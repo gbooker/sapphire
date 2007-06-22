@@ -12,6 +12,7 @@
 		38FAFC320C012A7800853CFE /* SapphireAppliance.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */; };
 		38FAFC330C012A7800853CFE /* SapphireApplianceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC310C012A7800853CFE /* SapphireApplianceController.m */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		F531A51D0C2C8DB500E46F62 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531A51C0C2C8DB500E46F62 /* QTKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		38FAFC310C012A7800853CFE /* SapphireApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireApplianceController.m; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Sapphire.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Sapphire.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		F531A51C0C2C8DB500E46F62 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +37,7 @@
 			files = (
 				38FAF9B40C0129D500853CFE /* Foundation.framework in Frameworks */,
 				38FAF9B60C0129E400853CFE /* BackRow.framework in Frameworks */,
+				F531A51D0C2C8DB500E46F62 /* QTKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,6 +59,7 @@
 		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F531A51C0C2C8DB500E46F62 /* QTKit.framework */,
 				089C1672FE841209C02AAC07 /* Foundation.framework */,
 				38FAF9B50C0129E400853CFE /* BackRow.framework */,
 			);

@@ -8,11 +8,16 @@
 
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
+#import <QTKit/QTKit.h>
 
 #define FILES_KEY @"Files"
 #define DIRS_KEY @"Dirs"
+#define META_VERSION_KEY @"Version"
+#define META_VERSION 1
 
 #define MODIFIED_KEY @"Modified"
+#define SIZE_KEY @"Size"
+#define DURATION_KEY @"Duration"
 
 @implementation NSString (episodeSorting)
 
@@ -27,6 +32,8 @@
 @interface SapphireApplianceController (private)
 - (BOOL)pruneMetaDataWithFiles:(NSArray *)files andDirectories:(NSArray *)dirs;
 - (BOOL)updateMetaDataWithFiles:(NSArray *)files andDirectories:(NSArray *)dirs;
+- (void)processFiles:(NSArray *)files;
+- (void)filesProcessed:(NSDictionary *)files;
 @end
 
 @implementation SapphireApplianceController
@@ -45,6 +52,12 @@ static NSMutableDictionary *mainMetaDictionary = nil;
 	{
 		mainMetaDictionary = [[NSMutableDictionary alloc] init];
 	}
+	else if([[mainMetaDictionary objectForKey:META_VERSION_KEY] intValue] < META_VERSION)
+	{
+		[mainMetaDictionary removeAllObjects];
+		[mainMetaDictionary setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
+	}
+	[[[QTMovie alloc] init] release];  //QTMovie must be first used in the main thread
 }
 
 + (NSString *) rootMenuLabel
@@ -226,9 +239,93 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 				[newFiles addObject:fileName];
 		}
 	}
-	//Do something in a thread to process newFiles
-	
+	if([newFiles count])
+		[NSThread detachNewThreadSelector:@selector(processFiles:) toTarget:self withObject:newFiles];
+
 	return ret;
+}
+
+- (void)processFiles:(NSArray *)files
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[files count]];
+	NSFileManager *manager = [NSFileManager defaultManager];
+	NSMutableArray *movies = [[NSMutableArray alloc] init];
+	
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		NSString *path = [_dir stringByAppendingPathComponent:file];
+		NSDictionary *props = [manager fileAttributesAtPath:path traverseLink:YES];
+		
+		if(props != nil)
+		{
+			NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
+			[result setObject:fileMeta forKey:file];
+			
+			[fileMeta setObject:[NSNumber numberWithInt:[[props objectForKey:NSFileModificationDate] timeIntervalSince1970]] forKey:MODIFIED_KEY];
+			[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
+			
+			NSError *error = nil;
+			QTMovie *movie = [QTMovie movieWithFile:path error:&error];
+			QTTime duration = [movie duration];
+			[fileMeta setObject:[NSNumber numberWithFloat:(float)duration.timeValue/(float)duration.timeScale] forKey:DURATION_KEY];
+			//Save the movie around for later, see below
+			[movies addObject:movie];
+		}
+	}
+	[self performSelectorOnMainThread:@selector(filesProcessed:) withObject:result waitUntilDone:YES];
+	[pool release];
+	//Finally can release these movies.  It seems that if you release a QTMovie in a thread, it crashes you.  Not good.
+	[self performSelectorOnMainThread:@selector(releaseThis:) withObject:movies waitUntilDone:NO];
+}
+
+- (void)filesProcessed:(NSDictionary *)files
+{
+	if(![files count])
+		return;
+	NSEnumerator *fileEnum = [files keyEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		[_metaFiles setObject:[files objectForKey:file] forKey:file];
+	
+	[SapphireApplianceController writeMetaData];
+	
+	BRListControl *list = [self list];
+	long selection = [list selection];
+	[list reload];
+	[list setSelection:selection];
+}
+
+- (void)releaseThis:(NSObject *)movies
+{
+	[movies release];
+}
+
+- (NSString *)sizeStringForMetaData:(NSDictionary *)meta
+{
+	float size = [[meta objectForKey:SIZE_KEY] intValue];
+	char letter = ' ';
+	if(size >= 102400)
+	{
+		if(size >= 1024*102400)
+		{
+			size /= 1024 * 1024 * 1024;
+			letter = 'G';
+		}
+		else
+		{
+			size /= 1024 * 1024;
+			letter = 'M';
+		}
+	}
+	else if (size >= 1000)
+	{
+		size /= 1024;
+		letter = 'K';
+	}
+	return [NSString stringWithFormat:@"%.1f\n%cB", size, letter];	
 }
 
 - (void) willBePushed
@@ -315,7 +412,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if([self isDirectory:[_dir stringByAppendingPathComponent:name]])
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 	else
-			result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
+	{
+		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
+		NSDictionary *meta = [_metaFiles objectForKey:name];
+		if(meta != nil)
+		{
+			[[result textItem] setRightJustifiedText:[self sizeStringForMetaData:meta]];
+		}
+	}
 			
 	// add text
 	[[result textItem] setTitle: name] ;
