@@ -14,16 +14,19 @@
 
 @interface SapphireApplianceController : BRMediaMenuController
 {
-	NSString *_dir;
-	NSMutableArray * _names ;
+	NSString			*_dir;
+	NSMutableArray		* _names ;
 
+	NSMutableDictionary	*_metaData;
+	NSMutableDictionary	*_metaFiles;
+	NSMutableDictionary	*_metaDirs;
 }
 
 + (NSString *) rootMenuLabel ;
 
 
 - (id) initWithScene: (BRRenderScene *) scene;
-- (id) initWithScene: (BRRenderScene *) scene directory: (NSString *)dir;
+- (id) initWithScene: (BRRenderScene *) scene directory: (NSString *) dir metaData: (NSMutableDictionary *)meta;
 - (void) dealloc;
 - (BOOL)isDirectory:(NSString *)path;
 /*
