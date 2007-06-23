@@ -9,11 +9,14 @@
 #import <Cocoa/Cocoa.h>
 
 @class SapphireFileMetaData;
-typedef BOOL (*metaDataPredicate)(NSString *path, SapphireFileMetaData *metaData);
 
-@interface SapphirePredicates : NSObject {
+@interface SapphirePredicate : NSObject {
 }
+
+- (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData;
 
 @end
 
-BOOL unwatchedPredicate(NSString *path, SapphireFileMetaData *metaData);
+@interface SapphireUnwatchedPredicate : SapphirePredicate {
+}
+@end

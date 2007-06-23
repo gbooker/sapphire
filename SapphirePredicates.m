@@ -9,11 +9,18 @@
 #import "SapphirePredicates.h"
 #import "SapphireMetaData.h"
 
-@implementation SapphirePredicates
+@implementation SapphirePredicate
+
+- (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
+{
+	return NO;
+}
 
 @end
 
-BOOL unwatchedPredicate(NSString *path, SapphireFileMetaData *metaData)
+@implementation SapphireUnwatchedPredicate
+
+- (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 	if(metaData == nil)
 		return YES;
@@ -21,3 +28,5 @@ BOOL unwatchedPredicate(NSString *path, SapphireFileMetaData *metaData)
 		return YES;
 	return NO;
 }
+
+@end

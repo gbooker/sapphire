@@ -23,14 +23,14 @@
 {
 	return [self initWithScene:scene metaData:meta predicate:NULL];
 }
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(metaDataPredicate)newPredicate;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 		
 	_names = [NSMutableArray new];
 	metaData = [meta retain];
 	[metaData setDelegate:self];
-	predicate = newPredicate;
+	predicate = [newPredicate retain];
 
 	[self reloadDirectoryContents];
 	
@@ -66,6 +66,7 @@
     // always remember to deallocate your resources
 	[_names release];
 	[metaData release];
+	[predicate release];
     [super dealloc];
 }
 

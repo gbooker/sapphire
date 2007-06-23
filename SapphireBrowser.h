@@ -19,11 +19,11 @@
 {
 	NSMutableArray				* _names ;
 	SapphireDirectoryMetaData	*metaData;
-	metaDataPredicate			predicate;
+	SapphirePredicate			*predicate;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(metaDataPredicate)newPredicate;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
 - (void) dealloc;
 /*
 - (void) willBePushed;

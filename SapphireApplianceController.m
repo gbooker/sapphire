@@ -34,7 +34,7 @@
 	names = [[NSArray alloc] initWithObjects:@"Unwatched", @"Play Movies", @"Settings", nil];
 	
 	SapphireBrowser *playBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];
-	SapphireBrowser *unwatchedBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:unwatchedPredicate];
+	SapphireBrowser *unwatchedBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
 	
 	controllers = [[NSArray alloc] initWithObjects:unwatchedBrowser, playBrowser, self, nil];
 	[[self list] setDatasource:self];

@@ -160,7 +160,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void)writeMetaData
 {
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
-	[metaData writeToFile:dictionaryPath atomically:YES];
+	[[mainDirectory dict] writeToFile:dictionaryPath atomically:YES];
 }
 
 @end
@@ -249,7 +249,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return directories;
 }
 
-- (BOOL)hasPredicatedFiles:(metaDataPredicate)predicate
+- (BOOL)hasPredicatedFiles:(SapphirePredicate *)predicate
 {
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *file = nil;
@@ -259,17 +259,17 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if([metaFiles objectForKey:file] != nil)
 		{
 			SapphireFileMetaData *meta = [self metaDataForFile:file];
-			include = (predicate)([meta path], meta);
+			include = [predicate accept:[meta path] meta:meta];
 		}
 		else
-			include = (predicate)([path stringByAppendingPathComponent:file], nil);
+			include = [predicate accept:[path stringByAppendingPathComponent:file] meta:nil];
 		if(include)
 			return YES;
 	}
 	return NO;
 }
 
-- (BOOL)hasPredicatedDirectories:(metaDataPredicate)predicate
+- (BOOL)hasPredicatedDirectories:(SapphirePredicate *)predicate
 {
 	NSEnumerator *directoryEnum = [directories objectEnumerator];
 	NSString *directory = nil;
@@ -284,7 +284,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return NO;
 }
 
-- (NSArray *)predicatedFiles:(metaDataPredicate)predicate
+- (NSArray *)predicatedFiles:(SapphirePredicate *)predicate
 {
 	NSMutableArray *ret = [NSMutableArray array];
 	NSEnumerator *fileEnum = [files objectEnumerator];
@@ -295,16 +295,16 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if([metaFiles objectForKey:file] != nil)
 		{
 			SapphireFileMetaData *meta = [self metaDataForFile:file];
-			include = (predicate)([meta path], meta);
+			include = [predicate accept:[meta path] meta:meta];
 		}
 		else
-			include = (predicate)([path stringByAppendingPathComponent:file], nil);
+			include = [predicate accept:[path stringByAppendingPathComponent:file] meta:nil];
 		if(include)
 			[ret addObject:file];
 	}
 	return ret;
 }
-- (NSArray *)predicatedDirectories:(metaDataPredicate)predicate
+- (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate
 {
 	NSMutableArray *ret = [NSMutableArray array];
 	NSEnumerator *directoryEnum = [directories objectEnumerator];

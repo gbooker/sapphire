@@ -56,8 +56,8 @@
 - (void)reloadDirectoryContents;
 - (NSArray *)files;
 - (NSArray *)directories;
-- (NSArray *)predicatedFiles:(metaDataPredicate)predicate;
-- (NSArray *)predicatedDirectories:(metaDataPredicate)predicate;
+- (NSArray *)predicatedFiles:(SapphirePredicate *)predicate;
+- (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate;
 
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
 - (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)file;
