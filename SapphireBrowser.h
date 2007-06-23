@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <BackRow/BRMediaMenuController.h>
+#import "SapphirePredicates.h"
 
 @class BRRenderScene, BRRenderLayer;
 
@@ -18,9 +19,11 @@
 {
 	NSMutableArray				* _names ;
 	SapphireDirectoryMetaData	*metaData;
+	metaDataPredicate			predicate;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(metaDataPredicate)newPredicate;
 - (void) dealloc;
 /*
 - (void) willBePushed;

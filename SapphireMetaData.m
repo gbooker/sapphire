@@ -197,8 +197,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self reloadDirectoryContents];
 	if([self pruneMetaData] || [self updateMetaData])
 		[self writeMetaData];
-	[directories sortUsingSelector:@selector(episodeCompare:)];
-	[files sortUsingSelector:@selector(episodeCompare:)];
 	
 	return self;
 }
@@ -237,6 +235,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		else if([self isDirectory:[path stringByAppendingPathComponent:name]])
 			[directories addObject:name];
 	}
+	[directories sortUsingSelector:@selector(episodeCompare:)];
+	[files sortUsingSelector:@selector(episodeCompare:)];
 }
 
 - (NSArray *)files
@@ -247,6 +247,77 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (NSArray *)directories
 {
 	return directories;
+}
+
+- (BOOL)hasPredicatedFiles:(metaDataPredicate)predicate
+{
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		BOOL include = NO;
+		if([metaFiles objectForKey:file] != nil)
+		{
+			SapphireFileMetaData *meta = [self metaDataForFile:file];
+			include = (predicate)([meta path], meta);
+		}
+		else
+			include = (predicate)([path stringByAppendingPathComponent:file], nil);
+		if(include)
+			return YES;
+	}
+	return NO;
+}
+
+- (BOOL)hasPredicatedDirectories:(metaDataPredicate)predicate
+{
+	NSEnumerator *directoryEnum = [directories objectEnumerator];
+	NSString *directory = nil;
+	while((directory = [directoryEnum nextObject]) != nil)
+	{
+		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
+		[meta cancelImport];
+		
+		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
+			return YES;
+	}
+	return NO;
+}
+
+- (NSArray *)predicatedFiles:(metaDataPredicate)predicate
+{
+	NSMutableArray *ret = [NSMutableArray array];
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		BOOL include = NO;
+		if([metaFiles objectForKey:file] != nil)
+		{
+			SapphireFileMetaData *meta = [self metaDataForFile:file];
+			include = (predicate)([meta path], meta);
+		}
+		else
+			include = (predicate)([path stringByAppendingPathComponent:file], nil);
+		if(include)
+			[ret addObject:file];
+	}
+	return ret;
+}
+- (NSArray *)predicatedDirectories:(metaDataPredicate)predicate
+{
+	NSMutableArray *ret = [NSMutableArray array];
+	NSEnumerator *directoryEnum = [directories objectEnumerator];
+	NSString *directory = nil;
+	while((directory = [directoryEnum nextObject]) != nil)
+	{
+		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
+		[meta cancelImport];
+
+		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
+			[ret addObject:directory];
+	}
+	return ret;
 }
 
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file
@@ -397,9 +468,26 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [self metaDataForFile:file];
 }
 
+- (void)processAllFiles
+{
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		[[self metaDataForFile:file] updateMetaData];
+}
+
 - (void)scanDirectory
 {
-	
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *directory = nil;
+	while((directory = [dirEnum nextObject]) != nil)
+		[[self metaDataForDirectory:directory] scanDirectory];
+}
+
+- (void)preloadMetaData
+{
+	[self scanDirectory];
+	[self processAllFiles];
 }
 
 @end

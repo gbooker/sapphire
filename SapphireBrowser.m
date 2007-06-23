@@ -11,6 +11,7 @@
 #import "SapphireMetaData.h"
 
 @interface SapphireBrowser (private)
+- (void)reloadDirectoryContents;
 - (void)processFiles:(NSArray *)files;
 - (void)filesProcessed:(NSDictionary *)files;
 - (NSMutableDictionary *)metaDataForPath:(NSString *)path;
@@ -18,16 +19,20 @@
 
 @implementation SapphireBrowser
 
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta
+{
+	return [self initWithScene:scene metaData:meta predicate:NULL];
+}
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(metaDataPredicate)newPredicate;
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 		
 	_names = [NSMutableArray new];
 	metaData = [meta retain];
 	[metaData setDelegate:self];
+	predicate = newPredicate;
 
-	[_names addObjectsFromArray:[meta directories]];
-	[_names addObjectsFromArray:[meta files]];
+	[self reloadDirectoryContents];
 	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
@@ -39,8 +44,16 @@
 {
 	[metaData reloadDirectoryContents];
 	[_names removeAllObjects];
-	[_names addObjectsFromArray:[metaData directories]];
-	[_names addObjectsFromArray:[metaData files]];
+	if(predicate == NULL)
+	{
+		[_names addObjectsFromArray:[metaData directories]];
+		[_names addObjectsFromArray:[metaData files]];
+	}
+	else
+	{
+		[_names addObjectsFromArray:[metaData predicatedDirectories:predicate]];
+		[_names addObjectsFromArray:[metaData predicatedFiles:predicate]];
+	}
 
 	BRListControl *list = [self list];
 	long selection = [list selection];
@@ -95,6 +108,7 @@
     
     // always call super
     [super wasPushed];
+	[metaData resumeImport];
 }
 
 - (void) willBePopped
@@ -104,6 +118,7 @@
     // always call super
     [super willBePopped];
 	[metaData cancelImport];
+	[metaData setDelegate:nil];
 }
 
 - (void) wasPopped
@@ -226,7 +241,7 @@
 	
 	if([[metaData directories] containsObject:name])
 	{
-		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name]];
+		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name] predicate:predicate];
 		[[self stack] pushController:controller];
 		[controller release];
 	}

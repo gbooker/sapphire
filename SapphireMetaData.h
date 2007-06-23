@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "SapphirePredicates.h"
 
 @class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
 
@@ -55,6 +56,8 @@
 - (void)reloadDirectoryContents;
 - (NSArray *)files;
 - (NSArray *)directories;
+- (NSArray *)predicatedFiles:(metaDataPredicate)predicate;
+- (NSArray *)predicatedDirectories:(metaDataPredicate)predicate;
 
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
 - (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)file;

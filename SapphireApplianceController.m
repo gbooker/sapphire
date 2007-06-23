@@ -10,6 +10,7 @@
 #import <BackRow/BackRow.h>
 #import "SapphireBrowser.h"
 #import "SapphireMetaData.h"
+#import "SapphirePredicates.h"
 
 @interface SapphireApplianceController (private)
 - (void)processFiles:(NSArray *)files;
@@ -33,8 +34,9 @@
 	names = [[NSArray alloc] initWithObjects:@"Unwatched", @"Play Movies", @"Settings", nil];
 	
 	SapphireBrowser *playBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];
+	SapphireBrowser *unwatchedBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:unwatchedPredicate];
 	
-	controllers = [[NSArray alloc] initWithObjects:self, playBrowser, self, nil];
+	controllers = [[NSArray alloc] initWithObjects:unwatchedBrowser, playBrowser, self, nil];
 	[[self list] setDatasource:self];
 
 	return self;
