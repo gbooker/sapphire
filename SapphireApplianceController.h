@@ -11,23 +11,22 @@
 
 @class BRRenderScene, BRRenderLayer;
 
-@class SapphireDirectoryMetaData;
+@class SapphireDirectoryMetaData, SapphireMetaDataCollection;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireApplianceController : BRMediaMenuController <SapphireMetaDataDelegate>
 {
-	NSString					*_dir;
 	NSMutableArray				* _names ;
 	SapphireDirectoryMetaData	*metaData;
+	SapphireMetaDataCollection	*metaCollection;
 }
 
 + (NSString *) rootMenuLabel ;
 
 
 - (id) initWithScene: (BRRenderScene *) scene;
-- (id) initWithScene: (BRRenderScene *) scene directory: (NSString *) dir metaData: (SapphireDirectoryMetaData *)meta;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
 - (void) dealloc;
-- (BOOL)isDirectory:(NSString *)path;
 /*
 - (void) willBePushed;
 - (void) wasPushed;
