@@ -125,8 +125,8 @@ static NSArray *extensions = nil;
 	if(!self)
 		return nil;
 	
-	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:mainMetaDictionary parent:self path:myPath];
 	dictionaryPath = [dictionary retain];
+	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:mainMetaDictionary parent:self path:myPath];
 	
 	return self;
 }

@@ -8,6 +8,7 @@
 
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
+#import "SapphireBrowser.h"
 #import "SapphireMetaData.h"
 
 @interface SapphireApplianceController (private)
@@ -20,93 +21,31 @@
 
 + (NSString *) rootMenuLabel
 {
-	return (@"net.pmerrill.recursivemenu.root" );
+	return (@"net.pmerrill.Sapphire" );
 }
 
 // 
 - (id) initWithScene: (BRRenderScene *) scene
 {
-/*
-    if ( [super initWithScene: scene] == nil )
-	return ( nil );
-    
-    // initialize your resources here
-    
-    return ( self );
-*/
-	SapphireMetaDataCollection *collection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-	self = [self initWithScene: scene metaData:[collection rootDirectory]];
-	if(!self)
-		return nil;
+	self = [super initWithScene:scene];
+	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
 
-	metaCollection = collection;
+	names = [[NSArray alloc] initWithObjects:@"Unwatched", @"Play Movies", @"Settings", nil];
 	
+	SapphireBrowser *playBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];
+	
+	controllers = [[NSArray alloc] initWithObjects:self, playBrowser, self, nil];
+	[[self list] setDatasource:self];
+
 	return self;
 }
 
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
+- (void)dealloc
 {
-	if ( [super initWithScene: scene] == nil ) return ( nil );
-		
-	_names = [NSMutableArray new];
-	metaData = [meta retain];
-	[metaData setDelegate:self];
-	metaCollection = nil;
-
-	[_names addObjectsFromArray:[meta directories]];
-	[_names addObjectsFromArray:[meta files]];
-	
-	// set the datasource *after* you've setup your array
-	[[self list] setDatasource: self] ;
-		
-	return ( self );
-}
-
-- (void)reloadDirectoryContents
-{
-	[metaData reloadDirectoryContents];
-	[_names removeAllObjects];
-	[_names addObjectsFromArray:[metaData directories]];
-	[_names addObjectsFromArray:[metaData files]];
-
-	BRListControl *list = [self list];
-	long selection = [list selection];
-	[list reload];
-	[list setSelection:selection];	
-}
-
-- (void) dealloc
-{
-    // always remember to deallocate your resources
-	[_names release];
-	[metaData release];
+	[names release];
+	[controllers release];
 	[metaCollection release];
-    [super dealloc];
-}
-
-- (NSString *)sizeStringForMetaData:(SapphireFileMetaData *)meta
-{
-	float size = [meta size];
-	char letter = ' ';
-	if(size >= 1024000)
-	{
-		if(size >= 1024*1024000)
-		{
-			size /= 1024 * 1024 * 1024;
-			letter = 'G';
-		}
-		else
-		{
-			size /= 1024 * 1024;
-			letter = 'M';
-		}
-	}
-	else if (size >= 1000)
-	{
-		size /= 1024;
-		letter = 'K';
-	}
-	return [NSString stringWithFormat:@"%.1f\n%cB", size, letter];	
+	[super dealloc];
 }
 
 - (void) willBePushed
@@ -131,7 +70,6 @@
     
     // always call super
     [super willBePopped];
-	[metaData cancelImport];
 }
 
 - (void) wasPopped
@@ -147,7 +85,6 @@
     // The user just chose an option, and we will be taken off the screen
     
     // always call super
-	[metaData cancelImport];
     [super willBeBuried];
 }
 
@@ -164,7 +101,6 @@
     // the user pressed Menu, but we've not been revealed yet
     
     // always call super
-	[self reloadDirectoryContents];
     [super willBeExhumed];
 }
 
@@ -174,13 +110,12 @@
     
     // always call super
     [super wasExhumedByPoppingController: controller];
-	[metaData resumeImport];
 }
 
 - (long) itemCount
 {
     // return the number of items in your menu list here
-	return ( [ _names count]);
+	return ( [ names count]);
 }
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
@@ -190,25 +125,11 @@
     // return that object, it will be used to display the list item.
     return ( nil );
 */
-	if( row > [_names count] ) return ( nil ) ;
+	if( row > [names count] ) return ( nil ) ;
 	
 	BRAdornedMenuItemLayer * result = nil ;
-	NSString *name = [_names objectAtIndex:row];
-	if([[metaData directories] containsObject:name])
-		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
-	else
-	{
-		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
-		BOOL watched = NO;
-		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
-		if(meta != nil)
-		{
-			[[result textItem] setRightJustifiedText:[self sizeStringForMetaData:meta]];
-			watched = [meta watched];
-		}
-		if(!watched)
-			[result setLeftIcon:[[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:[self scene]]]; 
-	}
+	NSString *name = [names objectAtIndex:row];
+	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 			
 	// add text
 	[[result textItem] setTitle: name] ;
@@ -219,9 +140,9 @@
 - (NSString *) titleForRow: (long) row
 {
 
-	if ( row > [ _names count] ) return ( nil );
+	if ( row > [ names count] ) return ( nil );
 	
-	NSString *result = [ _names objectAtIndex: row] ;
+	NSString *result = [ names objectAtIndex: row] ;
 	return ( result ) ;
 /*
     // return the title for the list item at the given index here
@@ -249,35 +170,8 @@
 {
     // This is called when the user presses play/pause on a list item
 	
-	NSString *name = [_names objectAtIndex:row];
-	NSString *dir = [metaData path];
-	
-	if([[metaData directories] containsObject:name])
-	{
-		id controller = [[SapphireApplianceController alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name]];
-		[[self stack] pushController:controller];
-		[controller release];
-	}
-	else
-	{
-		BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
-		BRQTKitVideoPlayer *player = [[BRQTKitVideoPlayer alloc] init];
-		NSError *error = nil;
-		
-		NSURL *url = [NSURL fileURLWithPath:[dir stringByAppendingPathComponent:name]];
-		BRSimpleMediaAsset *asset  =[[BRSimpleMediaAsset alloc] initWithMediaURL:url];
-		[player setMedia:asset error:&error];
-		
-		[controller setVideoPlayer:player];
-		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
-		[meta setWatched];
-		[meta writeMetaData];
-		[[self stack] pushController:controller];
-
-		[asset release];
-		[player release];
-		[controller release];
-	}
+	id controller = [controllers objectAtIndex:row];
+	[[self stack] pushController:controller];
 }
 
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item

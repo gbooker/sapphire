@@ -10,10 +10,11 @@
 		38FAF9B40C0129D500853CFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
 		38FAF9B60C0129E400853CFE /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
 		38FAFC320C012A7800853CFE /* SapphireAppliance.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */; };
-		38FAFC330C012A7800853CFE /* SapphireApplianceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC310C012A7800853CFE /* SapphireApplianceController.m */; };
+		38FAFC330C012A7800853CFE /* SapphireBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC310C012A7800853CFE /* SapphireBrowser.m */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		F531A51D0C2C8DB500E46F62 /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531A51C0C2C8DB500E46F62 /* QTKit.framework */; };
 		F531A5BA0C2CB43400E46F62 /* SapphireMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */; };
+		F531A98F0C2DACBE00E46F62 /* SapphireApplianceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,15 +23,17 @@
 		32DBCF630370AF2F00C91783 /* Sapphire_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sapphire_Prefix.pch; sourceTree = "<group>"; };
 		3834DF340C031FDC009BE46D /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
 		38FAF9B50C0129E400853CFE /* BackRow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackRow.framework; path = /System/Library/PrivateFrameworks/BackRow.framework; sourceTree = "<absolute>"; };
-		38FAFC2E0C012A7800853CFE /* SapphireApplianceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireApplianceController.h; sourceTree = "<group>"; };
+		38FAFC2E0C012A7800853CFE /* SapphireBrowser.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireBrowser.h; sourceTree = "<group>"; };
 		38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireAppliance.m; sourceTree = "<group>"; };
 		38FAFC300C012A7800853CFE /* SapphireAppliance.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireAppliance.h; sourceTree = "<group>"; };
-		38FAFC310C012A7800853CFE /* SapphireApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireApplianceController.m; sourceTree = "<group>"; };
+		38FAFC310C012A7800853CFE /* SapphireBrowser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireBrowser.m; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Sapphire.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Sapphire.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
 		F531A51C0C2C8DB500E46F62 /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		F531A5B80C2CB43400E46F62 /* SapphireMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMetaData.h; sourceTree = "<group>"; };
 		F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMetaData.m; sourceTree = "<group>"; };
+		F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireApplianceController.h; sourceTree = "<group>"; };
+		F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireApplianceController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,8 +86,10 @@
 			children = (
 				38FAFC300C012A7800853CFE /* SapphireAppliance.h */,
 				38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */,
-				38FAFC2E0C012A7800853CFE /* SapphireApplianceController.h */,
-				38FAFC310C012A7800853CFE /* SapphireApplianceController.m */,
+				F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */,
+				F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */,
+				38FAFC2E0C012A7800853CFE /* SapphireBrowser.h */,
+				38FAFC310C012A7800853CFE /* SapphireBrowser.m */,
 				F531A5B80C2CB43400E46F62 /* SapphireMetaData.h */,
 				F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */,
 			);
@@ -161,8 +166,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				38FAFC320C012A7800853CFE /* SapphireAppliance.m in Sources */,
-				38FAFC330C012A7800853CFE /* SapphireApplianceController.m in Sources */,
+				38FAFC330C012A7800853CFE /* SapphireBrowser.m in Sources */,
 				F531A5BA0C2CB43400E46F62 /* SapphireMetaData.m in Sources */,
+				F531A98F0C2DACBE00E46F62 /* SapphireApplianceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

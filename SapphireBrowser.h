@@ -1,5 +1,5 @@
 //
-//  SapphireApplianceController.h
+//  SapphireBrowser.h
 //  Sapphire
 //
 //  Created by pnmerrill on 6/20/07.
@@ -11,20 +11,16 @@
 
 @class BRRenderScene, BRRenderLayer;
 
-@class SapphireMetaDataCollection;
+@class SapphireDirectoryMetaData, SapphireMetaDataCollection;
 @protocol SapphireMetaDataDelegate;
 
-@interface SapphireApplianceController : BRMediaMenuController <SapphireMetaDataDelegate>
+@interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
 {
-	SapphireMetaDataCollection	*metaCollection;
-	NSArray						*names;
-	NSArray						*controllers;
+	NSMutableArray				* _names ;
+	SapphireDirectoryMetaData	*metaData;
 }
 
-+ (NSString *) rootMenuLabel ;
-
-
-- (id) initWithScene: (BRRenderScene *) scene;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
 - (void) dealloc;
 /*
 - (void) willBePushed;
