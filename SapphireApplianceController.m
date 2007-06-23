@@ -8,16 +8,7 @@
 
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
-#import <QTKit/QTKit.h>
-
-#define FILES_KEY @"Files"
-#define DIRS_KEY @"Dirs"
-#define META_VERSION_KEY @"Version"
-#define META_VERSION 1
-
-#define MODIFIED_KEY @"Modified"
-#define SIZE_KEY @"Size"
-#define DURATION_KEY @"Duration"
+#import "SapphireMetaData.h"
 
 @implementation NSString (episodeSorting)
 
@@ -30,59 +21,24 @@
 @end
 
 @interface SapphireApplianceController (private)
-- (BOOL)pruneMetaDataWithFiles:(NSArray *)files andDirectories:(NSArray *)dirs;
-- (BOOL)updateMetaDataWithFiles:(NSArray *)files andDirectories:(NSArray *)dirs;
 - (void)processFiles:(NSArray *)files;
 - (void)filesProcessed:(NSDictionary *)files;
+- (NSMutableDictionary *)metaDataForPath:(NSString *)path;
 @end
 
 @implementation SapphireApplianceController
 
 // Static set of file extensions to filter
 static NSArray *extensions = nil;
-static NSString *metaPath = nil;
-static NSMutableDictionary *mainMetaDictionary = nil;
 
 +(void)load
 {
 	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"wmv", nil];
-	metaPath = [[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] retain];
-	mainMetaDictionary = [[NSMutableDictionary alloc] initWithContentsOfFile:metaPath];
-	if(mainMetaDictionary == nil)
-	{
-		mainMetaDictionary = [[NSMutableDictionary alloc] init];
-	}
-	else if([[mainMetaDictionary objectForKey:META_VERSION_KEY] intValue] < META_VERSION)
-	{
-		[mainMetaDictionary removeAllObjects];
-		[mainMetaDictionary setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
-	}
-	[[[QTMovie alloc] init] release];  //QTMovie must be first used in the main thread
 }
 
 + (NSString *) rootMenuLabel
 {
 	return (@"net.pmerrill.recursivemenu.root" );
-}
-
-static void makeParentDir(NSFileManager *manager, NSString *dir)
-{
-	NSString *parent = [dir stringByDeletingLastPathComponent];
-	
-	BOOL isDir;
-	if(![manager fileExistsAtPath:parent isDirectory:&isDir])
-		makeParentDir(manager, parent);
-	else if(!isDir)
-		//Can't work with this
-		return;
-	
-	[manager createDirectoryAtPath:dir attributes:nil];
-}
-
-+ (void)writeMetaData
-{
-	makeParentDir([NSFileManager defaultManager], [metaPath stringByDeletingLastPathComponent]);
-	[mainMetaDictionary writeToFile:metaPath atomically:YES];
 }
 
 // 
@@ -96,34 +52,21 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
     
     return ( self );
 */
-	return ( [self initWithScene: scene directory:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"] metaData:mainMetaDictionary] );
+	SapphireDirectoryMetaData *mainMeta = [[SapphireDirectoryMetaData alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"]];
+	return ( [self initWithScene: scene directory:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"] metaData:mainMeta] );
 }
 
-- (id) initWithScene: (BRRenderScene *) scene directory: (NSString *) dir metaData: (NSMutableDictionary *)meta;
+- (id) initWithScene: (BRRenderScene *) scene directory: (NSString *) dir metaData: (SapphireDirectoryMetaData *)meta;
 {
 	BOOL modifiedMeta = NO;
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 	_dir = [dir retain];
 		
 	_names = [NSMutableArray new];
-	_metaData = [meta retain];
-	_metaFiles = [meta objectForKey:FILES_KEY];
-	if(_metaFiles == nil)
-	{
-		_metaFiles = [NSMutableDictionary dictionary];
-		[meta setObject:_metaFiles forKey:FILES_KEY];
-		modifiedMeta = YES;
-	}
-	_metaDirs = [meta objectForKey:DIRS_KEY];
-	if(_metaDirs == nil)
-	{
-		_metaDirs = [NSMutableDictionary dictionary];
-		[meta setObject:_metaDirs forKey:DIRS_KEY];
-		modifiedMeta = YES;
-	}
-	
+	metaData = [meta retain];
+	[metaData setDelegate:self];
+
 	NSMutableArray *files = [NSMutableArray array];
-	
 	NSArray *names = [[[NSFileManager defaultManager] directoryContentsAtPath:dir] retain];
 	
 	NSEnumerator *nameEnum = [names objectEnumerator];
@@ -140,14 +83,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		else if([self isDirectory:[_dir stringByAppendingPathComponent:name]])
 			[_names addObject:name];
 	}
-	modifiedMeta |= [self pruneMetaDataWithFiles:files andDirectories:_names];
-	modifiedMeta |= [self updateMetaDataWithFiles:files andDirectories:_names];
+	modifiedMeta |= [metaData pruneMetaDataWithFiles:files andDirectories:_names];
+	modifiedMeta |= [metaData updateMetaDataWithFiles:files andDirectories:_names];
 	[_names sortUsingSelector:@selector(episodeCompare:)];
 	[files sortUsingSelector:@selector(episodeCompare:)];
 	[_names addObjectsFromArray:files];
 	
 	if(modifiedMeta)
-		[SapphireApplianceController writeMetaData];
+		[metaData writeMetaData];
 	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
@@ -160,7 +103,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
     // always remember to deallocate your resources
 	[_dir release];
 	[_names release];
-	[_metaData release];
     [super dealloc];
 }
 
@@ -171,145 +113,13 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] && isDir;
 }
 
-- (BOOL)pruneMetaDataWithFiles:(NSArray *)files andDirectories:(NSArray *)dirs
+- (NSString *)sizeStringForMetaData:(SapphireFileMetaData *)meta
 {
-	BOOL ret = NO;
-	NSSet *existingSet = [NSSet setWithArray:files];
-	NSArray *metaArray = [_metaFiles allKeys];
-	NSMutableSet *pruneSet = [NSMutableSet setWithArray:metaArray];
-
-	[pruneSet minusSet:existingSet];
-	if([pruneSet anyObject] != nil)
-	{
-		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
-		NSString *pruneKey = nil;
-		while((pruneKey = [pruneEnum nextObject]) != nil)
-			[_metaFiles removeObjectForKey:pruneKey];
-		ret = YES;		
-	}
-	
-	existingSet = [NSSet setWithArray:dirs];
-	metaArray = [_metaDirs allKeys];
-	pruneSet = [NSMutableSet setWithArray:metaArray];
-	
-	[pruneSet minusSet:existingSet];
-	if([pruneSet anyObject] != nil)
-	{
-		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
-		NSString *pruneKey = nil;
-		while((pruneKey = [pruneEnum nextObject]) != nil)
-			[_metaDirs removeObjectForKey:pruneKey];
-		ret = YES;
-	}
-	
-	return ret;
-}
-
-- (BOOL)updateMetaDataWithFiles:(NSArray *)files andDirectories:(NSArray *)dirs
-{
-	BOOL ret = NO;
-	NSArray *metaArray = [_metaDirs allKeys];
-	NSSet *metaSet = [NSSet setWithArray:metaArray];
-	NSMutableSet *newSet = [NSMutableSet setWithArray:dirs];
-	
-	[newSet minusSet:metaSet];
-	if([newSet anyObject] != nil)
-	{
-		NSEnumerator *newEnum = [newSet objectEnumerator];
-		NSString *newKey = nil;
-		while((newKey = [newEnum nextObject]) != nil)
-			[_metaDirs setObject:[NSMutableDictionary dictionary] forKey:newKey];
-		ret = YES;
-	}
-
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *fileName = nil;
-	NSMutableArray *newFiles = [NSMutableArray array];
-	while((fileName = [fileEnum nextObject]) != nil)
-	{
-		NSDictionary *fileMeta = [_metaFiles objectForKey:fileName];
-		if(fileMeta == nil)
-			[newFiles addObject:fileName];
-		else
-		{
-			NSString *path = [_dir stringByAppendingPathComponent:fileName];
-			NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
-			NSDate *modDate = [props objectForKey:NSFileModificationDate];
-			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != [modDate timeIntervalSince1970])
-				[newFiles addObject:fileName];
-		}
-	}
-	if([newFiles count])
-		[NSThread detachNewThreadSelector:@selector(processFiles:) toTarget:self withObject:newFiles];
-
-	return ret;
-}
-
-- (void)processFiles:(NSArray *)files
-{
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[files count]];
-	NSFileManager *manager = [NSFileManager defaultManager];
-	NSMutableArray *movies = [[NSMutableArray alloc] init];
-	
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-	{
-		NSString *path = [_dir stringByAppendingPathComponent:file];
-		NSDictionary *props = [manager fileAttributesAtPath:path traverseLink:YES];
-		
-		if(props != nil)
-		{
-			NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
-			[result setObject:fileMeta forKey:file];
-			
-			[fileMeta setObject:[NSNumber numberWithInt:[[props objectForKey:NSFileModificationDate] timeIntervalSince1970]] forKey:MODIFIED_KEY];
-			[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
-			
-			NSError *error = nil;
-			QTMovie *movie = [QTMovie movieWithFile:path error:&error];
-			QTTime duration = [movie duration];
-			[fileMeta setObject:[NSNumber numberWithFloat:(float)duration.timeValue/(float)duration.timeScale] forKey:DURATION_KEY];
-			//Save the movie around for later, see below
-			[movies addObject:movie];
-		}
-	}
-	[self performSelectorOnMainThread:@selector(filesProcessed:) withObject:result waitUntilDone:YES];
-	[pool release];
-	//Finally can release these movies.  It seems that if you release a QTMovie in a thread, it crashes you.  Not good.
-	[self performSelectorOnMainThread:@selector(releaseThis:) withObject:movies waitUntilDone:NO];
-}
-
-- (void)filesProcessed:(NSDictionary *)files
-{
-	if(![files count])
-		return;
-	NSEnumerator *fileEnum = [files keyEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-		[_metaFiles setObject:[files objectForKey:file] forKey:file];
-	
-	[SapphireApplianceController writeMetaData];
-	
-	BRListControl *list = [self list];
-	long selection = [list selection];
-	[list reload];
-	[list setSelection:selection];
-}
-
-- (void)releaseThis:(NSObject *)movies
-{
-	[movies release];
-}
-
-- (NSString *)sizeStringForMetaData:(NSDictionary *)meta
-{
-	float size = [[meta objectForKey:SIZE_KEY] intValue];
+	float size = [meta size];
 	char letter = ' ';
-	if(size >= 102400)
+	if(size >= 1024000)
 	{
-		if(size >= 1024*102400)
+		if(size >= 1024*1024000)
 		{
 			size /= 1024 * 1024 * 1024;
 			letter = 'G';
@@ -350,6 +160,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
     
     // always call super
     [super willBePopped];
+	[metaData cancelImport];
 }
 
 - (void) wasPopped
@@ -365,6 +176,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
     // The user just chose an option, and we will be taken off the screen
     
     // always call super
+	[metaData cancelImport];
     [super willBeBuried];
 }
 
@@ -390,6 +202,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
     
     // always call super
     [super wasExhumedByPoppingController: controller];
+	[metaData resumeImport];
 }
 
 - (long) itemCount
@@ -414,11 +227,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	else
 	{
 		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
-		NSDictionary *meta = [_metaFiles objectForKey:name];
+		BOOL watched = NO;
+		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
 			[[result textItem] setRightJustifiedText:[self sizeStringForMetaData:meta]];
+			watched = [meta watched];
 		}
+		if(!watched)
+			[result setLeftIcon:[[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:[self scene]]]; 
 	}
 			
 	// add text
@@ -464,7 +281,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	if([self isDirectory:[_dir stringByAppendingPathComponent:name]])
 	{
-		id controller = [[SapphireApplianceController alloc] initWithScene:[self scene] directory:[_dir stringByAppendingPathComponent:name] metaData:[_metaDirs objectForKey:name]];
+		id controller = [[SapphireApplianceController alloc] initWithScene:[self scene] directory:[_dir stringByAppendingPathComponent:name] metaData:[metaData metaDataForDirectory:name]];
 		[[self stack] pushController:controller];
 		[controller release];
 	}
@@ -479,6 +296,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		[player setMedia:asset error:&error];
 		
 		[controller setVideoPlayer:player];
+		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
+		[meta setWatched];
+		[meta writeMetaData];
 		[[self stack] pushController:controller];
 
 		[asset release];
@@ -492,6 +312,19 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
     return ( nil );
+}
+
+- (NSString *)directory
+{
+	return _dir;
+}
+
+- (void)updateComplete
+{
+	BRListControl *list = [self list];
+	long selection = [list selection];
+	[list reload];
+	[list setSelection:selection];	
 }
 
 @end
