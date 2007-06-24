@@ -42,16 +42,19 @@
 
 - (void)reloadDirectoryContents
 {
+	int divider = 0;
 	[metaData reloadDirectoryContents];
 	[_names removeAllObjects];
 	if(predicate == NULL)
 	{
 		[_names addObjectsFromArray:[metaData directories]];
+		divider = [_names count];
 		[_names addObjectsFromArray:[metaData files]];
 	}
 	else
 	{
 		[_names addObjectsFromArray:[metaData predicatedDirectories:predicate]];
+		divider = [_names count];
 		[_names addObjectsFromArray:[metaData predicatedFiles:predicate]];
 	}
 
@@ -59,6 +62,8 @@
 	long selection = [list selection];
 	[list reload];
 	[list setSelection:selection];	
+	if(divider && divider != [_names count])
+		[list addDividerAtIndex:divider];
 }
 
 - (void) dealloc
@@ -245,6 +250,8 @@
 	if([[metaData directories] containsObject:name])
 	{
 		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name] predicate:predicate];
+		[controller setListTitle:name];
+		[controller setListIcon:[self listIcon]];
 		[[self stack] pushController:controller];
 		[controller release];
 	}
