@@ -30,11 +30,11 @@
 	BOOL showTopShows= TRUE ;
 	BOOL showUnwatchedShows= TRUE ;
 	BOOL disableReporting= FALSE ;
-	options = [[NSArray alloc] initWithObjects:	[NSNumber numberWithBool:populateShowData],
-												[NSNumber numberWithBool:showFavoriteShows],
-												[NSNumber numberWithBool:showTopShows],
-												[NSNumber numberWithBool:showUnwatchedShows],
-												[NSNumber numberWithBool:disableReporting],nil];
+	options = [[NSMutableArray alloc] initWithObjects:	[NSNumber numberWithBool:populateShowData],
+														[NSNumber numberWithBool:showFavoriteShows],
+														[NSNumber numberWithBool:showTopShows],
+														[NSNumber numberWithBool:showUnwatchedShows],
+														[NSNumber numberWithBool:disableReporting],nil];
 	[[self list] setDatasource:self];
 
 	return self;
@@ -43,6 +43,7 @@
 - (void)dealloc
 {
 	[names release];
+	[options release];
 	[super dealloc];
 }
 
