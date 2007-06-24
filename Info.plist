@@ -5,15 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
+	<string>Sapphire</string>
 	<key>CFBundleIdentifier</key>
 	<string>net.nanopu.gbooker.pmerrill.sapphire</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
+	<string>Sapphire</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleSignature</key>
@@ -21,9 +19,9 @@
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>FRApplianceIconHorizontalOffset</key>
-	<real>2.5</real>
+	<real>-0.055</real>
 	<key>FRApplianceIconReflectionOffset</key>
-	<real>-0.20000000000000001</real>
+	<real>-0.29999999999999999</real>
 	<key>FRAppliancePreferedOrderValue</key>
 	<integer>-1</integer>
 	<key>NSPrincipalClass</key>
