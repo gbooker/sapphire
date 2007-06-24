@@ -12,7 +12,7 @@
 @interface SapphireSettings : BRMediaMenuController 
 {
 	NSArray						*names;
-	NSArray						*options;
+	NSMutableArray				*options;
 }
 
 

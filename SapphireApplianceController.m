@@ -47,6 +47,11 @@
 	[playBrowser setListTitle:				@"Show Browser"];
 	[settingsMenu setListTitle:				@"Settings"] ;
 	controllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settingsMenu,nil];
+	[unwatchedBrowser release];
+	[favoriteShowsBrowser release];
+	[topShowsBrowser release];
+	[playBrowser release];
+	[settingsMenu release];
 	[[self list] setDatasource:self];
 
 	return self;

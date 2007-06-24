@@ -168,8 +168,9 @@
 {
     // This is called when the user presses play/pause on a list item
 	
-	id settings = [settings objectAtIndex:row];
-	[[self stack] pushController:settings];
+	NSNumber *setting = [options objectAtIndex:row];
+	[options replaceObjectAtIndex:row withObject:[NSNumber numberWithBool:![setting boolValue]]];
+	[(BRListControl *)[self list] reload];
 }
 
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item
@@ -177,14 +178,6 @@
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
     return ( nil );
-}
-
-- (void)updateComplete
-{
-	BRListControl *list = [self list];
-	long selection = [list selection];
-	[list reload];
-	[list setSelection:selection];	
 }
 
 @end

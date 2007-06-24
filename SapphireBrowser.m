@@ -73,6 +73,8 @@
 - (NSString *)sizeStringForMetaData:(SapphireFileMetaData *)meta
 {
 	float size = [meta size];
+	if(size == 0)
+		return @"-";
 	char letter = ' ';
 	if(size >= 1024000)
 	{
