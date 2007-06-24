@@ -32,13 +32,13 @@
 	self = [super initWithScene:scene];
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
 
-	names = [[NSArray alloc] initWithObjects:@"<!> Unwatched",@"<!> Favorite Shows",@"<!>Top Shows", @"Browse Shows", @"<!> Settings", nil];
+	names = [[NSArray alloc] initWithObjects:@"   Unwatched",@"   Favorite Shows",@"   Top Shows", @"   Browse Shows", @"   Settings", nil];
 	
 	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
-	SapphireBrowser *favoriteShowsBrowser	=[[SapphireBrowser alloc]  initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
-	SapphireBrowser *topShowsBrowser		=[[SapphireBrowser alloc]  initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
+	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
+	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
 	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
-	SapphireSettings *settingsMenu			=[[SapphireSettings alloc]   initWithScene:[self scene]] ;
+	SapphireSettings *settingsMenu			= [[SapphireSettings alloc] initWithScene:[self scene]] ;
 		
 	[self setListTitle:							@"Main Menu"];
 	[unwatchedBrowser setListTitle:			@"Unwatched Shows"];
@@ -153,6 +153,7 @@
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
+	[result setLeftIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]];
 			
 	// add text
 	[[result textItem] setTitle: name] ;

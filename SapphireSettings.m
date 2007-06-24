@@ -24,7 +24,7 @@
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
-	names = [[NSArray alloc] initWithObjects:@" Populate Show Data",@" Hide \"Favorite Shows\"",@" Hide \"Top Shows\"",@" Hide \"Unwatched Shows\"", @" Disable Anonymous Reporting", nil];
+	names = [[NSArray alloc] initWithObjects:@"   Populate Show Data",@"   Hide \"Favorite Shows\"",@"   Hide \"Top Shows\"",@"   Hide \"Unwatched Shows\"", @"   Disable Anonymous Reporting", nil];
 	BOOL populateShowData = TRUE ;
 	BOOL showFavoriteShows = TRUE ;
 	BOOL showTopShows= TRUE ;
@@ -129,7 +129,10 @@
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
-	[result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]];
+
+	if( row > 0 )		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
+	else				[result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]];
+
 	// add text
 	[[result textItem] setTitle: name] ;
 				
