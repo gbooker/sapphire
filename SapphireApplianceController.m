@@ -46,6 +46,12 @@
 	[topShowsBrowser setListTitle:			@"Favorite Shows"];
 	[playBrowser setListTitle:				@"Show Browser"];
 	[settingsMenu setListTitle:				@"Settings"] ;
+	
+	[settingsMenu  setListIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+	[playBrowser  setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
+	[topShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
+	[favoriteShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
+	[unwatchedBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
 	controllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settingsMenu,nil];
 	[unwatchedBrowser release];
 	[favoriteShowsBrowser release];
