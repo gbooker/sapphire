@@ -30,3 +30,35 @@
 }
 
 @end
+
+@implementation SapphireFavoritePredicate
+
+- (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
+{
+/*
+	if(metaData == nil)
+		return YES;
+	else if(![metaData favorite])
+		return YES;
+	return NO;
+*/
+	return YES ;
+}
+
+@end
+
+@implementation SapphireTopShowPredicate
+
+- (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
+{
+/*
+	if(metaData == nil)
+		return YES;
+	else if(![metaData topShow])
+		return YES;
+	return NO;
+*/
+	return YES ;
+}
+
+@end

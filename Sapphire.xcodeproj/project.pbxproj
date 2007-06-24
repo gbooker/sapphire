@@ -17,6 +17,7 @@
 		F531A5BA0C2CB43400E46F62 /* SapphireMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */; };
 		F531A98F0C2DACBE00E46F62 /* SapphireApplianceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */; };
 		FE6B37690C2DBC1F009E6DCE /* ApplianceIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FE6B37680C2DBC1F009E6DCE /* ApplianceIcon.png */; };
+		FE8D57D40C2DE4AF00BC1768 /* SapphireSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,8 @@
 		F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireApplianceController.h; sourceTree = "<group>"; };
 		F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireApplianceController.m; sourceTree = "<group>"; };
 		FE6B37680C2DBC1F009E6DCE /* ApplianceIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ApplianceIcon.png; sourceTree = "<group>"; };
+		FE8D57D20C2DE4AF00BC1768 /* SapphireSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireSettings.h; sourceTree = "<group>"; };
+		FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireSettings.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +95,8 @@
 			children = (
 				38FAFC300C012A7800853CFE /* SapphireAppliance.h */,
 				38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */,
+				FE8D57D20C2DE4AF00BC1768 /* SapphireSettings.h */,
+				FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */,
 				F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */,
 				F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */,
 				38FAFC2E0C012A7800853CFE /* SapphireBrowser.h */,
@@ -179,6 +184,7 @@
 				F531A5BA0C2CB43400E46F62 /* SapphireMetaData.m in Sources */,
 				F531A98F0C2DACBE00E46F62 /* SapphireApplianceController.m in Sources */,
 				F523996F0C2DCC9100D5DA2E /* SapphirePredicates.m in Sources */,
+				FE8D57D40C2DE4AF00BC1768 /* SapphireSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

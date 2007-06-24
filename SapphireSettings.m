@@ -1,52 +1,40 @@
 //
-//  SapphireApplianceController.m
+//  SapphireSettings.m
 //  Sapphire
 //
-//  Created by pnmerrill on 6/20/07.
+//  Created by pnmerrill on 6/23/07.
 //  Copyright 2007 __MyCompanyName__. All rights reserved.
 //
 
-#import "SapphireApplianceController.h"
+
 #import <BackRow/BackRow.h>
-#import "SapphireBrowser.h"
-#import "SapphireMetaData.h"
-#import "SapphirePredicates.h"
+#import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
 
-@interface SapphireApplianceController (private)
+
+@interface SapphireSettings(private)
 - (void)processFiles:(NSArray *)files;
 - (void)filesProcessed:(NSDictionary *)files;
-- (NSMutableDictionary *)metaDataForPath:(NSString *)path;
 @end
 
-@implementation SapphireApplianceController
+@implementation SapphireSettings
 
-+ (NSString *) rootMenuLabel
-{
-	return (@"net.pmerrill.Sapphire" );
-}
 
 // 
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
-	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-
-	names = [[NSArray alloc] initWithObjects:@"<!> Unwatched",@"<!> Favorite Shows",@"<!>Top Shows", @"Browse Shows", @"<!> Settings", nil];
-	
-	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
-	SapphireBrowser *favoriteShowsBrowser	=[[SapphireBrowser alloc]  initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
-	SapphireBrowser *topShowsBrowser		=[[SapphireBrowser alloc]  initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
-	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
-	SapphireSettings *settingsMenu			=[[SapphireSettings alloc]   initWithScene:[self scene]] ;
-		
-	[self setListTitle:							@"Main Menu"];
-	[unwatchedBrowser setListTitle:			@"Unwatched Shows"];
-	[favoriteShowsBrowser setListTitle:		@"Favorite Shows"];
-	[topShowsBrowser setListTitle:			@"Favorite Shows"];
-	[playBrowser setListTitle:				@"Show Browser"];
-	[settingsMenu setListTitle:				@"Settings"] ;
-	controllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settingsMenu,nil];
+	names = [[NSArray alloc] initWithObjects:@"<!> Populate Show Data",@"<!>Hide \"Favorite Shows\"",@"<!> Hide \"Top Shows\"",@"<!>Hide \"Unwatched Shows\"", @"Disable Anyon Reporting", nil];
+	BOOL populateShowData = TRUE ;
+	BOOL showFavoriteShows = TRUE ;
+	BOOL showTopShows= TRUE ;
+	BOOL showUnwatchedShows= TRUE ;
+	BOOL disableReporting= FALSE ;
+	options = [[NSArray alloc] initWithObjects:	[NSNumber numberWithBool:populateShowData],
+												[NSNumber numberWithBool:showFavoriteShows],
+												[NSNumber numberWithBool:showTopShows],
+												[NSNumber numberWithBool:showUnwatchedShows],
+												[NSNumber numberWithBool:disableReporting],nil];
 	[[self list] setDatasource:self];
 
 	return self;
@@ -55,8 +43,6 @@
 - (void)dealloc
 {
 	[names release];
-	[controllers release];
-	[metaCollection release];
 	[super dealloc];
 }
 
@@ -182,8 +168,8 @@
 {
     // This is called when the user presses play/pause on a list item
 	
-	id controller = [controllers objectAtIndex:row];
-	[[self stack] pushController:controller];
+	id settings = [settings objectAtIndex:row];
+	[[self stack] pushController:settings];
 }
 
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item
@@ -202,3 +188,4 @@
 }
 
 @end
+

@@ -20,3 +20,11 @@
 @interface SapphireUnwatchedPredicate : SapphirePredicate {
 }
 @end
+
+@interface SapphireFavoritePredicate : SapphirePredicate {
+}
+@end
+
+@interface SapphireTopShowPredicate : SapphirePredicate {
+}
+@end
