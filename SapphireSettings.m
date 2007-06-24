@@ -20,7 +20,6 @@
 @implementation SapphireSettings
 
 
-// 
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];

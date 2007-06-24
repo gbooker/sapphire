@@ -20,8 +20,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
+	<key>FRApplianceIconHorizontalOffset</key>
+	<real>2.5</real>
+	<key>FRApplianceIconReflectionOffset</key>
+	<real>-0.20000000000000001</real>
 	<key>FRAppliancePreferedOrderValue</key>
-	<real>2.0019999999999998</real>
+	<integer>-1</integer>
 	<key>NSPrincipalClass</key>
 	<string>SapphireAppliance</string>
 </dict>
