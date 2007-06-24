@@ -116,11 +116,7 @@ static NSArray *extensions = nil;
 	{
 		mainMetaDictionary = [[NSMutableDictionary alloc] init];
 	}
-	else if([[mainMetaDictionary objectForKey:META_VERSION_KEY] intValue] < META_VERSION)
-	{
-		[mainMetaDictionary removeAllObjects];
-		[mainMetaDictionary setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
-	}	
+	[mainMetaDictionary setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
 	self = [self initWithDictionary:mainMetaDictionary parent:nil path:myPath];
 	if(!self)
 		return nil;
@@ -410,7 +406,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			NSString *filePath = [path stringByAppendingPathComponent:fileName];
 			NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:YES];
 			NSDate *modDate = [props objectForKey:NSFileModificationDate];
-			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != [modDate timeIntervalSince1970])
+			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != [modDate timeIntervalSince1970] || [[fileMeta objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
 				[importArray addObject:fileName];
 		}
 	}
@@ -453,6 +449,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)subPath
 {
 	NSArray *components = [subPath pathComponents];
+	if(![components count])
+		return self;
 	NSString *file = [components objectAtIndex:0];
 	
 	if([self isDirectory:file])
@@ -497,13 +495,19 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void) updateMetaData
 {
 	NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+	int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
 	
-	if(props != nil)
+	if(props == nil)
+		//No file
+		return;
+	
+	if(modTime != [self modified] || [[metaData objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
 	{
 		NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
 		
-		[fileMeta setObject:[NSNumber numberWithInt:[[props objectForKey:NSFileModificationDate] timeIntervalSince1970]] forKey:MODIFIED_KEY];
+		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 		[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
+		[fileMeta setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
 		
 		NSError *error = nil;
 		QTMovie *movie = [QTMovie movieWithFile:path error:&error];
