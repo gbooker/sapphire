@@ -309,6 +309,7 @@
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:[self scene]]]; 
 			
 	// add text
+
 	[[result textItem] setTitle: name] ;
 				
 	return ( result ) ;

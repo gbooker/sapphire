@@ -57,7 +57,6 @@ static SapphireSettings *sharedInstance = nil;
 		options = [[NSMutableDictionary alloc] init];
 
 	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene];
-
 	
 	[[self list] setDatasource:self];
 	[[self list] addDividerAtIndex:1];
