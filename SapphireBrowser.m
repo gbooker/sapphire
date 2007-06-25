@@ -17,12 +17,64 @@
 - (NSMutableDictionary *)metaDataForPath:(NSString *)path;
 @end
 
+@interface BRTVShowsSortControl (bypassAccess)
+- (BRTVShowsSortSelectorStateLayer *)gimmieDate;
+- (BRTVShowsSortSelectorStateLayer *)gimmieShow;
+- (int)gimmieState;
+@end
+
+@interface BRTVShowsSortSelectorStateLayer (bypassAccess)
+- (BRTextLayer *)gimmieDate;
+- (BRTextLayer *)gimmieShow;
+@end
+
+
+@implementation BRTVShowsSortControl (bypassAccess)
+- (BRTVShowsSortSelectorStateLayer *)gimmieDate
+{
+	return _sortedByDateWidget;
+}
+
+- (BRTVShowsSortSelectorStateLayer *)gimmieShow
+{
+	return _sortedByShowWidget;
+}
+
+- (int)gimmieState
+{
+	return _state;
+}
+
+@end
+
+@implementation BRTVShowsSortSelectorStateLayer (bypassAccess)
+- (BRTextLayer *)gimmieDate
+{
+	return _dateLayer;
+}
+
+- (BRTextLayer *)gimmieShow
+{
+	return _showLayer;
+}
+
+@end
+
 @implementation SapphireBrowser
+
+- (void)replaceControlText:(BRTextLayer *)control withString:(NSString *)str
+{
+	NSMutableAttributedString  *dateString = [[control attributedString] mutableCopy];
+	[dateString replaceCharactersInRange:NSMakeRange(0, [dateString length]) withString:str];
+	[control setAttributedString:dateString];
+	[dateString release];
+}
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta
 {
 	return [self initWithScene:scene metaData:meta predicate:NULL];
 }
+
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
@@ -31,7 +83,21 @@
 	metaData = [meta retain];
 	[metaData setDelegate:self];
 	predicate = [newPredicate retain];
+	sort = [[BRTVShowsSortControl alloc] initWithScene:scene state:1];
 
+	NSRect frame = [self masterLayerFrame];
+	NSRect sortRect;
+	sortRect.size = [sort preferredSizeForScreenHeight:frame.size.height];
+	sortRect.origin.y = frame.origin.y;
+	NSRect listFrame = [self listFrameForBounds:frame.size];
+	sortRect.origin.x = (listFrame.size.width - sortRect.size.width)/2 + listFrame.origin.x;
+	[self replaceControlText:[[sort gimmieDate] gimmieDate] withString:@"Select"];
+	[self replaceControlText:[[sort gimmieDate] gimmieShow] withString:@"Mark"];
+	[self replaceControlText:[[sort gimmieShow] gimmieDate] withString:@"Select"];
+	[self replaceControlText:[[sort gimmieShow] gimmieShow] withString:@"Mark"];
+	[sort setFrame:sortRect];
+	[self addControl:sort];
+	
 	[self reloadDirectoryContents];
 	
 	// set the datasource *after* you've setup your array
@@ -71,6 +137,7 @@
 	[_names release];
 	[metaData release];
 	[predicate release];
+	[sort release];
     [super dealloc];
 }
 
@@ -245,6 +312,11 @@
 	
 	NSString *name = [_names objectAtIndex:row];
 	NSString *dir = [metaData path];
+	
+	if([sort gimmieState] == 2)
+	{
+		return;
+	}
 	
 	if([[metaData directories] containsObject:name])
 	{

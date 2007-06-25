@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <BackRow/BRMediaMenuController.h>
+#import <BackRow/BRTVShowsSortControl.h>
 #import "SapphirePredicates.h"
 
 @class BRRenderScene, BRRenderLayer;
@@ -20,6 +21,7 @@
 	NSMutableArray				* _names ;
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
+	BRTVShowsSortControl		*sort;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
