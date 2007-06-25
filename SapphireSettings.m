@@ -11,6 +11,7 @@
 #import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
 
+static SapphireSettings *sharedInstance = nil;
 
 @interface SapphireSettings(private)
 - (void)processFiles:(NSArray *)files;
@@ -25,8 +26,22 @@
 #define	HIDE_SPOILERS_KEY	@"HideSpoilers"
 #define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
 
++ (SapphireSettings *)sharedSettings
+{
+	return sharedInstance;
+}
+
++ (void)relinquishSettings
+{
+	[sharedInstance release];
+	sharedInstance = nil;
+}
+
 - (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath
 {
+	if(sharedInstance != nil)
+		return sharedInstance;
+	
 	self = [super initWithScene:scene];
 	
 	names = [[NSArray alloc] initWithObjects:	@"   Populate Show Data",
@@ -46,6 +61,7 @@
 	
 	[[self list] setDatasource:self];
 	[[self list] addDividerAtIndex:1];
+	sharedInstance = [self retain];
 
 	return self;
 }
@@ -62,6 +78,32 @@
 	[path release];
 	[super dealloc];
 }
+
+- (BOOL)displayUnwatched
+{
+	return ![[options objectForKey:HIDE_UNWATCHED_KEY] boolValue];
+}
+
+- (BOOL)displayFavorites;
+{
+	return ![[options objectForKey:HIDE_FAVORITE_KEY] boolValue];
+}
+
+- (BOOL)displayTopShows;
+{
+	return ![[options objectForKey:HIDE_TOP_SHOWS_KEY] boolValue];
+}
+
+- (BOOL)displaySpoilers;
+{
+	return ![[options objectForKey:HIDE_SPOILERS_KEY] boolValue];
+}
+
+- (BOOL)disableAnonymousReporting;
+{
+	return [[options objectForKey:DISABLE_ANON_KEY] boolValue];
+}
+
 
 - (void) willBePushed
 {

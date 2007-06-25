@@ -12,7 +12,7 @@
 
 @class BRRenderScene, BRRenderLayer;
 
-@class SapphireDirectoryMetaData, SapphireMetaDataCollection, BRTVShowsSortControl;
+@class SapphireDirectoryMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
@@ -22,6 +22,7 @@
 	SapphirePredicate			*predicate;
 	BRTVShowsSortControl		*sort;
 	SapphireFileMetaData		*currentPlayFile;
+	SapphireSettings			*settings;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;

@@ -14,9 +14,7 @@
 #import "SapphireSettings.h"
 
 @interface SapphireApplianceController (private)
-- (void)processFiles:(NSArray *)files;
-- (void)filesProcessed:(NSDictionary *)files;
-- (NSMutableDictionary *)metaDataForPath:(NSString *)path;
+- (void)setMenuFromSettings;
 @end
 
 @implementation SapphireApplianceController
@@ -32,38 +30,37 @@
 	self = [super initWithScene:scene];
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
 
-	names = [[NSArray alloc] initWithObjects:	@"   Unwatched",
-												@"   Favorite Shows",
-												@"   Top Shows",
-												@"   Browse Shows", 
-												@"   Settings", nil];
+	masterNames = [[NSArray alloc] initWithObjects:	@"   Unwatched",
+													@"   Favorite Shows",
+													@"   Top Shows",
+													@"   Browse Shows", 
+													@"   Settings", nil];
 	
 	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
 	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
 	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
 	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
-	SapphireSettings *settingsMenu			= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"]] ;
-//	BRHeaderControl *settingsMenu			=[[BRHeaderControl alloc] initWithScene:[self scene]] ;		
+	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"]] ;
 	[self setListTitle:							@"Main Menu"];
 	[unwatchedBrowser setListTitle:			@"Unwatched Shows"];
 	[favoriteShowsBrowser setListTitle:		@"Favorite Shows"];
-	[topShowsBrowser setListTitle:			@"Favorite Shows"];
+	[topShowsBrowser setListTitle:			@"Top Shows"];
 	[playBrowser setListTitle:				@"Show Browser"];
-	[settingsMenu setListTitle:				@"Settings"] ;
-//	[settingsMenu setTitle:@"Settings"];
+	[settings setListTitle:					@"Settings"] ;
 	
-	[settingsMenu  setListIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
-//	[settingsMenu setIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]] horizontalOffset:0 kerningFactor:0 ] ;
-	[playBrowser  setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
+	[settings setListIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+	[playBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
 	[topShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
 	[favoriteShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
 	[unwatchedBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
-	controllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settingsMenu,nil];
+	masterControllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settings,nil];
 	[unwatchedBrowser release];
 	[favoriteShowsBrowser release];
 	[topShowsBrowser release];
 	[playBrowser release];
-	[settingsMenu release];
+	names = [[NSMutableArray alloc] init];
+	controllers = [[NSMutableArray alloc] init];
+	[self setMenuFromSettings];
 	[[self list] setDatasource:self];
 
 	return self;
@@ -73,8 +70,38 @@
 {
 	[names release];
 	[controllers release];
+	[masterNames release];
+	[masterControllers release];
 	[metaCollection release];
+	[SapphireSettings relinquishSettings];
+	[settings release];
 	[super dealloc];
+}
+
+- (void)setMenuFromSettings
+{
+	[names removeAllObjects];
+	[controllers removeAllObjects];
+	
+	if([settings displayUnwatched])
+	{
+		[names addObject:[masterNames objectAtIndex:0]];
+		[controllers addObject:[masterControllers objectAtIndex:0]];
+	}
+	if([settings displayFavorites])
+	{
+		[names addObject:[masterNames objectAtIndex:1]];
+		[controllers addObject:[masterControllers objectAtIndex:1]];
+	}
+	if([settings displayTopShows])
+	{
+		[names addObject:[masterNames objectAtIndex:2]];
+		[controllers addObject:[masterControllers objectAtIndex:2]];
+	}
+	[names addObject:[masterNames objectAtIndex:3]];
+	[controllers addObject:[masterControllers objectAtIndex:3]];
+	[names addObject:[masterNames objectAtIndex:4]];
+	[controllers addObject:[masterControllers objectAtIndex:4]];
 }
 
 - (void) willBePushed
@@ -131,6 +158,9 @@
     
     // always call super
     [super willBeExhumed];
+	[self setMenuFromSettings];
+	[[self list] reload];
+	[[self scene] renderScene];
 }
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller

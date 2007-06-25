@@ -21,9 +21,18 @@
 	NSString					*path;
 }
 
++ (SapphireSettings *)sharedSettings;
++ (void)relinquishSettings;
+
 - (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath;
 - (void) dealloc;
-/*
+
+- (BOOL)displayUnwatched;
+- (BOOL)displayFavorites;
+- (BOOL)displayTopShows;
+- (BOOL)displaySpoilers;
+- (BOOL)disableAnonymousReporting;
+
 - (void) willBePushed;
 - (void) wasPushed;
 - (void) willBePopped;
@@ -32,7 +41,7 @@
 - (void) wasBuriedByPushingController: (BRLayerController *) controller;
 - (void) willBeExhumed;
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller;
-*/
+
 - (long) itemCount;
 - (id<BRMenuItemLayer>) itemForRow: (long) row;
 - (NSString *) titleForRow: (long) row;
@@ -41,4 +50,5 @@
 - (void) itemSelected: (long) row;
 
 //- (id<BRMediaPreviewController>) previewControllerForItem: (long) item;
+
 @end

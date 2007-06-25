@@ -11,14 +11,17 @@
 
 @class BRRenderScene, BRRenderLayer,BRHeaderControl;
 
-@class SapphireMetaDataCollection;
+@class SapphireMetaDataCollection, SapphireSettings;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireApplianceController : BRMediaMenuController
 {
 	SapphireMetaDataCollection	*metaCollection;
-	NSArray						*names;
-	NSArray						*controllers;
+	NSMutableArray				*names;
+	NSMutableArray				*controllers;
+	NSArray						*masterNames;
+	NSArray						*masterControllers;
+	SapphireSettings			*settings;
 }
 
 + (NSString *) rootMenuLabel ;
