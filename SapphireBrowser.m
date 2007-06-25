@@ -265,7 +265,10 @@
 - (long) itemCount
 {
     // return the number of items in your menu list here
-	return ( [ _names count]);
+	if([_names count])
+		return ( [ _names count]);
+	// Put up an empty item
+	return 1;
 }
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
@@ -275,6 +278,12 @@
     // return that object, it will be used to display the list item.
     return ( nil );
 */
+	if( [_names count] == 0)
+	{
+		BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
+		[[result textItem] setTitle:@"< EMPTY >"];
+		return result;
+	}
 	if( row >= [_names count] ) return ( nil ) ;
 	
 	BRAdornedMenuItemLayer * result = nil ;
@@ -333,6 +342,12 @@
 - (void) itemSelected: (long) row
 {
     // This is called when the user presses play/pause on a list item
+	
+	if([_names count] == 0)
+	{
+		[[self stack] popController];
+		return;
+	}
 	
 	NSString *name = [_names objectAtIndex:row];
 	NSString *dir = [metaData path];
