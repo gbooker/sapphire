@@ -14,7 +14,7 @@
 @class SapphireMetaDataCollection;
 @protocol SapphireMetaDataDelegate;
 
-@interface SapphireApplianceController : BRMediaMenuController <SapphireMetaDataDelegate>
+@interface SapphireApplianceController : BRMediaMenuController
 {
 	SapphireMetaDataCollection	*metaCollection;
 	NSArray						*names;

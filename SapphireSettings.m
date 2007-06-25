@@ -19,16 +19,15 @@
 
 @implementation SapphireSettings
 
+#define	HIDE_FAVORITE_KEY	@"HideFavorites"
+#define	HIDE_TOP_SHOWS_KEY	@"HideTopShows"
+#define	HIDE_UNWATCHED_KEY	@"HideUnwatched"
+#define	HIDE_SPOILERS_KEY	@"HideSpoilers"
+#define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
 
-- (id) initWithScene: (BRRenderScene *) scene
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath
 {
 	self = [super initWithScene:scene];
-	BOOL populateShowData = TRUE ;
-	BOOL showFavoriteShows = TRUE ;
-	BOOL showTopShows= TRUE ;
-	BOOL showUnwatchedShows= TRUE ;
-	BOOL showSpoilers= TRUE ;
-	BOOL disableReporting= FALSE ;
 	
 	names = [[NSArray alloc] initWithObjects:	@"   Populate Show Data",
 												@"   Hide \"Favorite Shows\"",
@@ -36,26 +35,31 @@
 												@"   Hide \"Unwatched Shows\"", 
 												@"   Hide Show Spoilers",
 												@"   Disable Anonymous Reporting", nil];
+	keys = [[NSArray alloc] initWithObjects:@"", HIDE_FAVORITE_KEY, HIDE_TOP_SHOWS_KEY, HIDE_UNWATCHED_KEY, HIDE_SPOILERS_KEY, DISABLE_ANON_KEY, nil];
+	path = [dictionaryPath retain];
+	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
+	if(options == nil)
+		options = [[NSMutableDictionary alloc] init];
 
-	options = [[NSMutableArray alloc] initWithObjects:	[NSNumber numberWithBool:populateShowData],
-														[NSNumber numberWithBool:showFavoriteShows],
-														[NSNumber numberWithBool:showTopShows],
-														[NSNumber numberWithBool:showUnwatchedShows],
-														[NSNumber numberWithBool:showSpoilers],
-														[NSNumber numberWithBool:disableReporting],nil];
-	
 	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene];
 
 	
 	[[self list] setDatasource:self];
+	[[self list] addDividerAtIndex:1];
 
 	return self;
+}
+
+- (void)writeSettings
+{
+	[options writeToFile:path atomically:YES];
 }
 
 - (void)dealloc
 {
 	[names release];
 	[options release];
+	[path release];
 	[super dealloc];
 }
 
@@ -143,7 +147,7 @@
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
 	if(row==0)	[result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]];
-	else if( row > 0 && [[options objectAtIndex:row] boolValue])
+	else if( row > 0 && [[options objectForKey:[keys objectAtIndex:row]] boolValue])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
@@ -188,7 +192,6 @@
 {
     // This is called when the user presses play/pause on a list item
 
-	NSNumber *setting = [options objectAtIndex:row];
 	if(row==0)
 	{
 		id controller = populateShowDataController;
@@ -200,15 +203,14 @@
 	} 
 	if(row>0)
 	{
-		[options replaceObjectAtIndex:row withObject:[NSNumber numberWithBool:![setting boolValue]]];
-//		[[self stack] pushController: self] ;
-//		[[self stack] pushController:self] ;
-//		[[self stack] popController] ;
-//		[[self stack] popController] ;
+		NSString *key = [keys objectAtIndex:row];
+		NSNumber *setting = [options objectForKey:key];
+		[options setObject:[NSNumber numberWithBool:![setting boolValue]] forKey:key];
 	}
 
 
 	[[self list] reload] ;
+	[[self scene] renderScene];
 
 }
 

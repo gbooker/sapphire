@@ -59,11 +59,10 @@
 	}
 
 	BRListControl *list = [self list];
-	long selection = [list selection];
 	[list reload];
-	[list setSelection:selection];	
 	if(divider && divider != [_names count])
 		[list addDividerAtIndex:divider];
+	[[self scene] renderScene];
 }
 
 - (void) dealloc
@@ -287,9 +286,8 @@
 - (void)updateComplete
 {
 	BRListControl *list = [self list];
-	long selection = [list selection];
 	[list reload];
-	[list setSelection:selection];	
+	[[self scene] renderScene];
 }
 
 @end

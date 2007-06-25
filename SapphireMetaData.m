@@ -453,6 +453,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		importTimer = [NSTimer scheduledTimerWithTimeInterval:1.1 target:self selector:@selector(processFiles:) userInfo:nil repeats:NO];
 	else
 	{
+		[importTimer invalidate];
 		importTimer = nil;
 		[importArray release];
 		importArray = nil;

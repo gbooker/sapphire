@@ -15,12 +15,13 @@
 @interface SapphireSettings : BRMediaMenuController 
 {
 	NSArray						*names;
-	NSMutableArray				*options;
-	SapphirePopulateDataMenu			*populateShowDataController;
+	NSArray						*keys;
+	NSMutableDictionary			*options;
+	SapphirePopulateDataMenu	*populateShowDataController;
+	NSString					*path;
 }
 
-
-- (id) initWithScene: (BRRenderScene *) scene;
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath;
 - (void) dealloc;
 /*
 - (void) willBePushed;

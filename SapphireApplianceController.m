@@ -42,7 +42,7 @@
 	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
 	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
 	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
-	SapphireSettings *settingsMenu			= [[SapphireSettings alloc] initWithScene:[self scene]] ;
+	SapphireSettings *settingsMenu			= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"]] ;
 //	BRHeaderControl *settingsMenu			=[[BRHeaderControl alloc] initWithScene:[self scene]] ;		
 	[self setListTitle:							@"Main Menu"];
 	[unwatchedBrowser setListTitle:			@"Unwatched Shows"];
@@ -208,14 +208,6 @@
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
     return ( nil );
-}
-
-- (void)updateComplete
-{
-	BRListControl *list = [self list];
-	long selection = [list selection];
-	[list reload];
-	[list setSelection:selection];	
 }
 
 @end
