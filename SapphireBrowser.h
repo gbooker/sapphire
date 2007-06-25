@@ -8,12 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import <BackRow/BRMediaMenuController.h>
-#import <BackRow/BRTVShowsSortControl.h>
 #import "SapphirePredicates.h"
 
 @class BRRenderScene, BRRenderLayer;
 
-@class SapphireDirectoryMetaData, SapphireMetaDataCollection;
+@class SapphireDirectoryMetaData, SapphireMetaDataCollection, BRTVShowsSortControl;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
