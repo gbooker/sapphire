@@ -67,6 +67,10 @@
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (void)scanDirectory;
+
+- (void)setWatched:(BOOL)watched;
+- (void)setFavorite:(BOOL)favorite;
+
 @end
 
 @interface SapphireFileMetaData : SapphireMetaData {
@@ -74,7 +78,9 @@
 
 - (int)modified;
 - (BOOL)watched;
-- (void)setWatched;
+- (void)setWatched:(BOOL)watched;
+- (BOOL)favorite;
+- (void)setFavorite:(BOOL)favorite;
 - (long long)size;
 - (float)duration;
 - (int)sampleRate;

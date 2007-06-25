@@ -9,6 +9,7 @@
 #import "SapphireBrowser.h"
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
+#import "SapphireMarkMenu.h"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -251,7 +252,7 @@
     // return that object, it will be used to display the list item.
     return ( nil );
 */
-	if( row > [_names count] ) return ( nil ) ;
+	if( row >= [_names count] ) return ( nil ) ;
 	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [_names objectAtIndex:row];
@@ -280,14 +281,10 @@
 - (NSString *) titleForRow: (long) row
 {
 
-	if ( row > [ _names count] ) return ( nil );
+	if ( row >= [ _names count] ) return ( nil );
 	
 	NSString *result = [ _names objectAtIndex: row] ;
 	return ( result ) ;
-/*
-    // return the title for the list item at the given index here
-    return ( @"Sapphire" );
-*/
 }
 
 - (long) rowForTitle: (NSString *) title
@@ -315,6 +312,14 @@
 	
 	if([sort gimmieState] == 2)
 	{
+		id meta = nil;
+		if([[metaData directories] containsObject:name])
+			meta = [metaData metaDataForDirectory:name];
+		else
+			meta = [metaData metaDataForFile:name];
+		id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
+		[[self stack] pushController:controller];
+		[controller release];
 		return;
 	}
 	
@@ -338,7 +343,7 @@
 		
 		[controller setVideoPlayer:player];
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
-		[meta setWatched];
+		[meta setWatched:YES];
 		[meta writeMetaData];
 		[[self stack] pushController:controller];
 

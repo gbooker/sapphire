@@ -16,17 +16,17 @@
 #define META_VERSION				1
 
 //File Specific Keys
-#define MODIFIED_KEY				@"Modified"
+#define MODIFIED_KEY			@"Modified"
 #define WATCHED_KEY				@"Watched"
-#define FAVORITE_KEY				@"Favorite"
+#define FAVORITE_KEY			@"Favorite"
 #define RESUME_KEY				@"Resume Time"
-#define SIZE_KEY					@"Size"
-#define DURATION_KEY				@"Duration"
+#define SIZE_KEY				@"Size"
+#define DURATION_KEY			@"Duration"
 #define SAMPLE_RATE_KEY			@"Sample Rate"
 
 //TV Show Specific Keys
 #define EPISODE_NUMBER_KEY		@"Episode Number"
-#define EPISODE_TITLE_KEY			@"Episode Title"
+#define EPISODE_TITLE_KEY		@"Episode Title"
 #define SEASON_NUMBER_KEY		@"Season"
 #define SHOW_NAME_KEY			@"Show Name"
 #define SHOW_DESCRIPTION_KEY	@"Show Description"
@@ -423,8 +423,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 				[importArray addObject:fileName];
 		}
 	}
-	[self resumeImport];
-	
 	return ret;
 }
 
@@ -449,6 +447,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (void)resumeImport
 {
+	[importTimer invalidate];
 	if([importArray count])
 		importTimer = [NSTimer scheduledTimerWithTimeInterval:1.1 target:self selector:@selector(processFiles:) userInfo:nil repeats:NO];
 	else
@@ -502,6 +501,32 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self processAllFiles];
 }
 
+- (void)setWatched:(BOOL)watched
+{
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+		[[self metaDataForDirectory:dir] setWatched:watched];
+	
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		[[self metaDataForFile:file] setWatched:watched];
+}
+
+- (void)setFavorite:(BOOL)favorite
+{
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+		[[self metaDataForDirectory:dir] setFavorite:favorite];
+	
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		[[self metaDataForFile:file] setFavorite:favorite];
+}
+
 @end
 
 @implementation SapphireFileMetaData : SapphireMetaData
@@ -547,9 +572,19 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [[metaData objectForKey:WATCHED_KEY] boolValue];
 }
 
-- (void)setWatched
+- (void)setWatched:(BOOL)watched
 {
-	[metaData setObject:[NSNumber numberWithBool:YES] forKey:WATCHED_KEY];
+	[metaData setObject:[NSNumber numberWithBool:watched] forKey:WATCHED_KEY];
+}
+
+- (BOOL)favorite
+{
+	return [[metaData objectForKey:FAVORITE_KEY] boolValue];
+}
+
+- (void)setFavorite:(BOOL)favorite
+{
+	[metaData setObject:[NSNumber numberWithBool:favorite] forKey:FAVORITE_KEY];
 }
 
 - (long long)size
