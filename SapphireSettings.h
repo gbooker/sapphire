@@ -8,11 +8,15 @@
 
 #import <Cocoa/Cocoa.h>
 #import <BackRow/BackRow.h>
+#import "SapphirePopulateDataMenu.h"
+
+@class BRHeaderControl ;
 
 @interface SapphireSettings : BRMediaMenuController 
 {
 	NSArray						*names;
 	NSMutableArray				*options;
+	SapphirePopulateDataMenu			*populateShowDataController;
 }
 
 

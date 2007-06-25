@@ -23,17 +23,30 @@
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
-	names = [[NSArray alloc] initWithObjects:@"   Populate Show Data",@"   Hide \"Favorite Shows\"",@"   Hide \"Top Shows\"",@"   Hide \"Unwatched Shows\"", @"   Disable Anonymous Reporting", nil];
 	BOOL populateShowData = TRUE ;
 	BOOL showFavoriteShows = TRUE ;
 	BOOL showTopShows= TRUE ;
 	BOOL showUnwatchedShows= TRUE ;
+	BOOL showSpoilers= TRUE ;
 	BOOL disableReporting= FALSE ;
+	
+	names = [[NSArray alloc] initWithObjects:	@"   Populate Show Data",
+												@"   Hide \"Favorite Shows\"",
+												@"   Hide \"Top Shows\"",
+												@"   Hide \"Unwatched Shows\"", 
+												@"   Hide Show Spoilers",
+												@"   Disable Anonymous Reporting", nil];
+
 	options = [[NSMutableArray alloc] initWithObjects:	[NSNumber numberWithBool:populateShowData],
 														[NSNumber numberWithBool:showFavoriteShows],
 														[NSNumber numberWithBool:showTopShows],
 														[NSNumber numberWithBool:showUnwatchedShows],
+														[NSNumber numberWithBool:showSpoilers],
 														[NSNumber numberWithBool:disableReporting],nil];
+	
+	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene];
+
+	
 	[[self list] setDatasource:self];
 
 	return self;
@@ -129,8 +142,12 @@
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if( row > 0 )		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
-	else				[result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]];
+	if(row==0)	[result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]];
+	else if( row > 0 && [[options objectAtIndex:row] boolValue])
+	{
+		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
+	}
+
 
 	// add text
 	[[result textItem] setTitle: name] ;
@@ -172,8 +189,26 @@
     // This is called when the user presses play/pause on a list item
 
 	NSNumber *setting = [options objectAtIndex:row];
-	[options replaceObjectAtIndex:row withObject:[NSNumber numberWithBool:![setting boolValue]]];
-	[(BRListControl *)[self list] reload];
+	if(row==0)
+	{
+		id controller = populateShowDataController;
+		[[self stack] pushController:controller];
+//		[[self stack] pushController:populateShowDataController];
+//		[[self stack] popController] ;
+
+		
+	} 
+	if(row>0)
+	{
+		[options replaceObjectAtIndex:row withObject:[NSNumber numberWithBool:![setting boolValue]]];
+//		[[self stack] pushController: self] ;
+//		[[self stack] pushController:self] ;
+//		[[self stack] popController] ;
+//		[[self stack] popController] ;
+	}
+
+
+	[[self list] reload] ;
 
 }
 

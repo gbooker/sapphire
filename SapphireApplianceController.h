@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import <BackRow/BRMediaMenuController.h>
 
-@class BRRenderScene, BRRenderLayer;
+@class BRRenderScene, BRRenderLayer,BRHeaderControl;
 
 @class SapphireMetaDataCollection;
 @protocol SapphireMetaDataDelegate;

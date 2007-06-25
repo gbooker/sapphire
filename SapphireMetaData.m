@@ -9,16 +9,29 @@
 #import "SapphireMetaData.h"
 #import <QTKit/QTKit.h>
 
-#define FILES_KEY @"Files"
-#define DIRS_KEY @"Dirs"
-#define META_VERSION_KEY @"Version"
-#define META_VERSION 1
+//Structure Specific Keys
+#define FILES_KEY					@"Files"
+#define DIRS_KEY					@"Dirs"
+#define META_VERSION_KEY			@"Version"
+#define META_VERSION				1
 
-#define MODIFIED_KEY @"Modified"
-#define WATCHED_KEY @"Watched"
-#define SIZE_KEY @"Size"
-#define DURATION_KEY @"Duration"
-#define SAMPLE_RATE_KEY @"Sample Rate"
+//File Specific Keys
+#define MODIFIED_KEY				@"Modified"
+#define WATCHED_KEY				@"Watched"
+#define FAVORITE_KEY				@"Favorite"
+#define RESUME_KEY				@"Resume Time"
+#define SIZE_KEY					@"Size"
+#define DURATION_KEY				@"Duration"
+#define SAMPLE_RATE_KEY			@"Sample Rate"
+
+//TV Show Specific Keys
+#define EPISODE_NUMBER_KEY		@"Episode Number"
+#define EPISODE_TITLE_KEY			@"Episode Title"
+#define SEASON_NUMBER_KEY		@"Season"
+#define SHOW_NAME_KEY			@"Show Name"
+#define SHOW_DESCRIPTION_KEY	@"Show Description"
+#define SHOW_AIR_DATE			@"Air Date"
+
 
 @implementation NSString (episodeSorting)
 
@@ -41,7 +54,7 @@ static NSArray *extensions = nil;
 
 +(void)load
 {
-	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"wmv", nil];
+	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"wmv",@"mkv", nil];
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath

@@ -32,22 +32,28 @@
 	self = [super initWithScene:scene];
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
 
-	names = [[NSArray alloc] initWithObjects:@"   Unwatched",@"   Favorite Shows",@"   Top Shows", @"   Browse Shows", @"   Settings", nil];
+	names = [[NSArray alloc] initWithObjects:	@"   Unwatched",
+												@"   Favorite Shows",
+												@"   Top Shows",
+												@"   Browse Shows", 
+												@"   Settings", nil];
 	
 	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
 	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
 	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
 	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
 	SapphireSettings *settingsMenu			= [[SapphireSettings alloc] initWithScene:[self scene]] ;
-		
+//	BRHeaderControl *settingsMenu			=[[BRHeaderControl alloc] initWithScene:[self scene]] ;		
 	[self setListTitle:							@"Main Menu"];
 	[unwatchedBrowser setListTitle:			@"Unwatched Shows"];
 	[favoriteShowsBrowser setListTitle:		@"Favorite Shows"];
 	[topShowsBrowser setListTitle:			@"Favorite Shows"];
 	[playBrowser setListTitle:				@"Show Browser"];
 	[settingsMenu setListTitle:				@"Settings"] ;
+//	[settingsMenu setTitle:@"Settings"];
 	
 	[settingsMenu  setListIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+//	[settingsMenu setIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]] horizontalOffset:0 kerningFactor:0 ] ;
 	[playBrowser  setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
 	[topShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
 	[favoriteShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
@@ -146,7 +152,6 @@
 /*
     // build a BRTextMenuItemLayer or a BRAdornedMenuItemLayer, etc. here
     // return that object, it will be used to display the list item.
-    return ( nil );
 */
 	if( row > [names count] ) return ( nil ) ;
 	
