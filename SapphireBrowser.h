@@ -27,7 +27,7 @@
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
 - (void) dealloc;
-/*
+
 - (void) willBePushed;
 - (void) wasPushed;
 - (void) willBePopped;
@@ -36,7 +36,7 @@
 - (void) wasBuriedByPushingController: (BRLayerController *) controller;
 - (void) willBeExhumed;
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller;
-*/
+
 - (long) itemCount;
 - (id<BRMenuItemLayer>) itemForRow: (long) row;
 - (NSString *) titleForRow: (long) row;
