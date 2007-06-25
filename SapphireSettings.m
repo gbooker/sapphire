@@ -208,6 +208,7 @@
 		[options setObject:[NSNumber numberWithBool:![setting boolValue]] forKey:key];
 	}
 
+	[self writeSettings];
 
 	[[self list] reload] ;
 	[[self scene] renderScene];
