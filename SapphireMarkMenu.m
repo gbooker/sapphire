@@ -207,6 +207,7 @@
 				break;
 		}
 	}
+	[metaData writeMetaData];
 	[[self stack] popController];
 }
 

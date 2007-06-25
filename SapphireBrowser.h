@@ -21,6 +21,7 @@
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
 	BRTVShowsSortControl		*sort;
+	SapphireFileMetaData		*currentPlayFile;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;

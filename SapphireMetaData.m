@@ -501,6 +501,23 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self processAllFiles];
 }
 
+- (BOOL)watched
+{
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		if(![[self metaDataForFile:file] watched])
+			return NO;
+
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+		if(![[self metaDataForDirectory:dir] watched])
+			return NO;
+
+	return YES;
+}
+
 - (void)setWatched:(BOOL)watched
 {
 	NSEnumerator *dirEnum = [directories objectEnumerator];
@@ -512,6 +529,23 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 		[[self metaDataForFile:file] setWatched:watched];
+}
+
+- (BOOL)favorite
+{
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		if([[self metaDataForFile:file] favorite])
+			return YES;
+
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+		if([[self metaDataForDirectory:dir] favorite])
+			return YES;
+	
+	return NO;
 }
 
 - (void)setFavorite:(BOOL)favorite
@@ -585,6 +619,16 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void)setFavorite:(BOOL)favorite
 {
 	[metaData setObject:[NSNumber numberWithBool:favorite] forKey:FAVORITE_KEY];
+}
+
+- (unsigned int)resumeTime
+{
+	return [[metaData objectForKey:RESUME_KEY] unsignedIntValue];
+}
+
+- (void)setResumeTime:(unsigned int)resumeTime
+{
+	[metaData setObject:[NSNumber numberWithUnsignedInt:resumeTime] forKey:RESUME_KEY];
 }
 
 - (long long)size

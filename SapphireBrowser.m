@@ -10,6 +10,7 @@
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
 #import "SapphireMarkMenu.h"
+#import "SapphireMedia.h"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -225,8 +226,28 @@
 {
     // the user pressed Menu, but we've not been revealed yet
     
-    // always call super
+	id controller = [[self stack] peekController];
+	if([controller isKindOfClass:[BRVideoPlayerController class]])
+	{
+		BRVideoPlayer *player = [(BRVideoPlayerController *)controller player];
+		float elapsed = [player elapsedPlaybackTime];
+		float duration = [player trackDuration];
+		if(elapsed / duration > 0.9f)
+		{
+			[currentPlayFile setWatched:YES];
+			[[self list] reload];
+			[[self scene] renderScene];
+		}
+		if(elapsed < duration - 2)
+			[currentPlayFile setResumeTime:[player elapsedPlaybackTime]];
+		else
+			[currentPlayFile setResumeTime:0];
+		[currentPlayFile writeMetaData];
+	}
+	[currentPlayFile release];
+	currentPlayFile = nil;
 	[self reloadDirectoryContents];
+    // always call super
     [super willBeExhumed];
 }
 
@@ -236,6 +257,8 @@
     
     // always call super
     [super wasExhumedByPoppingController: controller];
+	if([_names count] == 0)
+		[[self stack] popController];
 	[metaData resumeImport];
 }
 
@@ -256,21 +279,25 @@
 	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [_names objectAtIndex:row];
+	BOOL watched = NO;
 	if([[metaData directories] containsObject:name])
+	{
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
+		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
+		watched = [meta watched];
+	}
 	else
 	{
 		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
-		BOOL watched = NO;
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
 			[[result textItem] setRightJustifiedText:[self sizeStringForMetaData:meta]];
 			watched = [meta watched];
 		}
-		if(!watched)
-			[result setLeftIcon:[[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:[self scene]]]; 
 	}
+	if(!watched)
+		[result setLeftIcon:[[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:[self scene]]]; 
 			
 	// add text
 	[[result textItem] setTitle: name] ;
@@ -337,14 +364,15 @@
 		BRQTKitVideoPlayer *player = [[BRQTKitVideoPlayer alloc] init];
 		NSError *error = nil;
 		
+		currentPlayFile = [[metaData metaDataForFile:name] retain];
+		[controller setAllowsResume:YES];
+		
 		NSURL *url = [NSURL fileURLWithPath:[dir stringByAppendingPathComponent:name]];
-		BRSimpleMediaAsset *asset  =[[BRSimpleMediaAsset alloc] initWithMediaURL:url];
+		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
+		[asset setResumeTime:[currentPlayFile resumeTime]];
 		[player setMedia:asset error:&error];
 		
 		[controller setVideoPlayer:player];
-		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
-		[meta setWatched:YES];
-		[meta writeMetaData];
 		[[self stack] pushController:controller];
 
 		[asset release];

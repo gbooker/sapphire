@@ -68,7 +68,9 @@
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (void)scanDirectory;
 
+- (BOOL)watched;
 - (void)setWatched:(BOOL)watched;
+- (BOOL)favorite;
 - (void)setFavorite:(BOOL)favorite;
 
 @end
@@ -81,6 +83,9 @@
 - (void)setWatched:(BOOL)watched;
 - (BOOL)favorite;
 - (void)setFavorite:(BOOL)favorite;
+- (unsigned int)resumeTime;
+- (void)setResumeTime:(unsigned int)resumeTime;
+
 - (long long)size;
 - (float)duration;
 - (int)sampleRate;
