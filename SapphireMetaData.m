@@ -466,7 +466,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		return self;
 	NSString *file = [components objectAtIndex:0];
 	
-	if([self isDirectory:[directories file]])
+	if([self isDirectory:[path stringByAppendingPathComponent:file]])
 	{
 		NSMutableArray *newComp = [components mutableCopy];
 		[newComp removeObjectAtIndex:0];
