@@ -11,6 +11,12 @@
 #import "SapphireMetaData.h"
 #import "SapphireMarkMenu.h"
 #import "SapphireMedia.h"
+#import "SapphireVideoPlayer.h"
+#import <QTKit/QTKit.h>
+
+@interface QTMovie (whoKnows)
+- (BOOL)hasChapters;
+@end
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -377,13 +383,19 @@
 	else
 	{
 		BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
-		BRQTKitVideoPlayer *player = [[BRQTKitVideoPlayer alloc] init];
+		BRQTKitVideoPlayer *player = nil;
 		NSError *error = nil;
+		NSString *path = [dir stringByAppendingPathComponent:name];
+		QTMovie *movie = [[QTMovie alloc] initWithFile:path error:&error];
+		if(![movie hasChapters])
+			player = [[SapphireVideoPlayer alloc] init];
+		else
+			player = [[BRQTKitVideoPlayer alloc] init];
 		
 		currentPlayFile = [[metaData metaDataForFile:name] retain];
 		[controller setAllowsResume:YES];
 		
-		NSURL *url = [NSURL fileURLWithPath:[dir stringByAppendingPathComponent:name]];
+		NSURL *url = [NSURL fileURLWithPath:path];
 		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
 		[asset setResumeTime:[currentPlayFile resumeTime]];
 		[player setMedia:asset error:&error];
