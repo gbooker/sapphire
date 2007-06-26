@@ -45,7 +45,7 @@
 - (NSString *) moduleIconName
 {
     // replace this with your own icon name
-    return ( @"SapphireApplianceIcon.png" );
+    return ( @"SapphireIcon.png" );
 }
 
 - (NSString *) moduleName
