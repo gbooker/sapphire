@@ -11,26 +11,22 @@
 #import <BackRow/BRLayerController.h>
 #import <BackRow/BRTextEntryDelegateProtocol.h>
 
-@class BRRenderScene, BRControl, BRHeaderControl, BRTextEntryControl, BRButtonControl;
+@class BRRenderScene, BRControl, BRHeaderControl, BRTextEntryControl, BRButtonControl, SapphireDirectoryMetaData;
 @protocol BRTextContainer;
 
-@interface SapphirePopulateDataMenu : BRLayerController <BRTextEntryDelegate>
+@interface SapphirePopulateDataMenu : BRLayerController
 {
-	BRHeaderControl *       _title;
-	BRTextEntryControl *    _entry;
-	BRButtonControl *       _button;
-	BRProgressBarLayer* _bar ;
+	BRHeaderControl				*title;
+	BRButtonControl				*button;
+	BRTextControl				*text;
+	BRProgressBarWidget			*bar;
 
-
+	SapphireDirectoryMetaData	*meta;
+	NSMutableArray				*importItems;
+	NSTimer						*importTimer;
+	float						max;
+	float						current;
 }
-- (id) initWithScene: (BRRenderScene *) scene;
+- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData;
 - (void) dealloc;
-
-- (void) textDidChange: (id<BRTextContainer>) sender;
-- (void) textDidEndEditing: (id<BRTextContainer>) sender;
-
-- (void) editTitle;
-
-- (void) removeControl: (BRControl *) control;
-- (void) fadeFrom: (BRControl *) from to: (BRControl *) to;
 @end

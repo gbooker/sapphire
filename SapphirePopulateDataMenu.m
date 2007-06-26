@@ -8,107 +8,134 @@
 
 #import "SapphirePopulateDataMenu.h"
 #import <BackRow/BackRow.h>
+#import "SapphireMetaData.h"
 
+@interface SapphirePopulateDataMenu (private)
+- (void)setText:(NSString *)theText;
+- (void)resetUIElements;
+@end
 
 @implementation SapphirePopulateDataMenu
-- (id) initWithScene: (BRRenderScene *) scene
+- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData
 {
 	if ( [super initWithScene: scene] == nil )
 	return ( nil );
+	meta = [metaData retain];
 	// Setup the Header Control with default contents
-	_title = [[BRHeaderControl alloc] initWithScene: scene];
-	[_title setTitle: @"Populate Show Data"];
+	title = [[BRHeaderControl alloc] initWithScene: scene];
+	[title setTitle: @"Populate Show Data"];
 	NSRect frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
-	[_title setFrame: frame];
+	[title setFrame: frame];
 
 	// setup the button control
 	frame = [[self masterLayer] frame];
-	_button = [[BRButtonControl alloc] initWithScene: scene masterLayerSize: frame.size];
-	[_button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
-	[_button setTitle: @"Edit Page Title"];
-	[_button setTarget: self];
-	[_button setAction: @selector(editTitle)];
+	button = [[BRButtonControl alloc] initWithScene: scene masterLayerSize: frame.size];
+	[button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
 
 	// setup the text entry control
-	_entry = [[BRTextEntryControl alloc] initWithScene: scene];
-	[_entry setFrameFromScreenSize: [[self masterLayer] frame].size];
-	[_entry setTextFieldLabel: @"New Title"];
-	[_entry setInitialText: [_title title]];
-	[_entry setTextEntryCompleteDelegate: self];
+	text = [[BRTextControl alloc] initWithScene: scene];
 	
-	_bar = [[BRProgressBarLayer alloc] initWithScene: scene];
-	[_bar setValue:0 maxValue:1000] ;
-//	[_bar renderInContext];
-	[_bar setFrame: frame] ;
+	bar = [[BRProgressBarWidget alloc] initWithScene: scene];
+	frame = [[self masterLayer] frame];
+	frame.origin.y = frame.size.height * 5.0f / 16.0f;
+	frame.origin.x = frame.size.width / 6.0f;
+	frame.size.height = frame.size.height / 16.0f;
+	frame.size.width = frame.size.width * 2.0f / 3.0f;
+	[bar setFrame: frame] ;
 	
+	[self resetUIElements];
 	
 	// add controls
-	[self addControl: _title];
-//	[self addControl: _bar] ;
-	[self addControl: _button];
+	[self addControl: title];
+	[self addControl: text];
+	[[self masterLayer] addSublayer:bar];
+	[self addControl: button];
 
     return ( self );
 }
 
+- (void)setText:(NSString *)theText
+{
+	[text setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+	[text setText:theText];
+	
+	NSRect master = [[self masterLayer] frame];
+	[text setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
+	NSSize txtSize = [text renderedSize];
+	
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 0.4f - txtSize.height) + master.size.height * 0.3f/0.8f;
+	frame.size = txtSize;
+	[text setFrame:frame];
+}
+
 - (void) dealloc
 {
-    [_entry setTextEntryCompleteDelegate: nil];
-    [_title release];
-    [_entry release];
-    [_button release];
+    [title release];
+    [text release];
+	[bar release];
+    [button release];
+	[meta release];
+	[importTimer invalidate];
 
     [super dealloc];
 }
 
-- (void) textDidChange: (id<BRTextContainer>) sender
+- (void)import
 {
-    // do nothing for now
+	current = 0;
+	importItems = [[meta subFileMetas] mutableCopy];
+	max = [importItems count];
+	[button setTitle:@"Cancel Import"];
+	[button setAction:@selector(cancel)];
+	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
 
-- (void) textDidEndEditing: (id<BRTextContainer>) sender
+- (void)importNextItem:(NSTimer *)timer
 {
-    [_title setTitle: [sender stringValue]];
-    [self fadeFrom: _entry to: _button];
+	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
+	[fileMeta updateMetaData];
+	[importItems removeObjectAtIndex:0];
+	current++;
+	[bar setPercentage:current/max * 100.0f];
+	
+	if(![importItems count])
+	{
+		[importTimer invalidate];
+		importTimer = nil;
+		[meta writeMetaData];
+		[button setHidden:YES];
+		[button setTarget:nil];
+		[self setText:@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported"];
+	}
+	[[self scene] renderScene];
 }
 
-- (void) editTitle
+- (void)cancel
 {
-    // switch between showing the button and the text entry control
-    [self fadeFrom: _button to: _entry];
+	[importTimer invalidate];
+	importTimer = nil;
+	[self resetUIElements];
+	[meta writeMetaData];
 }
 
-- (void) removeControl: (BRControl *) control
+- (void)resetUIElements
 {
-    NSMutableArray * array = [NSMutableArray arrayWithArray: [self controls]];
-    if ( [array containsObject: control] )
-    {
-        [[control layer] removeFromSuperlayer];
-        [array removeObject: control];
-        [self setControls: array];
-    }
+	[self setText:@"This will populate Sapphire's Meta data.  This proceedure may take a while, but you may cancel at any time"];
+	[bar setPercentage:0.0f];
+	[button setTitle: @"Import Meta Data"];
+	[button setTarget:self];
+	[button setAction: @selector(import)];
+	[button setHidden:NO];
 }
 
-- (void) fadeFrom: (BRControl *) from to: (BRControl *) to
+- (void)wasPopped
 {
-    [to setAlphaValue: 0.0f];
-    [self addControl: to];
-
-    BRValueAnimation * valanim = [BRValueAnimation fadeInAnimationWithTarget: to
-                                  scene: [self scene]];
-
-    BRAggregateAnimation * animation = [BRAggregateAnimation animationWithScene: [self scene]];
-    [animation setDuration: [[BRThemeInfo sharedTheme] fadeThroughBlackDuration]];
-    [animation addAnimation: valanim];
-
-    valanim = [BRValueAnimation fadeOutAnimationWithTarget: from
-                                                     scene: [self scene]];
-    [animation addAnimation: valanim];
-    [animation run];
-
-    // remove the leaving control so it doesn't eat events
-    [self removeControl: from];
+	[self cancel];
+	[super wasPopped];
 }
 
 @end

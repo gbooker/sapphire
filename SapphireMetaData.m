@@ -495,6 +495,28 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		[[self metaDataForDirectory:directory] scanDirectory];
 }
 
+- (NSArray *)subFileMetas
+{
+	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+	{
+		SapphireDirectoryMetaData *dirMeta = [self metaDataForDirectory:dir];
+		if(dirMeta != nil)
+			[ret addObjectsFromArray:[dirMeta subFileMetas]];
+	}
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		if(fileMeta != nil)
+			[ret addObject:fileMeta];
+	}
+	return ret;
+}
+
 - (void)preloadMetaData
 {
 	[self scanDirectory];

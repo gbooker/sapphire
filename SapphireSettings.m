@@ -37,7 +37,7 @@ static SapphireSettings *sharedInstance = nil;
 	sharedInstance = nil;
 }
 
-- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)metaData
 {
 	if(sharedInstance != nil)
 		return sharedInstance;
@@ -56,7 +56,7 @@ static SapphireSettings *sharedInstance = nil;
 	if(options == nil)
 		options = [[NSMutableDictionary alloc] init];
 
-	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene];
+	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene metaData:metaData];
 	
 	[[self list] setDatasource:self];
 	[[self list] addDividerAtIndex:1];

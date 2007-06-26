@@ -9,12 +9,16 @@
 #import <Cocoa/Cocoa.h>
 #import <BackRow/BRQTKitVideoPlayer.h>
 
+@class SapphireFileMetaData;
 
 @interface SapphireVideoPlayer : BRQTKitVideoPlayer {
-	double	ffTime;
-	double	revTime;
-	BOOL	enabled;
-	NSTimer	*resetTimer;
+	double					ffTime;
+	double					revTime;
+	BOOL					enabled;
+	NSTimer					*resetTimer;
+	SapphireFileMetaData	*meta;
 }
+
+- (void)setMetaData:(SapphireFileMetaData *)newMeta;
 
 @end

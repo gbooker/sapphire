@@ -67,6 +67,7 @@
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (void)scanDirectory;
+- (NSArray *)subFileMetas;
 
 - (BOOL)watched;
 - (void)setWatched:(BOOL)watched;
@@ -77,6 +78,8 @@
 
 @interface SapphireFileMetaData : SapphireMetaData {
 }
+
+- (void) updateMetaData;
 
 - (int)modified;
 - (BOOL)watched;

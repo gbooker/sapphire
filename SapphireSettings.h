@@ -24,7 +24,7 @@
 + (SapphireSettings *)sharedSettings;
 + (void)relinquishSettings;
 
-- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath;
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)metaData;
 - (void) dealloc;
 
 - (BOOL)displayUnwatched;
