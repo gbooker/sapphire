@@ -102,8 +102,6 @@
 	[sort setFrame:sortRect];
 	[self addControl:sort];
 	
-	[self reloadDirectoryContents];
-	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
 		
@@ -151,6 +149,7 @@
     
     // always call super
     [super willBePushed];
+	[self reloadDirectoryContents];
 }
 
 - (void) wasPushed
