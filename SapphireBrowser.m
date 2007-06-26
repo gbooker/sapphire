@@ -12,6 +12,7 @@
 #import "SapphireMarkMenu.h"
 #import "SapphireMedia.h"
 #import "SapphireVideoPlayer.h"
+#import "SapphireMediaPreview.h"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -142,33 +143,6 @@
 	[predicate release];
 	[sort release];
     [super dealloc];
-}
-
-- (NSString *)sizeStringForMetaData:(SapphireFileMetaData *)meta
-{
-	float size = [meta size];
-	if(size == 0)
-		return @"-";
-	char letter = ' ';
-	if(size >= 1024000)
-	{
-		if(size >= 1024*1024000)
-		{
-			size /= 1024 * 1024 * 1024;
-			letter = 'G';
-		}
-		else
-		{
-			size /= 1024 * 1024;
-			letter = 'M';
-		}
-	}
-	else if (size >= 1000)
-	{
-		size /= 1024;
-		letter = 'K';
-	}
-	return [NSString stringWithFormat:@"%.1f\n%cB", size, letter];	
 }
 
 - (void) willBePushed
@@ -302,7 +276,7 @@
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
-			[[result textItem] setRightJustifiedText:[self sizeStringForMetaData:meta]];
+			[[result textItem] setRightJustifiedText:[meta sizeString]];
 			watched = [meta watched];
 		}
 	}
@@ -405,6 +379,31 @@
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
+	NSString *name = [_names objectAtIndex:item];
+	if([[metaData files] containsObject:name])
+	{
+		SapphireFileMetaData *fileMeta = [metaData metaDataForFile:name];
+		
+		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
+		
+		NSURL *url = [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/BackRow.framework/Resources/Movies.png"];
+		CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+		CGImageRef imageRef = nil;
+		if(sourceRef)
+		{
+			imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+			CFRelease(sourceRef);
+		}
+		if(imageRef)
+		{
+			[preview setImage:imageRef];
+			CFRelease(imageRef);
+		}
+		
+		[preview setText:[[[NSAttributedString alloc] initWithString:[fileMeta metaDataDescription] attributes:[[BRThemeInfo sharedTheme] metadataSummaryFieldAttributes]] autorelease]];
+		
+		return [preview autorelease];
+	}
     return ( nil );
 }
 

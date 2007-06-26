@@ -93,4 +93,7 @@
 - (float)duration;
 - (int)sampleRate;
 
+- (NSString *)sizeString;
+- (NSString *)metaDataDescription;
+
 @end

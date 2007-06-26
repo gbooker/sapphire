@@ -22,7 +22,9 @@
 #define RESUME_KEY				@"Resume Time"
 #define SIZE_KEY				@"Size"
 #define DURATION_KEY			@"Duration"
+#define AUDIO_DESC_KEY			@"Audio Description"
 #define SAMPLE_RATE_KEY			@"Sample Rate"
+#define VIDEO_DESC_KEY			@"Video Description"
 
 //TV Show Specific Keys
 #define EPISODE_NUMBER_KEY		@"Episode Number"
@@ -611,9 +613,51 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		NSArray *audioTracks = [movie tracksOfMediaType:@"soun"];
 		NSNumber *audioSampleRate = nil;
 		if([audioTracks count])
-			[[[audioTracks objectAtIndex:0] media] attributeForKey:QTMediaTimeScaleAttribute];
+		{
+			QTTrack *track = [audioTracks objectAtIndex:0];
+			QTMedia *media = [track media];
+			audioSampleRate = [media attributeForKey:QTMediaTimeScaleAttribute];
+			if(media != nil)
+			{
+				Media qtMedia = [media quickTimeMedia];
+				Handle sampleDesc = NewHandle(1);
+				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
+				CFStringRef userText = nil;
+				ByteCount	propSize = 0;
+				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_UserReadableText, sizeof(userText), &userText, &propSize);
+				DisposeHandle(sampleDesc);
+				
+				if(userText != nil)
+				{
+					[fileMeta setObject:(NSString *)userText forKey:AUDIO_DESC_KEY];
+					CFRelease(userText);
+				}
+			}
+		}
 		if(audioSampleRate != nil)
 			[fileMeta setObject:audioSampleRate forKey:SAMPLE_RATE_KEY];
+		NSArray *videoTracks = [movie tracksOfMediaType:@"vide"];
+		if([videoTracks count])
+		{
+			QTTrack *track = [videoTracks objectAtIndex:0];
+			QTMedia *media = [track media];
+			if(media != nil)
+			{
+				Media qtMedia = [media quickTimeMedia];
+				Handle sampleDesc = NewHandle(1);
+				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
+				CFStringRef userText = nil;
+				ByteCount	propSize = 0;
+				ICMImageDescriptionGetProperty((ImageDescriptionHandle)sampleDesc, kQTPropertyClass_ImageDescription, kICMImageDescriptionPropertyID_SummaryString, sizeof(userText), &userText, &propSize);
+				DisposeHandle(sampleDesc);
+				
+				if(userText != nil)
+				{
+					[fileMeta setObject:(NSString *)userText forKey:VIDEO_DESC_KEY];
+					CFRelease(userText);
+				}
+			}
+		}
 		[metaData addEntriesFromDictionary:fileMeta];
 	}
 }
@@ -666,6 +710,62 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (int)sampleRate
 {
 	return [[metaData objectForKey:SAMPLE_RATE_KEY] intValue];
+}
+
+- (NSString *)sizeString
+{
+	float size = [self size];
+	if(size == 0)
+		return @"-";
+	char letter = ' ';
+	if(size >= 1024000)
+	{
+		if(size >= 1024*1024000)
+		{
+			size /= 1024 * 1024 * 1024;
+			letter = 'G';
+		}
+		else
+		{
+			size /= 1024 * 1024;
+			letter = 'M';
+		}
+	}
+	else if (size >= 1000)
+	{
+		size /= 1024;
+		letter = 'K';
+	}
+	return [NSString stringWithFormat:@"%.1f%cB", size, letter];	
+}
+
+- (NSString *)metaDataDescription
+{
+	NSString *name = [path lastPathComponent];
+	int duration = [self duration];
+	int secs = duration % 60;
+	int mins = (duration /60) % 60;
+	int hours = duration / 3600;
+	NSString *durationStr = nil;
+	if(hours != 0)
+		durationStr = [NSString stringWithFormat:@"%d:%02d:%02d", hours, mins, secs];
+	else if (mins != 0)
+		durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
+	else
+		durationStr = [NSString stringWithFormat:@"%ds", secs];
+	NSMutableString *ret = [NSMutableString stringWithFormat:
+												   @"Name: %@\n"
+													"Duration: %@\n"
+													"Size: %@", name, durationStr, [self sizeString]];
+	NSString *videoDesc = [metaData objectForKey:VIDEO_DESC_KEY];
+	if(videoDesc != nil)
+		[ret appendFormat:@"\nVideo: %@", videoDesc];
+	NSString *audioDesc = [metaData objectForKey:AUDIO_DESC_KEY];
+	if(audioDesc != nil)
+		[ret appendFormat:@"\nAudio: %@", audioDesc];
+	//This aligns the last line correctly.
+	[ret appendString:@"\n "];
+	return ret;
 }
 
 @end
