@@ -279,6 +279,10 @@
 				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
 				PRODUCT_NAME = Sapphire;
 				WRAPPER_EXTENSION = frappliance;
 			};
