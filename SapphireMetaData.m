@@ -61,7 +61,7 @@ static NSArray *extensions = nil;
 	if(!self)
 		return nil;
 	
-	else if(dict == nil)
+	if(dict == nil)
 		metaData = [NSMutableDictionary new];
 	else
 		metaData = [dict mutableCopy];
@@ -115,7 +115,8 @@ static NSArray *extensions = nil;
 		return nil;
 	
 	dictionaryPath = [dictionary retain];
-	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:metaData parent:self path:myPath];
+	NSDictionary *metaDict = [NSDictionary dictionaryWithContentsOfFile:dictionary];
+	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:metaDict parent:self path:myPath];
 	metaData = [[mainDirectory dict] retain];
 	[metaData setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
 	
