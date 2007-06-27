@@ -245,7 +245,8 @@
     [super wasExhumedByPoppingController: controller];
 	if([_names count] == 0)
 		[[self stack] popController];
-	[metaData resumeImport];
+	else
+		[metaData resumeImport];
 }
 
 - (long) itemCount
@@ -390,6 +391,8 @@
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
+	if(item >= [_names count])
+		return nil;
 	NSString *name = [_names objectAtIndex:item];
 	if([[metaData files] containsObject:name])
 	{
