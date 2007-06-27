@@ -21,7 +21,7 @@
 	<key>FRApplianceIconHorizontalOffset</key>
 	<real>-0.055</real>
 	<key>FRApplianceIconReflectionOffset</key>
-	<real>-0.115</real>
+	<real>-0.245</real>
 	<key>FRAppliancePreferedOrderValue</key>
 	<integer>-1</integer>
 	<key>NSPrincipalClass</key>

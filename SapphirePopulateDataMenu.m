@@ -28,6 +28,19 @@
 	frame.origin.y = frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
 	[title setFrame: frame];
+	
+	
+	// Setup the Header Control with default contents
+//	_warning = [[BRTextWithSpinnerController alloc] initWithScene: scene title:@"Test" text:@"Body" showBack:TRUE];
+//	[_warning setTitle: @"Depending on the size of your TV show collection, this could take several minutes."];
+//	[_warning setTitle:@"This can take several minutes"];
+//	[_warning showProgress:TRUE ] ;
+//	NSRect frame = [[self masterLayer] frame];
+	frame.origin.y = frame.size.height * 0.80f;
+	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
+//	[_warning setFrame: frame];
+	
+	
 
 	// setup the button control
 	frame = [[self masterLayer] frame];
@@ -48,6 +61,7 @@
 	[self resetUIElements];
 	
 	// add controls
+
 	[self addControl: title];
 	[self addControl: text];
 	[[self masterLayer] addSublayer:bar];
