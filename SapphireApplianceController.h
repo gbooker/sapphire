@@ -11,7 +11,7 @@
 
 @class BRRenderScene, BRRenderLayer,BRHeaderControl;
 
-@class SapphireMetaDataCollection, SapphireSettings;
+@class SapphireMetaDataCollection, SapphireSettings,SapphireTheme;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireApplianceController : BRMediaMenuController

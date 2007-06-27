@@ -18,9 +18,9 @@
 }
 + (id)sharedTheme;
 
-- (BRTexture *)redJemForScene:(BRRenderScene *)scene;
-- (BRTexture *)blueJemForScene:(BRRenderScene *)scene;
-- (BRTexture *)greenJemForScene:(BRRenderScene *)scene;
-- (BRTexture *)yellowJemForScene:(BRRenderScene *)scene;
+- (BRTexture *)redGemForScene:(BRRenderScene *)scene;
+- (BRTexture *)blueGemForScene:(BRRenderScene *)scene;
+- (BRTexture *)greenGemForScene:(BRRenderScene *)scene;
+- (BRTexture *)yellowGemForScene:(BRRenderScene *)scene;
 
 @end

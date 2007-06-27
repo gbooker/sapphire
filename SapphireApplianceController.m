@@ -12,6 +12,7 @@
 #import "SapphireMetaData.h"
 #import "SapphirePredicates.h"
 #import "SapphireSettings.h"
+#import "SapphireTheme.h"
 
 @interface SapphireApplianceController (private)
 - (void)setMenuFromSettings;
@@ -49,10 +50,10 @@
 	[settings setListTitle:					@"Settings"] ;
 	
 	[settings setListIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
-	[playBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
-	[topShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
-	[favoriteShowsBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
-	[unwatchedBrowser setListIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]] ;
+	[playBrowser setListIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]] ;
+	[topShowsBrowser setListIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]] ;
+	[favoriteShowsBrowser setListIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]] ;
+	[unwatchedBrowser setListIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]] ;
 	masterControllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settings,nil];
 	[unwatchedBrowser release];
 	[favoriteShowsBrowser release];
@@ -185,10 +186,16 @@
 */
 	if( row > [names count] ) return ( nil ) ;
 	
+	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
-	[result setLeftIcon:[[BRThemeInfo sharedTheme] errorIconForScene:[self scene]]];
+	
+	if(row==0) [result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
+	if(row==1)  [result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
+	if(row==2)  [result setLeftIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
+	if(row==3)  [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
+//	if(row==4)  [result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
 			
 	// add text
 	[[result textItem] setTitle: name] ;

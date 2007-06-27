@@ -278,10 +278,13 @@
 	if( row >= [_names count] ) return ( nil ) ;
 	
 	NSString *name = [_names objectAtIndex:row];
+	// Pad filename to correcrtly display gem icons
+	name=[@"   " stringByAppendingString: name] ;
 	BRAdornedMenuItemLayer * result = [listItems objectForKey:name];
 	if(result != nil)
 		return result;
 	BOOL watched = NO;
+	BOOL favorite = NO ;
 	if([[metaData directories] containsObject:name])
 	{
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
@@ -297,10 +300,12 @@
 		{
 			[[result textItem] setRightJustifiedText:[meta sizeString]];
 			watched = [meta watched];
+			favorite = [meta favorite] ;
 		}
 	}
 	if(!watched)
-		[result setLeftIcon:[[SapphireTheme sharedTheme] redJemForScene:[self scene]]]; 
+		[result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
+	else if(favorite)[result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
 			
 	// add text
 
@@ -315,7 +320,8 @@
 	if ( row >= [ _names count] ) return ( nil );
 	
 	NSString *result = [ _names objectAtIndex: row] ;
-	return ( result ) ;
+	
+	return ([@"   " stringByAppendingString: result] ) ;
 }
 
 - (long) rowForTitle: (NSString *) title
@@ -345,6 +351,7 @@
 	}
 	
 	NSString *name = [_names objectAtIndex:row];
+//	name=[@"  " stringByAppendingString: name] ;
 	NSString *dir = [metaData path];
 	
 	if([sort gimmieState] == 2)
@@ -408,6 +415,7 @@
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 		
 		NSURL *url = [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/BackRow.framework/Resources/Movies.png"];
+//		NSURL *url = [NSURL fileURLWithPath:@"/Contents/Resources/ApplianceIcon.png"];
 		CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
 		CGImageRef imageRef = nil;
 		if(sourceRef)

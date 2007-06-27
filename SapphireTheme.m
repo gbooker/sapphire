@@ -34,7 +34,7 @@
 	return imageRef;
 }
 
-- (BRTexture *)redJemForScene:(BRRenderScene *)scene;
+- (BRTexture *)redGemForScene:(BRRenderScene *)scene;
 {
 	if(redJem == NULL)
 	{
@@ -46,11 +46,11 @@
 	return [BRBitmapTexture textureWithImage:redJem context:[scene resourceContext] mipmap:YES];
 }
 
-- (BRTexture *)blueJemForScene:(BRRenderScene *)scene
+- (BRTexture *)blueGemForScene:(BRRenderScene *)scene
 {
 	if(blueJem == NULL)
 	{
-		blueJem = [self loadImage:@"Contents/Resources/Orange_Blue.png"];
+		blueJem = [self loadImage:@"Contents/Resources/Blue.png"];
 		if(blueJem == NULL)
 			return nil;
 		
@@ -58,11 +58,11 @@
 	return [BRBitmapTexture textureWithImage:blueJem context:[scene resourceContext] mipmap:YES];
 }
 
-- (BRTexture *)greenJemForScene:(BRRenderScene *)scene
+- (BRTexture *)greenGemForScene:(BRRenderScene *)scene
 {
 	if(greenJem == NULL)
 	{
-		greenJem = [self loadImage:@"Contents/Resources/Orange_Green.png"];
+		greenJem = [self loadImage:@"Contents/Resources/Green.png"];
 		if(greenJem == NULL)
 			return nil;
 		
@@ -70,11 +70,11 @@
 	return [BRBitmapTexture textureWithImage:greenJem context:[scene resourceContext] mipmap:YES];
 }
 
-- (BRTexture *)yellowJemForScene:(BRRenderScene *)scene
+- (BRTexture *)yellowGemForScene:(BRRenderScene *)scene
 {
 	if(yellowJem == NULL)
 	{
-		yellowJem = [self loadImage:@"Contents/Resources/Orange_Yellog.png"];
+		yellowJem = [self loadImage:@"Contents/Resources/Yellow.png"];
 		if(yellowJem == NULL)
 			return nil;
 		

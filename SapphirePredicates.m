@@ -35,14 +35,13 @@
 
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
-/*
+
 	if(metaData == nil)
-		return YES;
-	else if(![metaData favorite])
+		return NO;
+	else if([metaData favorite])
 		return YES;
 	return NO;
-*/
-	return YES ;
+
 }
 
 @end
