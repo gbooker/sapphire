@@ -52,7 +52,7 @@ static NSArray *extensions = nil;
 
 +(void)load
 {
-	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"wmv",@"mkv", nil];
+	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"wmv",@"mkv", @"flv", @"divx", @"mp4", nil];
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
@@ -98,14 +98,6 @@ static NSArray *extensions = nil;
 	[parent writeMetaData];
 }
 
-- (void)cancelImport
-{
-}
-
-- (void)resumeImport
-{
-}
-
 - (BOOL)isDirectory:(NSString *)fullPath
 {
 	BOOL isDir = NO;
@@ -122,18 +114,10 @@ static NSArray *extensions = nil;
 	if(!self)
 		return nil;
 	
-	NSMutableDictionary *mainMetaDictionary = [[NSDictionary dictionaryWithContentsOfFile:dictionary] mutableCopy];
-	if(mainMetaDictionary == nil)
-	{
-		mainMetaDictionary = [[NSMutableDictionary alloc] init];
-	}
-	[mainMetaDictionary setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
-	self = [self initWithDictionary:mainMetaDictionary parent:nil path:myPath];
-	if(!self)
-		return nil;
-	
 	dictionaryPath = [dictionary retain];
-	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:mainMetaDictionary parent:self path:myPath];
+	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:metaData parent:self path:myPath];
+	metaData = [[mainDirectory dict] retain];
+	[metaData setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
 	
 	return self;
 }
@@ -186,24 +170,22 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	metaFiles = [metaData objectForKey:FILES_KEY];
 	if(metaFiles == nil)
-		metaFiles = [NSMutableDictionary dictionary];
+		metaFiles = [NSMutableDictionary new];
 	else
-		metaFiles = [[metaFiles mutableCopy] autorelease];
+		metaFiles = [metaFiles mutableCopy];
 	[metaData setObject:metaFiles forKey:FILES_KEY];
+	[metaFiles release];
 
 	metaDirs = [metaData objectForKey:DIRS_KEY];
 	if(metaDirs == nil)
-		metaDirs = [NSMutableDictionary dictionary];
+		metaDirs = [NSMutableDictionary new];
 	else
-		metaDirs = [[metaDirs mutableCopy] autorelease];
+		metaDirs = [metaDirs mutableCopy];
 	[metaData setObject:metaDirs forKey:DIRS_KEY];
+	[metaDirs release];
+	
 	cachedMetaDirs = [NSMutableDictionary new];
 	cachedMetaFiles = [NSMutableDictionary new];
-	
-	importTimer = nil;
-	[self reloadDirectoryContents];
-	if(/*[self pruneMetaData] || */[self updateMetaData])
-		[self writeMetaData];
 	
 	return self;
 }
@@ -226,7 +208,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	files = [NSMutableArray new];
 	directories = [NSMutableArray new];
 	
-	NSArray *names = [[[NSFileManager defaultManager] directoryContentsAtPath:path] retain];
+	NSArray *names = [[NSFileManager defaultManager] directoryContentsAtPath:path];
 	
 	NSEnumerator *nameEnum = [names objectEnumerator];
 	NSString *name = nil;
@@ -237,13 +219,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			continue;
 		//Only accept if it is a directory or right extension
 		NSString *extension = [name pathExtension];
-		if([extensions containsObject:extension])
-			[files addObject:name];
-		else if([self isDirectory:[path stringByAppendingPathComponent:name]])
+		if([self isDirectory:[path stringByAppendingPathComponent:name]])
 			[directories addObject:name];
+		else if([extensions containsObject:extension])
+			[files addObject:name];
 	}
 	[directories sortUsingSelector:@selector(episodeCompare:)];
 	[files sortUsingSelector:@selector(episodeCompare:)];
+	[self updateMetaData];
 }
 
 - (NSArray *)files
@@ -389,21 +372,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (BOOL)updateMetaData
 {
-	BOOL ret = NO;
-	NSArray *metaArray = [metaDirs allKeys];
-	NSSet *metaSet = [NSSet setWithArray:metaArray];
-	NSMutableSet *newSet = [NSMutableSet setWithArray:directories];
-	
-	[newSet minusSet:metaSet];
-	if([newSet anyObject] != nil)
-	{
-		NSEnumerator *newEnum = [newSet objectEnumerator];
-		NSString *newKey = nil;
-		while((newKey = [newEnum nextObject]) != nil)
-			[metaDirs setObject:[NSMutableDictionary dictionary] forKey:newKey];
-		ret = YES;
-	}
-	
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *fileName = nil;
 	importArray = [[NSMutableArray alloc] init];
@@ -421,7 +389,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 				[importArray addObject:fileName];
 		}
 	}
-	return ret;
+	return NO;
 }
 
 - (void)processFiles:(NSTimer *)timer
@@ -457,6 +425,13 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 }
 
+- (void)resumeDelayedImport
+{
+	[importTimer invalidate];
+	if([importArray count])
+		importTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(resumeImport) userInfo:nil repeats:NO];
+}
+
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)subPath
 {
 	NSArray *components = [subPath pathComponents];
@@ -477,25 +452,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [self metaDataForFile:file];
 }
 
-- (void)processAllFiles
-{
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-		[[self metaDataForFile:file] updateMetaData];
-}
-
-- (void)scanDirectory
-{
-	NSEnumerator *dirEnum = [directories objectEnumerator];
-	NSString *directory = nil;
-	while((directory = [dirEnum nextObject]) != nil)
-		[[self metaDataForDirectory:directory] scanDirectory];
-}
-
 - (NSArray *)subFileMetas
 {
 	NSMutableArray *ret = [[NSMutableArray alloc] init];
+	[self reloadDirectoryContents];
 	NSEnumerator *dirEnum = [directories objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
@@ -512,13 +472,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if(fileMeta != nil)
 			[ret addObject:fileMeta];
 	}
-	return ret;
-}
-
-- (void)preloadMetaData
-{
-	[self scanDirectory];
-	[self processAllFiles];
+	return [ret autorelease];
 }
 
 - (BOOL)watched
@@ -553,6 +507,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (BOOL)favorite
 {
+	[self reloadDirectoryContents];
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)

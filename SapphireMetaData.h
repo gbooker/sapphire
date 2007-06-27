@@ -18,6 +18,7 @@
 @interface SapphireMetaData : NSObject {
 	NSMutableDictionary				*metaData;
 	SapphireMetaData				*parent;
+	/* These two are not retained */
 	NSString						*path;
 	id <SapphireMetaDataDelegate>	delegate;
 }
@@ -26,8 +27,6 @@
 
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
 - (void)writeMetaData;
-- (void)cancelImport;
-- (void)resumeImport;
 
 @end
 
@@ -41,8 +40,10 @@
 @end
 
 @interface SapphireDirectoryMetaData : SapphireMetaData {
+	/*These two are not retained*/
 	NSMutableDictionary	*metaFiles;
 	NSMutableDictionary	*metaDirs;
+	
 	NSMutableDictionary	*cachedMetaFiles;
 	NSMutableDictionary	*cachedMetaDirs;
 
@@ -65,8 +66,11 @@
 - (BOOL)pruneMetaData;
 - (BOOL)updateMetaData;
 
+- (void)cancelImport;
+- (void)resumeImport;
+- (void)resumeDelayedImport;
+
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
-- (void)scanDirectory;
 - (NSArray *)subFileMetas;
 
 - (BOOL)watched;

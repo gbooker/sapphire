@@ -13,6 +13,7 @@
 #import "SapphireMedia.h"
 #import "SapphireVideoPlayer.h"
 #import "SapphireMediaPreview.h"
+#import "SapphireTheme.h"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -84,6 +85,7 @@
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 		
 	_names = [NSMutableArray new];
+	listItems = [NSMutableDictionary new];
 	metaData = [meta retain];
 	[metaData setDelegate:self];
 	predicate = [newPredicate retain];
@@ -125,6 +127,7 @@
 	int divider = 0;
 	[metaData reloadDirectoryContents];
 	[_names removeAllObjects];
+	[listItems removeAllObjects];
 	if(predicate == NULL)
 	{
 		[_names addObjectsFromArray:[metaData directories]];
@@ -149,6 +152,7 @@
 {
     // always remember to deallocate your resources
 	[_names release];
+	[listItems release];
 	[metaData release];
 	[predicate release];
 	[sort release];
@@ -170,7 +174,7 @@
     
     // always call super
     [super wasPushed];
-	[metaData resumeImport];
+	[metaData resumeDelayedImport];
 }
 
 - (void) willBePopped
@@ -246,7 +250,7 @@
 	if([_names count] == 0)
 		[[self stack] popController];
 	else
-		[metaData resumeImport];
+		[metaData resumeDelayedImport];
 }
 
 - (long) itemCount
@@ -273,14 +277,17 @@
 	}
 	if( row >= [_names count] ) return ( nil ) ;
 	
-	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [_names objectAtIndex:row];
+	BRAdornedMenuItemLayer * result = [listItems objectForKey:name];
+	if(result != nil)
+		return result;
 	BOOL watched = NO;
 	if([[metaData directories] containsObject:name])
 	{
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watched];
+		[listItems setObject:result forKey:name];
 	}
 	else
 	{
@@ -293,7 +300,7 @@
 		}
 	}
 	if(!watched)
-		[result setLeftIcon:[[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:[self scene]]]; 
+		[result setLeftIcon:[[SapphireTheme sharedTheme] redJemForScene:[self scene]]]; 
 			
 	// add text
 
@@ -429,6 +436,12 @@
 		return [preview autorelease];
 	}
     return ( nil );
+}
+
+- (BOOL)brEventAction:(id)fp8
+{
+	[metaData resumeDelayedImport];
+	return [super brEventAction:fp8];
 }
 
 - (void)updateComplete
