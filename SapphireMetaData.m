@@ -45,10 +45,6 @@
 
 @end
 
-@interface SapphireFileMetaData (private)
-- (void)updateMetaData;
-@end
-
 @implementation SapphireMetaData
 
 // Static set of file extensions to filter
@@ -754,15 +750,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	else
 		durationStr = [NSString stringWithFormat:@"%ds", secs];
 	NSMutableString *ret = [NSMutableString stringWithFormat:
-												   @"Name: %@\n"
-													"Duration: %@\n"
-													"Size: %@", name, durationStr, [self sizeString]];
+												   @"Name: \t%@\n"
+													"Duration: \t%@\n"
+													"Size: \t%@", name, durationStr, [self sizeString]];
 	NSString *videoDesc = [metaData objectForKey:VIDEO_DESC_KEY];
 	if(videoDesc != nil)
-		[ret appendFormat:@"\nVideo: %@", videoDesc];
+		[ret appendFormat:@"\nVideo: \t%@", videoDesc];
 	NSString *audioDesc = [metaData objectForKey:AUDIO_DESC_KEY];
 	if(audioDesc != nil)
-		[ret appendFormat:@"\nAudio: %@", audioDesc];
+		[ret appendFormat:@"\nAudio: \t%@", audioDesc];
 	//This aligns the last line correctly.
 	[ret appendString:@"\n "];
 	return ret;

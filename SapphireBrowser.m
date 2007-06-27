@@ -399,7 +399,17 @@
 			CFRelease(imageRef);
 		}
 		
-		[preview setText:[[[NSAttributedString alloc] initWithString:[fileMeta metaDataDescription] attributes:[[BRThemeInfo sharedTheme] metadataSummaryFieldAttributes]] autorelease]];
+		NSMutableDictionary *attrs = [[[BRThemeInfo sharedTheme] metadataSummaryFieldAttributes] mutableCopy];
+		NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+		float tabLoc = [[self masterLayer] frame].size.width * 0.4f;
+		NSTextTab *myTab = [[NSTextTab alloc] initWithType:NSRightTabStopType location:tabLoc];
+		NSArray *tabs = [NSArray arrayWithObject:myTab];
+		[myTab release];
+		[style setTabStops:tabs];
+		[attrs removeObjectForKey:@"CTTextAlignment"];
+		[attrs setObject:style forKey:NSParagraphStyleAttributeName];
+		[preview setText:[[[NSAttributedString alloc] initWithString:[fileMeta metaDataDescription] attributes:attrs] autorelease]];
+		[attrs release];
 		
 		return [preview autorelease];
 	}
