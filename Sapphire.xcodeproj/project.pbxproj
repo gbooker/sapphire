@@ -19,6 +19,7 @@
 		F56A19490C3170870022918E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A19480C3170870022918E /* AppKit.framework */; };
 		F56A1B950C31B52B0022918E /* SapphireMediaPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */; };
 		F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A1DF40C31CE190022918E /* QTKit.framework */; };
+		F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D0DEB50C331D76007652B2 /* SapphireTheme.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
 		FE4239A40C331FFD0035A717 /* Green.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A00C331FFD0035A717 /* Green.png */; };
@@ -54,6 +55,8 @@
 		F56A1B930C31B52B0022918E /* SapphireMediaPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMediaPreview.h; sourceTree = "<group>"; };
 		F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMediaPreview.m; sourceTree = "<group>"; };
 		F56A1DF40C31CE190022918E /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
+		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
 		F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMarkMenu.h; sourceTree = "<group>"; };
 		F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMarkMenu.m; sourceTree = "<group>"; };
 		F5EA91330C3063F500B1EC7D /* SapphireMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMedia.h; sourceTree = "<group>"; };
@@ -146,6 +149,8 @@
 				F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */,
 				F56A1B930C31B52B0022918E /* SapphireMediaPreview.h */,
 				F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */,
+				F5D0DEB40C331D76007652B2 /* SapphireTheme.h */,
+				F5D0DEB50C331D76007652B2 /* SapphireTheme.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -235,6 +240,7 @@
 				F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */,
 				F51DCDB90C30AE010046F25E /* SapphireVideoPlayer.m in Sources */,
 				F56A1B950C31B52B0022918E /* SapphireMediaPreview.m in Sources */,
+				F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
