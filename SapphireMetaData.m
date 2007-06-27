@@ -759,8 +759,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSString *audioDesc = [metaData objectForKey:AUDIO_DESC_KEY];
 	if(audioDesc != nil)
 		[ret appendFormat:@"\nAudio: \t%@", audioDesc];
-	//This aligns the last line correctly.
-	[ret appendString:@"\n "];
 	return ret;
 }
 

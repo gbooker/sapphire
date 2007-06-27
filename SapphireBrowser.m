@@ -90,22 +90,34 @@
 	sort = [[BRTVShowsSortControl alloc] initWithScene:scene state:1];
 
 	NSRect frame = [self masterLayerFrame];
+	NSRect listFrame = [self listFrameForBounds:frame.size];
 	NSRect sortRect;
 	sortRect.size = [sort preferredSizeForScreenHeight:frame.size.height];
-	sortRect.origin.y = frame.origin.y;
-	NSRect listFrame = [self listFrameForBounds:frame.size];
+	sortRect.origin.y = listFrame.origin.y * 1.5f;
 	sortRect.origin.x = (listFrame.size.width - sortRect.size.width)/2 + listFrame.origin.x;
+	listFrame.size.height -= listFrame.origin.y;
+	listFrame.origin.y *= 4.0f;
 	[self replaceControlText:[[sort gimmieDate] gimmieDate] withString:@"Select"];
 	[self replaceControlText:[[sort gimmieDate] gimmieShow] withString:@"Mark"];
 	[self replaceControlText:[[sort gimmieShow] gimmieDate] withString:@"Select"];
 	[self replaceControlText:[[sort gimmieShow] gimmieShow] withString:@"Mark"];
 	[sort setFrame:sortRect];
+	[[_listControl layer] setFrame:listFrame];
 	[self addControl:sort];
 	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
 		
 	return ( self );
+}
+
+- (void)_doLayout
+{
+	[super _doLayout];
+	NSRect listFrame = [[_listControl layer] frame];
+	listFrame.size.height -= listFrame.origin.y;
+	listFrame.origin.y *= 2;
+	[[_listControl layer] setFrame:listFrame];
 }
 
 - (void)reloadDirectoryContents
