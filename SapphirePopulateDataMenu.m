@@ -100,11 +100,12 @@
 
 - (void)import
 {
-	current = 0;
-	importItems = [[meta subFileMetas] mutableCopy];
-	max = [importItems count];
 	[button setTitle:@"Cancel Import"];
 	[button setAction:@selector(cancel)];
+	[[self scene] renderScene];
+	importItems = [[meta subFileMetas] mutableCopy];
+	current = 0;
+	max = [importItems count];
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
 
@@ -123,9 +124,10 @@
 		[meta writeMetaData];
 		[button setHidden:YES];
 		[button setTarget:nil];
+		[title setTitle: @"Import Complete"];
 		[self setText:@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported"];
+		[[self scene] renderScene];
 	}
-	[[self scene] renderScene];
 }
 
 - (void)cancel
@@ -138,6 +140,7 @@
 
 - (void)resetUIElements
 {
+	[title setTitle: @"Populate Show Data"];
 	[self setText:@"This will populate Sapphire's Meta data.  This proceedure may take a while, but you may cancel at any time"];
 	[bar setPercentage:0.0f];
 	[button setTitle: @"Import Meta Data"];
