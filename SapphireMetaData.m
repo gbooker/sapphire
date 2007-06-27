@@ -202,7 +202,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	importTimer = nil;
 	[self reloadDirectoryContents];
-	if([self pruneMetaData] || [self updateMetaData])
+	if(/*[self pruneMetaData] || */[self updateMetaData])
 		[self writeMetaData];
 	
 	return self;
