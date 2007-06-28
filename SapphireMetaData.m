@@ -530,7 +530,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
-		[[self metaDataForFile:file] setWatched:watched];
+	{
+		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
+			[fileMeta setWatched:watched];
+	}
 }
 
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate
@@ -564,7 +568,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
-		[[self metaDataForFile:file] setFavorite:favorite];
+	{
+		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
+			[fileMeta setFavorite:favorite];
+	}
 }
 
 @end
