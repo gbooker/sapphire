@@ -106,4 +106,16 @@
 	return [BRBitmapTexture textureWithImage:coneGem context:[scene resourceContext] mipmap:YES];
 }
 
+- (BRTexture *)iGemForScene:(BRRenderScene *)scene
+{
+	if(iGem == NULL)
+	{
+		iGem = [self loadImage:@"Contents/Resources/Eye.png"];
+		if(iGem == NULL)
+			return nil;
+		
+	}
+	return [BRBitmapTexture textureWithImage:iGem context:[scene resourceContext] mipmap:YES];
+}
+
 @end

@@ -28,6 +28,7 @@
 		FE4239A70C331FFD0035A717 /* Orange_Red.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A30C331FFD0035A717 /* Orange_Red.png */; };
 		FE423A6B0C3338030035A717 /* Gear.png in Resources */ = {isa = PBXBuildFile; fileRef = FE423A6A0C3338030035A717 /* Gear.png */; };
 		FE423A9F0C333DF40035A717 /* Cone.png in Resources */ = {isa = PBXBuildFile; fileRef = FE423A9E0C333DF40035A717 /* Cone.png */; };
+		FE423ABE0C3341D70035A717 /* Eye.png in Resources */ = {isa = PBXBuildFile; fileRef = FE423ABD0C3341D70035A717 /* Eye.png */; };
 		FE5BD4670C3090CD009F2B2E /* ApplianceIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5BD4660C3090CD009F2B2E /* ApplianceIcon.png */; };
 		FE88FD100C2F564700C55E3F /* SapphirePopulateDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FD0F0C2F564700C55E3F /* SapphirePopulateDataMenu.m */; };
 		FE8D57D40C2DE4AF00BC1768 /* SapphireSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */; };
@@ -69,6 +70,7 @@
 		FE4239A30C331FFD0035A717 /* Orange_Red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Orange_Red.png; sourceTree = "<group>"; };
 		FE423A6A0C3338030035A717 /* Gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Gear.png; sourceTree = "<group>"; };
 		FE423A9E0C333DF40035A717 /* Cone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cone.png; sourceTree = "<group>"; };
+		FE423ABD0C3341D70035A717 /* Eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Eye.png; sourceTree = "<group>"; };
 		FE5BD4660C3090CD009F2B2E /* ApplianceIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ApplianceIcon.png; sourceTree = "<group>"; };
 		FE88FD0E0C2F564700C55E3F /* SapphirePopulateDataMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphirePopulateDataMenu.h; sourceTree = "<group>"; };
 		FE88FD0F0C2F564700C55E3F /* SapphirePopulateDataMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphirePopulateDataMenu.m; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FE423ABD0C3341D70035A717 /* Eye.png */,
 				FE423A6A0C3338030035A717 /* Gear.png */,
 				FE4239A00C331FFD0035A717 /* Green.png */,
 				FE4239A10C331FFD0035A717 /* Yellow.png */,
@@ -227,6 +230,7 @@
 				FE4239A70C331FFD0035A717 /* Orange_Red.png in Resources */,
 				FE423A6B0C3338030035A717 /* Gear.png in Resources */,
 				FE423A9F0C333DF40035A717 /* Cone.png in Resources */,
+				FE423ABE0C3341D70035A717 /* Eye.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

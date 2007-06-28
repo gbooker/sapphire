@@ -196,7 +196,7 @@ static SapphireSettings *sharedInstance = nil;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if(row==0)	[result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]];
+	if(row==0) [result setRightIcon:[[SapphireTheme sharedTheme] iGemForScene:[self scene]]];
 	else if( row > 0 && [[options objectForKey:[keys objectAtIndex:row]] boolValue])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
