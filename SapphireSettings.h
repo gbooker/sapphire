@@ -31,6 +31,7 @@
 - (BOOL)displayFavorites;
 - (BOOL)displayTopShows;
 - (BOOL)displaySpoilers;
+- (BOOL)disableUIQuit;
 - (BOOL)disableAnonymousReporting;
 
 - (void) willBePushed;

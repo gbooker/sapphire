@@ -35,7 +35,8 @@
 													@"   Favorite Shows",
 													@"   Top Shows",
 													@"   Browse Shows", 
-													@"   Settings", nil];
+													@"   Settings",
+													@"   Reset the thing already", nil];
 	
 	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
 	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
@@ -103,6 +104,8 @@
 	[controllers addObject:[masterControllers objectAtIndex:3]];
 	[names addObject:[masterNames objectAtIndex:4]];
 	[controllers addObject:[masterControllers objectAtIndex:4]];
+	if(![settings disableUIQuit])
+		[names addObject:[masterNames objectAtIndex:5]];
 }
 
 - (void) willBePushed
@@ -196,6 +199,7 @@
 	if([name isEqual: @"   Top Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
 	if([name isEqual: @"   Browse Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
 	if( [name isEqual: @"   Settings"]) [result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]] ;
+	if( [name isEqual: @"   Reset the thing already"]) [result setLeftIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]] ;
 
 			
 	// add text
@@ -237,6 +241,8 @@
 {
     // This is called when the user presses play/pause on a list item
 	
+	if(row == [controllers count])
+		[[NSApplication sharedApplication] terminate:self];
 	id controller = [controllers objectAtIndex:row];
 	[[self stack] pushController:controller];
 }
