@@ -279,7 +279,6 @@
 	
 	NSString *name = [_names objectAtIndex:row];
 	// Pad filename to correcrtly display gem icons
-	name=[@"   " stringByAppendingString: name] ;
 	BRAdornedMenuItemLayer * result = [listItems objectForKey:name];
 	if(result != nil)
 		return result;
@@ -308,7 +307,7 @@
 	else if(favorite)[result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
 			
 	// add text
-
+	name=[@"   " stringByAppendingString: name] ;
 	[[result textItem] setTitle: name] ;
 				
 	return ( result ) ;
