@@ -8,6 +8,8 @@
 
 #import "SapphireMetaData.h"
 #import <QTKit/QTKit.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"
@@ -269,7 +271,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
-		[meta cancelImport];
+		[meta reloadDirectoryContents];
 		
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			return YES;
@@ -389,9 +391,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		else
 		{
 			NSString *filePath = [path stringByAppendingPathComponent:fileName];
-			NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:YES];
-			NSDate *modDate = [props objectForKey:NSFileModificationDate];
-			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != [modDate timeIntervalSince1970] || [[fileMeta objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
+			struct stat sb;
+			memset(&sb, 0, sizeof(struct stat));
+			stat([filePath fileSystemRepresentation], &sb);
+			long modTime = sb.st_mtimespec.tv_sec;
+			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != modTime || [[fileMeta objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
 				[importArray addObject:fileName];
 		}
 	}
@@ -486,7 +490,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if(predicate)
 	{
 		*filesToScan = [self predicatedFiles:predicate];
-		*directoriesToScan = [self predicatedDirectories:predicate];
 	}
 	else if([files count] + [directories count] == 0)
 	{

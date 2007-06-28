@@ -19,6 +19,7 @@
 	NSMutableDictionary			*options;
 	SapphirePopulateDataMenu	*populateShowDataController;
 	NSString					*path;
+	NSDictionary				*defaults;
 }
 
 + (SapphireSettings *)sharedSettings;

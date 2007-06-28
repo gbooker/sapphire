@@ -49,14 +49,22 @@ static SapphireSettings *sharedInstance = nil;
 	
 	names = [[NSArray alloc] initWithObjects:	@"   Populate Show Data",
 												@"   Hide \"Favorite Shows\"",
-												@"   Hide \"Top Shows\"",
+/*												@"   Hide \"Top Shows\"",*/
 												@"   Hide \"Unwatched Shows\"", 
-												@"   Hide Show Spoilers",
+/*												@"   Hide Show Spoilers",*/
 												@"   Hide UI Quit",
 												@"   Disable Anonymous Reporting", nil];
-	keys = [[NSArray alloc] initWithObjects:@"", HIDE_FAVORITE_KEY, HIDE_TOP_SHOWS_KEY, HIDE_UNWATCHED_KEY,  HIDE_SPOILERS_KEY, HIDE_UI_QUIT_KEY, DISABLE_ANON_KEY, nil];
+	keys = [[NSArray alloc] initWithObjects:@"", HIDE_FAVORITE_KEY, /*HIDE_TOP_SHOWS_KEY, */HIDE_UNWATCHED_KEY,  /*HIDE_SPOILERS_KEY, */HIDE_UI_QUIT_KEY, DISABLE_ANON_KEY, nil];
 	path = [dictionaryPath retain];
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
+	defaults = [[NSDictionary alloc] initWithObjectsAndKeys:
+		[NSNumber numberWithBool:NO], HIDE_FAVORITE_KEY,
+		[NSNumber numberWithBool:YES], HIDE_TOP_SHOWS_KEY,
+		[NSNumber numberWithBool:NO], HIDE_UNWATCHED_KEY,
+		[NSNumber numberWithBool:NO], HIDE_SPOILERS_KEY,
+		[NSNumber numberWithBool:YES], HIDE_UI_QUIT_KEY,
+		[NSNumber numberWithBool:NO], DISABLE_ANON_KEY,
+		nil];
 	if(options == nil)
 		options = [[NSMutableDictionary alloc] init];
 
@@ -79,37 +87,46 @@ static SapphireSettings *sharedInstance = nil;
 	[names release];
 	[options release];
 	[path release];
+	[defaults release];
 	[super dealloc];
+}
+
+- (BOOL)boolForKey:(NSString *)key
+{
+	NSNumber *num = [options objectForKey:key];
+	if(!num)
+		num = [defaults objectForKey:key];
+	return [num boolValue];
 }
 
 - (BOOL)displayUnwatched
 {
-	return ![[options objectForKey:HIDE_UNWATCHED_KEY] boolValue];
+	return ![self boolForKey:HIDE_UNWATCHED_KEY];
 }
 
 - (BOOL)displayFavorites;
 {
-	return ![[options objectForKey:HIDE_FAVORITE_KEY] boolValue];
+	return ![self boolForKey:HIDE_FAVORITE_KEY];
 }
 
 - (BOOL)displayTopShows;
 {
-	return ![[options objectForKey:HIDE_TOP_SHOWS_KEY] boolValue];
+	return ![self boolForKey:HIDE_TOP_SHOWS_KEY];
 }
 
 - (BOOL)displaySpoilers;
 {
-	return ![[options objectForKey:HIDE_SPOILERS_KEY] boolValue];
+	return ![self boolForKey:HIDE_SPOILERS_KEY];
 }
 
 - (BOOL)disableUIQuit
 {
-	return [[options objectForKey:HIDE_UI_QUIT_KEY] boolValue];
+	return [self boolForKey:HIDE_UI_QUIT_KEY];
 }
 
 - (BOOL)disableAnonymousReporting;
 {
-	return [[options objectForKey:DISABLE_ANON_KEY] boolValue];
+	return [self boolForKey:DISABLE_ANON_KEY];
 }
 
 
@@ -197,15 +214,15 @@ static SapphireSettings *sharedInstance = nil;
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
 	if(row==0) [result setRightIcon:[[SapphireTheme sharedTheme] iGemForScene:[self scene]]];
-	else if( row > 0 && [[options objectForKey:[keys objectAtIndex:row]] boolValue])
+	else if( row > 0 && [self boolForKey:[keys objectAtIndex:row]])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
 	if(row==1)[result setRightIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
-	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
-	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
-	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
-	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
+/*	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];*/
+	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
+/*	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];*/
+	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
 
 
 	// add text
@@ -259,8 +276,8 @@ static SapphireSettings *sharedInstance = nil;
 	if(row>0)
 	{
 		NSString *key = [keys objectAtIndex:row];
-		NSNumber *setting = [options objectForKey:key];
-		[options setObject:[NSNumber numberWithBool:![setting boolValue]] forKey:key];
+		BOOL setting = [self boolForKey:key];
+		[options setObject:[NSNumber numberWithBool:!setting] forKey:key];
 	}
 
 	[self writeSettings];
