@@ -33,9 +33,9 @@
 			watched = @"Mark as Watched";
 
 		if([fileMeta favorite])
-			favorite = @"Mark as Favorite";
-		else
 			favorite = @"Mark as Not Favorite";
+		else
+			favorite = @"Mark as Favorite";
 		names = [[NSArray alloc] initWithObjects:watched, favorite, nil];
 	}
 	else
