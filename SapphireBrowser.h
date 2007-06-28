@@ -18,6 +18,7 @@
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
 {
 	NSMutableArray				* _names ;
+	NSMutableArray				* items ;
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
 	BRTVShowsSortControl		*sort;
