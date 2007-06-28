@@ -136,30 +136,10 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				38FAFC300C012A7800853CFE /* SapphireAppliance.h */,
-				38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */,
-				FE8D57D20C2DE4AF00BC1768 /* SapphireSettings.h */,
-				FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */,
-				F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */,
-				F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */,
-				38FAFC2E0C012A7800853CFE /* SapphireBrowser.h */,
-				38FAFC310C012A7800853CFE /* SapphireBrowser.m */,
-				F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */,
-				F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */,
-				F5EA91330C3063F500B1EC7D /* SapphireMedia.h */,
-				F5EA91340C3063F500B1EC7D /* SapphireMedia.m */,
-				F531A5B80C2CB43400E46F62 /* SapphireMetaData.h */,
-				F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */,
-				F523996D0C2DCC9100D5DA2E /* SapphirePredicates.h */,
-				F523996E0C2DCC9100D5DA2E /* SapphirePredicates.m */,
-				FE88FD0E0C2F564700C55E3F /* SapphirePopulateDataMenu.h */,
-				FE88FD0F0C2F564700C55E3F /* SapphirePopulateDataMenu.m */,
-				F51DCDB70C30AE010046F25E /* SapphireVideoPlayer.h */,
-				F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */,
-				F56A1B930C31B52B0022918E /* SapphireMediaPreview.h */,
-				F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */,
-				F5D0DEB40C331D76007652B2 /* SapphireTheme.h */,
-				F5D0DEB50C331D76007652B2 /* SapphireTheme.m */,
+				F56B6D8F0C34713400E934AA /* Browser */,
+				F56B6D900C34713A00E934AA /* MetaData */,
+				F56B6D920C34717200E934AA /* Settings */,
+				F56B6D910C34714600E934AA /* FRAppliance */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -179,6 +159,58 @@
 				3834DF340C031FDC009BE46D /* BackRowUtils.h */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		F56B6D8F0C34713400E934AA /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				38FAFC2E0C012A7800853CFE /* SapphireBrowser.h */,
+				38FAFC310C012A7800853CFE /* SapphireBrowser.m */,
+				F5EA91330C3063F500B1EC7D /* SapphireMedia.h */,
+				F5EA91340C3063F500B1EC7D /* SapphireMedia.m */,
+				F51DCDB70C30AE010046F25E /* SapphireVideoPlayer.h */,
+				F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */,
+				F56A1B930C31B52B0022918E /* SapphireMediaPreview.h */,
+				F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */,
+			);
+			name = Browser;
+			sourceTree = "<group>";
+		};
+		F56B6D900C34713A00E934AA /* MetaData */ = {
+			isa = PBXGroup;
+			children = (
+				F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */,
+				F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */,
+				F531A5B80C2CB43400E46F62 /* SapphireMetaData.h */,
+				F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */,
+				F523996D0C2DCC9100D5DA2E /* SapphirePredicates.h */,
+				F523996E0C2DCC9100D5DA2E /* SapphirePredicates.m */,
+				FE88FD0E0C2F564700C55E3F /* SapphirePopulateDataMenu.h */,
+				FE88FD0F0C2F564700C55E3F /* SapphirePopulateDataMenu.m */,
+			);
+			name = MetaData;
+			sourceTree = "<group>";
+		};
+		F56B6D910C34714600E934AA /* FRAppliance */ = {
+			isa = PBXGroup;
+			children = (
+				38FAFC300C012A7800853CFE /* SapphireAppliance.h */,
+				38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */,
+				F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */,
+				F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */,
+			);
+			name = FRAppliance;
+			sourceTree = "<group>";
+		};
+		F56B6D920C34717200E934AA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				FE8D57D20C2DE4AF00BC1768 /* SapphireSettings.h */,
+				FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */,
+				F5D0DEB40C331D76007652B2 /* SapphireTheme.h */,
+				F5D0DEB50C331D76007652B2 /* SapphireTheme.m */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
