@@ -85,7 +85,6 @@
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 		
 	_names = [NSMutableArray new];
-	listItems = [NSMutableDictionary new];
 	metaData = [meta retain];
 	[metaData setDelegate:self];
 	predicate = [newPredicate retain];
@@ -127,7 +126,6 @@
 	int divider = 0;
 	[metaData reloadDirectoryContents];
 	[_names removeAllObjects];
-	[listItems removeAllObjects];
 	if(predicate == NULL)
 	{
 		[_names addObjectsFromArray:[metaData directories]];
@@ -152,7 +150,6 @@
 {
     // always remember to deallocate your resources
 	[_names release];
-	[listItems release];
 	[metaData release];
 	[predicate release];
 	[sort release];
@@ -279,9 +276,7 @@
 	
 	NSString *name = [_names objectAtIndex:row];
 	// Pad filename to correcrtly display gem icons
-	BRAdornedMenuItemLayer * result = [listItems objectForKey:name];
-	if(result != nil)
-		return result;
+	BRAdornedMenuItemLayer * result = nil;
 	BOOL watched = NO;
 	BOOL favorite = NO ;
 	if([[metaData directories] containsObject:name])
@@ -289,7 +284,6 @@
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watchedForPredicate:predicate];
-		[listItems setObject:result forKey:name];
 	}
 	else
 	{
