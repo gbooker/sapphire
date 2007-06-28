@@ -8,16 +8,19 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SapphireMetaData;
+@class SapphireMetaData, SapphirePredicate;
 
 @interface SapphireMarkMenu : BRMediaMenuController {
 	BOOL				isDir;
 	NSArray				*names;
 	SapphireMetaData	*metaData;
+	SapphirePredicate	*predicate;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireMetaData *)meta;
 - (void) dealloc;
+
+- (void)setPredicate:(SapphirePredicate *)newPredicate;
 
 - (void) willBePushed;
 - (void) wasPushed;

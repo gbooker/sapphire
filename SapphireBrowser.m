@@ -288,7 +288,7 @@
 	{
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
-		watched = [meta watched];
+		watched = [meta watchedForPredicate:predicate];
 		[listItems setObject:result forKey:name];
 	}
 	else
@@ -361,6 +361,7 @@
 		else
 			meta = [metaData metaDataForFile:name];
 		id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
+		[(SapphireMarkMenu *)controller setPredicate:predicate];
 		[[self stack] pushController:controller];
 		[controller release];
 		return;

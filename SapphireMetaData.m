@@ -476,60 +476,80 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [ret autorelease];
 }
 
-- (BOOL)watched
+- (BOOL)watchedForPredicate:(SapphirePredicate *)predicate
 {
-	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSArray *filesToScan = files;
+	NSArray *directoriesToScan = directories;
+	if(predicate)
+	{
+		filesToScan = [self predicatedFiles:predicate];
+		directoriesToScan = [self predicatedDirectories:predicate];
+	}
+	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 		if(![[self metaDataForFile:file] watched])
 			return NO;
 
-	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSEnumerator *dirEnum = [directoriesToScan objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
-		if(![[self metaDataForDirectory:dir] watched])
+		if(![[self metaDataForDirectory:dir] watchedForPredicate:predicate])
 			return NO;
 
 	return YES;
 }
 
-- (void)setWatched:(BOOL)watched
+- (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate
 {
-	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSArray *filesToScan = files;
+	NSArray *directoriesToScan = directories;
+	if(predicate)
+	{
+		filesToScan = [self predicatedFiles:predicate];
+		directoriesToScan = [self predicatedDirectories:predicate];
+	}
+	NSEnumerator *dirEnum = [directoriesToScan objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
-		[[self metaDataForDirectory:dir] setWatched:watched];
+		[[self metaDataForDirectory:dir] setWatched:watched predicate:predicate];
 	
-	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 		[[self metaDataForFile:file] setWatched:watched];
 }
 
-- (BOOL)favorite
+- (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate
 {
-	[self reloadDirectoryContents];
-	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSArray *filesToScan = files;
+	NSArray *directoriesToScan = directories;
+	if(predicate)
+	{
+		filesToScan = [self predicatedFiles:predicate];
+		directoriesToScan = [self predicatedDirectories:predicate];
+	}
+	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 		if([[self metaDataForFile:file] favorite])
 			return YES;
 
-	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSEnumerator *dirEnum = [directoriesToScan objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
-		if([[self metaDataForDirectory:dir] favorite])
+		if([[self metaDataForDirectory:dir] favoriteForPredicate:predicate])
 			return YES;
 	
 	return NO;
 }
 
-- (void)setFavorite:(BOOL)favorite
+- (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate
 {
 	NSEnumerator *dirEnum = [directories objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
-		[[self metaDataForDirectory:dir] setFavorite:favorite];
+		[[self metaDataForDirectory:dir] setFavorite:favorite predicate:predicate];
 	
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *file = nil;

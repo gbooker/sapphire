@@ -73,10 +73,10 @@
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (NSArray *)subFileMetas;
 
-- (BOOL)watched;
-- (void)setWatched:(BOOL)watched;
-- (BOOL)favorite;
-- (void)setFavorite:(BOOL)favorite;
+- (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
+- (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;
+- (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
+- (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate;
 
 @end
 

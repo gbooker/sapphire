@@ -52,7 +52,13 @@
 {
 	[metaData release];
 	[names release];
+	[predicate release];
 	[super dealloc];
+}
+
+- (void)setPredicate:(SapphirePredicate *)newPredicate
+{
+	predicate = [newPredicate retain];
 }
 
 - (void) willBePushed
@@ -181,16 +187,16 @@
 		switch(row)
 		{
 			case 0:
-				[dirMeta setWatched:YES];
+				[dirMeta setWatched:YES predicate:predicate];
 				break;
 			case 1:
-				[dirMeta setWatched:NO];
+				[dirMeta setWatched:NO predicate:predicate];
 				break;
 			case 2:
-				[dirMeta setFavorite:YES];
+				[dirMeta setFavorite:YES predicate:predicate];
 				break;
 			case 3:
-				[dirMeta setFavorite:NO];
+				[dirMeta setFavorite:NO predicate:predicate];
 				break;
 		}
 	}
