@@ -54,7 +54,7 @@ static NSArray *extensions = nil;
 
 +(void)load
 {
-	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"wmv",@"mkv", @"flv", @"divx", @"mp4", nil];
+	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"mpeg", @"wmv",@"mkv", @"flv", @"divx", @"mp4", nil];
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath

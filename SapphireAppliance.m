@@ -36,7 +36,7 @@
         // this is the whitelist check -- tell a Great Big Fib
         BRLog( @"[%@ className] called for whitelist check; returning RUICalibrationAppliance instead",
                className );
-        className = @"RUICalibrationAppliance";     // could be anything in the whitelist, really
+        className = @"RUIMoviesAppliance";     // could be anything in the whitelist, really
     }
     
     return ( className );

@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Sapphire</string>
 	<key>CFBundleIdentifier</key>
-	<string>net.nanopu.gbooker.pmerrill.sapphire</string>
+	<string>com.apple.frontrow.appliance.Sapphire</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
