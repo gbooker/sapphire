@@ -41,7 +41,7 @@
 	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
 	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
 	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
-	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:[metaCollection rootDirectory]] ;
+	settings									= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:[metaCollection rootDirectory]] ;
 	[self setListTitle:							@"Main Menu"];
 	[unwatchedBrowser setListTitle:			@"Unwatched Shows"];
 	[favoriteShowsBrowser setListTitle:		@"Favorite Shows"];
@@ -191,11 +191,13 @@
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 	
-	if(row==0) [result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
-	if(row==1)  [result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
-	if(row==2)  [result setLeftIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
-	if(row==3)  [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
-//	if(row==4)  [result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+	
+	if([name isEqual: @"   Unwatched"]) [result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
+	if([name isEqual: @"   Favorite Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
+	if([name isEqual: @"   Top Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
+	if([name isEqual: @"   Browse Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
+	if( [name isEqual: @"   Settings"]) [result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+
 			
 	// add text
 	[[result textItem] setTitle: name] ;

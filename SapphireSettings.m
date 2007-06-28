@@ -192,6 +192,10 @@ static SapphireSettings *sharedInstance = nil;
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
+	if(row==1)[result setRightIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
+	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
+	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
+	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
 
 
 	// add text
