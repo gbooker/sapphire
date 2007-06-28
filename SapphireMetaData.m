@@ -303,7 +303,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
-		[meta cancelImport];
+		[meta reloadDirectoryContents];
 
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			[ret addObject:directory];
