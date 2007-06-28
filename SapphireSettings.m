@@ -10,6 +10,7 @@
 #import <BackRow/BackRow.h>
 #import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
+#import "SapphireTheme.h"
 
 static SapphireSettings *sharedInstance = nil;
 
@@ -187,7 +188,7 @@ static SapphireSettings *sharedInstance = nil;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if(row==0)	[result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]];
+	if(row==0)	[result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]];
 	else if( row > 0 && [[options objectForKey:[keys objectAtIndex:row]] boolValue])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];

@@ -36,50 +36,62 @@
 
 - (BRTexture *)redGemForScene:(BRRenderScene *)scene;
 {
-	if(redJem == NULL)
+	if(redGem == NULL)
 	{
-		redJem = [self loadImage:@"Contents/Resources/Orange_Red.png"];
-		if(redJem == NULL)
+		redGem = [self loadImage:@"Contents/Resources/Orange_Red.png"];
+		if(redGem == NULL)
 			return nil;
 		
 	}
-	return [BRBitmapTexture textureWithImage:redJem context:[scene resourceContext] mipmap:YES];
+	return [BRBitmapTexture textureWithImage:redGem context:[scene resourceContext] mipmap:YES];
 }
 
 - (BRTexture *)blueGemForScene:(BRRenderScene *)scene
 {
-	if(blueJem == NULL)
+	if(blueGem == NULL)
 	{
-		blueJem = [self loadImage:@"Contents/Resources/Blue.png"];
-		if(blueJem == NULL)
+		blueGem = [self loadImage:@"Contents/Resources/Blue.png"];
+		if(blueGem == NULL)
 			return nil;
 		
 	}
-	return [BRBitmapTexture textureWithImage:blueJem context:[scene resourceContext] mipmap:YES];
+	return [BRBitmapTexture textureWithImage:blueGem context:[scene resourceContext] mipmap:YES];
 }
 
 - (BRTexture *)greenGemForScene:(BRRenderScene *)scene
 {
-	if(greenJem == NULL)
+	if(greenGem == NULL)
 	{
-		greenJem = [self loadImage:@"Contents/Resources/Green.png"];
-		if(greenJem == NULL)
+		greenGem = [self loadImage:@"Contents/Resources/Green.png"];
+		if(greenGem == NULL)
 			return nil;
 		
 	}
-	return [BRBitmapTexture textureWithImage:greenJem context:[scene resourceContext] mipmap:YES];
+	return [BRBitmapTexture textureWithImage:greenGem context:[scene resourceContext] mipmap:YES];
 }
 
 - (BRTexture *)yellowGemForScene:(BRRenderScene *)scene
 {
-	if(yellowJem == NULL)
+	if(yellowGem == NULL)
 	{
-		yellowJem = [self loadImage:@"Contents/Resources/Yellow.png"];
-		if(yellowJem == NULL)
+		yellowGem = [self loadImage:@"Contents/Resources/Yellow.png"];
+		if(yellowGem == NULL)
 			return nil;
 		
 	}
-	return [BRBitmapTexture textureWithImage:yellowJem context:[scene resourceContext] mipmap:YES];
+	return [BRBitmapTexture textureWithImage:yellowGem context:[scene resourceContext] mipmap:YES];
+}
+
+- (BRTexture *)gearGemForScene:(BRRenderScene *)scene
+{
+	if(gearGem == NULL)
+	{
+		gearGem = [self loadImage:@"Contents/Resources/Gear.png"];
+		if(gearGem == NULL)
+			return nil;
+		
+	}
+	return [BRBitmapTexture textureWithImage:gearGem context:[scene resourceContext] mipmap:YES];
 }
 
 @end

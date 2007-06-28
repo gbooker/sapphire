@@ -11,10 +11,11 @@
 @class BRTexture, BRRenderScene;
 
 @interface SapphireTheme : NSObject {
-	CGImageRef		redJem;
-	CGImageRef		blueJem;
-	CGImageRef		greenJem;
-	CGImageRef		yellowJem;
+	CGImageRef		redGem;
+	CGImageRef		blueGem;
+	CGImageRef		greenGem;
+	CGImageRef		yellowGem;
+	CGImageRef		gearGem;
 }
 + (id)sharedTheme;
 
@@ -22,5 +23,6 @@
 - (BRTexture *)blueGemForScene:(BRRenderScene *)scene;
 - (BRTexture *)greenGemForScene:(BRRenderScene *)scene;
 - (BRTexture *)yellowGemForScene:(BRRenderScene *)scene;
+- (BRTexture *)gearGemForScene:(BRRenderScene *)scene;
 
 @end

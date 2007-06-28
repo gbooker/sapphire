@@ -49,7 +49,7 @@
 	[playBrowser setListTitle:				@"Show Browser"];
 	[settings setListTitle:					@"Settings"] ;
 	
-	[settings setListIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+	[settings setListIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]] ;
 	[playBrowser setListIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]] ;
 	[topShowsBrowser setListIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]] ;
 	[favoriteShowsBrowser setListIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]] ;
@@ -186,7 +186,6 @@
 */
 	if( row > [names count] ) return ( nil ) ;
 	
-	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
@@ -196,7 +195,7 @@
 	if([name isEqual: @"   Favorite Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
 	if([name isEqual: @"   Top Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
 	if([name isEqual: @"   Browse Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
-	if( [name isEqual: @"   Settings"]) [result setLeftIcon:[[BRThemeInfo sharedTheme] gearImageForScene:[self scene]]] ;
+	if( [name isEqual: @"   Settings"]) [result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]] ;
 
 			
 	// add text
