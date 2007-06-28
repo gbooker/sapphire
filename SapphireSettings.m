@@ -25,7 +25,9 @@ static SapphireSettings *sharedInstance = nil;
 #define	HIDE_TOP_SHOWS_KEY	@"HideTopShows"
 #define	HIDE_UNWATCHED_KEY	@"HideUnwatched"
 #define	HIDE_SPOILERS_KEY	@"HideSpoilers"
+#define HIDE_UI_QUIT_KEY @"HideUIQuit"
 #define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
+
 
 + (SapphireSettings *)sharedSettings
 {
@@ -50,8 +52,9 @@ static SapphireSettings *sharedInstance = nil;
 												@"   Hide \"Top Shows\"",
 												@"   Hide \"Unwatched Shows\"", 
 												@"   Hide Show Spoilers",
+												@"   Hide UI Quit",
 												@"   Disable Anonymous Reporting", nil];
-	keys = [[NSArray alloc] initWithObjects:@"", HIDE_FAVORITE_KEY, HIDE_TOP_SHOWS_KEY, HIDE_UNWATCHED_KEY, HIDE_SPOILERS_KEY, DISABLE_ANON_KEY, nil];
+	keys = [[NSArray alloc] initWithObjects:@"", HIDE_FAVORITE_KEY, HIDE_TOP_SHOWS_KEY, HIDE_UNWATCHED_KEY,  HIDE_UI_QUIT_KEY,HIDE_SPOILERS_KEY, DISABLE_ANON_KEY, nil];
 	path = [dictionaryPath retain];
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
 	if(options == nil)
@@ -197,6 +200,7 @@ static SapphireSettings *sharedInstance = nil;
 	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
 	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
 	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
+	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
 
 
 	// add text
