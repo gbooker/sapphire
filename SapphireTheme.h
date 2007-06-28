@@ -16,6 +16,7 @@
 	CGImageRef		greenGem;
 	CGImageRef		yellowGem;
 	CGImageRef		gearGem;
+	CGImageRef		coneGem;
 }
 + (id)sharedTheme;
 
@@ -24,5 +25,5 @@
 - (BRTexture *)greenGemForScene:(BRRenderScene *)scene;
 - (BRTexture *)yellowGemForScene:(BRRenderScene *)scene;
 - (BRTexture *)gearGemForScene:(BRRenderScene *)scene;
-
+- (BRTexture *)coneGemForScene:(BRRenderScene *)scene ;
 @end

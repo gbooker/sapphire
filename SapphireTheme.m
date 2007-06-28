@@ -94,4 +94,16 @@
 	return [BRBitmapTexture textureWithImage:gearGem context:[scene resourceContext] mipmap:YES];
 }
 
+- (BRTexture *)coneGemForScene:(BRRenderScene *)scene
+{
+	if(coneGem == NULL)
+	{
+		coneGem = [self loadImage:@"Contents/Resources/Cone.png"];
+		if(coneGem == NULL)
+			return nil;
+		
+	}
+	return [BRBitmapTexture textureWithImage:coneGem context:[scene resourceContext] mipmap:YES];
+}
+
 @end
