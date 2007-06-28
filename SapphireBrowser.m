@@ -284,6 +284,8 @@
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watchedForPredicate:predicate];
+		if(watched)
+			favorite = [meta favoriteForPredicate:predicate];
 	}
 	else
 	{
