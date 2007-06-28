@@ -408,8 +408,8 @@
 		
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 		
-		NSURL *url = [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/BackRow.framework/Resources/Movies.png"];
-//		NSURL *url = [NSURL fileURLWithPath:@"/Contents/Resources/ApplianceIcon.png"];
+//		NSURL *url = [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/BackRow.framework/Resources/Movies.png"];
+		NSURL *url = [NSURL fileURLWithPath:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"]];
 		CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
 		CGImageRef imageRef = nil;
 		if(sourceRef)
