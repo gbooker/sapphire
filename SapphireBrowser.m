@@ -14,6 +14,7 @@
 #import "SapphireVideoPlayer.h"
 #import "SapphireMediaPreview.h"
 #import "SapphireTheme.h"
+#import "SapphireSettings.h"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -33,6 +34,17 @@
 - (BRTextLayer *)gimmieShow;
 @end
 
+@interface NSString (PostStrings)
+- (NSString *)URLEncode;
+@end
+
+@implementation NSString (PostStrings)
+- (NSString *)URLEncode
+{
+	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);
+	return [result autorelease];
+}
+@end
 
 @implementation BRTVShowsSortControl (bypassAccess)
 - (BRTVShowsSortSelectorStateLayer *)gimmieDate
@@ -379,6 +391,22 @@
 		[controller setAllowsResume:YES];
 		
 		NSString *path = [dir stringByAppendingPathComponent:name];
+		
+		if(![[SapphireSettings sharedSettings] disableAnonymousReporting])
+		{
+			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
+			NSString *reqData = [NSString stringWithFormat:@"path=%@", [path URLEncode]];
+			NSData *postData = [reqData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+			
+			[request setHTTPMethod:@"POST"];
+			[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+			[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+			[request setHTTPBody:postData];
+			[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+			NSURLDownload *download = [[NSURLDownload alloc] initWithRequest:request delegate:nil];
+			[download autorelease];
+		}
+		
 		NSURL *url = [NSURL fileURLWithPath:path];
 		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
 		[asset setResumeTime:[currentPlayFile resumeTime]];
