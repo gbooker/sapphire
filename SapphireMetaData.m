@@ -444,7 +444,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		importTimer = [NSTimer scheduledTimerWithTimeInterval:1.1 target:self selector:@selector(processFiles:) userInfo:nil repeats:NO];
 	else
 	{
-		[importTimer invalidate];
 		importTimer = nil;
 		[importArray release];
 		importArray = nil;
@@ -456,6 +455,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[importTimer invalidate];
 	if([importArray count])
 		importTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(resumeImport) userInfo:nil repeats:NO];
+	else
+		importTimer = nil;
 }
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)subPath
