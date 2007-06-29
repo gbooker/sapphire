@@ -26,6 +26,7 @@ static SapphireSettings *sharedInstance = nil;
 #define	HIDE_UNWATCHED_KEY	@"HideUnwatched"
 #define	HIDE_SPOILERS_KEY	@"HideSpoilers"
 #define HIDE_UI_QUIT_KEY	@"HideUIQuit"
+#define	ENABLE_FAST_SWITCHING_KEY	@"EnableFastSwitching"
 #define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
 
 
@@ -53,8 +54,18 @@ static SapphireSettings *sharedInstance = nil;
 												@"   Hide \"Unwatched Shows\"", 
 /*												@"   Hide Show Spoilers",*/
 												@"   Hide UI Quit",
+												@"   Fast Directory Switching",
 												@"   Disable Anonymous Reporting", nil];
-	keys = [[NSArray alloc] initWithObjects:@"", HIDE_FAVORITE_KEY, /*HIDE_TOP_SHOWS_KEY, */HIDE_UNWATCHED_KEY,  /*HIDE_SPOILERS_KEY, */HIDE_UI_QUIT_KEY, DISABLE_ANON_KEY, nil];
+	
+	keys = [[NSArray alloc] initWithObjects:		@"", 
+													HIDE_FAVORITE_KEY, 
+													/*HIDE_TOP_SHOWS_KEY, */
+													HIDE_UNWATCHED_KEY,  
+													/*HIDE_SPOILERS_KEY, */
+													HIDE_UI_QUIT_KEY,
+													ENABLE_FAST_SWITCHING_KEY, 
+													DISABLE_ANON_KEY, nil];
+	
 	path = [dictionaryPath retain];
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
 	defaults = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -63,6 +74,7 @@ static SapphireSettings *sharedInstance = nil;
 		[NSNumber numberWithBool:NO], HIDE_UNWATCHED_KEY,
 		[NSNumber numberWithBool:NO], HIDE_SPOILERS_KEY,
 		[NSNumber numberWithBool:YES], HIDE_UI_QUIT_KEY,
+		[NSNumber numberWithBool:YES], ENABLE_FAST_SWITCHING_KEY,
 		[NSNumber numberWithBool:NO], DISABLE_ANON_KEY,
 		nil];
 	if(options == nil)
@@ -127,6 +139,12 @@ static SapphireSettings *sharedInstance = nil;
 - (BOOL)disableAnonymousReporting;
 {
 	return [self boolForKey:DISABLE_ANON_KEY];
+}
+
+- (BOOL)fastSwitching
+{
+	return [self boolForKey:ENABLE_FAST_SWITCHING_KEY];
+
 }
 
 
@@ -221,8 +239,9 @@ static SapphireSettings *sharedInstance = nil;
 	if(row==1)[result setRightIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
 /*	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];*/
 	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
-/*	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];*/
-	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
+/*	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];*/
+	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
+	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
 
 
 	// add text

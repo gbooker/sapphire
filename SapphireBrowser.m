@@ -234,7 +234,7 @@
 
 - (void) wasBuriedByPushingController: (BRLayerController *) controller
 {
-    // The user chose an option and this controller os no longer on screen
+    // The user chose an option and this controller is no longer on screen
     
     // always call super
     [super wasBuriedByPushingController: controller];
@@ -341,6 +341,7 @@
 	if(!watched)
 		[result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
 	else if(favorite)[result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
+	else [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
 			
 	// add text
 	name=[@"   " stringByAppendingString: name] ;
