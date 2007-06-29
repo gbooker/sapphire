@@ -136,6 +136,9 @@
 
 - (void)reloadDirectoryContents
 {
+	BRListControl *list = [self list];
+	[list removeDividerAtIndex:dirCount];
+	[list removeDividerAtIndex:[_names count] - 1];
 	[metaData reloadDirectoryContents];
 	[_names removeAllObjects];
 	[items removeAllObjects];
@@ -165,7 +168,6 @@
 		[items addObject:[NSNull null]];
 	}
 
-	BRListControl *list = [self list];
 	[list reload];
 	if(dirCount && dirCount != [_names count])
 		[list addDividerAtIndex:dirCount];
@@ -273,7 +275,7 @@
     
     // always call super
     [super wasExhumedByPoppingController: controller];
-	if([_names count] == 0)
+	if(fileCount + dirCount == 0)
 		[[self stack] popController];
 	else
 		[metaData resumeDelayedImport];
