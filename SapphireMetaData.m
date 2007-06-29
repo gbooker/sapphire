@@ -613,17 +613,19 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireFileMetaData : SapphireMetaData
 
-- (void) updateMetaData
+- (BOOL) updateMetaData
 {
 	NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
 	int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
+	BOOL updated =FALSE;
 	
 	if(props == nil)
 		//No file
-		return;
+		return FALSE;
 	
 	if(modTime != [self modified] || [[metaData objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
 	{
+		updated=TRUE ;
 		NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
 		
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
@@ -684,6 +686,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		}
 		[metaData addEntriesFromDictionary:fileMeta];
 	}
+	return updated ;
 }
 
 - (int)modified

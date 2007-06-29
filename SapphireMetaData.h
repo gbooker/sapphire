@@ -85,7 +85,7 @@
 @interface SapphireFileMetaData : SapphireMetaData {
 }
 
-- (void) updateMetaData;
+- (BOOL) updateMetaData;
 
 - (int)modified;
 - (BOOL)watched;

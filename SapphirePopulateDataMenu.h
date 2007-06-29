@@ -17,15 +17,17 @@
 @interface SapphirePopulateDataMenu : BRLayerController
 {
 	BRHeaderControl				*title;
-	BRButtonControl				*button;
-	BRTextControl				*text;
+	BRButtonControl					*button;
+	BRTextControl					*text;
+	BRTextControl					*fileProgress;
 	BRProgressBarWidget			*bar;
 
-	SapphireDirectoryMetaData	*meta;
-	NSMutableArray				*importItems;
+	SapphireDirectoryMetaData		*meta;
+	NSMutableArray					*importItems;
 	NSTimer						*importTimer;
-	float						max;
-	float						current;
+	float							max;
+	float							current;
+	float							updated ;
 }
 - (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData;
 - (void) dealloc;

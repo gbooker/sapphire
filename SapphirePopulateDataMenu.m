@@ -12,6 +12,7 @@
 
 @interface SapphirePopulateDataMenu (private)
 - (void)setText:(NSString *)theText;
+- (void)setFileProgress:(NSString *)updateFileProgress;
 - (void)resetUIElements;
 @end
 
@@ -29,18 +30,9 @@
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
 	[title setFrame: frame];
 	
-	
 	// Setup the Header Control with default contents
-//	_warning = [[BRTextWithSpinnerController alloc] initWithScene: scene title:@"Test" text:@"Body" showBack:TRUE];
-//	[_warning setTitle: @"Depending on the size of your TV show collection, this could take several minutes."];
-//	[_warning setTitle:@"This can take several minutes"];
-//	[_warning showProgress:TRUE ] ;
-//	NSRect frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
-//	[_warning setFrame: frame];
-	
-	
 
 	// setup the button control
 	frame = [[self masterLayer] frame];
@@ -49,6 +41,7 @@
 
 	// setup the text entry control
 	text = [[BRTextControl alloc] initWithScene: scene];
+	fileProgress = [[BRTextControl alloc] initWithScene: scene];
 	
 	bar = [[BRProgressBarWidget alloc] initWithScene: scene];
 	frame = [[self masterLayer] frame];
@@ -64,6 +57,7 @@
 
 	[self addControl: title];
 	[self addControl: text];
+	[self addControl: fileProgress] ;
 	[[self masterLayer] addSublayer:bar];
 	[self addControl: button];
 
@@ -86,25 +80,46 @@
 	[text setFrame:frame];
 }
 
+- (void)setFileProgress:(NSString *)theFileProgress
+{
+	[fileProgress setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+	[fileProgress setText:theFileProgress];
+	
+	NSRect master = [[self masterLayer] frame];
+	[fileProgress setMaximumSize:NSMakeSize(master.size.width * 1.0f/2.0f, master.size.height * 0.3f)];
+	NSSize progressSize = [fileProgress renderedSize];
+	
+	NSRect frame;
+//	frame.origin.x =  (master.size.width - progressSize.width) * 0.2f;
+	frame.origin.x =  (master.size.width) * 0.2f;
+	frame.origin.y = (master.size.height * 0.00f - progressSize.height) + master.size.height * 0.25f/0.8f;
+	frame.size = progressSize;
+	[fileProgress setFrame:frame];
+}
+
 - (void) dealloc
 {
-    [title release];
-    [text release];
+	[title release];
+	[text release];
+	[fileProgress release] ;
 	[bar release];
-    [button release];
+	[button release];
 	[meta release];
 	[importTimer invalidate];
-
-    [super dealloc];
+	[super dealloc];
 }
 
 - (void)import
 {
 	[button setTitle:@"Cancel Import"];
 	[button setAction:@selector(cancel)];
+	[self setFileProgress:@"Initializing..."];
 	[[self scene] renderScene];
 	importItems = [[meta subFileMetas] mutableCopy];
+	updated = 0 ;
 	current = 0;
+//	[self setFileProgress:@"File Progress:  <Checking> "];
+//	[[self scene] renderScene];
 	max = [importItems count];
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
@@ -112,9 +127,10 @@
 - (void)importNextItem:(NSTimer *)timer
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	[fileMeta updateMetaData];
+	if([fileMeta updateMetaData])updated++;
 	[importItems removeObjectAtIndex:0];
-	current++;
+	current++ ;
+	[self setFileProgress:[NSString stringWithFormat:@"File Progress: %0.0f / %0.0f", current, max,updated]];
 	[bar setPercentage:current/max * 100.0f];
 	
 	if(![importItems count])
@@ -125,6 +141,7 @@
 		[button setHidden:YES];
 		[button setTarget:nil];
 		[title setTitle: @"Import Complete"];
+		[self setFileProgress:[NSString stringWithFormat:@"Updated %0.0f Entries.", updated]];
 		[self setText:@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported"];
 		[[self scene] renderScene];
 	}
@@ -142,6 +159,7 @@
 {
 	[title setTitle: @"Populate Show Data"];
 	[self setText:@"This will populate Sapphire's Meta data.  This proceedure may take a while, but you may cancel at any time"];
+//	[self setFileProgress:@"File Progress:  ? / ? "];
 	[bar setPercentage:0.0f];
 	[button setTitle: @"Import Meta Data"];
 	[button setTarget:self];

@@ -39,6 +39,13 @@
 	[self setFrame:[self frame]];
 }
 
+
+- (void)setFileProgress:(NSAttributedString *)fileProgress
+{
+	[textLayer setAttributedString:fileProgress];
+	[self setFrame:[self frame]];
+}
+
 - (void)setImage:(CGImageRef)image
 {
 	[imageLayer setImage:image];

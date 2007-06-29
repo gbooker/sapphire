@@ -16,6 +16,7 @@
 }
 
 - (void)setText:(NSAttributedString *)text;
+- (void)setFileProgress:(NSAttributedString *)fileProgress ;
 - (void)setImage:(CGImageRef)image;
 
 @end
