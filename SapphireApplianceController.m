@@ -29,6 +29,11 @@
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
+	
+	//Setup the theme's scene
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
+	[theme setScene:[self scene]];
+
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
 
 	masterNames = [[NSArray alloc] initWithObjects:	@"   Unwatched",
@@ -50,8 +55,6 @@
 	[playBrowser setListTitle:				@"Show Browser"];
 	[settings setListTitle:					@"Settings"] ;
 	
-	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	[theme setScene:[self scene]];
 	[settings setListIcon:[theme gem:GEAR_GEM_KEY]];
 	[playBrowser setListIcon:[theme gem:RED_GEM_KEY]];
 	[topShowsBrowser setListIcon:[theme gem:GREEN_GEM_KEY]];
