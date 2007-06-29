@@ -159,7 +159,7 @@
 {
 	[title setTitle: @"Populate Show Data"];
 	[self setText:@"This will populate Sapphire's Meta data.  This proceedure may take a while, but you may cancel at any time"];
-//	[self setFileProgress:@"File Progress:  ? / ? "];
+	[self setFileProgress:@" "];
 	[bar setPercentage:0.0f];
 	[button setTitle: @"Import Meta Data"];
 	[button setTarget:self];
