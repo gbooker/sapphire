@@ -34,6 +34,7 @@
 - (BOOL)displaySpoilers;
 - (BOOL)disableUIQuit;
 - (BOOL)disableAnonymousReporting;
+- (BOOL)fastSwitching ;
 
 - (void) willBePushed;
 - (void) wasPushed;
