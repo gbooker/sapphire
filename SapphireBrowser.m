@@ -136,7 +136,6 @@
 
 - (void)reloadDirectoryContents
 {
-	int divider = 0;
 	[metaData reloadDirectoryContents];
 	[_names removeAllObjects];
 	[items removeAllObjects];
@@ -144,7 +143,6 @@
 	{
 		NSArray *dirs = [metaData directories];
 		[_names addObjectsFromArray:dirs];
-		divider = [_names count];
 		NSArray *files = [metaData files];
 		[_names addObjectsFromArray:files];
 		dirCount = [dirs count];
@@ -154,10 +152,10 @@
 	{
 		NSArray *dirs = [metaData predicatedDirectories:predicate];
 		[_names addObjectsFromArray:dirs];
-		divider = [_names count];
 		NSArray *files = [metaData predicatedFiles:predicate];
 		[_names addObjectsFromArray:files];
-		[_names addObject:@"< Scan for new files >"];
+		if([[SapphireSettings sharedSettings] fastSwitching])
+			[_names addObject:@"< Scan for new files >"];
 		dirCount = [dirs count];
 		fileCount = [files count];
 	}
@@ -169,9 +167,9 @@
 
 	BRListControl *list = [self list];
 	[list reload];
-	if(divider && divider != [_names count])
-		[list addDividerAtIndex:divider];
-	if(predicate != NULL)
+	if(dirCount && dirCount != [_names count])
+		[list addDividerAtIndex:dirCount];
+	if(predicate != NULL && [[SapphireSettings sharedSettings] fastSwitching])
 		[list addDividerAtIndex:[_names count] -1];
 	[[self scene] renderScene];
 }
@@ -297,13 +295,14 @@
     // return that object, it will be used to display the list item.
     return ( nil );
 */
-	if( [_names count] == 0)
+	int nameCount = [_names count];
+	if( nameCount == 0)
 	{
 		BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
 		[[result textItem] setTitle:@"< EMPTY >"];
 		return result;
 	}
-	if( row >= [_names count] ) return ( nil ) ;
+	if( row >= nameCount ) return ( nil ) ;
 	
 	id cached = [items objectAtIndex:row];
 	if(cached != [NSNull null])
@@ -313,17 +312,18 @@
 	BRAdornedMenuItemLayer * result = nil;
 	BOOL watched = NO;
 	BOOL favorite = NO;
+	BOOL gear = NO;
+	BRRenderScene *scene = [self scene];
 	if(row < dirCount)
 	{
-		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
+		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: scene] ;
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watchedForPredicate:predicate];
-		if(watched)
-			favorite = [meta favoriteForPredicate:predicate];
+		favorite = [meta favoriteForPredicate:predicate];
 	}
 	else if(row < dirCount + fileCount)
 	{
-		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
+		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: scene] ;
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
@@ -334,14 +334,14 @@
 	}
 	else
 	{
-		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
-		[result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]];
-		watched = YES;
+		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:scene];
+		gear = YES;
 	}
-	if(!watched)
-		[result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
-	else if(favorite)[result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
-	else [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
+	if(gear) [result setLeftIcon:[theme gearGemForScene:scene]];
+	else if(!watched) [result setLeftIcon:[theme blueGemForScene:scene]];
+	else if(favorite)[result setLeftIcon:[theme yellowGemForScene:scene]];
+	else [result setLeftIcon:[theme redGemForScene:scene]];
 			
 	// add text
 	name=[@"   " stringByAppendingString: name] ;
@@ -511,8 +511,11 @@
 	return [super brEventAction:fp8];
 }
 
-- (void)updateComplete
+- (void)updateCompleteForFile:(NSString *)file
 {
+	int index = [_names indexOfObject:file];
+	if(index != NSNotFound)
+		[items replaceObjectAtIndex:index withObject:[NSNull null]];
 	BRListControl *list = [self list];
 	[list reload];
 	[[self scene] renderScene];

@@ -10,6 +10,7 @@
 #import <QTKit/QTKit.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#import "SapphireSettings.h"
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"
@@ -278,6 +279,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
+		if(![[SapphireSettings sharedSettings] fastSwitching])
+			[meta reloadDirectoryContents];
 		
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			return YES;
@@ -319,6 +322,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
+		if(![[SapphireSettings sharedSettings] fastSwitching])
+			[meta reloadDirectoryContents];
 
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			[ret addObject:directory];
@@ -420,7 +425,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[[self metaDataForFile:file] updateMetaData];
 	
 	[self writeMetaData];
-	[delegate updateComplete];
+	[delegate updateCompleteForFile:file];
 	
 	[importArray removeObjectAtIndex:0];
 	[self resumeImport];
@@ -498,6 +503,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (void)scanForNewFiles
 {
+	[self reloadDirectoryContents];
 	NSEnumerator *dirEnum = [directories objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)

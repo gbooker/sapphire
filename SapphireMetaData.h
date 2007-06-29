@@ -12,7 +12,7 @@
 @class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
 
 @protocol SapphireMetaDataDelegate <NSObject>
-- (void)updateComplete;
+- (void)updateCompleteForFile:(NSString *)file;
 @end
 
 @interface SapphireMetaData : NSObject {
