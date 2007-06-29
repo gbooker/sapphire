@@ -142,15 +142,24 @@
 	[items removeAllObjects];
 	if(predicate == NULL)
 	{
-		[_names addObjectsFromArray:[metaData directories]];
+		NSArray *dirs = [metaData directories];
+		[_names addObjectsFromArray:dirs];
 		divider = [_names count];
-		[_names addObjectsFromArray:[metaData files]];
+		NSArray *files = [metaData files];
+		[_names addObjectsFromArray:files];
+		dirCount = [dirs count];
+		fileCount = [files count];
 	}
 	else
 	{
-		[_names addObjectsFromArray:[metaData predicatedDirectories:predicate]];
+		NSArray *dirs = [metaData predicatedDirectories:predicate];
+		[_names addObjectsFromArray:dirs];
 		divider = [_names count];
-		[_names addObjectsFromArray:[metaData predicatedFiles:predicate]];
+		NSArray *files = [metaData predicatedFiles:predicate];
+		[_names addObjectsFromArray:files];
+		[_names addObject:@"< Scan for new files >"];
+		dirCount = [dirs count];
+		fileCount = [files count];
 	}
 	int i=0, count=[_names count];
 	for(i=0; i<count; i++)
@@ -162,6 +171,8 @@
 	[list reload];
 	if(divider && divider != [_names count])
 		[list addDividerAtIndex:divider];
+	if(predicate != NULL)
+		[list addDividerAtIndex:[_names count] -1];
 	[[self scene] renderScene];
 }
 
@@ -301,8 +312,8 @@
 	// Pad filename to correcrtly display gem icons
 	BRAdornedMenuItemLayer * result = nil;
 	BOOL watched = NO;
-	BOOL favorite = NO ;
-	if(row < [[metaData directories] count])
+	BOOL favorite = NO;
+	if(row < dirCount)
 	{
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
@@ -310,7 +321,7 @@
 		if(watched)
 			favorite = [meta favoriteForPredicate:predicate];
 	}
-	else
+	else if(row < dirCount + fileCount)
 	{
 		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
@@ -320,6 +331,12 @@
 			watched = [meta watched];
 			favorite = [meta favorite] ;
 		}
+	}
+	else
+	{
+		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
+		[result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]];
+		watched = YES;
 	}
 	if(!watched)
 		[result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
@@ -387,7 +404,7 @@
 		return;
 	}
 	
-	if([[metaData directories] containsObject:name])
+	if(row < dirCount)
 	{
 		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name] predicate:predicate];
 		[controller setListTitle:name];
@@ -395,7 +412,7 @@
 		[[self stack] pushController:controller];
 		[controller release];
 	}
-	else
+	else if(row < dirCount + fileCount)
 	{
 		BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
 		
@@ -435,16 +452,21 @@
 		[player release];
 		[controller release];
 	}
+	else
+	{
+		[metaData scanForNewFiles];
+		[self reloadDirectoryContents];
+	}
 }
 
-- (id<BRMediaPreviewController>) previewControllerForItem: (long) item
+- (id<BRMediaPreviewController>) previewControllerForItem: (long) row
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
-	if(item >= [_names count])
+	if(row >= [_names count])
 		return nil;
-	NSString *name = [_names objectAtIndex:item];
-	if([[metaData files] containsObject:name])
+	NSString *name = [_names objectAtIndex:row];
+	if(row >= dirCount && row < dirCount + fileCount)
 	{
 		SapphireFileMetaData *fileMeta = [metaData metaDataForFile:name];
 		

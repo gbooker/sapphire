@@ -52,6 +52,7 @@
 	
 	NSTimer				*importTimer;
 	NSMutableArray		*importArray;
+	BOOL				scannedDirectory;
 }
 
 - (void)reloadDirectoryContents;
@@ -72,6 +73,7 @@
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (NSArray *)subFileMetas;
+- (void)scanForNewFiles;
 
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;

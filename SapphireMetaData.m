@@ -232,6 +232,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self updateMetaData];
 	if([importArray count])
 		[self writeMetaData];
+	scannedDirectory = YES;
 }
 
 - (NSArray *)files
@@ -246,7 +247,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (BOOL)hasPredicatedFiles:(SapphirePredicate *)predicate
 {
-	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSArray *filesToScan = files;
+	if(!scannedDirectory)
+		filesToScan = [metaFiles allKeys];
+	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 	{
@@ -266,12 +270,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (BOOL)hasPredicatedDirectories:(SapphirePredicate *)predicate
 {
-	NSEnumerator *directoryEnum = [directories objectEnumerator];
+	NSArray *directoriesToScan = directories;
+	if(!scannedDirectory)
+		directoriesToScan = [metaDirs allKeys];
+	NSEnumerator *directoryEnum = [directoriesToScan objectEnumerator];
 	NSString *directory = nil;
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
-		[meta reloadDirectoryContents];
 		
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			return YES;
@@ -282,7 +288,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (NSArray *)predicatedFiles:(SapphirePredicate *)predicate
 {
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSArray *filesToScan = files;
+	if(!scannedDirectory)
+		filesToScan = [metaFiles allKeys];
+	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 	{
@@ -302,12 +311,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate
 {
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *directoryEnum = [directories objectEnumerator];
+	NSArray *directoriesToScan = directories;
+	if(!scannedDirectory)
+		directoriesToScan = [metaDirs allKeys];
+	NSEnumerator *directoryEnum = [directoriesToScan objectEnumerator];
 	NSString *directory = nil;
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
-		[meta reloadDirectoryContents];
 
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			[ret addObject:directory];
@@ -485,13 +496,30 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [ret autorelease];
 }
 
+- (void)scanForNewFiles
+{
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+	{
+		SapphireDirectoryMetaData *dirMeta = [self metaDataForDirectory:dir];
+		if(dirMeta != nil)
+			[dirMeta scanForNewFiles];
+	}
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+		[self metaDataForFile:file];
+}
+
 - (void)setupFiles:(NSArray * *)filesToScan andDirectories:(NSArray * *)directoriesToScan arraysForPredicate:(SapphirePredicate *)predicate
 {
 	if(predicate)
 	{
 		*filesToScan = [self predicatedFiles:predicate];
+		*directoriesToScan = [self predicatedDirectories:predicate];
 	}
-	else if([files count] + [directories count] == 0)
+	else if(!scannedDirectory)
 	{
 		//Likely haven't scanned the directory yet, so use cached
 		*filesToScan = [metaFiles allKeys];

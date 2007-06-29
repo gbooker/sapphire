@@ -18,12 +18,14 @@
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
 {
 	NSMutableArray				* _names ;
-	NSMutableArray				* items ;
+	NSMutableArray				*items ;
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
 	BRTVShowsSortControl		*sort;
 	SapphireFileMetaData		*currentPlayFile;
 	SapphireSettings			*settings;
+	int							dirCount;
+	int							fileCount;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
