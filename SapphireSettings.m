@@ -240,8 +240,8 @@ static SapphireSettings *sharedInstance = nil;
 /*	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];*/
 	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
 /*	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];*/
-	if(row==4)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
-	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
+	if(row>2)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
+//	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
 
 
 	// add text
