@@ -8,24 +8,23 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define RED_GEM_KEY @"RedGem"
+#define BLUE_GEM_KEY @"BlueGem"
+#define GREEN_GEM_KEY @"greenGem"
+#define YELLOW_GEM_KEY @"YellowGem"
+#define GEAR_GEM_KEY @"GearGem"
+#define CONE_GEM_KEY @"ConeGem"
+#define EYE_GEM_KEY @"EyeGem"
+
 @class BRTexture, BRRenderScene;
 
 @interface SapphireTheme : NSObject {
-	CGImageRef		redGem;
-	CGImageRef		blueGem;
-	CGImageRef		greenGem;
-	CGImageRef		yellowGem;
-	CGImageRef		gearGem;
-	CGImageRef		coneGem;
-	CGImageRef		iGem;
+	NSMutableDictionary		*gemDict;
+	BRRenderScene			*scene;
+	NSDictionary			*gemFiles;
 }
 + (id)sharedTheme;
 
-- (BRTexture *)redGemForScene:(BRRenderScene *)scene;
-- (BRTexture *)blueGemForScene:(BRRenderScene *)scene;
-- (BRTexture *)greenGemForScene:(BRRenderScene *)scene;
-- (BRTexture *)yellowGemForScene:(BRRenderScene *)scene;
-- (BRTexture *)gearGemForScene:(BRRenderScene *)scene;
-- (BRTexture *)coneGemForScene:(BRRenderScene *)scene ;
-- (BRTexture *)iGemForScene:(BRRenderScene *)scene ;
+- (void)setScene:(BRRenderScene *)scene;
+- (BRTexture *)gem:(NSString *)type;
 @end

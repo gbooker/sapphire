@@ -338,10 +338,10 @@
 		gear = YES;
 	}
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	if(gear) [result setLeftIcon:[theme gearGemForScene:scene]];
-	else if(!watched) [result setLeftIcon:[theme blueGemForScene:scene]];
-	else if(favorite)[result setLeftIcon:[theme yellowGemForScene:scene]];
-	else [result setLeftIcon:[theme redGemForScene:scene]];
+	if(gear) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
+	else if(!watched) [result setLeftIcon:[theme gem:BLUE_GEM_KEY]];
+	else if(favorite)[result setLeftIcon:[theme gem:YELLOW_GEM_KEY]];
+	else [result setLeftIcon:[theme gem:RED_GEM_KEY]];
 			
 	// add text
 	name=[@"   " stringByAppendingString: name] ;

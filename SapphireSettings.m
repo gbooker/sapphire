@@ -231,18 +231,17 @@ static SapphireSettings *sharedInstance = nil;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if(row==0) [result setRightIcon:[[SapphireTheme sharedTheme] iGemForScene:[self scene]]];
+	if(row==0) [result setRightIcon:[[SapphireTheme sharedTheme] gem:EYE_GEM_KEY]];
 	else if( row > 0 && [self boolForKey:[keys objectAtIndex:row]])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
-	if(row==1)[result setRightIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
-/*	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];*/
-	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
-/*	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];*/
-	if(row>2)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
-//	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]];
-
+	if(row==1)[result setRightIcon:[[SapphireTheme sharedTheme] gem:YELLOW_GEM_KEY]];
+/*	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] gem:GREEN_GEM_KEY]];*/
+	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] gem:BLUE_GEM_KEY]];
+/*	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] gem:RED_GEM_KEY]];*/
+	if(row>2)[result setRightIcon:[[SapphireTheme sharedTheme] gem:CONE_GEM_KEY]];
+//	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] gem:CONE_GEM_KEY]];
 
 	// add text
 	[[result textItem] setTitle: name] ;

@@ -50,11 +50,13 @@
 	[playBrowser setListTitle:				@"Show Browser"];
 	[settings setListTitle:					@"Settings"] ;
 	
-	[settings setListIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]] ;
-	[playBrowser setListIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]] ;
-	[topShowsBrowser setListIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]] ;
-	[favoriteShowsBrowser setListIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]] ;
-	[unwatchedBrowser setListIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]] ;
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
+	[theme setScene:[self scene]];
+	[settings setListIcon:[theme gem:GEAR_GEM_KEY]];
+	[playBrowser setListIcon:[theme gem:RED_GEM_KEY]];
+	[topShowsBrowser setListIcon:[theme gem:GREEN_GEM_KEY]];
+	[favoriteShowsBrowser setListIcon:[theme gem:YELLOW_GEM_KEY]];
+	[unwatchedBrowser setListIcon:[theme gem:BLUE_GEM_KEY]];
 	masterControllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,settings,nil];
 	[unwatchedBrowser release];
 	[favoriteShowsBrowser release];
@@ -193,13 +195,13 @@
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 	
-	
-	if([name isEqual: @"   Unwatched"]) [result setLeftIcon:[[SapphireTheme sharedTheme] blueGemForScene:[self scene]]];
-	if([name isEqual: @"   Favorite Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] yellowGemForScene:[self scene]]];
-	if([name isEqual: @"   Top Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] greenGemForScene:[self scene]]];
-	if([name isEqual: @"   Browse Shows"])  [result setLeftIcon:[[SapphireTheme sharedTheme] redGemForScene:[self scene]]];
-	if( [name isEqual: @"   Settings"]) [result setLeftIcon:[[SapphireTheme sharedTheme] gearGemForScene:[self scene]]] ;
-	if( [name isEqual: @"   Reset the thing already"]) [result setLeftIcon:[[SapphireTheme sharedTheme] coneGemForScene:[self scene]]] ;
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
+	if([name isEqual: @"   Unwatched"]) [result setLeftIcon:[theme gem:BLUE_GEM_KEY]];
+	if([name isEqual: @"   Favorite Shows"])  [result setLeftIcon:[theme gem:YELLOW_GEM_KEY]];
+	if([name isEqual: @"   Top Shows"])  [result setLeftIcon:[theme gem:GREEN_GEM_KEY]];
+	if([name isEqual: @"   Browse Shows"])  [result setLeftIcon:[theme gem:RED_GEM_KEY]];
+	if( [name isEqual: @"   Settings"]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
+	if( [name isEqual: @"   Reset the thing already"]) [result setLeftIcon:[theme gem:CONE_GEM_KEY]];
 
 			
 	// add text

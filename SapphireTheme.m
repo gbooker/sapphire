@@ -20,6 +20,40 @@
 	return shared;
 }
 
+- (id)init
+{
+	self = [super init];
+	if(!self)
+		return nil;
+	
+	gemDict = [NSMutableDictionary new];
+	gemFiles = [[NSDictionary alloc] initWithObjectsAndKeys:
+		@"Contents/Resources/Orange_Red.png", RED_GEM_KEY,
+		@"Contents/Resources/Blue.png", BLUE_GEM_KEY,
+		@"Contents/Resources/Green.png", GREEN_GEM_KEY,
+		@"Contents/Resources/Yellow.png", YELLOW_GEM_KEY,
+		@"Contents/Resources/Gear.png", GEAR_GEM_KEY,
+		@"Contents/Resources/Cone.png", CONE_GEM_KEY,
+		@"Contents/Resources/Eye.png", EYE_GEM_KEY,
+		nil];
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[gemDict release];
+	[scene release];
+	[gemFiles release];
+	[super dealloc];
+}
+
+- (void)setScene:(BRRenderScene *)theScene
+{
+	[gemDict removeAllObjects];
+	scene = [theScene retain];
+}
+
 - (CGImageRef)loadImage:(NSString *)path
 {
 	NSString *bundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
@@ -34,88 +68,21 @@
 	return imageRef;
 }
 
-- (BRTexture *)redGemForScene:(BRRenderScene *)scene;
+- (BRTexture *)gem:(NSString *)type
 {
-	if(redGem == NULL)
+	BRTexture *ret = [gemDict objectForKey:type];
+	if(ret != nil)
+		return ret;
+	
+	CGImageRef image = [self loadImage:[gemFiles objectForKey:type]];
+	if(image != NULL)
 	{
-		redGem = [self loadImage:@"Contents/Resources/Orange_Red.png"];
-		if(redGem == NULL)
-			return nil;
-		
+		ret = [BRBitmapTexture textureWithImage:image context:[scene resourceContext] mipmap:YES];
+		CFRelease(image);
 	}
-	return [BRBitmapTexture textureWithImage:redGem context:[scene resourceContext] mipmap:YES];
-}
-
-- (BRTexture *)blueGemForScene:(BRRenderScene *)scene
-{
-	if(blueGem == NULL)
-	{
-		blueGem = [self loadImage:@"Contents/Resources/Blue.png"];
-		if(blueGem == NULL)
-			return nil;
-		
-	}
-	return [BRBitmapTexture textureWithImage:blueGem context:[scene resourceContext] mipmap:YES];
-}
-
-- (BRTexture *)greenGemForScene:(BRRenderScene *)scene
-{
-	if(greenGem == NULL)
-	{
-		greenGem = [self loadImage:@"Contents/Resources/Green.png"];
-		if(greenGem == NULL)
-			return nil;
-		
-	}
-	return [BRBitmapTexture textureWithImage:greenGem context:[scene resourceContext] mipmap:YES];
-}
-
-- (BRTexture *)yellowGemForScene:(BRRenderScene *)scene
-{
-	if(yellowGem == NULL)
-	{
-		yellowGem = [self loadImage:@"Contents/Resources/Yellow.png"];
-		if(yellowGem == NULL)
-			return nil;
-		
-	}
-	return [BRBitmapTexture textureWithImage:yellowGem context:[scene resourceContext] mipmap:YES];
-}
-
-- (BRTexture *)gearGemForScene:(BRRenderScene *)scene
-{
-	if(gearGem == NULL)
-	{
-		gearGem = [self loadImage:@"Contents/Resources/Gear.png"];
-		if(gearGem == NULL)
-			return nil;
-		
-	}
-	return [BRBitmapTexture textureWithImage:gearGem context:[scene resourceContext] mipmap:YES];
-}
-
-- (BRTexture *)coneGemForScene:(BRRenderScene *)scene
-{
-	if(coneGem == NULL)
-	{
-		coneGem = [self loadImage:@"Contents/Resources/Cone.png"];
-		if(coneGem == NULL)
-			return nil;
-		
-	}
-	return [BRBitmapTexture textureWithImage:coneGem context:[scene resourceContext] mipmap:YES];
-}
-
-- (BRTexture *)iGemForScene:(BRRenderScene *)scene
-{
-	if(iGem == NULL)
-	{
-		iGem = [self loadImage:@"Contents/Resources/Eye.png"];
-		if(iGem == NULL)
-			return nil;
-		
-	}
-	return [BRBitmapTexture textureWithImage:iGem context:[scene resourceContext] mipmap:YES];
+	if(ret != nil)
+		[gemDict setObject:ret forKey:type];
+	return ret;
 }
 
 @end
