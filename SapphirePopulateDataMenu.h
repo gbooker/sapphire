@@ -20,6 +20,7 @@
 	BRButtonControl					*button;
 	BRTextControl					*text;
 	BRTextControl					*fileProgress;
+	BRTextControl					*currentFile;
 	BRProgressBarWidget			*bar;
 
 	SapphireDirectoryMetaData		*meta;

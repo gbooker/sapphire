@@ -19,23 +19,32 @@
 #define META_VERSION				1
 
 //File Specific Keys
-#define MODIFIED_KEY			@"Modified"
-#define WATCHED_KEY				@"Watched"
-#define FAVORITE_KEY			@"Favorite"
-#define RESUME_KEY				@"Resume Time"
-#define SIZE_KEY				@"Size"
-#define DURATION_KEY			@"Duration"
-#define AUDIO_DESC_KEY			@"Audio Description"
-#define SAMPLE_RATE_KEY			@"Sample Rate"
-#define VIDEO_DESC_KEY			@"Video Description"
+#define MODIFIED_KEY					@"Modified"
+#define WATCHED_KEY					@"Watched"
+#define FAVORITE_KEY					@"Favorite"
+#define RESUME_KEY					@"Resume Time"
+#define SIZE_KEY						@"Size"
+#define DURATION_KEY					@"Duration"
+#define AUDIO_DESC_KEY				@"Audio Description"
+#define SAMPLE_RATE_KEY				@"Sample Rate"
+#define VIDEO_DESC_KEY				@"Video Description"
 
 //TV Show Specific Keys
-#define EPISODE_NUMBER_KEY		@"Episode Number"
-#define EPISODE_TITLE_KEY		@"Episode Title"
-#define SEASON_NUMBER_KEY		@"Season"
-#define SHOW_NAME_KEY			@"Show Name"
-#define SHOW_DESCRIPTION_KEY	@"Show Description"
-#define SHOW_AIR_DATE			@"Air Date"
+#define EPISODE_NUMBER_KEY			@"Episode Number"
+#define EPISODE_TITLE_KEY				@"Episode Title"
+#define SEASON_NUMBER_KEY			@"Season"
+#define SHOW_NAME_KEY				@"Show Name"
+#define SHOW_DESCRIPTION_KEY		@"Show Description"
+#define SHOW_AIR_DATE				@"Air Date"
+
+//ATV Extra Info
+#define SHOW_BROADCASTER_KEY		@"Broadcast Company"
+#define SHOW_PUBLISHED_DATE_KEY	@"Published Date"
+#define SHOW_AQUIRED_DATE			@"Date Aquired"
+#define SHOW_RATING_KEY				@"Rating"
+#define SHOW_FAVORITE_RATING		@"User Rating"
+
+//IMDB Type Info
 
 
 @implementation NSString (episodeSorting)
@@ -272,6 +281,13 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			return YES;
 	}
 	return NO;
+}
+
+- (BOOL)hasXMLMetaData:(NSString *)file
+{
+//	NSString *extension = [file pathExtension] ;
+
+	return FALSE ;
 }
 
 - (BOOL)hasPredicatedDirectories:(SapphirePredicate *)predicate

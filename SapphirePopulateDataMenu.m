@@ -42,6 +42,7 @@
 	// setup the text entry control
 	text = [[BRTextControl alloc] initWithScene: scene];
 	fileProgress = [[BRTextControl alloc] initWithScene: scene];
+	currentFile = [[BRTextControl alloc] initWithScene: scene];
 	
 	bar = [[BRProgressBarWidget alloc] initWithScene: scene];
 	frame = [[self masterLayer] frame];
@@ -58,6 +59,7 @@
 	[self addControl: title];
 	[self addControl: text];
 	[self addControl: fileProgress] ;
+	[self addControl: currentFile] ;
 	[[self masterLayer] addSublayer:bar];
 	[self addControl: button];
 
@@ -90,11 +92,26 @@
 	NSSize progressSize = [fileProgress renderedSize];
 	
 	NSRect frame;
-//	frame.origin.x =  (master.size.width - progressSize.width) * 0.2f;
-	frame.origin.x =  (master.size.width) * 0.2f;
-	frame.origin.y = (master.size.height * 0.00f - progressSize.height) + master.size.height * 0.25f/0.8f;
+	frame.origin.x =  (master.size.width) * 0.05f;
+	frame.origin.y = (master.size.height * 0.1f - progressSize.height) ;
 	frame.size = progressSize;
 	[fileProgress setFrame:frame];
+}
+
+- (void)setCurrentFile:(NSString *)theCurrentFile
+{
+	[currentFile setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+	[currentFile setText:theCurrentFile];
+	
+	NSRect master = [[self masterLayer] frame];
+	[currentFile setMaximumSize:NSMakeSize(master.size.width * 9.0f/10.0f, master.size.height * 0.3f)];
+	NSSize currentFileSize = [currentFile renderedSize];
+	
+	NSRect frame;
+	frame.origin.x =  (master.size.width) * 0.05f;
+	frame.origin.y = (master.size.height * 0.07f - currentFileSize.height) ;
+	frame.size = currentFileSize;
+	[currentFile setFrame:frame];
 }
 
 - (void) dealloc
@@ -118,8 +135,6 @@
 	importItems = [[meta subFileMetas] mutableCopy];
 	updated = 0 ;
 	current = 0;
-//	[self setFileProgress:@"File Progress:  <Checking> "];
-//	[[self scene] renderScene];
 	max = [importItems count];
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
@@ -127,10 +142,13 @@
 - (void)importNextItem:(NSTimer *)timer
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	if([fileMeta updateMetaData])updated++;
-	[importItems removeObjectAtIndex:0];
+	NSString * fileName=[[fileMeta path] lastPathComponent] ;
 	current++ ;
+	[self setCurrentFile:[NSString stringWithFormat:@"Current File: %@",fileName]];
 	[self setFileProgress:[NSString stringWithFormat:@"File Progress: %0.0f / %0.0f", current, max,updated]];
+	if([fileMeta updateMetaData])updated++;
+	
+	[importItems removeObjectAtIndex:0];
 	[bar setPercentage:current/max * 100.0f];
 	
 	if(![importItems count])
@@ -142,6 +160,7 @@
 		[button setTarget:nil];
 		[title setTitle: @"Import Complete"];
 		[self setFileProgress:[NSString stringWithFormat:@"Updated %0.0f Entries.", updated]];
+		[self setCurrentFile:@""];
 		[self setText:@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported"];
 		[[self scene] renderScene];
 	}
@@ -160,6 +179,7 @@
 	[title setTitle: @"Populate Show Data"];
 	[self setText:@"This will populate Sapphire's Meta data.  This proceedure may take a while, but you may cancel at any time"];
 	[self setFileProgress:@" "];
+	[self setCurrentFile:@" "] ;
 	[bar setPercentage:0.0f];
 	[button setTitle: @"Import Meta Data"];
 	[button setTarget:self];
