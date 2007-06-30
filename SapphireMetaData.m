@@ -107,6 +107,11 @@ static NSSet *extensions = nil;
 	return [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
 }
 
+- (NSDictionary *)getAllMetaData
+{
+	return nil;
+}
+
 @end
 
 @implementation SapphireMetaDataCollection
@@ -608,6 +613,13 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
 			[fileMeta setFavorite:favorite];
 	}
+}
+
+- (NSDictionary *)getAllMetaData
+{
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		[path lastPathComponent], META_TITLE_KEY,
+		nil];
 }
 
 @end

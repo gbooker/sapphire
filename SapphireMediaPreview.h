@@ -10,12 +10,12 @@
 #import <BackRow/BRMediaPreviewControllerProtocol.h>
 #import <BackRow/BRRenderLayer.h>
 
-@class SapphireFileMetaData;
+@class SapphireMetaData;
 
 @interface SapphireMediaPreview : BRMetadataPreviewController{
-	SapphireFileMetaData	*meta;
+	SapphireMetaData	*meta;
 }
 
-- (void)setMetaData:(SapphireFileMetaData *)newMeta;
+- (void)setMetaData:(SapphireMetaData *)newMeta;
 
 @end

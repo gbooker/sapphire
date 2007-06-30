@@ -469,42 +469,13 @@
 	if(row >= [_names count])
 		return nil;
 	NSString *name = [_names objectAtIndex:row];
-	if(row >= dirCount && row < dirCount + fileCount)
+	if(row < dirCount + fileCount)
 	{
-/*		SapphireFileMetaData *fileMeta = [metaData metaDataForFile:name];
-		
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
-		
-//		NSURL *url = [NSURL fileURLWithPath:@"/System/Library/PrivateFrameworks/BackRow.framework/Resources/Movies.png"];
-		NSURL *url = [NSURL fileURLWithPath:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"]];
-		CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
-		CGImageRef imageRef = nil;
-		if(sourceRef)
-		{
-			imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
-			CFRelease(sourceRef);
-		}
-		if(imageRef)
-		{
-			[preview setImage:imageRef];
-			CFRelease(imageRef);
-		}
-		
-		NSMutableDictionary *attrs = [[[BRThemeInfo sharedTheme] metadataSummaryFieldAttributes] mutableCopy];
-		NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-		float tabLoc = [[self masterLayer] frame].size.width * 0.4f;
-		NSTextTab *myTab = [[NSTextTab alloc] initWithType:NSRightTabStopType location:tabLoc];
-		NSArray *tabs = [NSArray arrayWithObject:myTab];
-		[myTab release];
-		[style setTabStops:tabs];
-		[attrs removeObjectForKey:@"CTTextAlignment"];
-		[attrs setObject:style forKey:NSParagraphStyleAttributeName];
-		[preview setText:[[[NSAttributedString alloc] initWithString:[fileMeta metaDataDescription] attributes:attrs] autorelease]];
-		[attrs release];
-		
-		return [preview autorelease];*/
-		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
-		[preview setMetaData:[metaData metaDataForFile:name]];
+		if(row < dirCount)
+			[preview setMetaData:[metaData metaDataForDirectory:name]];
+		else
+			[preview setMetaData:[metaData metaDataForFile:name]];
 		[preview setShowsMetadataImmediately:NO];
 		return [preview autorelease];
 	}

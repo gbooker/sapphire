@@ -50,7 +50,7 @@ static NSSet *coverArtExtentions = nil;
 	[super dealloc];
 }
 
-- (void)setMetaData:(SapphireFileMetaData *)newMeta
+- (void)setMetaData:(SapphireMetaData *)newMeta
 {
 	[meta release];
 	meta = [newMeta retain];
@@ -61,7 +61,11 @@ static NSSet *coverArtExtentions = nil;
 
 - (NSString *)coverArtForPath
 {
-	NSString *subPath = [[meta path] stringByDeletingPathExtension];
+	NSString *subPath = nil;
+	if([meta isKindOfClass:[SapphireFileMetaData class]])
+		subPath = [[meta path] stringByDeletingPathExtension];
+	else
+		subPath = [[meta path] stringByAppendingPathComponent:@"cover"];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	
 	BOOL isDir = NO;

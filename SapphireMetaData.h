@@ -32,6 +32,7 @@
 
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
 - (void)writeMetaData;
+- (NSDictionary *)getAllMetaData;
 
 @end
 
@@ -105,6 +106,5 @@
 - (int)sampleRate;
 
 - (NSString *)sizeString;
-- (NSDictionary *)getAllMetaData;
 
 @end
