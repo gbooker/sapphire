@@ -51,11 +51,11 @@
 @implementation SapphireMetaData
 
 // Static set of file extensions to filter
-static NSArray *extensions = nil;
+static NSSet *extensions = nil;
 
 +(void)load
 {
-	extensions = [[NSArray alloc] initWithObjects:@"avi", @"mov", @"mpg", @"mpeg", @"wmv",@"mkv", @"flv", @"divx", @"mp4", nil];
+	extensions = [[NSSet alloc] initWithObjects:@"avi", @"mov", @"mpg", @"mpeg", @"wmv",@"mkv", @"flv", @"divx", @"mp4", nil];
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
