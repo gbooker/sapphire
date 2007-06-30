@@ -23,6 +23,18 @@
 
 @implementation SapphireMediaPreview
 
+static NSSet *coverArtExtentions = nil;
+
++ (void)initialize
+{
+	coverArtExtentions = [[NSSet alloc] initWithObjects:
+		@"jpg",
+		@"tif",
+		@"tiff",
+		@"png",
+		nil];
+}
+
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
@@ -47,6 +59,23 @@
 	[self setAsset:asset];
 }
 
+- (NSString *)coverArtForPath
+{
+	NSString *subPath = [[meta path] stringByDeletingPathExtension];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	
+	BOOL isDir = NO;
+	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
+	NSString *ext = nil;
+	while((ext = [extEnum nextObject]) != nil)
+	{
+		NSString *candidate = [subPath stringByAppendingPathExtension:ext];
+		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
+			return candidate;		
+	}
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
+}
+
 - (void)_loadCoverArt
 {
 	[super _loadCoverArt];
@@ -54,7 +83,8 @@
 	if([_coverArtLayer texture] != nil)
 		return;
 	
-	NSURL *url = [NSURL fileURLWithPath:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"]];
+	NSString *path = [self coverArtForPath];
+	NSURL *url = [NSURL fileURLWithPath:path];
 	CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
 	CGImageRef imageRef = nil;
 	if(sourceRef)
