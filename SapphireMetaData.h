@@ -32,7 +32,7 @@
 
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
 - (void)writeMetaData;
-- (NSDictionary *)getAllMetaData;
+- (NSMutableDictionary *)getDisplayedMetaData;
 
 @end
 

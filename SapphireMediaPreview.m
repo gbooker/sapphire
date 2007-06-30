@@ -109,7 +109,7 @@ static NSSet *coverArtExtentions = nil;
 	[super _populateMetadata];
 	if([[_metadataLayer gimmieMetadataObjs] count])
 		return;
-	NSMutableDictionary *allMeta = [[meta getAllMetaData] mutableCopy];
+	NSMutableDictionary *allMeta = [meta getDisplayedMetaData];
 	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
 	if(value != nil)
 	{

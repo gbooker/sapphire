@@ -107,7 +107,7 @@ static NSSet *extensions = nil;
 	return [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
 }
 
-- (NSDictionary *)getAllMetaData
+- (NSMutableDictionary *)getDisplayedMetaData
 {
 	return nil;
 }
@@ -615,9 +615,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 }
 
-- (NSDictionary *)getAllMetaData
+- (NSMutableDictionary *)getDisplayedMetaData
 {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[path lastPathComponent], META_TITLE_KEY,
 		nil];
 }
@@ -627,7 +627,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 @implementation SapphireFileMetaData : SapphireMetaData
 
 static NSDictionary *metaDataSubstitutions = nil;
-static NSArray *metaDataRemovals = nil;
+static NSSet *displayedMetaData = nil;
 
 + (void) initialize
 {
@@ -635,14 +635,12 @@ static NSArray *metaDataRemovals = nil;
 		@"Video", VIDEO_DESC_KEY,
 		@"Audio", AUDIO_DESC_KEY,
 		nil];
-	metaDataRemovals = [[NSArray alloc] initWithObjects:
-		MODIFIED_KEY,
-		WATCHED_KEY,
-		FAVORITE_KEY,
-		RESUME_KEY,
-		SIZE_KEY,
-		DURATION_KEY,
-		SAMPLE_RATE_KEY,
+	displayedMetaData = [[NSSet alloc] initWithObjects:
+		VIDEO_DESC_KEY,
+		AUDIO_DESC_KEY,
+		META_RATING_KEY,
+		META_SUMMARY_KEY,
+		META_COPYRIGHT_KEY,
 		nil];
 		
 }
@@ -800,7 +798,7 @@ static NSArray *metaDataRemovals = nil;
 	return [NSString stringWithFormat:@"%.1f%cB", size, letter];	
 }
 
-- (NSDictionary *)getAllMetaData
+- (NSMutableDictionary *)getDisplayedMetaData
 {
 	NSString *name = [path lastPathComponent];
 	int duration = [self duration];
@@ -816,12 +814,12 @@ static NSArray *metaDataRemovals = nil;
 		durationStr = [NSString stringWithFormat:@"%ds", secs];
 	NSMutableDictionary *ret = [metaData mutableCopy];
 	//Pretty this up now
-	NSEnumerator *removeEnum = [metaDataRemovals objectEnumerator];
-	NSString *key = nil;
-	while((key = [removeEnum nextObject]) != nil)
-		[ret removeObjectForKey:key];
+	NSMutableSet *currentKeys = [NSMutableSet setWithArray:[ret allKeys]];
+	[currentKeys minusSet:displayedMetaData];
+	[ret removeObjectsForKeys:[currentKeys allObjects]];
 	
 	NSEnumerator *subEnum = [metaDataSubstitutions keyEnumerator];
+	NSString *key = nil;
 	while((key = [subEnum nextObject]) != nil)
 	{
 		NSString *value = [ret objectForKey:key];
