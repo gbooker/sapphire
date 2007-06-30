@@ -9,6 +9,7 @@
 #import "SapphireMediaPreview.h"
 #import "SapphireMetaData.h"
 #import "SapphireMedia.h"
+#import "SapphireSettings.h"
 
 @interface BRMetadataLayer (protectedAccess)
 - (NSArray *)gimmieMetadataObjs;
@@ -124,7 +125,8 @@ static NSSet *coverArtExtentions = nil;
 	value = [allMeta objectForKey:META_SUMMARY_KEY];
 	if(value != nil)
 	{
-		[_metadataLayer setSummary:value];
+		if([[SapphireSettings sharedSettings] displaySpoilers])
+			[_metadataLayer setSummary:value];
 		[allMeta removeObjectForKey:META_SUMMARY_KEY];
 	}
 	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
