@@ -471,7 +471,7 @@
 	NSString *name = [_names objectAtIndex:row];
 	if(row >= dirCount && row < dirCount + fileCount)
 	{
-		SapphireFileMetaData *fileMeta = [metaData metaDataForFile:name];
+/*		SapphireFileMetaData *fileMeta = [metaData metaDataForFile:name];
 		
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 		
@@ -502,6 +502,10 @@
 		[preview setText:[[[NSAttributedString alloc] initWithString:[fileMeta metaDataDescription] attributes:attrs] autorelease]];
 		[attrs release];
 		
+		return [preview autorelease];*/
+		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
+		[preview setMetaData:[metaData metaDataForFile:name]];
+		[preview setShowsMetadataImmediately:NO];
 		return [preview autorelease];
 	}
     return ( nil );

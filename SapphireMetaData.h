@@ -9,6 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import "SapphirePredicates.h"
 
+#define META_TITLE_KEY @"Title"
+#define META_RATING_KEY @"Rating"
+#define META_SUMMARY_KEY @"Summary"
+#define META_COPYRIGHT_KEY @"Copyright"
+
 @class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
 
 @protocol SapphireMetaDataDelegate <NSObject>
@@ -100,6 +105,6 @@
 - (int)sampleRate;
 
 - (NSString *)sizeString;
-- (NSString *)metaDataDescription;
+- (NSDictionary *)getAllMetaData;
 
 @end

@@ -614,6 +614,27 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireFileMetaData : SapphireMetaData
 
+static NSDictionary *metaDataSubstitutions = nil;
+static NSArray *metaDataRemovals = nil;
+
++ (void) initialize
+{
+	metaDataSubstitutions = [[NSDictionary alloc] initWithObjectsAndKeys:
+		@"Video", VIDEO_DESC_KEY,
+		@"Audio", AUDIO_DESC_KEY,
+		nil];
+	metaDataRemovals = [[NSArray alloc] initWithObjects:
+		MODIFIED_KEY,
+		WATCHED_KEY,
+		FAVORITE_KEY,
+		RESUME_KEY,
+		SIZE_KEY,
+		DURATION_KEY,
+		SAMPLE_RATE_KEY,
+		nil];
+		
+}
+
 - (BOOL) updateMetaData
 {
 	NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
@@ -767,7 +788,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [NSString stringWithFormat:@"%.1f%cB", size, letter];	
 }
 
-- (NSString *)metaDataDescription
+- (NSDictionary *)getAllMetaData
 {
 	NSString *name = [path lastPathComponent];
 	int duration = [self duration];
@@ -781,16 +802,28 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
 	else
 		durationStr = [NSString stringWithFormat:@"%ds", secs];
-	NSMutableString *ret = [NSMutableString stringWithFormat:
-												   @"Name: \t%@\n"
-													"Duration: \t%@\n"
-													"Size: \t%@", name, durationStr, [self sizeString]];
-	NSString *videoDesc = [metaData objectForKey:VIDEO_DESC_KEY];
-	if(videoDesc != nil)
-		[ret appendFormat:@"\nVideo: \t%@", videoDesc];
-	NSString *audioDesc = [metaData objectForKey:AUDIO_DESC_KEY];
-	if(audioDesc != nil)
-		[ret appendFormat:@"\nAudio: \t%@", audioDesc];
+	NSMutableDictionary *ret = [metaData mutableCopy];
+	//Pretty this up now
+	NSEnumerator *removeEnum = [metaDataRemovals objectEnumerator];
+	NSString *key = nil;
+	while((key = [removeEnum nextObject]) != nil)
+		[ret removeObjectForKey:key];
+	
+	NSEnumerator *subEnum = [metaDataSubstitutions keyEnumerator];
+	while((key = [subEnum nextObject]) != nil)
+	{
+		NSString *value = [ret objectForKey:key];
+		if(value != nil)
+		{
+			[ret setObject:value forKey:[metaDataSubstitutions objectForKey:key]];
+			[ret removeObjectForKey:key];
+		}
+	}
+	if([self duration])
+		[ret setObject:durationStr forKey:DURATION_KEY];
+	[ret setObject:name forKey:META_TITLE_KEY];
+	if([self size])
+		[ret setObject:[self sizeString] forKey:SIZE_KEY];
 	return ret;
 }
 

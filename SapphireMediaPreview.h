@@ -10,13 +10,12 @@
 #import <BackRow/BRMediaPreviewControllerProtocol.h>
 #import <BackRow/BRRenderLayer.h>
 
-@interface SapphireMediaPreview : BRRenderLayer <BRMediaPreviewController>{
-	BRTextLayer			*textLayer;
-	BRImageLayer		*imageLayer;
+@class SapphireFileMetaData;
+
+@interface SapphireMediaPreview : BRMetadataPreviewController{
+	SapphireFileMetaData	*meta;
 }
 
-- (void)setText:(NSAttributedString *)text;
-- (void)setFileProgress:(NSAttributedString *)fileProgress ;
-- (void)setImage:(CGImageRef)image;
+- (void)setMetaData:(SapphireFileMetaData *)newMeta;
 
 @end

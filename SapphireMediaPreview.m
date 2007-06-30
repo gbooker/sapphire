@@ -7,7 +7,19 @@
 //
 
 #import "SapphireMediaPreview.h"
+#import "SapphireMetaData.h"
+#import "SapphireMedia.h"
 
+@interface BRMetadataLayer (protectedAccess)
+- (NSArray *)gimmieMetadataObjs;
+@end
+
+@implementation BRMetadataLayer (protectedAccess)
+- (NSArray *)gimmieMetadataObjs
+{
+	return _metadataObjs;
+}
+@end
 
 @implementation SapphireMediaPreview
 
@@ -17,102 +29,83 @@
 	if(!self)
 		return nil;
 	
-	textLayer = [[BRTextLayer alloc] initWithScene:scene];
-	imageLayer = [[BRImageLayer alloc] initWithScene:scene];
-	
-	[self addSublayer:textLayer];
-	[self addSublayer:imageLayer];
-	
 	return self;
 }
 
 - (void)dealloc
 {
-	[textLayer release];
-	[imageLayer release];
+	[meta release];
 	[super dealloc];
 }
 
-- (void)setText:(NSAttributedString *)text
+- (void)setMetaData:(SapphireFileMetaData *)newMeta
 {
-	[textLayer setAttributedString:text];
-	[self setFrame:[self frame]];
+	[meta release];
+	meta = [newMeta retain];
+	NSURL *url = [NSURL fileURLWithPath:[meta path]];
+	SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
+	[self setAsset:asset];
 }
 
-
-- (void)setFileProgress:(NSAttributedString *)fileProgress
+- (void)_loadCoverArt
 {
-	[textLayer setAttributedString:fileProgress];
-	[self setFrame:[self frame]];
-}
-
-- (void)setImage:(CGImageRef)image
-{
-	[imageLayer setImage:image];
-}
-
-- (void)setFrame:(NSRect)frame
-{
-	frame.origin.x += frame.size.width / 12.0f;
-	frame.size.width *= 2.0f / 3.0f;
-	frame.origin.y += frame.size.height / 24.0f;
-	frame.size.height *= 5.0f/6.0f;
-	[super setFrame:frame];
+	[super _loadCoverArt];
 	
-	[textLayer setMaxSize:frame.size];
-	NSSize txtSize = [textLayer renderedSize];
+	if([_coverArtLayer texture] != nil)
+		return;
 	
-	NSRect textRect = frame;
-	textRect.size.height = txtSize.height;
-	[textLayer setFrame:textRect];
-	
-	NSRect imageRect = frame;
-	long shrink = textRect.size.height + frame.size.height * 0.05f;
-	imageRect.origin.y += shrink;
-	imageRect.size.height -= shrink;
-	
-	NSSize scaled = [imageLayer pixelBounds];
-	double xscale = imageRect.size.width / scaled.width;
-	double yscale = imageRect.size.height / scaled.height;
-	if(xscale < yscale)
-		yscale = xscale;
-	scaled.width *= yscale;
-	scaled.height *= yscale;
-	imageRect.origin.y += (imageRect.size.height - scaled.height) / 2.0f;
-	imageRect.origin.x += (imageRect.size.width - scaled.width) / 2.0f;
-	imageRect.size = scaled;
-	
-	[imageLayer setFrame:imageRect];
+	NSURL *url = [NSURL fileURLWithPath:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"]];
+	CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+	CGImageRef imageRef = nil;
+	if(sourceRef)
+	{
+		imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+		CFRelease(sourceRef);
+	}
+	if(imageRef)
+	{
+		[_coverArtLayer setImage:imageRef];
+		CFRelease(imageRef);
+	}	
 }
 
-- (id)layer
+- (void)_populateMetadata
 {
-	return self;
+	[super _populateMetadata];
+	if([[_metadataLayer gimmieMetadataObjs] count])
+		return;
+	NSMutableDictionary *allMeta = [[meta getAllMetaData] mutableCopy];
+	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
+	if(value != nil)
+	{
+		[_metadataLayer setTitle:value];
+		[allMeta removeObjectForKey:META_TITLE_KEY];
+	}
+	value = [allMeta objectForKey:META_RATING_KEY];
+	if(value != nil)
+	{
+		[_metadataLayer setRating:value];
+		[allMeta removeObjectForKey:META_RATING_KEY];
+	}
+	value = [allMeta objectForKey:META_SUMMARY_KEY];
+	if(value != nil)
+	{
+		[_metadataLayer setSummary:value];
+		[allMeta removeObjectForKey:META_SUMMARY_KEY];
+	}
+	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
+	if(value != nil)
+	{
+		[_metadataLayer setCopyright:value];
+		[allMeta removeObjectForKey:META_COPYRIGHT_KEY];
+	}
+	[_metadataLayer setMetadata:[allMeta allValues] withLabels:[allMeta allKeys]];
 }
 
-- (void)activate
+- (BOOL)_assetHasMetadata
 {
+	return YES;
 }
 
-- (void)willLoseFocus
-{
-}
-
-- (void)willRegainFocus
-{
-}
-
-- (void)willDeactivate
-{
-}
-
-- (void)deactivate
-{
-}
-
-- (BOOL)fadeLayerIn
-{
-	return NO;
-}
 
 @end
