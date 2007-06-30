@@ -7,7 +7,6 @@
 //
 
 #import "SapphirePopulateDataMenu.h"
-#import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
 
 @interface SapphireImporterDataMenu (private)
