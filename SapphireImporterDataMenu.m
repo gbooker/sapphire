@@ -92,8 +92,8 @@
 	NSSize progressSize = [fileProgress renderedSize];
 	
 	NSRect frame;
-	frame.origin.x =  (master.size.width) * 0.05f;
-	frame.origin.y = (master.size.height * 0.1f - progressSize.height) ;
+	frame.origin.x =  (master.size.width) * 0.1f;
+	frame.origin.y = (master.size.height * 0.12f) ;
 	frame.size = progressSize;
 	[fileProgress setFrame:frame];
 }
@@ -108,8 +108,8 @@
 	NSSize currentFileSize = [currentFile renderedSize];
 	
 	NSRect frame;
-	frame.origin.x =  (master.size.width) * 0.05f;
-	frame.origin.y = (master.size.height * 0.07f - currentFileSize.height) ;
+	frame.origin.x =  (master.size.width) * 0.1f;
+	frame.origin.y = (master.size.height * 0.09f) ;
 	frame.size = currentFileSize;
 	[currentFile setFrame:frame];
 }
@@ -145,6 +145,7 @@
 
 - (BOOL)doImport
 {
+	return NO;
 }
 
 - (void)setCompletionText
