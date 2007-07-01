@@ -10,12 +10,22 @@
 #import "SapphireMetaData.h"
 #import "SapphireMedia.h"
 #import "SapphireSettings.h"
+#import <objc/objc-class.h>  //Add this line
 
 @interface BRMetadataLayer (protectedAccess)
 - (NSArray *)gimmieMetadataObjs;
 @end
 
 @implementation BRMetadataLayer (protectedAccess)
+//And change this function to what is below
+- (NSArray *)gimmieMetadataObjs
+{
+	Class myClass = [self class];
+	Ivar ret = class_getInstanceVariable(myClass,"_metadataLabels");
+	
+	return *(NSArray * *)(((char *)self)+ret->ivar_offset);
+}
+/*
 - (NSArray *)gimmieMetadataObjs
 {
 	if([self respondsToSelector:@selector(setStarRating:)])
@@ -23,6 +33,7 @@
 		return _metadataLabels;
 	return _metadataObjs;
 }
+*/
 @end
 
 @implementation SapphireMediaPreview

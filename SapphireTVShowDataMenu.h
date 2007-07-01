@@ -13,7 +13,8 @@
 	NSMutableDictionary		*showTranslations;
 	NSMutableDictionary		*showInfo;
 	regex_t					letterMarking;
-	regex_t					seasonByEpisode;	
+	regex_t					seasonByEpisode;
+	regex_t					seasonEpisodeTriple;
 }
 
 @end

@@ -75,6 +75,7 @@
 	
 	regcomp(&letterMarking, "[ -]?S[0-9]+E[0-9]+", REG_EXTENDED | REG_ICASE);
 	regcomp(&seasonByEpisode, "[ -]?[0-9]+x[0-9]+", REG_EXTENDED | REG_ICASE);
+//	regcomp(&seasonEpisodeTriple, "[ -]?[0-9]+[0-2]+[0-9]+", REG_EXTENDED | REG_ICASE);
 	
 	return self;
 }
@@ -274,7 +275,12 @@
 	{
 		index = matches[0].rm_so;
 	}
-	
+/*	
+	else if(!regexec(&seasonEpisodeTriple, [fileName fileSystemRepresentation], 3, matches, 0))
+	{
+		index = matches[0].rm_so;
+	}
+*/	
 	if(index == NSNotFound)
 		return NO;
 	
