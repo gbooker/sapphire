@@ -557,7 +557,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 }
 
-- (BOOL)watchedForPredicate:(SapphirePredicate *)predicate
+- (BOOL)checkResult:(BOOL)result recursivelyOnFiles:(NSInvocation *)fileInv forPredicate:(SapphirePredicate *)predicate
 {
 	NSArray *filesToScan = files;
 	NSArray *directoriesToScan = directories;
@@ -565,90 +565,81 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
-		if(![[self metaDataForFile:file] watched])
-			return NO;
+	{
+		[fileInv invokeWithTarget:[self metaDataForFile:file]];
+		BOOL result = NO;
+		[fileInv getReturnValue:&result];
+		if(result == result)
+			return result;
+	}
 
 	NSEnumerator *dirEnum = [directoriesToScan objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
-		if(![[self metaDataForDirectory:dir] watchedForPredicate:predicate])
-			return NO;
+		if([[self metaDataForDirectory:dir] checkResult:result recursivelyOnFiles:fileInv forPredicate:predicate] == result)
+			return result;
+	
+	return !result;
+}
 
-	return YES;
+- (void)invokeRecursivelyOnFiles:(NSInvocation *)fileInv withPredicate:(SapphirePredicate *)predicate
+{
+	[self reloadDirectoryContents];
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+		[[self metaDataForDirectory:dir] invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
+	
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
+			[fileInv invokeWithTarget:fileMeta];
+	}
+}
+
+- (BOOL)watchedForPredicate:(SapphirePredicate *)predicate
+{
+	SEL select = @selector(watched);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
+	[fileInv setSelector:select];
+	return [self checkResult:NO recursivelyOnFiles:fileInv forPredicate:predicate];
 }
 
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate
 {
-	[self reloadDirectoryContents];
-	NSEnumerator *dirEnum = [directories objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-		[[self metaDataForDirectory:dir] setWatched:watched predicate:predicate];
-	
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-	{
-		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
-		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
-			[fileMeta setWatched:watched];
-	}
+	SEL select = @selector(setWatched:);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
+	[fileInv setSelector:select];
+	[fileInv setArgument:&watched atIndex:2];
+	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate
 {
-	NSArray *filesToScan = files;
-	NSArray *directoriesToScan = directories;
-	[self setupFiles:&filesToScan andDirectories:&directoriesToScan arraysForPredicate:predicate];
-	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-		if([[self metaDataForFile:file] favorite])
-			return YES;
-
-	NSEnumerator *dirEnum = [directoriesToScan objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-		if([[self metaDataForDirectory:dir] favoriteForPredicate:predicate])
-			return YES;
-	
-	return NO;
+	SEL select = @selector(favorite);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
+	[fileInv setSelector:select];
+	return [self checkResult:YES recursivelyOnFiles:fileInv forPredicate:predicate];	
 }
 
 - (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate
 {
-	[self reloadDirectoryContents];
-	NSEnumerator *dirEnum = [directories objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-		[[self metaDataForDirectory:dir] setFavorite:favorite predicate:predicate];
-	
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-	{
-		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
-		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
-			[fileMeta setFavorite:favorite];
-	}
+	SEL select = @selector(setFavorite:);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
+	[fileInv setSelector:select];
+	[fileInv setArgument:&favorite atIndex:2];
+	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
 - (void)setToImportFromTVForPredicate:(SapphirePredicate *)predicate
 {
-	[self reloadDirectoryContents];
-	NSEnumerator *dirEnum = [directories objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-		[[self metaDataForDirectory:dir] setToImportFromTVForPredicate:predicate];
-	
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-	{
-		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
-		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
-			[fileMeta setToImportFromTV];
-	}	
+	SEL select = @selector(setToImportFromTV);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
+	[fileInv setSelector:select];
+	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
 - (NSMutableDictionary *)getDisplayedMetaData
