@@ -79,8 +79,21 @@ static NSSet *coverArtExtentions = nil;
 	{
 		NSString *candidate = [subPath stringByAppendingPathExtension:ext];
 		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
-			return candidate;		
+			return candidate;
 	}
+	if(!isDir)
+	{
+		extEnum = [coverArtExtentions objectEnumerator];
+		ext=nil ;
+		subPath =[[[meta path] stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"cover"];
+		while((ext = [extEnum nextObject]) != nil)
+		{
+			NSString *candidate = [subPath stringByAppendingPathExtension:ext];
+			if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
+				return candidate;
+		}
+	}
+	
 	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
 }
 
