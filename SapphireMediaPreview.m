@@ -18,6 +18,9 @@
 @implementation BRMetadataLayer (protectedAccess)
 - (NSArray *)gimmieMetadataObjs
 {
+	if([self respondsToSelector:@selector(setStarRating:)])
+		//This object is in a different possition
+		return _metadataLabels;
 	return _metadataObjs;
 }
 @end
