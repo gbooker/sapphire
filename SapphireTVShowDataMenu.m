@@ -8,6 +8,7 @@
 
 #import "SapphireTVShowDataMenu.h"
 #import "SapphireMetaData.h"
+#import "NSString-Extensions.h"
 #include <regex.h>
 
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"

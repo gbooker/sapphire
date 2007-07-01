@@ -21,6 +21,7 @@
 		F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A1DF40C31CE190022918E /* QTKit.framework */; };
 		F56B727A0C3716B300E934AA /* SapphireImporterDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B72790C3716B300E934AA /* SapphireImporterDataMenu.m */; };
 		F56B72EF0C371E4B00E934AA /* SapphireTVShowDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B72EE0C371E4B00E934AA /* SapphireTVShowDataMenu.m */; };
+		F56B74D60C3753E300E934AA /* NSString-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B74D50C3753E300E934AA /* NSString-Extensions.m */; };
 		F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D0DEB50C331D76007652B2 /* SapphireTheme.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
@@ -64,6 +65,8 @@
 		F56B72790C3716B300E934AA /* SapphireImporterDataMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireImporterDataMenu.m; sourceTree = "<group>"; };
 		F56B72ED0C371E4B00E934AA /* SapphireTVShowDataMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireTVShowDataMenu.h; sourceTree = "<group>"; };
 		F56B72EE0C371E4B00E934AA /* SapphireTVShowDataMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireTVShowDataMenu.m; sourceTree = "<group>"; };
+		F56B74D40C3753E300E934AA /* NSString-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-Extensions.h"; sourceTree = "<group>"; };
+		F56B74D50C3753E300E934AA /* NSString-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-Extensions.m"; sourceTree = "<group>"; };
 		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
 		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
 		F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMarkMenu.h; sourceTree = "<group>"; };
@@ -146,6 +149,7 @@
 				F56B6D900C34713A00E934AA /* MetaData */,
 				F56B6D920C34717200E934AA /* Settings */,
 				F56B6D910C34714600E934AA /* FRAppliance */,
+				F56B74D30C3753C100E934AA /* Extensions */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -223,6 +227,15 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		F56B74D30C3753C100E934AA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F56B74D40C3753E300E934AA /* NSString-Extensions.h */,
+				F56B74D50C3753E300E934AA /* NSString-Extensions.m */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -297,6 +310,7 @@
 				F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */,
 				F56B727A0C3716B300E934AA /* SapphireImporterDataMenu.m in Sources */,
 				F56B72EF0C371E4B00E934AA /* SapphireTVShowDataMenu.m in Sources */,
+				F56B74D60C3753E300E934AA /* NSString-Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

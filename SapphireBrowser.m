@@ -15,6 +15,7 @@
 #import "SapphireMediaPreview.h"
 #import "SapphireTheme.h"
 #import "SapphireSettings.h"
+#import "NSString-Extensions.h"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -32,18 +33,6 @@
 @interface BRTVShowsSortSelectorStateLayer (bypassAccess)
 - (BRTextLayer *)gimmieDate;
 - (BRTextLayer *)gimmieShow;
-@end
-
-@interface NSString (PostStrings)
-- (NSString *)URLEncode;
-@end
-
-@implementation NSString (PostStrings)
-- (NSString *)URLEncode
-{
-	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);
-	return [result autorelease];
-}
 @end
 
 @implementation BRTVShowsSortControl (bypassAccess)
