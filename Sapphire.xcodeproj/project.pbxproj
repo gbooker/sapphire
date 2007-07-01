@@ -23,6 +23,7 @@
 		F56B72EF0C371E4B00E934AA /* SapphireTVShowDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B72EE0C371E4B00E934AA /* SapphireTVShowDataMenu.m */; };
 		F56B74D60C3753E300E934AA /* NSString-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B74D50C3753E300E934AA /* NSString-Extensions.m */; };
 		F56B765E0C3837CE00E934AA /* SapphireShowChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */; };
+		F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */ = {isa = PBXBuildFile; fileRef = F56B77D60C3858B400E934AA /* DefaultPreview.png */; };
 		F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D0DEB50C331D76007652B2 /* SapphireTheme.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
@@ -70,6 +71,7 @@
 		F56B74D50C3753E300E934AA /* NSString-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-Extensions.m"; sourceTree = "<group>"; };
 		F56B765C0C3837CE00E934AA /* SapphireShowChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireShowChooser.h; sourceTree = "<group>"; };
 		F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireShowChooser.m; sourceTree = "<group>"; };
+		F56B77D60C3858B400E934AA /* DefaultPreview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPreview.png; sourceTree = "<group>"; };
 		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
 		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
 		F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMarkMenu.h; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F56B77D60C3858B400E934AA /* DefaultPreview.png */,
 				FE423ABD0C3341D70035A717 /* Eye.png */,
 				FE423A6A0C3338030035A717 /* Gear.png */,
 				FE4239A00C331FFD0035A717 /* Green.png */,
@@ -291,6 +294,7 @@
 				FE423A6B0C3338030035A717 /* Gear.png in Resources */,
 				FE423A9F0C333DF40035A717 /* Cone.png in Resources */,
 				FE423ABE0C3341D70035A717 /* Eye.png in Resources */,
+				F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

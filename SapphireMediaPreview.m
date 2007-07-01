@@ -99,7 +99,7 @@ static NSSet *coverArtExtentions = nil;
 		NSString *ret = [self coverArtForDir:[meta path] parents:1];
 		if(ret != nil)
 			return ret;
-		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
+		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
 	}
 
 	NSString *subPath = [[meta path] stringByDeletingPathExtension];
@@ -116,7 +116,7 @@ static NSSet *coverArtExtentions = nil;
 	if(ret != nil)
 		return ret;
 	
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
 }
 
 - (void)_loadCoverArt
