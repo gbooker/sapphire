@@ -66,23 +66,41 @@ static NSSet *coverArtExtentions = nil;
 - (NSString *)coverArtForPath
 {
 	NSString *subPath = nil;
+	NSString *subPath2 = nil;
+	NSString *subPath3 = nil;
+
 	if([meta isKindOfClass:[SapphireFileMetaData class]])
+	{
 		subPath = [[meta path] stringByDeletingPathExtension];
+		subPath2 =[[[meta path] stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"cover"];
+		subPath3 =[[[[meta path] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"cover"];
+	}
 	else
 		subPath = [[meta path] stringByAppendingPathComponent:@"cover"];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	
 	BOOL isDir = NO;
+	BOOL foundSubPath2 = NO ;
+	BOOL foundSubPath3 = NO ;
+	NSString *candidate2 = nil;
+	NSString *candidate3 = nil;
 	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
 	NSString *ext = nil;
 	while((ext = [extEnum nextObject]) != nil)
 	{
-		NSString *candidate = [subPath stringByAppendingPathExtension:ext];
+		NSString *candidate =   [subPath stringByAppendingPathExtension:ext];
+		if(!foundSubPath2) candidate2 = [subPath2 stringByAppendingPathExtension:ext];
+		if(!foundSubPath3 && !foundSubPath2)candidate3 = [subPath3 stringByAppendingPathExtension:ext];
 		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
 			return candidate;
+		if([fm fileExistsAtPath:candidate2 isDirectory:&isDir] && !isDir)foundSubPath2=TRUE ;
+		if([fm fileExistsAtPath:candidate3 isDirectory:&isDir] && !isDir && !foundSubPath2)foundSubPath3=TRUE ;
 	}
 	if(!isDir)
 	{
+		if(foundSubPath2) return candidate2 ;
+		if(foundSubPath3) return candidate3 ;
+	/*
 		extEnum = [coverArtExtentions objectEnumerator];
 		ext=nil ;
 		subPath =[[[meta path] stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"cover"];
@@ -92,6 +110,7 @@ static NSSet *coverArtExtentions = nil;
 			if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
 				return candidate;
 		}
+	*/	
 	}
 	
 	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
