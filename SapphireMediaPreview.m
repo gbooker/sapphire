@@ -63,37 +63,58 @@ static NSSet *coverArtExtentions = nil;
 	[self setAsset:asset];
 }
 
+- (NSString *)searchExtForPath:(NSString *)path
+{
+	NSFileManager *fm = [NSFileManager defaultManager];
+	BOOL isDir = NO;
+	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
+	NSString *ext = nil;
+	while((ext = [extEnum nextObject]) != nil)
+	{
+		NSString *candidate = [path stringByAppendingPathExtension:ext];
+		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
+			return candidate;
+	}
+	return nil;
+}
+
+- (NSString *)coverArtForDir:(NSString *)dir parents:(int)parents
+{
+	NSString *ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"<Cover Art>/cover"]];
+	if(ret != nil)
+		return ret;
+	ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"cover"]];
+	if(ret != nil)
+		return ret;
+	if(parents != 0)
+		return [self coverArtForDir:[dir stringByDeletingLastPathComponent] parents:parents -1];
+	return nil;
+}
+
 - (NSString *)coverArtForPath
 {
-	NSString *subPath = nil;
-	int parents = 1;
+	if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
+	{
+		NSString *ret = [self coverArtForDir:[meta path] parents:1];
+		if(ret != nil)
+			return ret;
+		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
+	}
 
-	if([meta isKindOfClass:[SapphireFileMetaData class]])
-	{
-		subPath = [[meta path] stringByDeletingPathExtension];
-		parents = 2;
-	}
-	else
-		subPath = [[meta path] stringByAppendingPathComponent:@"cover"];
-	NSFileManager *fm = [NSFileManager defaultManager];
+	NSString *subPath = [[meta path] stringByDeletingPathExtension];
+	NSString *fileName = [subPath lastPathComponent];
+	NSString *ret = [self searchExtForPath:[[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"<Cover Art>"] stringByAppendingPathComponent:fileName]];
+	if(ret != nil)
+		return ret;
 	
-	BOOL isDir = NO;
-	while(parents >= 0)
-	{
-		NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
-		NSString *ext = nil;
-		while((ext = [extEnum nextObject]) != nil)
-		{
-			NSString *candidate = [subPath stringByAppendingPathExtension:ext];
-			if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
-				return candidate;
-		}
-		if(parents == 2)
-			subPath = [[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"];
-		else
-			subPath = [[[subPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"];
-		parents--;
-	}
+	ret = [self searchExtForPath:subPath];
+	if(ret != nil)
+		return ret;
+	
+	ret = [self coverArtForDir:[subPath stringByDeletingLastPathComponent] parents:2];
+	if(ret != nil)
+		return ret;
+	
 	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/ApplianceIcon.png"];
 }
 

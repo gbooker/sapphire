@@ -255,6 +255,8 @@
 - (BOOL)doImport
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
+	if([fileMeta importedFromTV])
+		return NO;
 	NSString *path = [fileMeta path];
 //	NSArray *pathComponents = [path pathComponents];
 	NSString *fileName = [path lastPathComponent];
@@ -303,13 +305,18 @@
 	{
 		NSURL *imageURL = [NSURL URLWithString:image];
 		NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-		NSString *destination = [[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
+		NSString *fileName = [path lastPathComponent];
+		NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"<Cover Art>"];
+		NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
+		[[NSFileManager defaultManager] createDirectoryAtPath:coverArtDir attributes:nil];
+		NSString *destination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
 		SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:destination];
 		[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate];
 		[myDelegate release];
 	}
 	
 	[info removeObjectForKey:LINK_KEY];
+	[info setObject:[NSNumber numberWithBool:YES] forKey:TVRAGE_IMPORT_KEY];
 	[fileMeta importInfo:info];
 	
 	return NO;

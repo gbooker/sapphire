@@ -235,6 +235,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	{
 		if([name hasPrefix:@"."])
 			continue;
+		if([name isEqualToString:@"<Cover Art>"])
+			continue;
 		//Only accept if it is a directory or right extension
 		NSString *extension = [name pathExtension];
 		if([self isDirectory:[path stringByAppendingPathComponent:name]])
