@@ -109,6 +109,8 @@
 - (long long)size;
 - (float)duration;
 - (int)sampleRate;
+- (int)episodeNumber ;
+- (NSString *)episodeTitle ;
 
 - (NSString *)sizeString;
 

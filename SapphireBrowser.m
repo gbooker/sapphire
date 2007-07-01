@@ -286,6 +286,7 @@
     // return that object, it will be used to display the list item.
     return ( nil );
 */
+	NSString * displayName=nil ;
 	int nameCount = [_names count];
 	if( nameCount == 0)
 	{
@@ -318,7 +319,11 @@
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
-			[[result textItem] setRightJustifiedText:[meta sizeString]];
+			int eps= [meta episodeNumber] ;
+			displayName=[meta episodeTitle] ;
+			if(eps>9)[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %d",eps]];
+			else if(eps>0)[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" 0%d",eps]];
+			else [[result textItem] setRightJustifiedText:[meta sizeString]];
 			watched = [meta watched];
 			favorite = [meta favorite] ;
 		}
@@ -335,6 +340,7 @@
 	else [result setLeftIcon:[theme gem:RED_GEM_KEY]];
 			
 	// add text
+	if(displayName)name= displayName ;
 	name=[@"   " stringByAppendingString: name] ;
 	[[result textItem] setTitle: name] ;
 	[items replaceObjectAtIndex:row withObject:result];
@@ -349,7 +355,7 @@
 	
 	NSString *result = [ _names objectAtIndex: row] ;
 	
-	return ([@"   " stringByAppendingString: result] ) ;
+	return ([@"  ????? " stringByAppendingString: result] ) ;
 }
 
 - (long) rowForTitle: (NSString *) title
@@ -379,7 +385,6 @@
 	}
 	
 	NSString *name = [_names objectAtIndex:row];
-//	name=[@"  " stringByAppendingString: name] ;
 	NSString *dir = [metaData path];
 	
 	if([sort gimmieState] == 2)
