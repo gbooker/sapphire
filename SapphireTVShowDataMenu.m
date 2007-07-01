@@ -87,8 +87,8 @@
 		showTranslations = [NSMutableDictionary new];
 	showInfo = [NSMutableDictionary new];
 	
-	regcomp(&letterMarking, "[ -]?S[0-9]+E[0-9]+", REG_EXTENDED | REG_ICASE);
-	regcomp(&seasonByEpisode, "[ -]?[0-9]+x[0-9]+", REG_EXTENDED | REG_ICASE);
+	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[0-9]+", REG_EXTENDED | REG_ICASE);
+	regcomp(&seasonByEpisode, "[\\. -]?[0-9]+x[0-9]+", REG_EXTENDED | REG_ICASE);
 	regcomp(&seasonEpisodeTriple, "[\\. -][0-9]{3,5}[\\. -]", REG_EXTENDED | REG_ICASE);	
 	return self;
 }
