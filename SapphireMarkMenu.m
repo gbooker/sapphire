@@ -20,12 +20,19 @@
 	isDir = [meta isKindOfClass:[SapphireDirectoryMetaData class]];
 	metaData = [meta retain];
 	if(isDir)
-		names = [[NSArray alloc] initWithObjects:@"Mark All as Watched", @"Mark All as Unwatched", @"Mark All as Favorite", @"Mark All as Not Favorite", nil];
+		names = [[NSArray alloc] initWithObjects:
+			@"Mark All as Watched",
+			@"Mark All as Unwatched",
+			@"Mark All as Favorite",
+			@"Mark All as Not Favorite",
+			@"Mark All to Refetch TV Data",
+			nil];
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
 		SapphireFileMetaData *fileMeta = (SapphireFileMetaData *)metaData;
 		NSString *watched = nil;
 		NSString *favorite = nil;
+		NSString *reimport = nil;
 		
 		if([fileMeta watched])
 			watched = @"Mark as Unwatched";
@@ -36,7 +43,9 @@
 			favorite = @"Mark as Not Favorite";
 		else
 			favorite = @"Mark as Favorite";
-		names = [[NSArray alloc] initWithObjects:watched, favorite, nil];
+		if([fileMeta importedFromTV])
+			reimport = @"Mark to Refetch TV Data";
+		names = [[NSArray alloc] initWithObjects:watched, favorite, reimport, nil];
 	}
 	else
 	{
@@ -198,6 +207,9 @@
 			case 3:
 				[dirMeta setFavorite:NO predicate:predicate];
 				break;
+			case 4:
+				[dirMeta setToImportFromTVForPredicate:predicate];
+				break;
 		}
 	}
 	else
@@ -210,6 +222,9 @@
 				break;
 			case 1:
 				[fileMeta setFavorite:![fileMeta favorite]];
+				break;
+			case 2:
+				[fileMeta setToImportFromTV];
 				break;
 		}
 	}

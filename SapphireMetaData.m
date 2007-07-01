@@ -19,19 +19,19 @@
 #define META_VERSION				1
 
 //File Specific Keys
-#define MODIFIED_KEY					@"Modified"
+#define MODIFIED_KEY				@"Modified"
 #define WATCHED_KEY					@"Watched"
-#define FAVORITE_KEY					@"Favorite"
+#define FAVORITE_KEY				@"Favorite"
 #define RESUME_KEY					@"Resume Time"
-#define SIZE_KEY						@"Size"
-#define DURATION_KEY					@"Duration"
+#define SIZE_KEY					@"Size"
+#define DURATION_KEY				@"Duration"
 #define AUDIO_DESC_KEY				@"Audio Description"
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
 
 //TV Show Specific Keys
 #define EPISODE_NUMBER_KEY			@"Episode Number"
-#define EPISODE_TITLE_KEY				@"Episode Title"
+#define EPISODE_TITLE_KEY			@"Episode Title"
 #define SEASON_NUMBER_KEY			@"Season"
 #define SHOW_NAME_KEY				@"Show Name"
 #define SHOW_DESCRIPTION_KEY		@"Show Description"
@@ -39,7 +39,7 @@
 
 //ATV Extra Info
 #define SHOW_BROADCASTER_KEY		@"Broadcast Company"
-#define SHOW_PUBLISHED_DATE_KEY	@"Published Date"
+#define SHOW_PUBLISHED_DATE_KEY		@"Published Date"
 #define SHOW_AQUIRED_DATE			@"Date Aquired"
 #define SHOW_RATING_KEY				@"Rating"
 #define SHOW_FAVORITE_RATING		@"User Rating"
@@ -631,6 +631,24 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 }
 
+- (void)setToImportFromTVForPredicate:(SapphirePredicate *)predicate
+{
+	[self reloadDirectoryContents];
+	NSEnumerator *dirEnum = [directories objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+		[[self metaDataForDirectory:dir] setToImportFromTVForPredicate:predicate];
+	
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
+			[fileMeta setToImportFromTV];
+	}	
+}
+
 - (NSMutableDictionary *)getDisplayedMetaData
 {
 	return [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -766,6 +784,16 @@ static NSSet *displayedMetaData = nil;
 - (void)setFavorite:(BOOL)favorite
 {
 	[metaData setObject:[NSNumber numberWithBool:favorite] forKey:FAVORITE_KEY];
+}
+
+- (BOOL)importedFromTV
+{
+	return [[metaData objectForKey:TVRAGE_IMPORT_KEY] boolValue];
+}
+
+- (void)setToImportFromTV
+{
+	[metaData removeObjectForKey:TVRAGE_IMPORT_KEY];
 }
 
 - (unsigned int)resumeTime

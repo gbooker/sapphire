@@ -9,10 +9,11 @@
 #import <Cocoa/Cocoa.h>
 #import "SapphirePredicates.h"
 
-#define META_TITLE_KEY @"Title"
-#define META_RATING_KEY @"Rating"
-#define META_SUMMARY_KEY @"Description"
-#define META_COPYRIGHT_KEY @"Copyright"
+#define META_TITLE_KEY				@"Title"
+#define META_RATING_KEY				@"Rating"
+#define META_SUMMARY_KEY			@"Description"
+#define META_COPYRIGHT_KEY			@"Copyright"
+#define TVRAGE_IMPORT_KEY			@"TVRageImported"
 
 @class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
 
@@ -85,6 +86,7 @@
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
 - (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate;
+- (void)setToImportFromTVForPredicate:(SapphirePredicate *)predicate;
 
 @end
 
@@ -99,6 +101,8 @@
 - (void)setWatched:(BOOL)watched;
 - (BOOL)favorite;
 - (void)setFavorite:(BOOL)favorite;
+- (BOOL)importedFromTV;
+- (void)setToImportFromTV;
 - (unsigned int)resumeTime;
 - (void)setResumeTime:(unsigned int)resumeTime;
 
