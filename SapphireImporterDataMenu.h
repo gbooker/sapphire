@@ -16,19 +16,20 @@
 
 @interface SapphireImporterDataMenu : BRLayerController
 {
-	BRHeaderControl				*title;
+	BRHeaderControl					*title;
 	BRButtonControl					*button;
 	BRTextControl					*text;
 	BRTextControl					*fileProgress;
 	BRTextControl					*currentFile;
-	BRProgressBarWidget			*bar;
+	BRProgressBarWidget				*bar;
 
 	SapphireDirectoryMetaData		*meta;
 	NSMutableArray					*importItems;
-	NSTimer						*importTimer;
+	NSTimer							*importTimer;
 	float							max;
 	float							current;
 	float							updated ;
+	BOOL							suspended;
 }
 - (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData;
 - (void) dealloc;

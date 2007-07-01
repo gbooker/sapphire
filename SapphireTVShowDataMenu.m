@@ -9,6 +9,7 @@
 #import "SapphireTVShowDataMenu.h"
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
+#import "SapphireShowChooser.h"
 #include <regex.h>
 
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
@@ -22,6 +23,8 @@
 #define SUMMARY_KEY @"Description"
 #define TITLE_KEY @"Title"
 #define LINK_KEY @"Link" 
+
+#define TRANSLATIONS_KEY		@"Translations"
 
 @interface SapphireTVShowDataMenuDownloadDelegate : NSObject
 {
@@ -60,23 +63,33 @@
 - (void)resetUIElements;
 - (void)importNextItem:(NSTimer *)timer;
 - (void)setCurrentFile:(NSString *)theCurrentFile;
+- (void)pause;
+- (void)resume;
+- (void)skipNextItem;
+@end
+
+@interface SapphireTVShowDataMenu (private)
+- (void)writeSettings;
 @end
 
 @implementation SapphireTVShowDataMenu
 
-- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData
+- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData savedSetting:(NSString *)path
 {
 	self = [super initWithScene:scene metaData:metaData];
 	if(!self)
 		return nil;
 	
-	showTranslations = [NSMutableDictionary new];
+	settingsPath = [path retain];
+	NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:path];
+	showTranslations = [[settings objectForKey:TRANSLATIONS_KEY] mutableCopy];
+	if(showTranslations == nil)
+		showTranslations = [NSMutableDictionary new];
 	showInfo = [NSMutableDictionary new];
 	
 	regcomp(&letterMarking, "[ -]?S[0-9]+E[0-9]+", REG_EXTENDED | REG_ICASE);
 	regcomp(&seasonByEpisode, "[ -]?[0-9]+x[0-9]+", REG_EXTENDED | REG_ICASE);
-//	regcomp(&seasonEpisodeTriple, "[ -]?[0-9]+[0-2]+[0-9]+", REG_EXTENDED | REG_ICASE);
-	
+	regcomp(&seasonEpisodeTriple, "[\\. -][0-9]{3,5}[\\. -]", REG_EXTENDED | REG_ICASE);	
 	return self;
 }
 
@@ -84,8 +97,10 @@
 {
 	[showTranslations release];
 	[showInfo release];
+	[settingsPath release];
 	regfree(&letterMarking);
 	regfree(&seasonByEpisode);
+	regfree(&seasonEpisodeTriple);
 	[super dealloc];
 }
 
@@ -250,6 +265,13 @@
 	return epDict;
 }
 
+- (void)writeSettings
+{
+	NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
+		showTranslations, TRANSLATIONS_KEY,
+		nil];
+	[settings writeToFile:settingsPath atomically:YES];
+}
 
 - (void)getItems
 {
@@ -267,20 +289,27 @@
 	
 	int index = NSNotFound;
 	regmatch_t matches[3];
-	if(!regexec(&letterMarking, [fileName fileSystemRepresentation], 3, matches, 0))
+	const char *theFileName = [fileName fileSystemRepresentation];
+	NSString *scanString = nil;
+	if(!regexec(&letterMarking, theFileName, 3, matches, 0))
 	{
 		index = matches[0].rm_so;
+		scanString = [fileName substringFromIndex:index];
 	}
-	else if(!regexec(&seasonByEpisode, [fileName fileSystemRepresentation], 3, matches, 0))
+	else if(!regexec(&seasonByEpisode, theFileName, 3, matches, 0))
 	{
 		index = matches[0].rm_so;
+		scanString = [fileName substringFromIndex:index];
 	}
-/*	
-	else if(!regexec(&seasonEpisodeTriple, [fileName fileSystemRepresentation], 3, matches, 0))
+	else if(!regexec(&seasonEpisodeTriple, theFileName, 3, matches, 0))
 	{
-		index = matches[0].rm_so;
+		index = matches[0].rm_so + 1;
+		NSMutableString *tempStr = [fileName mutableCopy];
+		[tempStr deleteCharactersInRange:NSMakeRange(0, index)];
+		[tempStr insertString:@"x" atIndex:matches[0].rm_eo - index - 3];
+		scanString = [tempStr autorelease];
 	}
-*/	
+	
 	if(index == NSNotFound)
 		return NO;
 	
@@ -289,13 +318,18 @@
 	if(show == nil)
 	{
 		NSArray *shows = [self searchResultsForSeries:searchStr];
-		show = [[shows objectAtIndex:0] objectForKey:@"link"];
-		[showTranslations setObject:show forKey:searchStr];
+		[self pause];
+		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[self scene]];
+		[chooser setShows:shows];
+		[chooser setListTitle:[@"Show? " stringByAppendingString:fileName]];
+		[chooser setSearchStr:searchStr];
+		[[self stack] pushController:chooser];
+		return NO;
 	}
 	
 	int season = 0;
 	int ep = 0;
-	NSScanner *scanner = [NSScanner scannerWithString:[fileName substringFromIndex:index]];
+	NSScanner *scanner = [NSScanner scannerWithString:scanString];
 	NSCharacterSet *digits = [NSCharacterSet decimalDigitCharacterSet];
 	[scanner scanUpToCharactersFromSet:digits intoString:nil];
 	[scanner scanInt:&season];
@@ -351,4 +385,28 @@
 	[self setText:@"This will attempt to fetch information about TV shows automatically.  This procedure may take quite some time and could ask you questions"];
 	[button setTitle: @"Import TV Show Data"];
 }
+
+- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+{
+	[super wasExhumedByPoppingController:controller];
+	if(![controller isKindOfClass:[SapphireShowChooser class]])
+		return;
+	
+	SapphireShowChooser *chooser = (SapphireShowChooser *)controller;
+	int selection = [chooser selection];
+	if(selection == SHOW_CHOOSE_CANCEL)
+		[self skipNextItem];
+	else if(selection == SHOW_CHOOSE_NOT_SHOW)
+		[[importItems objectAtIndex:0] importInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithBool:YES], TVRAGE_IMPORT_KEY,
+			nil]];
+	else
+	{
+		NSDictionary *show = [[chooser shows] objectAtIndex:selection];
+		[showTranslations setObject:[show objectForKey:@"link"] forKey:[chooser searchStr]];
+		[self writeSettings];
+	}
+	[self resume];
+}
+
 @end

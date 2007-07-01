@@ -299,7 +299,7 @@ static SapphireSettings *sharedInstance = nil;
 	}
 	else if(row == 1)
 	{
-		SapphireTVShowDataMenu *menu = [[SapphireTVShowDataMenu alloc] initWithScene:[self scene] metaData:metaData];
+		SapphireTVShowDataMenu *menu = [[SapphireTVShowDataMenu alloc] initWithScene:[self scene] metaData:metaData savedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
 		[[self stack] pushController:menu];
 		[menu release];
 	}

@@ -158,6 +158,12 @@
 	[self setFileProgress:[NSString stringWithFormat:@"File Progress: %0.0f / %0.0f", current, max,updated]];
 	if([self doImport])updated++;
 	
+	if(suspended)
+	{
+		current--;
+		return;
+	}
+	
 	[importItems removeObjectAtIndex:0];
 	[bar setPercentage:current/max * 100.0f];
 	
@@ -182,6 +188,25 @@
 	importTimer = nil;
 	[self resetUIElements];
 	[meta writeMetaData];
+}
+
+- (void)pause
+{
+	suspended = YES;
+	[importTimer invalidate];
+	importTimer = nil;
+}
+
+- (void)resume
+{
+	suspended = NO;
+	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+}
+
+- (void)skipNextItem
+{
+	if([importItems count])
+		[importItems removeObjectAtIndex:0];
 }
 
 - (void)resetUIElements
