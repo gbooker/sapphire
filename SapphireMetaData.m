@@ -657,6 +657,7 @@ static NSSet *displayedMetaData = nil;
 		META_RATING_KEY,
 		META_SUMMARY_KEY,
 		META_COPYRIGHT_KEY,
+		META_TITLE_KEY,
 		nil];
 		
 }
@@ -735,6 +736,11 @@ static NSSet *displayedMetaData = nil;
 		[metaData addEntriesFromDictionary:fileMeta];
 	}
 	return updated ;
+}
+
+- (void)importInfo:(NSDictionary *)newMeta
+{
+	[metaData addEntriesFromDictionary:newMeta];
 }
 
 - (int)modified
@@ -847,7 +853,8 @@ static NSSet *displayedMetaData = nil;
 	}
 	if([self duration])
 		[ret setObject:durationStr forKey:DURATION_KEY];
-	[ret setObject:name forKey:META_TITLE_KEY];
+	if([ret objectForKey:META_TITLE_KEY] == nil)
+		[ret setObject:name forKey:META_TITLE_KEY];\
 	if([self size])
 		[ret setObject:[self sizeString] forKey:SIZE_KEY];
 	return ret;

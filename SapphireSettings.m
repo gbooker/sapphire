@@ -11,6 +11,7 @@
 #import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"
+#import "SapphireTVShowDataMenu.h"
 
 static SapphireSettings *sharedInstance = nil;
 
@@ -41,30 +42,43 @@ static SapphireSettings *sharedInstance = nil;
 	sharedInstance = nil;
 }
 
-- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)metaData
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)meta
 {
 	if(sharedInstance != nil)
 		return sharedInstance;
 	
 	self = [super initWithScene:scene];
 	
+	metaData = [meta retain];
 	names = [[NSArray alloc] initWithObjects:	@"   Populate Show Data",
+												@"   Fetch TV Data",
 												@"   Hide \"Favorite Shows\"",
 /*												@"   Hide \"Top Shows\"",*/
 												@"   Hide \"Unwatched Shows\"", 
-/*												@"   Hide Show Spoilers",*/
+												@"   Hide Show Spoilers",
 												@"   Hide UI Quit",
 												@"   Fast Directory Switching",
 												@"   Disable Anonymous Reporting", nil];
 	
-	keys = [[NSArray alloc] initWithObjects:		@"", 
+	keys = [[NSArray alloc] initWithObjects:		@"",
+													@"",
 													HIDE_FAVORITE_KEY, 
 													/*HIDE_TOP_SHOWS_KEY, */
 													HIDE_UNWATCHED_KEY,  
-													/*HIDE_SPOILERS_KEY, */
+													HIDE_SPOILERS_KEY,
 													HIDE_UI_QUIT_KEY,
 													ENABLE_FAST_SWITCHING_KEY, 
 													DISABLE_ANON_KEY, nil];
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
+	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
+												[theme gem:EYE_GEM_KEY],
+												[theme gem:YELLOW_GEM_KEY],
+												/*[theme gem:GREEN_GEM_KEY],*/
+												[theme gem:BLUE_GEM_KEY],
+												[theme gem:RED_GEM_KEY],
+												[theme gem:CONE_GEM_KEY],
+												[theme gem:CONE_GEM_KEY],
+												[theme gem:CONE_GEM_KEY], nil];		
 	
 	path = [dictionaryPath retain];
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
@@ -83,7 +97,7 @@ static SapphireSettings *sharedInstance = nil;
 	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene metaData:metaData];
 	
 	[[self list] setDatasource:self];
-	[[self list] addDividerAtIndex:1];
+	[[self list] addDividerAtIndex:2];
 	sharedInstance = [self retain];
 
 	return self;
@@ -98,8 +112,10 @@ static SapphireSettings *sharedInstance = nil;
 {
 	[names release];
 	[options release];
+	[gems release];
 	[path release];
 	[defaults release];
+	[metaData release];
 	[super dealloc];
 }
 
@@ -231,17 +247,11 @@ static SapphireSettings *sharedInstance = nil;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if(row==0) [result setRightIcon:[[SapphireTheme sharedTheme] gem:EYE_GEM_KEY]];
-	else if( row > 0 && [self boolForKey:[keys objectAtIndex:row]])
+	if( row > 1 && [self boolForKey:[keys objectAtIndex:row]])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
-	if(row==1)[result setRightIcon:[[SapphireTheme sharedTheme] gem:YELLOW_GEM_KEY]];
-/*	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] gem:GREEN_GEM_KEY]];*/
-	if(row==2)[result setRightIcon:[[SapphireTheme sharedTheme] gem:BLUE_GEM_KEY]];
-/*	if(row==3)[result setRightIcon:[[SapphireTheme sharedTheme] gem:RED_GEM_KEY]];*/
-	if(row>2)[result setRightIcon:[[SapphireTheme sharedTheme] gem:CONE_GEM_KEY]];
-//	if(row==5)[result setRightIcon:[[SapphireTheme sharedTheme] gem:CONE_GEM_KEY]];
+	[result setRightIcon:[gems objectAtIndex:row]];
 
 	// add text
 	[[result textItem] setTitle: name] ;
@@ -286,12 +296,14 @@ static SapphireSettings *sharedInstance = nil;
 	{
 		id controller = populateShowDataController;
 		[[self stack] pushController:controller];
-//		[[self stack] pushController:populateShowDataController];
-//		[[self stack] popController] ;
-
-		
-	} 
-	if(row>0)
+	}
+	else if(row == 1)
+	{
+		SapphireTVShowDataMenu *menu = [[SapphireTVShowDataMenu alloc] initWithScene:[self scene] metaData:metaData];
+		[[self stack] pushController:menu];
+		[menu release];
+	}
+	if(row>1)
 	{
 		NSString *key = [keys objectAtIndex:row];
 		BOOL setting = [self boolForKey:key];

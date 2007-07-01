@@ -10,16 +10,18 @@
 #import <BackRow/BackRow.h>
 #import "SapphirePopulateDataMenu.h"
 
-@class BRHeaderControl ;
+@class BRHeaderControl, SapphireDirectoryMetaData ;
 
 @interface SapphireSettings : BRMediaMenuController 
 {
 	NSArray						*names;
 	NSArray						*keys;
+	NSArray						*gems;
 	NSMutableDictionary			*options;
 	SapphirePopulateDataMenu	*populateShowDataController;
 	NSString					*path;
 	NSDictionary				*defaults;
+	SapphireDirectoryMetaData	*metaData;
 }
 
 + (SapphireSettings *)sharedSettings;

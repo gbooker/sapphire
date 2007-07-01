@@ -92,6 +92,7 @@
 }
 
 - (BOOL) updateMetaData;
+- (void)importInfo:(NSDictionary *)newMeta;
 
 - (int)modified;
 - (BOOL)watched;

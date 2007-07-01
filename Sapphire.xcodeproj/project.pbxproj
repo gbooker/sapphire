@@ -20,6 +20,7 @@
 		F56A1B950C31B52B0022918E /* SapphireMediaPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */; };
 		F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A1DF40C31CE190022918E /* QTKit.framework */; };
 		F56B727A0C3716B300E934AA /* SapphireImporterDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B72790C3716B300E934AA /* SapphireImporterDataMenu.m */; };
+		F56B72EF0C371E4B00E934AA /* SapphireTVShowDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B72EE0C371E4B00E934AA /* SapphireTVShowDataMenu.m */; };
 		F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D0DEB50C331D76007652B2 /* SapphireTheme.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
@@ -61,6 +62,8 @@
 		F56A1DF40C31CE190022918E /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		F56B72780C3716B300E934AA /* SapphireImporterDataMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireImporterDataMenu.h; sourceTree = "<group>"; };
 		F56B72790C3716B300E934AA /* SapphireImporterDataMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireImporterDataMenu.m; sourceTree = "<group>"; };
+		F56B72ED0C371E4B00E934AA /* SapphireTVShowDataMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireTVShowDataMenu.h; sourceTree = "<group>"; };
+		F56B72EE0C371E4B00E934AA /* SapphireTVShowDataMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireTVShowDataMenu.m; sourceTree = "<group>"; };
 		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
 		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
 		F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMarkMenu.h; sourceTree = "<group>"; };
@@ -192,6 +195,8 @@
 				F523996E0C2DCC9100D5DA2E /* SapphirePredicates.m */,
 				FE88FD0E0C2F564700C55E3F /* SapphirePopulateDataMenu.h */,
 				FE88FD0F0C2F564700C55E3F /* SapphirePopulateDataMenu.m */,
+				F56B72ED0C371E4B00E934AA /* SapphireTVShowDataMenu.h */,
+				F56B72EE0C371E4B00E934AA /* SapphireTVShowDataMenu.m */,
 			);
 			name = MetaData;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 				F56A1B950C31B52B0022918E /* SapphireMediaPreview.m in Sources */,
 				F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */,
 				F56B727A0C3716B300E934AA /* SapphireImporterDataMenu.m in Sources */,
+				F56B72EF0C371E4B00E934AA /* SapphireTVShowDataMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
