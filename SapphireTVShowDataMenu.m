@@ -132,7 +132,7 @@
 	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
 	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
 	NSCharacterSet *skipSet = [NSCharacterSet characterSetWithCharactersInString:@"- "];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com/%@/episode_guide/%d", seriesName, season]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@/episode_guide/%d", seriesName, season]];
 	NSError *error = nil;
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
 	
@@ -208,9 +208,12 @@
 		NSXMLElement *result = nil;
 		while((result = [resultEnum nextObject]) != nil)
 		{
+			NSURL *resultURL = [NSURL URLWithString:[[result attributeForName:@"href"] stringValue]];
+			if(resultURL == nil)
+				continue;
 			[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				[[result childAtIndex:0] stringValue], @"name",
-				[[[result attributeForName:@"href"] stringValue] lastPathComponent], @"link",
+				[resultURL path], @"link",
 				nil]];
 		}
 		return ret;
@@ -319,7 +322,7 @@
 	[info setObject:[NSNumber numberWithBool:YES] forKey:TVRAGE_IMPORT_KEY];
 	[fileMeta importInfo:info];
 	
-	return NO;
+	return YES;
 }
 
 - (void)setCompletionText
