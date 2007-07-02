@@ -314,7 +314,7 @@
 		return NO;
 	
 	NSString *searchStr = [fileName substringToIndex:index];
-	NSString *show = [showTranslations objectForKey:searchStr];
+	NSString *show = [showTranslations objectForKey:[searchStr lowercaseString]];
 	if(show == nil)
 	{
 		NSArray *shows = [self searchResultsForSeries:searchStr];
@@ -403,7 +403,7 @@
 	else
 	{
 		NSDictionary *show = [[chooser shows] objectAtIndex:selection];
-		[showTranslations setObject:[show objectForKey:@"link"] forKey:[chooser searchStr]];
+		[showTranslations setObject:[show objectForKey:@"link"] forKey:[[chooser searchStr] lowercaseString]];
 		[self writeSettings];
 	}
 	[self resume];
