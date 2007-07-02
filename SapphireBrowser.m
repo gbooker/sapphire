@@ -321,8 +321,7 @@
 		{
 			int eps= [meta episodeNumber] ;
 			displayName=[meta episodeTitle] ;
-			if(eps>9)[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %d",eps]];
-			else if(eps>0)[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" 0%d",eps]];
+			if(eps>0)[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps]];
 			else [[result textItem] setRightJustifiedText:[meta sizeString]];
 			watched = [meta watched];
 			favorite = [meta favorite] ;
