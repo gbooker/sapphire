@@ -349,7 +349,7 @@
 		NSURL *imageURL = [NSURL URLWithString:image];
 		NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
 		NSString *fileName = [path lastPathComponent];
-		NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"<Cover Art>"];
+		NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"];
 		NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
 		[[NSFileManager defaultManager] createDirectoryAtPath:coverArtDir attributes:nil];
 		NSString *destination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];

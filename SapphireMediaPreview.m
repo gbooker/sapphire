@@ -81,7 +81,7 @@ static NSSet *coverArtExtentions = nil;
 
 - (NSString *)coverArtForDir:(NSString *)dir parents:(int)parents
 {
-	NSString *ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"<Cover Art>/cover"]];
+	NSString *ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"Cover Art/cover"]];
 	if(ret != nil)
 		return ret;
 	ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"cover"]];
@@ -104,7 +104,7 @@ static NSSet *coverArtExtentions = nil;
 
 	NSString *subPath = [[meta path] stringByDeletingPathExtension];
 	NSString *fileName = [subPath lastPathComponent];
-	NSString *ret = [self searchExtForPath:[[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"<Cover Art>"] stringByAppendingPathComponent:fileName]];
+	NSString *ret = [self searchExtForPath:[[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:fileName]];
 	if(ret != nil)
 		return ret;
 	
