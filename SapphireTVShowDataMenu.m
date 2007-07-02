@@ -87,9 +87,9 @@
 		showTranslations = [NSMutableDictionary new];
 	showInfo = [NSMutableDictionary new];
 	
-	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[0-9]+", REG_EXTENDED | REG_ICASE);
-	regcomp(&seasonByEpisode, "[\\. -]?[0-9]+x[0-9]+", REG_EXTENDED | REG_ICASE);
-	regcomp(&seasonEpisodeTriple, "[\\. -][0-9]{3,5}[\\. -]", REG_EXTENDED | REG_ICASE);	
+	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+", REG_EXTENDED | REG_ICASE);
+	regcomp(&seasonByEpisode, "[\\. -]?[0-9]+x[S0-9]+", REG_EXTENDED | REG_ICASE);
+	regcomp(&seasonEpisodeTriple, "[\\. -][0-9]{1,3}[S0-9]{2}[\\. -]", REG_EXTENDED | REG_ICASE);	
 	return self;
 }
 
@@ -119,16 +119,17 @@
 
 - (void)addEp:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink toDict:(NSMutableDictionary *)dict
 {
+	NSNumber *epNum = [NSNumber numberWithInt:ep];
+	id key = epNum;
 	if(ep == 0)
-		return;
+		key = [epTitle lowercaseString];
 	
 	NSNumber *seasonNum = [NSNumber numberWithInt:season];
-	NSNumber *epNum = [NSNumber numberWithInt:ep];
-	NSMutableDictionary *epDict = [dict objectForKey:epNum];
+	NSMutableDictionary *epDict = [dict objectForKey:key];
 	if(epDict == nil)
 	{
 		epDict = [NSMutableDictionary new];
-		[dict setObject:epDict forKey:epNum];
+		[dict setObject:epDict forKey:key];
 		[epDict release];
 	}
 	if(ep != 0)
@@ -237,12 +238,10 @@
 	return nil;
 }
 
-- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episode:(int)ep
+- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season
 {
 	NSMutableDictionary *showDict = [showInfo objectForKey:show];
 	NSMutableDictionary *seasonDict = nil;
-	NSMutableDictionary *epDict = nil;
-	NSNumber *epNum = [NSNumber numberWithInt:ep];
 	NSNumber *seasonNum = [NSNumber numberWithInt:season];
 	if(!showDict)
 	{
@@ -252,17 +251,24 @@
 	}
 	else
 		seasonDict = [showDict objectForKey:seasonNum];
-	if(seasonDict)
-		epDict = [seasonDict objectForKey:epNum];
-	
-	if(epDict == nil)
+	if(!seasonDict)
 	{
 		seasonDict = [self getMetaForSeries:show inSeason:season];
 		if(seasonDict != nil)
 			[showDict setObject:seasonDict forKey:seasonNum];
-		epDict = [seasonDict objectForKey:epNum];
 	}
-	return epDict;
+	return seasonDict;
+}
+
+- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episode:(int)ep
+{
+	NSNumber *epNum = [NSNumber numberWithInt:ep];
+	return [[self getInfo:show forSeason:season] objectForKey:epNum];
+}
+
+- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episodeTitle:(NSString *)epTitle
+{
+	return [[self getInfo:show forSeason:season] objectForKey:[epTitle lowercaseString]];
 }
 
 - (void)writeSettings
@@ -333,12 +339,26 @@
 	NSCharacterSet *digits = [NSCharacterSet decimalDigitCharacterSet];
 	[scanner scanUpToCharactersFromSet:digits intoString:nil];
 	[scanner scanInt:&season];
-	[scanner scanUpToCharactersFromSet:digits intoString:nil];
+	NSString *skipped = nil;
+	[scanner scanUpToCharactersFromSet:digits intoString:&skipped];
 	[scanner scanInt:&ep];
-	if(season == 0 || ep == 0)
+	if([skipped hasSuffix:@"S"])
+		ep = 0;
+	if(season == 0)
 		return NO;
 	
-	NSMutableDictionary *info = [self getInfo:show forSeason:season episode:ep];
+	NSMutableDictionary *info = nil;
+	if(ep != 0)
+		info = [self getInfo:show forSeason:season episode:ep];
+	else
+	{
+		NSString *showTitle = nil;
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet letterCharacterSet] intoString:nil];
+		if([scanner scanUpToString:@"." intoString:&showTitle])
+			info = [self getInfo:show forSeason:season episodeTitle:showTitle];
+	}
+	if(!info)
+		return NO;
 	
 	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
 	NSString *image = nil;
