@@ -49,8 +49,7 @@
 
 @implementation NSString (episodeSorting)
 
-// Custom TV Episode handler 
-- (NSComparisonResult) episodeCompare:(NSString *)other
+- (NSComparisonResult) directoryNameCompare:(NSString *)other
 {
 	return [self compare:other options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
@@ -225,6 +224,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[directories release];
 	files = [NSMutableArray new];
 	directories = [NSMutableArray new];
+	NSMutableArray *fileMetas = [NSMutableArray array];
 	
 	NSArray *names = [[NSFileManager defaultManager] directoryContentsAtPath:path];
 	
@@ -242,10 +242,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if([self isDirectory:[path stringByAppendingPathComponent:name]])
 			[directories addObject:name];
 		else if([extensions containsObject:extension])
-			[files addObject:name];
+			[fileMetas addObject:[self metaDataForFile:name]];
 	}
-	[directories sortUsingSelector:@selector(episodeCompare:)];
-	[files sortUsingSelector:@selector(episodeCompare:)];
+	[directories sortUsingSelector:@selector(directoryNameCompare:)];
+	[fileMetas sortUsingSelector:@selector(episodeCompare:)];
+	nameEnum = [fileMetas objectEnumerator];
+	SapphireFileMetaData *fileMeta = nil;
+	while((fileMeta = [nameEnum nextObject]) != nil)
+		[files addObject:[[fileMeta path] lastPathComponent]];
 	[self updateMetaData];
 	if([importArray count])
 		[self writeMetaData];
@@ -818,6 +822,12 @@ static NSSet *displayedMetaData = nil;
 {
 	return [[metaData objectForKey:EPISODE_NUMBER_KEY] intValue] ;
 }
+
+- (int)seasonNumber
+{
+	return [[metaData objectForKey:SEASON_NUMBER_KEY] intValue];
+}
+
 - (NSString *)episodeTitle
 {
 	NSString * title = [metaData objectForKey:EPISODE_TITLE_KEY] ;
@@ -891,6 +901,33 @@ static NSSet *displayedMetaData = nil;
 	if([self size])
 		[ret setObject:[self sizeString] forKey:SIZE_KEY];
 	return ret;
+}
+
+// Custom TV Episode handler 
+- (NSComparisonResult) episodeCompare:(SapphireFileMetaData *)other
+{
+	int myNum = [self seasonNumber];
+	int theirNum = [other seasonNumber];
+	if(myNum == 0)
+		myNum = INT_MAX;
+	if(theirNum == 0)
+		theirNum = INT_MAX;
+	if(myNum > theirNum)
+		return NSOrderedDescending;
+	if(theirNum > myNum)
+		return NSOrderedAscending;
+	
+	myNum = [self episodeNumber];
+	theirNum = [other episodeNumber];
+	if(myNum == 0)
+		myNum = INT_MAX;
+	if(theirNum == 0)
+		theirNum = INT_MAX;
+	if(myNum > theirNum)
+		return NSOrderedDescending;
+	if(theirNum > myNum)
+		return NSOrderedAscending;
+	return [[path lastPathComponent] compare:[[other path] lastPathComponent] options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
 
 @end
