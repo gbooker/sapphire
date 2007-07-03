@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by Graham Booker on 6/22/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
 #import "SapphireMetaData.h"
@@ -38,12 +38,13 @@
 #define SHOW_AIR_DATE				@"Air Date"
 
 //ATV Extra Info
+/*
 #define SHOW_BROADCASTER_KEY		@"Broadcast Company"
 #define SHOW_PUBLISHED_DATE_KEY	@"Published Date"
 #define SHOW_AQUIRED_DATE			@"Date Aquired"
 #define SHOW_RATING_KEY				@"Rating"
 #define SHOW_FAVORITE_RATING		@"User Rating"
-
+*/
 //IMDB Type Info
 
 
