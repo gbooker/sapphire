@@ -806,9 +806,9 @@ static NSSet *displayedMetaData = nil;
 	combinedInfo = nil;
 }
 
-- (BOOL)importedFromSource:(NSString *)source
+- (long)importedTimeFromSource:(NSString *)source
 {
-	return [metaData objectForKey:source] != nil;
+	return [[[metaData objectForKey:source] objectForKey:MODIFIED_KEY] longValue];
 }
 
 - (void)setToImportFromSource:(NSString *)source
@@ -817,8 +817,9 @@ static NSSet *displayedMetaData = nil;
 	[self combinedDataChanged];
 }
 
-- (void)importInfo:(NSDictionary *)newMeta fromSource:(NSString *)source
+- (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime
 {
+	[newMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 	[metaData setObject:newMeta forKey:source];
 	[self combinedDataChanged];
 }

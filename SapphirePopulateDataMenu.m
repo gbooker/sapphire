@@ -8,6 +8,8 @@
 
 #import "SapphirePopulateDataMenu.h"
 #import "SapphireMetaData.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 //Single Attributes
 #define MEDIA_TVSHOW_XML_QUERY		@"/media[@type='TV Show']/text()"
@@ -130,7 +132,11 @@ static NSDictionary *xmlMultiAttributes = nil;
 		[metaData setObject:newData forKey:[xmlMultiAttributes objectForKey:key]] ;
 
 	}
-	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY];
+	struct stat sb;
+	memset(&sb, 0, sizeof(struct stat));
+	stat([xmlFileName fileSystemRepresentation], &sb);
+	long modTime = sb.st_mtimespec.tv_sec;
+	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY withTime:modTime];
 }
 
 

@@ -43,7 +43,7 @@
 			favorite = @"Mark as Not Favorite";
 		else
 			favorite = @"Mark as Favorite";
-		if([fileMeta importedFromSource:META_TVRAGE_IMPORT_KEY])
+		if([fileMeta importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
 			reimport = @"Mark to Refetch TV Data";
 		names = [[NSArray alloc] initWithObjects:watched, favorite, reimport, nil];
 	}

@@ -118,9 +118,9 @@
 - (void)setWatched:(BOOL)watched;
 - (BOOL)favorite;
 - (void)setFavorite:(BOOL)favorite;
-- (BOOL)importedFromSource:(NSString *)source;
+- (long)importedTimeFromSource:(NSString *)source;
 - (void)setToImportFromSource:(NSString *)source;
-- (void)importInfo:(NSDictionary *)newMeta fromSource:(NSString *)source;
+- (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime;
 - (unsigned int)resumeTime;
 - (void)setResumeTime:(unsigned int)resumeTime;
 
