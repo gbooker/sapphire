@@ -19,34 +19,15 @@
 #define META_VERSION				1
 
 //File Specific Keys
-#define MODIFIED_KEY					@"Modified"
+#define MODIFIED_KEY				@"Modified"
 #define WATCHED_KEY					@"Watched"
-#define FAVORITE_KEY					@"Favorite"
+#define FAVORITE_KEY				@"Favorite"
 #define RESUME_KEY					@"Resume Time"
-#define SIZE_KEY						@"Size"
-#define DURATION_KEY					@"Duration"
+#define SIZE_KEY					@"Size"
+#define DURATION_KEY				@"Duration"
 #define AUDIO_DESC_KEY				@"Audio Description"
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
-
-//TV Show Specific Keys
-#define EPISODE_NUMBER_KEY			@"Episode"
-#define EPISODE_TITLE_KEY				@"Title"
-#define SEASON_NUMBER_KEY			@"Season"
-#define SHOW_NAME_KEY				@"Show Name"
-#define SHOW_DESCRIPTION_KEY		@"Show Description"
-#define SHOW_AIR_DATE				@"Air Date"
-
-//ATV Extra Info
-/*
-#define SHOW_BROADCASTER_KEY		@"Broadcast Company"
-#define SHOW_PUBLISHED_DATE_KEY	@"Published Date"
-#define SHOW_AQUIRED_DATE			@"Date Aquired"
-#define SHOW_RATING_KEY				@"Rating"
-#define SHOW_FAVORITE_RATING		@"User Rating"
-*/
-//IMDB Type Info
-
 
 @implementation NSString (episodeSorting)
 
@@ -671,7 +652,7 @@ static NSSet *displayedMetaData = nil;
 		VIDEO_DESC_KEY,
 		AUDIO_DESC_KEY,
 		META_RATING_KEY,
-		META_SUMMARY_KEY,
+		META_DESCRIPTION_KEY,
 		META_COPYRIGHT_KEY,
 		META_TITLE_KEY,
 		nil];
@@ -754,11 +735,6 @@ static NSSet *displayedMetaData = nil;
 	return updated ;
 }
 
-- (void)importInfo:(NSDictionary *)newMeta
-{
-	[metaData addEntriesFromDictionary:newMeta];
-}
-
 - (int)modified
 {
 	return [[metaData objectForKey:MODIFIED_KEY] intValue];
@@ -784,14 +760,19 @@ static NSSet *displayedMetaData = nil;
 	[metaData setObject:[NSNumber numberWithBool:favorite] forKey:FAVORITE_KEY];
 }
 
-- (BOOL)importedFromTV
+- (BOOL)importedFromSource:(NSString *)source
 {
-	return [[metaData objectForKey:TVRAGE_IMPORT_KEY] boolValue];
+	return [metaData objectForKey:source] != nil;
 }
 
-- (void)setToImportFromTV
+- (void)setToImportFromSource:(NSString *)source
 {
-	[metaData removeObjectForKey:TVRAGE_IMPORT_KEY];
+	[metaData removeObjectForKey:source];
+}
+
+- (void)importInfo:(NSDictionary *)newMeta fromSource:(NSString *)source
+{
+	[metaData setObject:newMeta forKey:source];
 }
 
 - (unsigned int)resumeTime
@@ -821,17 +802,17 @@ static NSSet *displayedMetaData = nil;
 
 - (int)episodeNumber
 {
-	return [[metaData objectForKey:EPISODE_NUMBER_KEY] intValue] ;
+	return [[metaData objectForKey:META_EPISODE_NUMBER_KEY] intValue] ;
 }
 
 - (int)seasonNumber
 {
-	return [[metaData objectForKey:SEASON_NUMBER_KEY] intValue];
+	return [[metaData objectForKey:META_SEASON_NUMBER_KEY] intValue];
 }
 
 - (NSString *)episodeTitle
 {
-	NSString * title = [metaData objectForKey:EPISODE_TITLE_KEY] ;
+	NSString * title = [metaData objectForKey:META_TITLE_KEY] ;
 	if(title!=nil)return title ;
 	else
 	return nil ;

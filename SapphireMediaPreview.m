@@ -160,12 +160,12 @@ static NSSet *coverArtExtentions = nil;
 		[_metadataLayer setRating:value];
 		[allMeta removeObjectForKey:META_RATING_KEY];
 	}
-	value = [allMeta objectForKey:META_SUMMARY_KEY];
+	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
 	if(value != nil)
 	{
 		if([[SapphireSettings sharedSettings] displaySpoilers])
 			[_metadataLayer setSummary:value];
-		[allMeta removeObjectForKey:META_SUMMARY_KEY];
+		[allMeta removeObjectForKey:META_DESCRIPTION_KEY];
 	}
 	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
 	if(value != nil)

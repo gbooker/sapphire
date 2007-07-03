@@ -287,7 +287,7 @@
 - (BOOL)doImport
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	if([fileMeta importedFromTV])
+	if([fileMeta importedFromSource:META_TVRAGE_IMPORT_KEY])
 		return NO;
 	NSString *path = [fileMeta path];
 //	NSArray *pathComponents = [path pathComponents];
@@ -380,8 +380,7 @@
 	}
 	
 	[info removeObjectForKey:LINK_KEY];
-	[info setObject:[NSNumber numberWithBool:YES] forKey:TVRAGE_IMPORT_KEY];
-	[fileMeta importInfo:info];
+	[fileMeta importInfo:info fromSource:META_TVRAGE_IMPORT_KEY];
 	
 	return YES;
 }
@@ -418,9 +417,7 @@
 	if(selection == SHOW_CHOOSE_CANCEL)
 		[self skipNextItem];
 	else if(selection == SHOW_CHOOSE_NOT_SHOW)
-		[[importItems objectAtIndex:0] importInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-			[NSNumber numberWithBool:YES], TVRAGE_IMPORT_KEY,
-			nil]];
+		[[importItems objectAtIndex:0] importInfo:[NSDictionary dictionary] fromSource:META_TVRAGE_IMPORT_KEY];
 	else
 	{
 		NSDictionary *show = [[chooser shows] objectAtIndex:selection];

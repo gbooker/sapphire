@@ -9,11 +9,28 @@
 #import <Cocoa/Cocoa.h>
 #import "SapphirePredicates.h"
 
-#define META_TITLE_KEY				@"Title"
-#define META_RATING_KEY				@"Rating"
-#define META_SUMMARY_KEY			@"Description"
-#define META_COPYRIGHT_KEY			@"Copyright"
-#define TVRAGE_IMPORT_KEY			@"TVRageImported"
+#define META_TVRAGE_IMPORT_KEY			@"TVRage Source"
+#define META_XML_IMPORT_KEY				@"XML Source"
+
+//TV Show Specific Keys
+#define META_TITLE_KEY					@"Title"
+#define META_SEASON_NUMBER_KEY			@"Season"
+#define META_EPISODE_NUMBER_KEY			@"Episode"
+#define META_SHOW_NAME_KEY				@"Show Name"
+#define META_SHOW_DESCRIPTION_KEY		@"Show Description"
+#define META_SHOW_AIR_DATE				@"Air Date"
+#define META_RATING_KEY					@"Rating"
+#define META_DESCRIPTION_KEY			@"Description"
+
+//ATV Extra Info
+#define META_SHOW_BROADCASTER_KEY		@"Broadcast Company"
+#define META_SHOW_PUBLISHED_DATE_KEY	@"Published Date"
+#define META_SHOW_AQUIRED_DATE			@"Date Aquired"
+#define META_SHOW_RATING_KEY			@"Rating"
+#define META_SHOW_FAVORITE_RATING_KEY	@"User Rating"
+#define META_COPYRIGHT_KEY				@"Copyright"
+
+//IMDB Type Info
 
 @class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
 
@@ -94,15 +111,15 @@
 }
 
 - (BOOL) updateMetaData;
-- (void)importInfo:(NSDictionary *)newMeta;
 
 - (int)modified;
 - (BOOL)watched;
 - (void)setWatched:(BOOL)watched;
 - (BOOL)favorite;
 - (void)setFavorite:(BOOL)favorite;
-- (BOOL)importedFromTV;
-- (void)setToImportFromTV;
+- (BOOL)importedFromSource:(NSString *)source;
+- (void)setToImportFromSource:(NSString *)source;
+- (void)importInfo:(NSDictionary *)newMeta fromSource:(NSString *)source;
 - (unsigned int)resumeTime;
 - (void)setResumeTime:(unsigned int)resumeTime;
 
