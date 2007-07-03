@@ -631,7 +631,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 {
 	if(order != nil)
-		*order = [NSArray arrayWithObject:META_TITLE_KEY];
+		*order = nil;
 	return [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[path lastPathComponent], META_TITLE_KEY,
 		nil];
