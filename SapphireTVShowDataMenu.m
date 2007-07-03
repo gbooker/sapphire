@@ -18,10 +18,6 @@
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
  
-#define EPISODE_KEY @"Episode"
-#define SEASON_KEY @"Season"
-#define SUMMARY_KEY @"Description"
-#define TITLE_KEY @"Title"
 #define LINK_KEY @"Link" 
 
 #define TRANSLATIONS_KEY		@"Translations"
@@ -133,15 +129,15 @@
 		[epDict release];
 	}
 	if(ep != 0)
-		[epDict setObject:epNum forKey:EPISODE_KEY];
+		[epDict setObject:epNum forKey:META_EPISODE_NUMBER_KEY];
 	if(season != 0)
-		[epDict setObject:seasonNum forKey:SEASON_KEY];
+		[epDict setObject:seasonNum forKey:META_SEASON_NUMBER_KEY];
 	if(epTitle != nil)
-		[epDict setObject:epTitle forKey:TITLE_KEY];
+		[epDict setObject:epTitle forKey:META_TITLE_KEY];
 	if(epLink != nil)
 		[epDict setObject:epLink forKey:LINK_KEY];
 	if(summary != nil)
-		[epDict setObject:summary forKey:SUMMARY_KEY];
+		[epDict setObject:summary forKey:META_DESCRIPTION_KEY];
 }
 
 - (NSMutableDictionary *)getMetaForSeries:(NSString *)seriesName inSeason:(int)season

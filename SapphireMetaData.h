@@ -17,10 +17,10 @@
 #define META_SEASON_NUMBER_KEY			@"Season"
 #define META_EPISODE_NUMBER_KEY			@"Episode"
 #define META_SHOW_NAME_KEY				@"Show Name"
-#define META_SHOW_DESCRIPTION_KEY		@"Show Description"
+#define META_DESCRIPTION_KEY			@"Show Description"
 #define META_SHOW_AIR_DATE				@"Air Date"
 #define META_RATING_KEY					@"Rating"
-#define META_DESCRIPTION_KEY			@"Description"
+#define META_SUMMARY_KEY				@"Summary"
 
 //ATV Extra Info
 #define META_SHOW_BROADCASTER_KEY		@"Broadcast Company"
