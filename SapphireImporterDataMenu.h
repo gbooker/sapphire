@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by pnmerrill on 6/24/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -16,16 +16,16 @@
 
 @interface SapphireImporterDataMenu : BRLayerController
 {
-	BRHeaderControl					*title;
+	BRHeaderControl				*title;
 	BRButtonControl					*button;
 	BRTextControl					*text;
 	BRTextControl					*fileProgress;
 	BRTextControl					*currentFile;
-	BRProgressBarWidget				*bar;
+	BRProgressBarWidget			*bar;
 
 	SapphireDirectoryMetaData		*meta;
 	NSMutableArray					*importItems;
-	NSTimer							*importTimer;
+	NSTimer						*importTimer;
 	float							max;
 	float							current;
 	float							updated ;

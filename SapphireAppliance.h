@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by pnmerrill on 6/20/07.
-//  Copyright (c) 2007 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2007 __www.nanopi.net__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by pnmerrill on 6/20/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
 #import "SapphireAppliance.h"
