@@ -97,7 +97,7 @@ static NSSet *extensions = nil;
 	return [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
 }
 
-- (NSMutableDictionary *)getDisplayedMetaData
+- (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order
 {
 	return nil;
 }
@@ -628,8 +628,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
-- (NSMutableDictionary *)getDisplayedMetaData
+- (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 {
+	if(order != nil)
+		*order = [NSArray arrayWithObject:META_TITLE_KEY];
 	return [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[path lastPathComponent], META_TITLE_KEY,
 		nil];
@@ -646,22 +648,51 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 static NSDictionary *metaDataSubstitutions = nil;
 static NSSet *displayedMetaData = nil;
+static NSArray *displayedMetaDataOrder = nil;
 
 + (void) initialize
 {
 	metaDataSubstitutions = [[NSDictionary alloc] initWithObjectsAndKeys:
+		//These substitute keys in the meta data to nicer display keys
 		@"Video", VIDEO_DESC_KEY,
 		@"Audio", AUDIO_DESC_KEY,
 		nil];
-	displayedMetaData = [[NSSet alloc] initWithObjects:
-		VIDEO_DESC_KEY,
-		AUDIO_DESC_KEY,
+	displayedMetaDataOrder = [NSArray arrayWithObjects:
+		//These are not shown in the list
 		META_RATING_KEY,
 		META_DESCRIPTION_KEY,
 		META_COPYRIGHT_KEY,
 		META_TITLE_KEY,
+		META_SHOW_AIR_DATE,
+		//These are displayed as line items
+		META_EPISODE_AND_SEASON_KEY,
+		META_SEASON_NUMBER_KEY,
+		META_EPISODE_NUMBER_KEY,
+		SIZE_KEY,
+		DURATION_KEY,
+		VIDEO_DESC_KEY,
+		AUDIO_DESC_KEY,
 		nil];
-		
+	displayedMetaData = [[NSSet alloc] initWithArray:displayedMetaDataOrder];
+	
+	int excludedKeys = 5;
+	NSMutableArray *modified = [[displayedMetaDataOrder subarrayWithRange:NSMakeRange(excludedKeys, [displayedMetaDataOrder count] - excludedKeys)] mutableCopy];
+	
+	int i;
+	for(i=0; i<[modified count]; i++)
+	{
+		NSString *newKey = [metaDataSubstitutions objectForKey:[modified objectAtIndex:i]];
+		if(newKey != nil)
+			[modified replaceObjectAtIndex:i withObject:newKey];
+	}
+	displayedMetaDataOrder = [[NSArray alloc] initWithArray:modified];
+	[modified release];
+}
+
+- (void)dealloc
+{
+	[combinedInfo release];
+	[super dealloc];
 }
 
 - (BOOL) updateMetaData
@@ -869,7 +900,7 @@ static NSSet *displayedMetaData = nil;
 	return [NSString stringWithFormat:@"%.1f%cB", size, letter];	
 }
 
-- (NSMutableDictionary *)getDisplayedMetaData
+- (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 {
 	NSString *name = [path lastPathComponent];
 	int duration = [self duration];
@@ -883,6 +914,8 @@ static NSSet *displayedMetaData = nil;
 		durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
 	else
 		durationStr = [NSString stringWithFormat:@"%ds", secs];
+	if(order != nil)
+		*order = displayedMetaDataOrder;
 	[self constructCombinedData];
 	NSMutableDictionary *ret = [combinedInfo mutableCopy];
 	//Pretty this up now
@@ -902,11 +935,26 @@ static NSSet *displayedMetaData = nil;
 		}
 	}
 	if([self duration])
-		[ret setObject:durationStr forKey:DURATION_KEY];
+	{
+		if([self size])
+		{
+			[ret setObject:[NSString stringWithFormat:@"%@ (%@)", durationStr, [self sizeString]] forKey:DURATION_KEY];
+			[ret removeObjectForKey:SIZE_KEY];
+		}
+		else
+			[ret setObject:durationStr forKey:DURATION_KEY];
+	}
+	else if([self size])
+		[ret setObject:[self sizeString] forKey:SIZE_KEY];
+	else
+		[ret removeObjectForKey:SIZE_KEY];
+		
 	if([ret objectForKey:META_TITLE_KEY] == nil)
 		[ret setObject:name forKey:META_TITLE_KEY];\
-	if([self size])
-		[ret setObject:[self sizeString] forKey:SIZE_KEY];
+	int season = [self seasonNumber];
+	int ep = [self episodeNumber];
+	if(season != 0 && ep != 0)
+		[ret setObject:[NSString stringWithFormat:@"%d / %d", season, ep] forKey:META_EPISODE_AND_SEASON_KEY];
 	return ret;
 }
 

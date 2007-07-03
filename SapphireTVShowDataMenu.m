@@ -14,6 +14,7 @@
 
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
 #define TVRAGE_EP_INFO @".//*[@class='b2']/*"
+#define TVRAGE_EP_TEXT @".//*[@class='b2']/text()"
 #define TVRAGE_SCREEN_CAP_XPATH @"//img[contains(@src, 'screencap')]"
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
@@ -113,7 +114,7 @@
 	return nil;
 }
 
-- (void)addEp:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink toDict:(NSMutableDictionary *)dict
+- (void)addEp:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink  absEpNum:(int)epNumber airDate:(NSDate *)airDate toDict:(NSMutableDictionary *)dict
 {
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
 	id key = epNum;
@@ -138,6 +139,10 @@
 		[epDict setObject:epLink forKey:LINK_KEY];
 	if(summary != nil)
 		[epDict setObject:summary forKey:META_DESCRIPTION_KEY];
+	if(epNumber != nil)
+		[epDict setObject:[NSNumber numberWithInt:epNumber] forKey:META_ABSOLUTE_EP_NUMBER_KEY];
+	if(airDate != nil)
+		[epDict setObject:airDate forKey:META_SHOW_AIR_DATE];
 }
 
 - (NSMutableDictionary *)getMetaForSeries:(NSString *)seriesName inSeason:(int)season
@@ -161,13 +166,15 @@
 		int ep = 0;
 		int epNumber = 0;
 		NSMutableString *summary = nil;
+		NSDate *airDate = nil;
 		
 		NSArray *epInfos = [epNode objectsForXQuery:TVRAGE_EP_INFO error:&error];
 		NSEnumerator *epInfoEnum = [epInfos objectEnumerator];
 		NSXMLNode *epInfo = nil;
 		while((epInfo = [epInfoEnum nextObject]) != nil)
 		{
-			if([[epInfo name] isEqualToString:@"a"] && link == nil)
+			NSString *nodeName = [epInfo name];
+			if(link == nil && [nodeName isEqualToString:@"a"])
 			{
 				link = [[(NSXMLElement *)epInfo attributeForName:@"href"] stringValue];
 				link = [NSString stringWithFormat:@"http://www.tvrage.com%@", link];
@@ -187,7 +194,7 @@
 					epTitle = [epInfoStr substringFromIndex:[scanner scanLocation]];
 				}
 			}
-			else if([[epInfo name] isEqualToString:@"font"] && summary == nil)
+			else if(summary == nil && [nodeName isEqualToString:@"font"])
 			{
 				NSArray *summarys = [epInfo objectsForXQuery:@"text()" error:&error];
 				summary = [NSMutableString string];
@@ -201,7 +208,24 @@
 					summary = nil;
 			}
 		}
-		[self addEp:epTitle season:season epNum:ep summary:summary link:link toDict:ret];
+		epInfos = [epNode objectsForXQuery:TVRAGE_EP_TEXT error:&error];
+		epInfoEnum = [epInfos objectEnumerator];
+		epInfo = nil;
+		while((epInfo = [epInfoEnum nextObject]) != nil)
+		{
+			NSString *nodeName = [epInfo stringValue];
+			if ([nodeName hasPrefix:@" ("] && [nodeName hasSuffix:@") "])
+			{
+				NSString *subStr = [nodeName substringWithRange:NSMakeRange(2, [nodeName length] - 4)];
+				
+				airDate = [NSDate dateWithNaturalLanguageString:subStr];
+				if([airDate timeIntervalSince1970] == 0)
+					airDate = nil;
+				else
+					break;
+			}
+		}
+		[self addEp:epTitle season:season epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate toDict:ret];
 	}
 	return ret;
 }
@@ -413,7 +437,7 @@
 	if(selection == SHOW_CHOOSE_CANCEL)
 		[self skipNextItem];
 	else if(selection == SHOW_CHOOSE_NOT_SHOW)
-		[[importItems objectAtIndex:0] importInfo:[NSDictionary dictionary] fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+		[[importItems objectAtIndex:0] importInfo:[NSMutableDictionary dictionary] fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	else
 	{
 		NSDictionary *show = [[chooser shows] objectAtIndex:selection];

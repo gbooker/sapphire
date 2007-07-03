@@ -21,6 +21,7 @@
 #define META_SHOW_AIR_DATE				@"Air Date"
 #define META_RATING_KEY					@"Rating"
 #define META_SUMMARY_KEY				@"Summary"
+#define META_ABSOLUTE_EP_NUMBER_KEY		@"Episode Number"
 
 //ATV Extra Info
 #define META_SHOW_BROADCASTER_KEY		@"Broadcast Company"
@@ -31,6 +32,9 @@
 #define META_COPYRIGHT_KEY				@"Copyright"
 
 //IMDB Type Info
+
+//Special Display Only Info
+#define META_EPISODE_AND_SEASON_KEY		@"S/E"
 
 @class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
 
@@ -50,7 +54,7 @@
 
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
 - (void)writeMetaData;
-- (NSMutableDictionary *)getDisplayedMetaData;
+- (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 
 @end
 

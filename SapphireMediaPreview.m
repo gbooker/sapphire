@@ -147,33 +147,58 @@ static NSSet *coverArtExtentions = nil;
 	[super _populateMetadata];
 	if([[_metadataLayer gimmieMetadataObjs] count])
 		return;
-	NSMutableDictionary *allMeta = [meta getDisplayedMetaData];
+	NSArray *order = nil;
+	NSMutableDictionary *allMeta = [meta getDisplayedMetaDataInOrder:&order];
 	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
 	if(value != nil)
 	{
+		NSDate *airDate = [allMeta objectForKey:META_SHOW_AIR_DATE];
+		if(airDate != nil)
+		{
+			NSDateFormatter *format = [[NSDateFormatter alloc] init];
+			[format setDateStyle:NSDateFormatterShortStyle];
+			[format setTimeZone:NSDateFormatterNoStyle];
+			value = [[format stringFromDate:airDate]stringByAppendingFormat:@" - %@", value];
+		}
 		[_metadataLayer setTitle:value];
-		[allMeta removeObjectForKey:META_TITLE_KEY];
 	}
+
 	value = [allMeta objectForKey:META_RATING_KEY];
 	if(value != nil)
-	{
 		[_metadataLayer setRating:value];
-		[allMeta removeObjectForKey:META_RATING_KEY];
-	}
+
 	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
 	if(value != nil)
-	{
 		if([[SapphireSettings sharedSettings] displaySpoilers])
 			[_metadataLayer setSummary:value];
-		[allMeta removeObjectForKey:META_DESCRIPTION_KEY];
-	}
+
 	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
 	if(value != nil)
-	{
 		[_metadataLayer setCopyright:value];
-		[allMeta removeObjectForKey:META_COPYRIGHT_KEY];
+	
+	value = [allMeta objectForKey:META_EPISODE_AND_SEASON_KEY];
+	if(value != nil)
+	{
+		[allMeta removeObjectForKey:META_EPISODE_NUMBER_KEY];
+		[allMeta removeObjectForKey:META_SEASON_NUMBER_KEY];
 	}
-	[_metadataLayer setMetadata:[allMeta allValues] withLabels:[allMeta allKeys]];
+	
+	NSMutableArray *values = [NSMutableArray array];
+	NSMutableArray *keys = [NSMutableArray array];
+	
+	NSEnumerator *keyEnum = [order objectEnumerator];
+	NSString *key = nil;
+	while((key = [keyEnum nextObject]) != nil)
+	{
+		NSString *value = [allMeta objectForKey:key];
+		if(value != nil)
+		{
+			[values addObject:value];
+			[keys addObject:key];
+		}
+	}
+
+	[_metadataLayer setMetadata:values withLabels:keys];
 }
 
 - (BOOL)_assetHasMetadata
