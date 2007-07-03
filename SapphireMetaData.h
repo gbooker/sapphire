@@ -108,6 +108,7 @@
 @end
 
 @interface SapphireFileMetaData : SapphireMetaData {
+	NSDictionary		*combinedInfo;
 }
 
 - (BOOL) updateMetaData;

@@ -637,7 +637,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @end
 
-@implementation SapphireFileMetaData : SapphireMetaData
+@interface SapphireFileMetaData (private)
+- (void)constructCombinedData;
+- (void)combinedDataChanged;
+@end
+
+@implementation SapphireFileMetaData
 
 static NSDictionary *metaDataSubstitutions = nil;
 static NSSet *displayedMetaData = nil;
@@ -760,21 +765,6 @@ static NSSet *displayedMetaData = nil;
 	[metaData setObject:[NSNumber numberWithBool:favorite] forKey:FAVORITE_KEY];
 }
 
-- (BOOL)importedFromSource:(NSString *)source
-{
-	return [metaData objectForKey:source] != nil;
-}
-
-- (void)setToImportFromSource:(NSString *)source
-{
-	[metaData removeObjectForKey:source];
-}
-
-- (void)importInfo:(NSDictionary *)newMeta fromSource:(NSString *)source
-{
-	[metaData setObject:newMeta forKey:source];
-}
-
 - (unsigned int)resumeTime
 {
 	return [[metaData objectForKey:RESUME_KEY] unsignedIntValue];
@@ -800,22 +790,55 @@ static NSSet *displayedMetaData = nil;
 	return [[metaData objectForKey:SAMPLE_RATE_KEY] intValue];
 }
 
+- (void)constructCombinedData
+{
+	if(combinedInfo != nil)
+		return;
+	NSMutableDictionary *ret = [metaData mutableCopy];
+	[ret addEntriesFromDictionary:[ret objectForKey:META_TVRAGE_IMPORT_KEY]];
+	[ret addEntriesFromDictionary:[ret objectForKey:META_XML_IMPORT_KEY]];
+	combinedInfo = ret;
+}
+
+- (void)combinedDataChanged
+{
+	[combinedInfo release];
+	combinedInfo = nil;
+}
+
+- (BOOL)importedFromSource:(NSString *)source
+{
+	return [metaData objectForKey:source] != nil;
+}
+
+- (void)setToImportFromSource:(NSString *)source
+{
+	[metaData removeObjectForKey:source];
+	[self combinedDataChanged];
+}
+
+- (void)importInfo:(NSDictionary *)newMeta fromSource:(NSString *)source
+{
+	[metaData setObject:newMeta forKey:source];
+	[self combinedDataChanged];
+}
+
 - (int)episodeNumber
 {
-	return [[metaData objectForKey:META_EPISODE_NUMBER_KEY] intValue] ;
+	[self constructCombinedData];
+	return [[combinedInfo objectForKey:META_EPISODE_NUMBER_KEY] intValue] ;
 }
 
 - (int)seasonNumber
 {
-	return [[metaData objectForKey:META_SEASON_NUMBER_KEY] intValue];
+	[self constructCombinedData];
+	return [[combinedInfo objectForKey:META_SEASON_NUMBER_KEY] intValue];
 }
 
 - (NSString *)episodeTitle
 {
-	NSString * title = [metaData objectForKey:META_TITLE_KEY] ;
-	if(title!=nil)return title ;
-	else
-	return nil ;
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_TITLE_KEY] ;
 }
 
 - (NSString *)sizeString
@@ -859,7 +882,8 @@ static NSSet *displayedMetaData = nil;
 		durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
 	else
 		durationStr = [NSString stringWithFormat:@"%ds", secs];
-	NSMutableDictionary *ret = [metaData mutableCopy];
+	[self constructCombinedData];
+	NSMutableDictionary *ret = [combinedInfo mutableCopy];
 	//Pretty this up now
 	NSMutableSet *currentKeys = [NSMutableSet setWithArray:[ret allKeys]];
 	[currentKeys minusSet:displayedMetaData];
