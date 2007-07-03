@@ -620,11 +620,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
-- (void)setToImportFromTVForPredicate:(SapphirePredicate *)predicate
+- (void)setToImportFromSource:(NSString *)source ForPredicate:(SapphirePredicate *)predicate
 {
-	SEL select = @selector(setToImportFromTV);
+	SEL select = @selector(setToImportFromSource:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
+	[fileInv setArgument:source atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 

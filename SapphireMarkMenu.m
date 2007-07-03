@@ -208,7 +208,7 @@
 				[dirMeta setFavorite:NO predicate:predicate];
 				break;
 			case 4:
-				[dirMeta setToImportFromTVForPredicate:predicate];
+				[dirMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY ForPredicate:predicate];
 				break;
 		}
 	}

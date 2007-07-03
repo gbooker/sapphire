@@ -107,7 +107,7 @@
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
 - (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate;
-- (void)setToImportFromTVForPredicate:(SapphirePredicate *)predicate;
+- (void)setToImportFromSource:(NSString *)source ForPredicate:(SapphirePredicate *)predicate;
 
 @end
 
