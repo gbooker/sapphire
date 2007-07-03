@@ -263,12 +263,12 @@
 - (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episode:(int)ep
 {
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
-	return [[self getInfo:show forSeason:season] objectForKey:epNum];
+	return [NSMutableDictionary dictionaryWithDictionary:[[self getInfo:show forSeason:season] objectForKey:epNum]];
 }
 
 - (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episodeTitle:(NSString *)epTitle
 {
-	return [[self getInfo:show forSeason:season] objectForKey:[epTitle lowercaseString]];
+	return [NSMutableDictionary dictionaryWithDictionary:[[self getInfo:show forSeason:season] objectForKey:[epTitle lowercaseString]]];
 }
 
 - (void)writeSettings
@@ -362,18 +362,19 @@
 	
 	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
 	NSString *image = nil;
-	if(showInfoUrl)
+	NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"];
+	NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
+	NSString *imageDestination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
+	BOOL isDir = NO;
+	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
+	if(showInfoUrl && !imageExists)
 		image = [self getScreencapUrl:showInfoUrl];
 	if(image)
 	{
 		NSURL *imageURL = [NSURL URLWithString:image];
 		NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-		NSString *fileName = [path lastPathComponent];
-		NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"];
-		NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
 		[[NSFileManager defaultManager] createDirectoryAtPath:coverArtDir attributes:nil];
-		NSString *destination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
-		SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:destination];
+		SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:imageDestination];
 		[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate];
 		[myDelegate release];
 	}
