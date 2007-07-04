@@ -12,7 +12,7 @@
 
 @class BRRenderScene, BRRenderLayer;
 
-@class SapphireDirectoryMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings;
+@class SapphireDirectoryMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
@@ -21,7 +21,7 @@
 	NSMutableArray				*items ;
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
-	BRTVShowsSortControl		*sort;
+	BRSegmentedSortControl		*modeControl;
 	SapphireFileMetaData		*currentPlayFile;
 	SapphireSettings			*settings;
 	int							dirCount;

@@ -81,6 +81,24 @@
 	return [self initWithScene:scene metaData:meta predicate:NULL];
 }
 
+- (void)createModeControlWithScene:(BRRenderScene *)scene names:(NSArray *)names
+{
+	Class modeClass = NSClassFromString(@"BRSegmentedSortControl");
+	if(modeClass != nil)
+		//Ignore this warning if compiling with backrow 1.0
+		modeControl = [[modeClass alloc] initWithScene:scene segmentNames:names selectedSegment:0];
+	else
+	{
+		modeControl = [[BRTVShowsSortControl alloc] initWithScene:scene state:1];
+		NSString *name1 = [names objectAtIndex:0];
+		NSString *name2 = [names objectAtIndex:1];
+		[self replaceControlText:[[modeControl gimmieDate] gimmieDate] withString:name1];
+		[self replaceControlText:[[modeControl gimmieDate] gimmieShow] withString:name2];
+		[self replaceControlText:[[modeControl gimmieShow] gimmieDate] withString:name1];
+		[self replaceControlText:[[modeControl gimmieShow] gimmieShow] withString:name2];
+	}
+}
+
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
@@ -90,23 +108,13 @@
 	metaData = [meta retain];
 	[metaData setDelegate:self];
 	predicate = [newPredicate retain];
-	sort = [[BRTVShowsSortControl alloc] initWithScene:scene state:1];
 
-	NSRect frame = [self masterLayerFrame];
-	NSRect listFrame = [self listFrameForBounds:frame.size];
-	NSRect sortRect;
-	sortRect.size = [sort preferredSizeForScreenHeight:frame.size.height];
-	sortRect.origin.y = listFrame.origin.y * 1.5f;
-	sortRect.origin.x = (listFrame.size.width - sortRect.size.width)/2 + listFrame.origin.x;
-	listFrame.size.height -= listFrame.origin.y;
-	listFrame.origin.y *= 4.0f;
-	[self replaceControlText:[[sort gimmieDate] gimmieDate] withString:@"Select"];
-	[self replaceControlText:[[sort gimmieDate] gimmieShow] withString:@"Mark"];
-	[self replaceControlText:[[sort gimmieShow] gimmieDate] withString:@"Select"];
-	[self replaceControlText:[[sort gimmieShow] gimmieShow] withString:@"Mark"];
-	[sort setFrame:sortRect];
-	[[_listControl layer] setFrame:listFrame];
-	[self addControl:sort];
+	NSArray *names = [NSArray arrayWithObjects:
+		@"Select",
+		@"Mark File",
+		nil];
+	[self createModeControlWithScene:scene names:names];
+	[self addControl:modeControl];
 	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
@@ -118,9 +126,14 @@
 {
 	[super _doLayout];
 	NSRect listFrame = [[_listControl layer] frame];
+	NSRect modeRect;
+	modeRect.size = [modeControl preferredSizeForScreenHeight:[self masterLayerFrame].size.height];
+	modeRect.origin.y = listFrame.origin.y * 1.5f;
+	modeRect.origin.x = (listFrame.size.width - modeRect.size.width)/2 + listFrame.origin.x;
 	listFrame.size.height -= listFrame.origin.y;
 	listFrame.origin.y *= 2;
 	[[_listControl layer] setFrame:listFrame];
+	[modeControl setFrame:modeRect];
 }
 
 - (void)reloadDirectoryContents
@@ -165,6 +178,14 @@
 	[[self scene] renderScene];
 }
 
+- (int)selectedMode
+{
+	if([modeControl isKindOfClass:[BRTVShowsSortControl class]])
+		return [modeControl gimmieState] - 1;
+	
+	return [modeControl selectedSegment];
+}
+
 - (void) dealloc
 {
     // always remember to deallocate your resources
@@ -172,7 +193,7 @@
 	[items release];
 	[metaData release];
 	[predicate release];
-	[sort release];
+	[modeControl release];
     [super dealloc];
 }
 
@@ -386,7 +407,7 @@
 	NSString *name = [_names objectAtIndex:row];
 	NSString *dir = [metaData path];
 	
-	if([sort gimmieState] == 2)
+	if([self selectedMode] == 1)
 	{
 		id meta = nil;
 		if([[metaData directories] containsObject:name])
