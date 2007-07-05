@@ -553,9 +553,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	while((file = [fileEnum nextObject]) != nil)
 	{
 		[fileInv invokeWithTarget:[self metaDataForFile:file]];
-		BOOL result = NO;
-		[fileInv getReturnValue:&result];
-		if(result == result)
+		BOOL thisResult = NO;
+		[fileInv getReturnValue:&thisResult];
+		if(thisResult == result)
 			return result;
 	}
 
