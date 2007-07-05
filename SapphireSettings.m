@@ -50,15 +50,15 @@ static SapphireSettings *sharedInstance = nil;
 	self = [super initWithScene:scene];
 	
 	metaData = [meta retain];
-	names = [[NSArray alloc] initWithObjects:	@"   Populate Show Data",
-												@"   Fetch TV Data",
-												@"   Hide \"Favorite Shows\"",
-/*												@"   Hide \"Top Shows\"",*/
-												@"   Hide \"Unwatched Shows\"", 
-												@"   Hide Show Spoilers",
-												@"   Hide UI Quit",
-												@"   Fast Directory Switching",
-												@"   Disable Anonymous Reporting", nil];
+	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate Show Data", @"Populate File Data menu item"),
+												BRLocalizedString(@"   Fetch TV Data", @"Populate TV Data menu item"),
+												BRLocalizedString(@"   Hide \"Favorite Shows\"", @"Hide Favorite shows menu item"),
+/*												BRLocalizedString(@"   Hide \"Top Shows\"", @"Hide Top shows menu item"),*/
+												BRLocalizedString(@"   Hide \"Unwatched Shows\"", @"Hide Unwatched shows menu item"), 
+												BRLocalizedString(@"   Hide Show Spoilers", @"Hide show summarys menu item"),
+												BRLocalizedString(@"   Hide UI Quit", @"Hide the ui quitter menu item"),
+												BRLocalizedString(@"   Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
+												BRLocalizedString(@"   Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
 	
 	keys = [[NSArray alloc] initWithObjects:		@"",
 													@"",

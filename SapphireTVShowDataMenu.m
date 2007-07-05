@@ -346,7 +346,7 @@
 		[self pause];
 		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[self scene]];
 		[chooser setShows:shows];
-		[chooser setListTitle:[@"Show? " stringByAppendingString:fileName]];
+		[chooser setListTitle:[BRLocalizedString(@"Show? ", @"Prompt the user for showname with a file") stringByAppendingString:fileName]];
 		[chooser setSearchStr:searchStr];
 		[[self stack] pushController:chooser];
 		return NO;
@@ -406,23 +406,23 @@
 
 - (void)setCompletionText
 {
-	[self setText:@"All availble TV Show data has been imported"];
+	[self setText:BRLocalizedString(@"All availble TV Show data has been imported", @"The TV Show import complete")];
 }
 
 - (void)importNextItem:(NSTimer *)timer
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
 	NSString * fileName=[[fileMeta path] lastPathComponent] ;
-	[self setCurrentFile:[NSString stringWithFormat:@"Current File: %@",fileName]];
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
 	[super importNextItem:timer];
 }
 
 - (void)resetUIElements
 {
 	[super resetUIElements];
-	[title setTitle: @"Populate TV Show Data"];
-	[self setText:@"This will attempt to fetch information about TV shows automatically.  This procedure may take quite some time and could ask you questions"];
-	[button setTitle: @"Import TV Show Data"];
+	[title setTitle: BRLocalizedString(@"Populate TV Show Data", @"Title")];
+	[self setText:BRLocalizedString(@"This will attempt to fetch information about TV shows automatically.  This procedure may take quite some time and could ask you questions", @"Description of the tv show import")];
+	[button setTitle: BRLocalizedString(@"Import TV Show Data", @"Button")];
 }
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller

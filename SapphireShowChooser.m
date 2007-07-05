@@ -69,7 +69,7 @@
 	BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
 	
 	if(row == 0)
-		[[result textItem] setTitle:@"<This is not a TV Show>"];
+		[[result textItem] setTitle:BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser")];
 	else
 		[[result textItem] setTitle:[[shows objectAtIndex:row-1] objectForKey:@"name"]];
 	
@@ -82,7 +82,7 @@
 		return nil;
 	
 	if(row == 0)
-		return @"<This is not a TV Show>";
+		return BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser");
 	else
 		return [[shows objectAtIndex:row-1] objectForKey:@"name"];
 }

@@ -110,8 +110,8 @@
 	predicate = [newPredicate retain];
 
 	NSArray *names = [NSArray arrayWithObjects:
-		@"Select",
-		@"Mark File",
+		BRLocalizedString(@"Select", @"Select Menu Item"),
+		BRLocalizedString(@"Mark File", @"Mark File Menu Item"),
 		nil];
 	[self createModeControlWithScene:scene names:names];
 	[self addControl:modeControl];
@@ -160,7 +160,7 @@
 		NSArray *files = [metaData predicatedFiles:predicate];
 		[_names addObjectsFromArray:files];
 		if([[SapphireSettings sharedSettings] fastSwitching])
-			[_names addObject:@"< Scan for new files >"];
+			[_names addObject:BRLocalizedString(@"< Scan for new files >", @"Conduct a scan of the directory for new files")];
 		dirCount = [dirs count];
 		fileCount = [files count];
 	}
@@ -312,7 +312,7 @@
 	if( nameCount == 0)
 	{
 		BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
-		[[result textItem] setTitle:@"< EMPTY >"];
+		[[result textItem] setTitle:BRLocalizedString(@"< EMPTY >", @"Empty directory")];
 		return result;
 	}
 	if( row >= nameCount ) return ( nil ) ;

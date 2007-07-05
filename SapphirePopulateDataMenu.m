@@ -86,7 +86,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 
 - (void)setCompletionText
 {
-	[self setText:@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported"];
+	[self setText:BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete")];
 }
 
 - (void)importXMLFile:(NSString *)xmlFileName forMeta: (SapphireFileMetaData *) fileMeta
@@ -185,7 +185,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 		xmlFileCount++ ;
 	}
 	xmlPathIsDir = NO;
-	[self setCurrentFile:[NSString stringWithFormat:@"Current File: %@ XML=%d",fileName,xmlFileCount]];
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@ XML=%d", @"Current file processes in import format, filename and number of xml files processed so far"),fileName,xmlFileCount]];
 	[super importNextItem:timer];
 }
 
@@ -194,8 +194,8 @@ static NSDictionary *xmlMultiAttributes = nil;
 - (void)resetUIElements
 {
 	[super resetUIElements];
-	[title setTitle: @"Import File Data"];
-	[self setText:@"This will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time"];
-	[button setTitle: @"Import File Data"];
+	[title setTitle: BRLocalizedString(@"Import File Data", @"Title")];
+	[self setText:BRLocalizedString(@"This will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time", @"Description of the import processes")];
+	[button setTitle: BRLocalizedString(@"Import File Data", @"Button")];
 }
 @end

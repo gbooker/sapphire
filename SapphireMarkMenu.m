@@ -21,11 +21,11 @@
 	metaData = [meta retain];
 	if(isDir)
 		names = [[NSArray alloc] initWithObjects:
-			@"Mark All as Watched",
-			@"Mark All as Unwatched",
-			@"Mark All as Favorite",
-			@"Mark All as Not Favorite",
-			@"Mark All to Refetch TV Data",
+			BRLocalizedString(@"Mark All as Watched", @"Mark whole directory as watched"),
+			BRLocalizedString(@"Mark All as Unwatched", @"Mark whole directory as unwatched"),
+			BRLocalizedString(@"Mark All as Favorite", @"Mark whole directory as favorite"),
+			BRLocalizedString(@"Mark All as Not Favorite", @"Mark whole directory as not favorite"),
+			BRLocalizedString(@"Mark All to Refetch TV Data", @"Mark whole directory to re-fetch its tv data"),
 			nil];
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
@@ -35,16 +35,16 @@
 		NSString *reimport = nil;
 		
 		if([fileMeta watched])
-			watched = @"Mark as Unwatched";
+			watched = BRLocalizedString(@"Mark as Unwatched", @"Mark file as unwatched");
 		else
-			watched = @"Mark as Watched";
+			watched = BRLocalizedString(@"Mark as Watched", @"Mark file as watched");
 
 		if([fileMeta favorite])
-			favorite = @"Mark as Not Favorite";
+			favorite = BRLocalizedString(@"Mark as Not Favorite", @"Mark file as a favorite");
 		else
-			favorite = @"Mark as Favorite";
+			favorite = BRLocalizedString(@"Mark as Favorite", @"Mark file as not a favorite");
 		if([fileMeta importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
-			reimport = @"Mark to Refetch TV Data";
+			reimport = BRLocalizedString(@"Mark to Refetch TV Data", @"Mark file to re-fetch its tv data");
 		names = [[NSArray alloc] initWithObjects:watched, favorite, reimport, nil];
 	}
 	else

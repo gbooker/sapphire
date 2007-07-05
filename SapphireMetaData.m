@@ -672,9 +672,15 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	metaDataSubstitutions = [[NSDictionary alloc] initWithObjectsAndKeys:
 		//These substitute keys in the meta data to nicer display keys
-		@"Video", VIDEO_DESC_KEY,
-		@"Audio", AUDIO_DESC_KEY,
+		BRLocalizedString(@"Video", @"Video format in metadata display"), VIDEO_DESC_KEY,
+		BRLocalizedString(@"Audio", @"Audio format in metadata display"), AUDIO_DESC_KEY,
+		BRLocalizedString(META_EPISODE_AND_SEASON_KEY, @"Season / Epsiode in metadata display"), META_EPISODE_AND_SEASON_KEY,
+		BRLocalizedString(META_SEASON_NUMBER_KEY, @"Season in metadata display"), META_SEASON_NUMBER_KEY,
+		BRLocalizedString(META_EPISODE_NUMBER_KEY, @"Epsiode in metadata display"), META_EPISODE_NUMBER_KEY,
+		BRLocalizedString(SIZE_KEY, @"filesize in metadata display"), SIZE_KEY,
+		BRLocalizedString(DURATION_KEY, @"file duration in metadata display"), DURATION_KEY,
 		nil];
+	//These keys are before the above translation
 	displayedMetaDataOrder = [NSArray arrayWithObjects:
 		//These are not shown in the list
 		META_RATING_KEY,

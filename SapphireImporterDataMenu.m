@@ -24,7 +24,7 @@
 	meta = [metaData retain];
 	// Setup the Header Control with default contents
 	title = [[BRHeaderControl alloc] initWithScene: scene];
-	[title setTitle: @"Populate Show Data"];
+	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
 	NSRect frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
@@ -133,9 +133,9 @@
 
 - (void)import
 {
-	[button setTitle:@"Cancel Import"];
+	[button setTitle:BRLocalizedString(@"Cancel Import", @"Cancel the import process")];
 	[button setAction:@selector(cancel)];
-	[self setFileProgress:@"Initializing..."];
+	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[[self scene] renderScene];
 	[self getItems];
 	updated = 0 ;
@@ -156,7 +156,7 @@
 - (void)importNextItem:(NSTimer *)timer
 {
 	current++ ;
-	[self setFileProgress:[NSString stringWithFormat:@"File Progress: %0.0f / %0.0f", current, max,updated]];
+	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 	if([self doImport])updated++;
 	
 	if(suspended)
@@ -175,8 +175,8 @@
 		[meta writeMetaData];
 		[button setHidden:YES];
 		[button setTarget:nil];
-		[title setTitle: @"Import Complete"];
-		[self setFileProgress:[NSString stringWithFormat:@"Updated %0.0f Entries.", updated]];
+		[title setTitle:BRLocalizedString(@"Import Complete", @"The import is complete")];
+		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Updated %0.0f Entries.", @"Import complete format with number updated"), updated]];
 		[self setCurrentFile:@""];
 		[self setCompletionText];
 		[[self scene] renderScene];
