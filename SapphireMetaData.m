@@ -233,7 +233,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	while((fileMeta = [nameEnum nextObject]) != nil)
 		[files addObject:[[fileMeta path] lastPathComponent]];
 	[self updateMetaData];
-	if([importArray count])
+	if([importArray count] || [self pruneMetaData])
 		[self writeMetaData];
 	scannedDirectory = YES;
 }
@@ -369,6 +369,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (BOOL)pruneMetaData
 {
 	BOOL ret = NO;
+	if([files count] + [directories count] == 0)
+		return ret;
 	NSSet *existingSet = [NSSet setWithArray:files];
 	NSArray *metaArray = [metaFiles allKeys];
 	NSMutableSet *pruneSet = [NSMutableSet setWithArray:metaArray];
@@ -379,8 +381,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
 		NSString *pruneKey = nil;
 		while((pruneKey = [pruneEnum nextObject]) != nil)
-			[metaFiles removeObjectForKey:pruneKey];
-		ret = YES;		
+		{
+			NSString *filePath = [path stringByAppendingPathComponent:pruneKey];
+			NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
+			if(![[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+			{
+				[metaFiles removeObjectForKey:pruneKey];
+				ret = YES;
+			}
+		}
 	}
 	
 	existingSet = [NSSet setWithArray:directories];
@@ -393,8 +402,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
 		NSString *pruneKey = nil;
 		while((pruneKey = [pruneEnum nextObject]) != nil)
-			[metaDirs removeObjectForKey:pruneKey];
-		ret = YES;
+		{
+			NSString *filePath = [path stringByAppendingPathComponent:pruneKey];
+			NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
+			if(![[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+			{
+				[metaDirs removeObjectForKey:pruneKey];
+				ret = YES;
+			}
+		}
 	}
 	
 	return ret;
