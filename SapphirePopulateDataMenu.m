@@ -70,8 +70,6 @@ static NSDictionary *xmlMultiAttributes = nil;
 		@"Directors",			DIRECTORS_XML_QUERY,nil];
 }
 
-
-
 - (void)getItems
 {
 	importItems = [[meta subFileMetas] mutableCopy];
@@ -80,13 +78,35 @@ static NSDictionary *xmlMultiAttributes = nil;
 
 - (BOOL)doImport
 {
+	BOOL ret = NO;
+	NSFileManager *fm = [NSFileManager defaultManager];
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	return [fileMeta updateMetaData];
+	NSString * xmlFilePath=[fileMeta path] ;
+	xmlPathIsDir = NO;
+	xmlFilePath=[[xmlFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
+	if([fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] && !xmlPathIsDir)
+	{
+		struct stat sb;
+		memset(&sb, 0, sizeof(struct stat));
+		stat([xmlFilePath fileSystemRepresentation], &sb);
+		long modTime = sb.st_mtimespec.tv_sec;
+		long oldTime = [fileMeta importedTimeFromSource:META_XML_IMPORT_KEY];
+		if(oldTime < modTime)
+		{
+			[self importXMLFile:xmlFilePath forMeta:fileMeta] ;
+			xmlFileCount++ ;
+			ret = YES;
+		}
+	}
+	if ([fileMeta updateMetaData])
+		ret = YES;
+	return ret;
 }
 
 - (void)setCompletionText
 {
 	[self setText:BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete")];
+	[self setCurrentFile:[NSString stringWithFormat:@"Imported %d XML file(s)",xmlFileCount]];
 }
 
 - (void)importXMLFile:(NSString *)xmlFileName forMeta: (SapphireFileMetaData *) fileMeta
@@ -130,7 +150,6 @@ static NSDictionary *xmlMultiAttributes = nil;
 			[newData addObject:[node stringValue]];
 		}
 		[metaData setObject:newData forKey:[xmlMultiAttributes objectForKey:key]] ;
-
 	}
 	//Special cases
 	NSString *value = [metaData objectForKey:META_SHOW_AIR_DATE];
@@ -173,9 +192,10 @@ static NSDictionary *xmlMultiAttributes = nil;
 
 - (void)importNextItem:(NSTimer *)timer
 {
-	NSFileManager *fm = [NSFileManager defaultManager];
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
 	NSString * fileName=[[fileMeta path] lastPathComponent] ;
+/*
+	[self setCurrentFile:[NSString stringWithFormat:@"Current File: %@",fileName]];
 	NSString * xmlFilePath=[fileMeta path] ;
 	xmlPathIsDir = NO;
 	xmlFilePath=[[xmlFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
@@ -185,11 +205,10 @@ static NSDictionary *xmlMultiAttributes = nil;
 		xmlFileCount++ ;
 	}
 	xmlPathIsDir = NO;
-	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@ XML=%d", @"Current file processes in import format, filename and number of xml files processed so far"),fileName,xmlFileCount]];
+*/
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", @"Current file processes in import format"),fileName]];
 	[super importNextItem:timer];
 }
-
-
 
 - (void)resetUIElements
 {
