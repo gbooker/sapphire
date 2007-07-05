@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #import "SapphireSettings.h"
+#import "SapphirePredicates.h"
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"

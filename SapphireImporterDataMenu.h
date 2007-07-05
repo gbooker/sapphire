@@ -6,11 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <Foundation/Foundation.h>
-#import <BackRow/BRLayerController.h>
-#import <BackRow/BRTextEntryDelegateProtocol.h>
-
 @class BRRenderScene, BRControl, BRHeaderControl, BRTextEntryControl, BRButtonControl, SapphireDirectoryMetaData;
 @protocol BRTextContainer;
 

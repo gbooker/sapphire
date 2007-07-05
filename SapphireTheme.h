@@ -6,8 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
 #define RED_GEM_KEY @"RedGem"
 #define BLUE_GEM_KEY @"BlueGem"
 #define GREEN_GEM_KEY @"greenGem"

@@ -6,11 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <BackRow/BackRow.h>
-#import "SapphirePopulateDataMenu.h"
-
-@class BRHeaderControl, SapphireDirectoryMetaData ;
+@class SapphireDirectoryMetaData, SapphirePopulateDataMenu;
 
 @interface SapphireSettings : BRMediaMenuController 
 {

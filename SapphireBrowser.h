@@ -6,13 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <BackRow/BRMediaMenuController.h>
-#import "SapphirePredicates.h"
-
-@class BRRenderScene, BRRenderLayer;
-
-@class SapphireDirectoryMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl;
+@class SapphireDirectoryMetaData, SapphireFileMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>

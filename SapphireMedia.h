@@ -6,10 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <BackRow/BRSimpleMediaAsset.h>
-
-
 @interface SapphireMedia : BRSimpleMediaAsset {
 	unsigned int		resumeTime;
 }

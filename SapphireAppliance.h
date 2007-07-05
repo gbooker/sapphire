@@ -6,11 +6,6 @@
 //  Copyright (c) 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <BackRow/BRAppliance.h>
-
-@class BRLayerController, BRRenderScene;
-
 @interface SapphireAppliance : BRAppliance 
 {
 }

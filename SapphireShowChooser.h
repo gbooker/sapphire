@@ -6,9 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <BackRow/BRCenteredMenuController.h>
-
 #define SHOW_CHOOSE_CANCEL -2
 #define SHOW_CHOOSE_NOT_SHOW -1
 

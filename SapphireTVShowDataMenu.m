@@ -10,7 +10,6 @@
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
 #import "SapphireShowChooser.h"
-#include <regex.h>
 
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
 #define TVRAGE_EP_INFO @".//*[@class='b2']/*"

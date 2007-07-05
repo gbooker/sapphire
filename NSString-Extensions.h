@@ -6,9 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
-
 @interface NSString (PostStrings)
 - (NSString *)URLEncode;
 @end

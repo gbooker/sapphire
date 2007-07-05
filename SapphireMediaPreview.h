@@ -6,10 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <BackRow/BRMediaPreviewControllerProtocol.h>
-#import <BackRow/BRRenderLayer.h>
-
 @class SapphireMetaData;
 
 @interface SapphireMediaPreview : BRMetadataPreviewController{

@@ -6,9 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-#import <BackRow/BRQTKitVideoPlayer.h>
-
 @class SapphireFileMetaData;
 
 @interface SapphireVideoPlayer : BRQTKitVideoPlayer {

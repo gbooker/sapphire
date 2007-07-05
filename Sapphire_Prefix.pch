@@ -3,6 +3,7 @@
 //
 
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-    #import <BackRow/BackRow.h>
+	#import <Foundation/Foundation.h>
+	#import <BackRow/BackRow.h>
+	#import "BackRowUtils.h"
 #endif
