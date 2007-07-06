@@ -42,6 +42,11 @@
 - (void)updateCompleteForFile:(NSString *)file;
 @end
 
+@protocol SapphireMetaDataScannerDelegate <NSObject>
+- (void)gotSubFiles:(NSArray *)subs;
+- (BOOL)getSubFilesCanceled;
+@end
+
 @interface SapphireMetaData : NSObject {
 	NSMutableDictionary				*metaData;
 	SapphireMetaData				*parent;
@@ -100,8 +105,8 @@
 - (void)resumeDelayedImport;
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
-- (NSArray *)subFileMetas;
-- (void)scanForNewFiles;
+- (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate;
+- (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate;
 
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;

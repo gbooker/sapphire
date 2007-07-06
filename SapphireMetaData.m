@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #import "SapphireSettings.h"
 #import "SapphirePredicates.h"
+#import "SapphireMetaDataScanner.h"
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"
@@ -505,44 +506,18 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [self metaDataForFile:file];
 }
 
-- (NSArray *)subFileMetas
+- (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate
 {
-	NSMutableArray *ret = [[NSMutableArray alloc] init];
 	[self reloadDirectoryContents];
-	NSEnumerator *dirEnum = [directories objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-	{
-		SapphireDirectoryMetaData *dirMeta = [self metaDataForDirectory:dir];
-		if(dirMeta != nil)
-			[ret addObjectsFromArray:[dirMeta subFileMetas]];
-	}
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-	{
-		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
-		if(fileMeta != nil)
-			[ret addObject:fileMeta];
-	}
-	return [ret autorelease];
+	SapphireMetaDataScanner *scanner = [[SapphireMetaDataScanner alloc] initWithDirectoryMetaData:self delegate:subDelegate];
+	[scanner setGivesResults:YES];
 }
 
-- (void)scanForNewFiles
+- (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate
 {
 	[self reloadDirectoryContents];
-	NSEnumerator *dirEnum = [directories objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-	{
-		SapphireDirectoryMetaData *dirMeta = [self metaDataForDirectory:dir];
-		if(dirMeta != nil)
-			[dirMeta scanForNewFiles];
-	}
-	NSEnumerator *fileEnum = [files objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
-		[self metaDataForFile:file];
+	SapphireMetaDataScanner *scanner = [[SapphireMetaDataScanner alloc] initWithDirectoryMetaData:self delegate:subDelegate];
+	[scanner setGivesResults:NO];
 }
 
 - (void)setupFiles:(NSArray * *)filesToScan andDirectories:(NSArray * *)directoriesToScan arraysForPredicate:(SapphirePredicate *)predicate

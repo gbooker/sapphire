@@ -72,7 +72,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 
 - (void)getItems
 {
-	importItems = [[meta subFileMetas] mutableCopy];
+	[super getItems];
 	xmlFileCount=0 ;
 }
 

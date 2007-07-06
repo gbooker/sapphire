@@ -222,6 +222,7 @@
     // always call super
     [super willBePopped];
 	[metaData cancelImport];
+	cancelScan = YES;
 	[metaData setDelegate:nil];
 }
 
@@ -239,6 +240,7 @@
     
     // always call super
 	[metaData cancelImport];
+	cancelScan = YES;
     [super willBeBuried];
 }
 
@@ -471,9 +473,19 @@
 	}
 	else
 	{
-		[metaData scanForNewFiles];
-		[self reloadDirectoryContents];
+		cancelScan = NO;
+		[metaData scanForNewFilesWithDelegate:self];
 	}
+}
+
+- (void)gotSubFiles:(NSArray *)subs
+{
+	[self reloadDirectoryContents];	
+}
+
+- (BOOL)getSubFilesCanceled
+{
+	return cancelScan;
 }
 
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) row

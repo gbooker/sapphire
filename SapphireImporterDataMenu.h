@@ -6,26 +6,28 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-@class BRRenderScene, BRControl, BRHeaderControl, BRTextEntryControl, BRButtonControl, SapphireDirectoryMetaData;
-@protocol BRTextContainer;
+@class SapphireDirectoryMetaData;
+@protocol SapphireMetaDataScannerDelegate;
 
-@interface SapphireImporterDataMenu : BRLayerController
+@interface SapphireImporterDataMenu : BRLayerController <SapphireMetaDataScannerDelegate>
 {
-	BRHeaderControl				*title;
+	BRHeaderControl					*title;
 	BRButtonControl					*button;
 	BRTextControl					*text;
 	BRTextControl					*fileProgress;
 	BRTextControl					*currentFile;
-	BRProgressBarWidget			*bar;
+	BRProgressBarWidget				*bar;
 
 	SapphireDirectoryMetaData		*meta;
 	NSMutableArray					*importItems;
-	NSTimer						*importTimer;
+	NSTimer							*importTimer;
 	float							max;
 	float							current;
 	float							updated ;
 	BOOL							suspended;
+	BOOL							canceled;
 }
 - (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData;
 - (void) dealloc;
+- (void)getItems;
 @end

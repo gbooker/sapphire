@@ -129,6 +129,7 @@
 
 - (void)getItems
 {
+	[meta getSubFileMetasWithDelegate:self];
 }
 
 - (void)import
@@ -138,10 +139,20 @@
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[[self scene] renderScene];
 	[self getItems];
+}
+
+- (void)gotSubFiles:(NSArray *)subs
+{
+	importItems = [subs mutableCopy];
 	updated = 0 ;
 	current = 0;
 	max = [importItems count];
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+}
+
+- (BOOL)getSubFilesCanceled
+{
+	return canceled;
 }
 
 - (BOOL)doImport
@@ -185,6 +196,7 @@
 
 - (void)cancel
 {
+	canceled = YES;
 	[importTimer invalidate];
 	importTimer = nil;
 	[self resetUIElements];

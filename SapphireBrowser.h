@@ -7,9 +7,9 @@
 //
 
 @class SapphireDirectoryMetaData, SapphireFileMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
-@protocol SapphireMetaDataDelegate;
+@protocol SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate;
 
-@interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate>
+@interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate>
 {
 	NSMutableArray				* _names ;
 	NSMutableArray				*items ;
@@ -20,6 +20,7 @@
 	SapphireSettings			*settings;
 	int							dirCount;
 	int							fileCount;
+	BOOL						cancelScan;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;

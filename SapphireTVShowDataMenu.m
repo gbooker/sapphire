@@ -298,11 +298,6 @@
 	[settings writeToFile:settingsPath atomically:YES];
 }
 
-- (void)getItems
-{
-	importItems = [[meta subFileMetas] mutableCopy];
-}
-
 - (BOOL)doImport
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
