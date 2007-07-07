@@ -17,33 +17,42 @@
 @end
 
 @implementation SapphireImporterDataMenu
+/*!
+ * @brief Creates a new Importer Data Menu
+ *
+ * @param scene The scene
+ * @praam meta The metadata for the directory to browse
+ * @return The Menu
+ */
 - (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData
 {
 	if ( [super initWithScene: scene] == nil )
 	return ( nil );
 	meta = [metaData retain];
-	// Setup the Header Control with default contents
+	/*Setup the Header Control with default contents*/
 	title = [[BRHeaderControl alloc] initWithScene: scene];
 	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
+	/*Set the size*/
 	NSRect frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
 	[title setFrame: frame];
 	
-	// Setup the Header Control with default contents
+	/*Setup the Header Control with default contents*/
 	frame.origin.y = frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
 
-	// setup the button control
+	/*Setup the button control*/
 	frame = [[self masterLayer] frame];
 	button = [[BRButtonControl alloc] initWithScene: scene masterLayerSize: frame.size];
 	[button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
 
-	// setup the text entry control
+	/*Setup the text entry control*/
 	text = [[BRTextControl alloc] initWithScene: scene];
 	fileProgress = [[BRTextControl alloc] initWithScene: scene];
 	currentFile = [[BRTextControl alloc] initWithScene: scene];
 	
+	/*Setup the progress bar*/
 	bar = [[BRProgressBarWidget alloc] initWithScene: scene];
 	frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height * 5.0f / 16.0f;
@@ -52,10 +61,10 @@
 	frame.size.width = frame.size.width * 2.0f / 3.0f;
 	[bar setFrame: frame] ;
 	
+	/*Setup the names*/
 	[self resetUIElements];
 	
-	// add controls
-
+	/*add controls*/
 	[self addControl: title];
 	[self addControl: text];
 	[self addControl: fileProgress] ;
@@ -66,6 +75,11 @@
     return ( self );
 }
 
+/*!
+ * @brief Sets the informative text
+ *
+ * @param theText The text to set
+ */
 - (void)setText:(NSString *)theText
 {
 	[text setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
@@ -82,6 +96,11 @@
 	[text setFrame:frame];
 }
 
+/*!
+ * @brief Sets the file progress string
+ *
+ * @param theFileProgress The file progress string to display
+ */
 - (void)setFileProgress:(NSString *)theFileProgress
 {
 	[fileProgress setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
@@ -98,6 +117,11 @@
 	[fileProgress setFrame:frame];
 }
 
+/*!
+ * @brief Sets the display of the current file being processed
+ *
+ * @param theCurrentFile The current file being proccessed
+ */
 - (void)setCurrentFile:(NSString *)theCurrentFile
 {
 	[currentFile setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
@@ -127,20 +151,33 @@
 	[super dealloc];
 }
 
+/*!
+ * @brief Get the list of all files to process
+ */
 - (void)getItems
 {
 	[meta getSubFileMetasWithDelegate:self skipDirectories:[NSMutableSet set]];
 }
 
+/*!
+ * @brief Start the import process
+ */
 - (void)import
 {
+	/*Change display*/
 	[button setTitle:BRLocalizedString(@"Cancel Import", @"Cancel the import process")];
 	[button setAction:@selector(cancel)];
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[[self scene] renderScene];
+	/*Initialize the import process*/
 	[self getItems];
 }
 
+/*!
+ * @brief Meta data delegate method to return final list of files
+ *
+ * @param subs The files which are children of the current directory
+ */
 - (void)gotSubFiles:(NSArray *)subs
 {
 	importItems = [subs mutableCopy];
@@ -150,40 +187,65 @@
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
 
+/*!
+ * @brief Ask if we should cancel the fetching of file listing
+ *
+ * @return YES if the file listing should be canceled, NO otherwise
+ */
 - (BOOL)getSubFilesCanceled
 {
 	return canceled;
 }
 
+/*!
+ * @brief Import a single item
+ *
+ * @return YES if any data was imported, NO otherwise
+ */
 - (BOOL)doImport
 {
 	return NO;
 }
 
+/*!
+ * @brief Change the display to show the completion text
+ */
 - (void)setCompletionText
 {
 }
 
+/*!
+ * @brief Timer function to start the import of the next file
+ *
+ * @param timer The timer that triggered this
+ */
 - (void)importNextItem:(NSTimer *)timer
 {
+	/*Update the display*/
 	current++ ;
 	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
-	if([self doImport])updated++;
+	/*Update the imported count*/
+	if([self doImport])
+		updated++;
 	
+	/*Check for a suspend and reimport afterwards*/
 	if(suspended)
 	{
 		current--;
 		return;
 	}
 	
+	/*Start with the first item*/
 	[importItems removeObjectAtIndex:0];
 	[bar setPercentage:current/max * 100.0f];
 	
+	/*Check for completion*/
 	if(![importItems count])
 	{
 		[importTimer invalidate];
 		importTimer = nil;
 		[meta writeMetaData];
+		/*Update display*/
 		[button setHidden:YES];
 		[button setTarget:nil];
 		[title setTitle:BRLocalizedString(@"Import Complete", @"The import is complete")];
@@ -194,34 +256,56 @@
 	}
 }
 
+/*!
+ * @brief Cancel the import process
+ */
 - (void)cancel
 {
+	/*Kill the timer*/
 	canceled = YES;
 	[importTimer invalidate];
 	importTimer = nil;
+	/*Reset the display and write data*/
 	[self resetUIElements];
 	[meta writeMetaData];
 }
 
+/*!
+ * @brief Pause the import process
+ */
 - (void)pause
 {
+	/*Kil lthe timer*/
 	suspended = YES;
 	[importTimer invalidate];
 	importTimer = nil;
 }
 
+/*!
+ * @brief Resume the import process
+ */
 - (void)resume
 {
+	/*Sanity checks*/
+	[importTimer invalidate];
+	/*Resume*/
 	suspended = NO;
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
 
+/*!
+ * @brief Skip the next item in the queue
+ */
 - (void)skipNextItem
 {
+	/*Remove the next item from the queue*/
 	if([importItems count])
 		[importItems removeObjectAtIndex:0];
 }
 
+/*!
+ * @brief Reset the UI after an import completion or cancel
+ */
 - (void)resetUIElements
 {
 	[self setFileProgress:@" "];
@@ -234,6 +318,7 @@
 
 - (void)wasPopped
 {
+	/*Someone hit menu, so cancel*/
 	[self cancel];
 	[super wasPopped];
 }

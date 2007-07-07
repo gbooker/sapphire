@@ -44,6 +44,7 @@
 
 @implementation SapphirePopulateDataMenu
 
+/*Information to make the XML import easier*/
 static NSDictionary *xmlSingleAttributes = nil;
 static NSDictionary *xmlMultiAttributes = nil;
 
@@ -70,22 +71,34 @@ static NSDictionary *xmlMultiAttributes = nil;
 		@"Directors",			DIRECTORS_XML_QUERY,nil];
 }
 
+/*!
+ * @brief Get the list of all files to process
+ */
 - (void)getItems
 {
 	[super getItems];
 	xmlFileCount=0 ;
 }
 
+/*!
+ * @brief Import a single item
+ *
+ * @return YES if any data was imported, NO otherwise
+ */
 - (BOOL)doImport
 {
+	/*Initialization*/
 	BOOL ret = NO;
 	NSFileManager *fm = [NSFileManager defaultManager];
+	/*Get the file*/
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
+	/*Check for XML file*/
 	NSString * xmlFilePath=[fileMeta path] ;
 	xmlPathIsDir = NO;
 	xmlFilePath=[[xmlFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
 	if([fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] && !xmlPathIsDir)
 	{
+		/*Check modification date on XML file*/
 		struct stat sb;
 		memset(&sb, 0, sizeof(struct stat));
 		stat([xmlFilePath fileSystemRepresentation], &sb);
@@ -93,24 +106,37 @@ static NSDictionary *xmlMultiAttributes = nil;
 		long oldTime = [fileMeta importedTimeFromSource:META_XML_IMPORT_KEY];
 		if(oldTime < modTime)
 		{
+			/*Import the XML file and update counts*/
 			[self importXMLFile:xmlFilePath forMeta:fileMeta] ;
 			xmlFileCount++ ;
 			ret = YES;
 		}
 	}
+	/*Import file if necessary*/
 	if ([fileMeta updateMetaData])
 		ret = YES;
+	/*Return whether we imported or not*/
 	return ret;
 }
 
+/*!
+ * @brief Change the display to show the completion text
+ */
 - (void)setCompletionText
 {
 	[self setText:BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete")];
 	[self setCurrentFile:[NSString stringWithFormat:@"Imported %d XML file(s)",xmlFileCount]];
 }
 
+/*!
+ * @brief Import and XML file into meta data
+ *
+ * @param xmlFileName The path of the xml file
+ * @param fileMeta The file's meta data
+ */
 - (void)importXMLFile:(NSString *)xmlFileName forMeta: (SapphireFileMetaData *) fileMeta
 {
+	/*Read the XML document*/
 	NSURL *url = [NSURL fileURLWithPath:xmlFileName];
 	NSError *error = nil;
 	NSMutableDictionary * metaData=[NSMutableDictionary dictionary];
@@ -123,58 +149,73 @@ static NSDictionary *xmlMultiAttributes = nil;
 	//Need to catch the media type {"TV Show" , "Movie"}
 	if(type!=nil)metaData
 */
+	/*Import single attribute items*/
 	NSEnumerator *keyEnum = [xmlSingleAttributes keyEnumerator];
 	NSString *key = nil;
 	
 	while((key = [keyEnum nextObject]) != nil)
 	{
+		/*Search for the attribute*/
 		NSArray *objects = [root objectsForXQuery:key error:&error];
 		if([objects count])
 		{
+			/*Import the attribute*/
 			[metaData setObject:[[objects objectAtIndex:0] stringValue] forKey:[xmlSingleAttributes objectForKey:key]] ;
 		}
     }
+	/*Search for multi attribute items*/
 	keyEnum = [xmlMultiAttributes keyEnumerator];
 	while((key = [keyEnum nextObject]) != nil)
 	{
+		/*Search for the attribute*/
 		NSArray *objects = [root objectsForXQuery:key error:&error];
 		int count = [objects count];
 		NSMutableArray *newData= nil;
 		if(!count)
 			continue;
+		/*Itterate through the attribute's values*/
 		newData = [NSMutableArray arrayWithCapacity:count];
 		NSEnumerator *objectsEnum = [objects objectEnumerator];
 		NSXMLNode *node = nil;
 		while((node = [objectsEnum nextObject]) != nil)
 		{
+			/*Add each value*/
 			[newData addObject:[node stringValue]];
 		}
+		/*Import the attribute*/
 		[metaData setObject:newData forKey:[xmlMultiAttributes objectForKey:key]] ;
 	}
-	//Special cases
+	/*Special cases*/
+	/*The air date*/
 	NSString *value = [metaData objectForKey:META_SHOW_AIR_DATE];
 	if(value != nil)
 	{
+		/*Change date string to a number*/
 		[metaData removeObjectForKey:META_SHOW_AIR_DATE];
 		NSDate *newValue = [NSDate dateWithNaturalLanguageString:value];
 		if([newValue timeIntervalSince1970])
 			[metaData setObject:newValue forKey:META_SHOW_AIR_DATE];
 	}
+	/*The aquired date*/
 	value = [metaData objectForKey:META_SHOW_AQUIRED_DATE];
 	if(value != nil)
 	{
+		/*Change date sttring to a number*/
 		[metaData removeObjectForKey:META_SHOW_AQUIRED_DATE];
 		NSDate *newValue = [NSDate dateWithNaturalLanguageString:value];
 		if([newValue timeIntervalSince1970])
 			[metaData setObject:newValue forKey:META_SHOW_AQUIRED_DATE];
 	}
+	/*Values which need to be converted to numbers*/
 	NSArray *convertToNumbers = [NSArray arrayWithObjects:META_SHOW_FAVORITE_RATING_KEY, META_RATING_KEY, META_ABSOLUTE_EP_NUMBER_KEY, META_SEASON_NUMBER_KEY, META_EPISODE_NUMBER_KEY, nil];
 	NSEnumerator *numEnum = [convertToNumbers objectEnumerator];
 	while((key = [numEnum nextObject]) != nil)
 	{
+		/*Check for presence of value*/
 		NSString *value = [metaData objectForKey:key];
 		if(value != nil)
 		{
+			/*Convert to a number, either a double or int, depending on value*/
 			double newValue = [value doubleValue];
 			NSNumber *newNum = [NSNumber numberWithInt:[value intValue]];
 			if(newValue != round(newValue))
@@ -182,34 +223,32 @@ static NSDictionary *xmlMultiAttributes = nil;
 			[metaData setObject:newNum forKey:key];
 		}
 	}
+	/*Update modification date*/
 	struct stat sb;
 	memset(&sb, 0, sizeof(struct stat));
 	stat([xmlFileName fileSystemRepresentation], &sb);
 	long modTime = sb.st_mtimespec.tv_sec;
+	/*Import into meta data*/
 	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY withTime:modTime];
 }
 
-
+/*!
+ * @brief Timer function to start the import of the next file
+ *
+ * @param timer The timer that triggered this
+ */
 - (void)importNextItem:(NSTimer *)timer
 {
+	/*Set the current file in the progress*/
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
 	NSString * fileName=[[fileMeta path] lastPathComponent] ;
-/*
-	[self setCurrentFile:[NSString stringWithFormat:@"Current File: %@",fileName]];
-	NSString * xmlFilePath=[fileMeta path] ;
-	xmlPathIsDir = NO;
-	xmlFilePath=[[xmlFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
-	if([fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] && !xmlPathIsDir)
-	{
-		[self importXMLFile:xmlFilePath forMeta:fileMeta] ;
-		xmlFileCount++ ;
-	}
-	xmlPathIsDir = NO;
-*/
 	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", @"Current file processes in import format"),fileName]];
 	[super importNextItem:timer];
 }
 
+/*!
+ * @brief Reset the UI after an import completion or cancel
+ */
 - (void)resetUIElements
 {
 	[super resetUIElements];
