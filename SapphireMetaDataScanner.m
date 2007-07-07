@@ -27,8 +27,23 @@
 	[metaDir release];
 	[remaining release];
 	[results release];
+	[skipDirectories release];
 	[delegate release];
 	[super dealloc];
+}
+
+- (void)setSkipDirectories:(NSMutableSet *)skip
+{
+	skipDirectories = [skip retain];
+	int i;
+	for(i = [remaining count]-1; i>=0; i++)
+	{
+		NSString *checkPath = [[metaDir metaDataForDirectory:[remaining objectAtIndex:i]] path];
+		if([skipDirectories containsObject:checkPath])
+			[remaining removeObjectAtIndex:i];
+		else
+			[skipDirectories addObject:checkPath];
+	}
 }
 
 - (void)setGivesResults:(BOOL)givesResults
@@ -68,9 +83,9 @@
 	{
 		SapphireDirectoryMetaData *next = [metaDir metaDataForDirectory:[remaining lastObject]];
 		if(results != nil)
-			[next getSubFileMetasWithDelegate:self];
+			[next getSubFileMetasWithDelegate:self skipDirectories:skipDirectories];
 		else
-			[next scanForNewFilesWithDelegate:self];
+			[next scanForNewFilesWithDelegate:self skipDirectories:skipDirectories];
 		[remaining removeLastObject];
 	}
 	else

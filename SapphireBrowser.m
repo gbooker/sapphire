@@ -566,7 +566,7 @@
 	{
 		/*Do a scan*/
 		cancelScan = NO;
-		[metaData scanForNewFilesWithDelegate:self];
+		[metaData scanForNewFilesWithDelegate:self skipDirectories:[NSMutableSet set]];
 	}
 }
 

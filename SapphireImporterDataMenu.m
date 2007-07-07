@@ -129,7 +129,7 @@
 
 - (void)getItems
 {
-	[meta getSubFileMetasWithDelegate:self];
+	[meta getSubFileMetasWithDelegate:self skipDirectories:[NSMutableSet set]];
 }
 
 - (void)import

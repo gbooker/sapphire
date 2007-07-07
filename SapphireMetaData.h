@@ -105,8 +105,8 @@
 - (void)resumeDelayedImport;
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
-- (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate;
-- (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate;
+- (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
+- (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
 
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;

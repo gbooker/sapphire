@@ -15,10 +15,12 @@
 	SapphireDirectoryMetaData				*metaDir;
 	NSMutableArray							*remaining;
 	NSMutableArray							*results;
+	NSMutableSet							*skipDirectories;
 	id <SapphireMetaDataScannerDelegate>	delegate;
 }
 
 - (id)initWithDirectoryMetaData:(SapphireDirectoryMetaData *)meta delegate:(id <SapphireMetaDataScannerDelegate>)newDelegate;
+- (void)setSkipDirectories:(NSMutableSet *)skip;
 - (void)setGivesResults:(BOOL)givesResults;
 
 @end
