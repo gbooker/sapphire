@@ -16,10 +16,6 @@
 	SapphireFileMetaData	*meta;
 }
 
-/*
- * Set the File information
- * @param newMeta the meta data
- */
 - (void)setMetaData:(SapphireFileMetaData *)newMeta;
 
 @end

@@ -66,6 +66,11 @@
 	[super dealloc];
 }
 
+/*!
+ * @brief Set the File information
+ *
+ * @param newMeta the meta data
+ */
 - (void)setMetaData:(SapphireFileMetaData *)newMeta
 {
 	meta = [newMeta retain];
