@@ -11,6 +11,11 @@
 
 @implementation SapphireTheme
 
+/*!
+ * @brief Get the shared theme
+ *
+ * @return The shared theme
+ */
 + (id)sharedTheme
 {
 	static SapphireTheme *shared = nil;
@@ -48,40 +53,56 @@
 	[super dealloc];
 }
 
+/*!
+ * @brief Sets the scene
+ *
+ * @param theScene The new scene
+ */
 - (void)setScene:(BRRenderScene *)theScene
 {
+	/*Flush cache in case the scene is different and it matters*/
 	[gemDict removeAllObjects];
 	scene = [theScene retain];
 }
 
+/*!
+ * @brief Load an image from a path
+ *
+ * @param path The image path
+ * @return A CGImageRef (retained) from the path
+ */
 - (CGImageRef)loadImage:(NSString *)path
 {
 	NSString *bundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
 	NSURL *url = [NSURL fileURLWithPath:[bundlePath stringByAppendingPathComponent:path]];
-	CGImageSourceRef sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
-	CGImageRef imageRef = NULL;
-	if(sourceRef)
-	{
-		imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
-		CFRelease(sourceRef);
-	}
-	return imageRef;
+	return CreateImageForURL(url);
 }
 
+/*!
+ * @brief Load a gem for a type
+ *
+ * @param type The gem type
+ * @return The gem's texture
+ */
 - (BRTexture *)gem:(NSString *)type
 {
+	/*Check cache*/
 	BRTexture *ret = [gemDict objectForKey:type];
 	if(ret != nil)
 		return ret;
 	
+	/*Load it*/
 	CGImageRef image = [self loadImage:[gemFiles objectForKey:type]];
 	if(image != NULL)
 	{
+		/*Create a texture*/
 		ret = [BRBitmapTexture textureWithImage:image context:[scene resourceContext] mipmap:YES];
 		CFRelease(image);
 	}
+	/*Save in the cache*/
 	if(ret != nil)
 		[gemDict setObject:ret forKey:type];
+	/*return it*/
 	return ret;
 }
 

@@ -42,6 +42,14 @@ static SapphireSettings *sharedInstance = nil;
 	sharedInstance = nil;
 }
 
+/*!
+ * @brief Create a settings object
+ *
+ * @param scene The scene
+ * @param dictionaryPath The path of the saved setting
+ * @param meta The top level meta data
+ * @return The settings object
+ */
 - (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)meta
 {
 	if(sharedInstance != nil)
@@ -49,6 +57,7 @@ static SapphireSettings *sharedInstance = nil;
 	
 	self = [super initWithScene:scene];
 	
+	/*Setup display*/
 	metaData = [meta retain];
 	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate Show Data", @"Populate File Data menu item"),
 												BRLocalizedString(@"   Fetch TV Data", @"Populate TV Data menu item"),
@@ -82,6 +91,7 @@ static SapphireSettings *sharedInstance = nil;
 	
 	path = [dictionaryPath retain];
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
+	/*Set deaults*/
 	defaults = [[NSDictionary alloc] initWithObjectsAndKeys:
 		[NSNumber numberWithBool:NO], HIDE_FAVORITE_KEY,
 		[NSNumber numberWithBool:YES], HIDE_TOP_SHOWS_KEY,
@@ -96,13 +106,18 @@ static SapphireSettings *sharedInstance = nil;
 
 	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene metaData:metaData];
 	
+	/*display*/
 	[[self list] setDatasource:self];
 	[[self list] addDividerAtIndex:2];
+	/*Save our instance*/
 	sharedInstance = [self retain];
 
 	return self;
 }
 
+/*!
+ * @brief Writes settings to disk
+ */
 - (void)writeSettings
 {
 	[options writeToFile:path atomically:YES];
@@ -119,10 +134,18 @@ static SapphireSettings *sharedInstance = nil;
 	[super dealloc];
 }
 
+/*!
+ * @brief Get a setting
+ *
+ * @param key The setting to retrieve
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)boolForKey:(NSString *)key
 {
+	/*Check the user's setting*/
 	NSNumber *num = [options objectForKey:key];
 	if(!num)
+		/*User hasn't set yet, use default then*/
 		num = [defaults objectForKey:key];
 	return [num boolValue];
 }
@@ -290,28 +313,33 @@ static SapphireSettings *sharedInstance = nil;
 
 - (void) itemSelected: (long) row
 {
-    // This is called when the user presses play/pause on a list item
+    // This is called when the user changed a setting
 
+	/*Check for populate show data*/
 	if(row==0)
 	{
 		id controller = populateShowDataController;
 		[[self stack] pushController:controller];
 	}
+	/*Check for import of TV data*/
 	else if(row == 1)
 	{
 		SapphireTVShowDataMenu *menu = [[SapphireTVShowDataMenu alloc] initWithScene:[self scene] metaData:metaData savedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
 		[[self stack] pushController:menu];
 		[menu release];
 	}
-	if(row>1)
+	/*Change setting*/
+	else
 	{
 		NSString *key = [keys objectAtIndex:row];
 		BOOL setting = [self boolForKey:key];
 		[options setObject:[NSNumber numberWithBool:!setting] forKey:key];
 	}
 
+	/*Save our settings*/
 	[self writeSettings];
 
+	/*Redraw*/
 	[[self list] reload] ;
 	[[self scene] renderScene];
 

@@ -11,14 +11,23 @@
 
 @implementation SapphireMarkMenu
 
+/*!
+ * @brief Create a mark menu for a directory or file
+ *
+ * @param scene The scene
+ * @param meta The meta data
+ * @return A new mark menu
+ */
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireMetaData *)meta
 {
 	self = [super initWithScene:scene];
 	if(!self)
 		return nil;
 	
+	/*Check to see if it is directory or file*/
 	isDir = [meta isKindOfClass:[SapphireDirectoryMetaData class]];
 	metaData = [meta retain];
+	/*Create the menu*/
 	if(isDir)
 		names = [[NSArray alloc] initWithObjects:
 			BRLocalizedString(@"Mark All as Watched", @"Mark whole directory as watched"),
@@ -49,6 +58,7 @@
 	}
 	else
 	{
+		/*Neither, so just return nil*/
 		[self autorelease];
 		return nil;
 	}
@@ -190,6 +200,7 @@
 	if(row >= [names count])
 		return;
 	
+	/*Do action on dir or file*/
 	if(isDir)
 	{
 		SapphireDirectoryMetaData *dirMeta = (SapphireDirectoryMetaData *)metaData;
@@ -228,6 +239,7 @@
 				break;
 		}
 	}
+	/*Save and exit*/
 	[metaData writeMetaData];
 	[[self stack] popController];
 }
