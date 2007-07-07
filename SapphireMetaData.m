@@ -33,6 +33,12 @@
 
 @implementation NSString (episodeSorting)
 
+/*!
+ * @brief Comparison for episode names
+ *
+ * @param other The other string to compare
+ * @return The comparison result of the compare
+ */
 - (NSComparisonResult) directoryNameCompare:(NSString *)other
 {
 	return [self compare:other options:NSCaseInsensitiveSearch | NSNumericSearch];

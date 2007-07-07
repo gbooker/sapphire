@@ -31,11 +31,19 @@ static SapphireSettings *sharedInstance = nil;
 #define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
 
 
+/*!
+ * @brief Get the shared settings object
+ *
+ * @return The settings object
+ */
 + (SapphireSettings *)sharedSettings
 {
 	return sharedInstance;
 }
 
+/*!
+ * @brief Allow the shared settings object to be freed
+ */
 + (void)relinquishSettings
 {
 	[sharedInstance release];
@@ -150,42 +158,76 @@ static SapphireSettings *sharedInstance = nil;
 	return [num boolValue];
 }
 
+/*!
+ * @brief Returns whether to display unwatched
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)displayUnwatched
 {
 	return ![self boolForKey:HIDE_UNWATCHED_KEY];
 }
 
+/*!
+ * @brief Returns whether to display favorites
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)displayFavorites;
 {
 	return ![self boolForKey:HIDE_FAVORITE_KEY];
 }
 
+/*!
+ * @brief Returns whether to display top shows
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)displayTopShows;
 {
 	return ![self boolForKey:HIDE_TOP_SHOWS_KEY];
 }
 
+/*!
+ * @brief Returns whether to display spoilers
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)displaySpoilers;
 {
 	return ![self boolForKey:HIDE_SPOILERS_KEY];
 }
 
+/*!
+ * @brief Returns whether to disable UI quit
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)disableUIQuit
 {
 	return [self boolForKey:HIDE_UI_QUIT_KEY];
 }
 
+/*!
+ * @brief Returns whether to disable anonymous reporting
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)disableAnonymousReporting;
 {
 	return [self boolForKey:DISABLE_ANON_KEY];
 }
 
+/*!
+ * @brief Returns whether to use fast directory switching
+ *
+ * @return YES if set, NO otherwise
+ */
 - (BOOL)fastSwitching
 {
 	return [self boolForKey:ENABLE_FAST_SWITCHING_KEY];
 
 }
-
 
 - (void) willBePushed
 {

@@ -27,6 +27,7 @@
 
 @implementation SapphireUnwatchedPredicate
 
+/*See super documentation*/
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 	if(metaData == nil)
@@ -40,6 +41,7 @@
 
 @implementation SapphireFavoritePredicate
 
+/*See super documentation*/
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 
@@ -55,6 +57,7 @@
 
 @implementation SapphireTopShowPredicate
 
+/*See super documentation*/
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 /*

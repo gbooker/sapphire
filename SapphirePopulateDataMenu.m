@@ -33,15 +33,6 @@
 #define DIRECTORS_XML_QUERY			@"/media/directors/name/text()"
 #define PRODUCERS_XML_QUERY			@"/media/producers/name/text()"
 
-@interface SapphireImporterDataMenu (private)
-- (void)setText:(NSString *)theText;
-- (void)setFileProgress:(NSString *)updateFileProgress;
-- (void)resetUIElements;
-- (void)importNextItem:(NSTimer *)timer;
-- (void)setCurrentFile:(NSString *)theCurrentFile;
-@end
-
-
 @implementation SapphirePopulateDataMenu
 
 /*Information to make the XML import easier*/
@@ -71,20 +62,14 @@ static NSDictionary *xmlMultiAttributes = nil;
 		@"Directors",			DIRECTORS_XML_QUERY,nil];
 }
 
-/*!
- * @brief Get the list of all files to process
- */
+/*See super documentation*/
 - (void)getItems
 {
 	[super getItems];
 	xmlFileCount=0 ;
 }
 
-/*!
- * @brief Import a single item
- *
- * @return YES if any data was imported, NO otherwise
- */
+/*See super documentation*/
 - (BOOL)doImport
 {
 	/*Initialization*/
@@ -119,9 +104,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return ret;
 }
 
-/*!
- * @brief Change the display to show the completion text
- */
+/*See super documentation*/
 - (void)setCompletionText
 {
 	[self setText:BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete")];
@@ -232,11 +215,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY withTime:modTime];
 }
 
-/*!
- * @brief Timer function to start the import of the next file
- *
- * @param timer The timer that triggered this
- */
+/*See super documentation*/
 - (void)importNextItem:(NSTimer *)timer
 {
 	/*Set the current file in the progress*/
@@ -246,9 +225,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	[super importNextItem:timer];
 }
 
-/*!
- * @brief Reset the UI after an import completion or cancel
- */
+/*See super documentation*/
 - (void)resetUIElements
 {
 	[super resetUIElements];

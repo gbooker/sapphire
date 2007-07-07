@@ -66,17 +66,6 @@
 }
 @end
  
-@interface SapphireImporterDataMenu (private)
-- (void)setText:(NSString *)theText;
-- (void)setFileProgress:(NSString *)updateFileProgress;
-- (void)resetUIElements;
-- (void)importNextItem:(NSTimer *)timer;
-- (void)setCurrentFile:(NSString *)theCurrentFile;
-- (void)pause;
-- (void)resume;
-- (void)skipNextItem;
-@end
-
 @interface SapphireTVShowDataMenu (private)
 - (void)writeSettings;
 @end
@@ -407,11 +396,7 @@
 	[settings writeToFile:settingsPath atomically:YES];
 }
 
-/*!
- * @brief Import a single item
- *
- * @return YES if any data was imported, NO otherwise
- */
+/*See super documentation*/
 - (BOOL)doImport
 {
 	/*Check to see if it is already imported*/
@@ -538,19 +523,13 @@
 	return YES;
 }
 
-/*!
- * @brief Change the display to show the completion text
- */
+/*See super documentation*/
 - (void)setCompletionText
 {
 	[self setText:BRLocalizedString(@"All availble TV Show data has been imported", @"The TV Show import complete")];
 }
 
-/*!
- * @brief Timer function to start the import of the next file
- *
- * @param timer The timer that triggered this
- */
+/*See super documentation*/
 - (void)importNextItem:(NSTimer *)timer
 {
 	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
@@ -559,9 +538,7 @@
 	[super importNextItem:timer];
 }
 
-/*!
- * @brief Reset the UI after an import completion or cancel
- */
+/*See super documentation*/
 - (void)resetUIElements
 {
 	[super resetUIElements];
@@ -570,11 +547,6 @@
 	[button setTitle: BRLocalizedString(@"Import TV Show Data", @"Button")];
 }
 
-/*!
- * @brief We are now at the top of the stack.  This means the user finished the show selection
- *
- * @param controller The controller that was at the top of the stack
- */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 	[super wasExhumedByPoppingController:controller];

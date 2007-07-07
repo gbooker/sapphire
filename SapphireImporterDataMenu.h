@@ -31,3 +31,14 @@
 - (void) dealloc;
 - (void)getItems;
 @end
+
+@interface SapphireImporterDataMenu (protectedAccess)
+- (void)setText:(NSString *)theText;
+- (void)setFileProgress:(NSString *)updateFileProgress;
+- (void)resetUIElements;
+- (void)importNextItem:(NSTimer *)timer;
+- (void)setCurrentFile:(NSString *)theCurrentFile;
+- (void)pause;
+- (void)resume;
+- (void)skipNextItem;
+@end
