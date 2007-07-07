@@ -50,12 +50,21 @@ static NSSet *extensions = nil;
 	extensions = [[NSSet alloc] initWithObjects:@"avi", @"mov", @"mpg", @"mpeg", @"wmv",@"mkv", @"flv", @"divx", @"mp4", nil];
 }
 
+/*!
+ * @brief Creates a new meta data object
+ *
+ * @param dict The configuration dictionary.  Note, this dictionary is copied and the copy is modified
+ * @param myParent The parent meta data
+ * @param The path for this meta data
+ * @return The meta data object
+ */
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
 {
 	self = [super init];
 	if(!self)
 		return nil;
 	
+	/*Create the mutable dictionary*/
 	if(dict == nil)
 		metaData = [NSMutableDictionary new];
 	else
@@ -73,21 +82,39 @@ static NSSet *extensions = nil;
 	[super dealloc];
 }
 
+/*!
+ * @brief Returns the mutable dictionary object containing all the meta data
+ *
+ * @return The dictionary
+ */
 - (NSMutableDictionary *)dict
 {
 	return metaData;
 }
 
+/*!
+ * @brief Returns the path of the current meta data
+ *
+ * @return The path
+ */
 - (NSString *)path
 {
 	return path;
 }
 
+/*!
+ * @brief Sets the delegate for the meta data
+ *
+ * @param newDelegate The new delegate
+ */
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate
 {
 	delegate = newDelegate;
 }
 
+/*!
+ * @brief Write all the meta data to a file.  This function is called on the parents
+ */
 - (void)writeMetaData
 {
 	[parent writeMetaData];
@@ -99,6 +126,12 @@ static NSSet *extensions = nil;
 	return [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
 }
 
+/*!
+ * @brief Get the meta data for display
+ *
+ * @param order A pointer to an NSArray * in which to store the order in which the meta data is to be displayed
+ * @return The display meta data with the titles as keys
+ */
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order
 {
 	return nil;
@@ -108,16 +141,26 @@ static NSSet *extensions = nil;
 
 @implementation SapphireMetaDataCollection
 
+/*!
+ * @brief Create a collection from a file and browsing a directory
+ *
+ * @param dictionary The path to the dictionary storing the meta data
+ * @param myPath The path to browse for the meta data
+ * @return The meta data collection
+ */
 - (id)initWithFile:(NSString *)dictionary path:(NSString *)myPath
 {
 	self = [super init];
 	if(!self)
 		return nil;
 	
+	/*Read the meta data*/
 	dictionaryPath = [dictionary retain];
 	NSDictionary *metaDict = [NSDictionary dictionaryWithContentsOfFile:dictionary];
 	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:metaDict parent:self path:myPath];
+	/*Get the mutable meta data back*/
 	metaData = [[mainDirectory dict] retain];
+	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
 	
 	return self;
@@ -130,25 +173,36 @@ static NSSet *extensions = nil;
 	[super dealloc];
 }
 
+/*!
+ * @brief Returns the primary directory meta data
+ *
+ * @return The root meta data
+ */
 - (SapphireDirectoryMetaData *)rootDirectory
 {
 	return mainDirectory;
 }
 
+/*Makes a director at a path, including its parents*/
 static void makeParentDir(NSFileManager *manager, NSString *dir)
 {
 	NSString *parent = [dir stringByDeletingLastPathComponent];
 	
+	/*See if parent exists, and make if not*/
 	BOOL isDir;
 	if(![manager fileExistsAtPath:parent isDirectory:&isDir])
 		makeParentDir(manager, parent);
 	else if(!isDir)
-		//Can't work with this
+		/*Can't work with this*/
 		return;
 	
+	/*Create our dir*/
 	[manager createDirectoryAtPath:dir attributes:nil];
 }
 
+/*!
+ * @brief Write all meta data to a file
+ */
 - (void)writeMetaData
 {
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
@@ -163,12 +217,21 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireDirectoryMetaData
 
+/*!
+ * @brief Creates a new meta data object
+ *
+ * @param dict The configuration dictionary.  Note, this dictionary is copied and the copy is modified
+ * @param myParent The parent meta data
+ * @param myPath The path for this meta data object
+ * @return The meta data object
+ */
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
 {
 	self = [super initWithDictionary:dict parent:myParent path:myPath];
 	if(!self)
 		return nil;
 	
+	/*Get the file listing*/
 	metaFiles = [metaData objectForKey:FILES_KEY];
 	if(metaFiles == nil)
 		metaFiles = [NSMutableDictionary new];
@@ -177,6 +240,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[metaData setObject:metaFiles forKey:FILES_KEY];
 	[metaFiles release];
 
+	/*Get the directory listing*/
 	metaDirs = [metaData objectForKey:DIRS_KEY];
 	if(metaDirs == nil)
 		metaDirs = [NSMutableDictionary new];
@@ -185,6 +249,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[metaData setObject:metaDirs forKey:DIRS_KEY];
 	[metaDirs release];
 	
+	/*Setup the cache*/
 	cachedMetaDirs = [NSMutableDictionary new];
 	cachedMetaFiles = [NSMutableDictionary new];
 	
@@ -202,63 +267,92 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[super dealloc];
 }
 
+/*!
+ * @brief Reloads the directory contents from what is present on disk
+ */
 - (void)reloadDirectoryContents
 {
+	/*Flush saved information*/
 	[files release];
 	[directories release];
 	files = [NSMutableArray new];
 	directories = [NSMutableArray new];
 	NSMutableArray *fileMetas = [NSMutableArray array];
 	
+	/*Get content*/
 	NSArray *names = [[NSFileManager defaultManager] directoryContentsAtPath:path];
 	
 	NSEnumerator *nameEnum = [names objectEnumerator];
 	NSString *name = nil;
-	// Display Menu Items
 	while((name = [nameEnum nextObject]) != nil)
 	{
+		/*Skip hidden files*/
 		if([name hasPrefix:@"."])
 			continue;
+		/*Skip the Cover Art directory*/
 		if([name isEqualToString:@"Cover Art"])
 			continue;
-		//Only accept if it is a directory or right extension
+		/*Only accept if it is a directory or right extension*/
 		NSString *extension = [name pathExtension];
 		if([self isDirectory:[path stringByAppendingPathComponent:name]])
 			[directories addObject:name];
 		else if([extensions containsObject:extension])
 			[fileMetas addObject:[self metaDataForFile:name]];
 	}
+	/*Sort them*/
 	[directories sortUsingSelector:@selector(directoryNameCompare:)];
 	[fileMetas sortUsingSelector:@selector(episodeCompare:)];
+	/*Create the file listing just containing names*/
 	nameEnum = [fileMetas objectEnumerator];
 	SapphireFileMetaData *fileMeta = nil;
 	while((fileMeta = [nameEnum nextObject]) != nil)
 		[files addObject:[[fileMeta path] lastPathComponent]];
+	/*Check to see if any data is out of date*/
 	[self updateMetaData];
 	if([importArray count] || [self pruneMetaData])
 		[self writeMetaData];
+	/*Mark directory as scanned*/
 	scannedDirectory = YES;
 }
 
+/*!
+ * @brief Retrieve a list of all file names
+ *
+ * @return An NSArray of all file names
+ */
 - (NSArray *)files
 {
 	return files;
 }
 
+/*!
+ * @brief Retrieve a list of all directory names
+ *
+ * @return An NSArray of all directory names
+ */
 - (NSArray *)directories
 {
 	return directories;
 }
 
+/*!
+ * @brief Returns whether the directory has any files which match the predicate
+ *
+ * @param predicate The predictate to match
+ * @return YES if a file exists, NO otherwise
+ */
 - (BOOL)hasPredicatedFiles:(SapphirePredicate *)predicate
 {
+	/*Get file listing*/
 	NSArray *filesToScan = files;
 	if(!scannedDirectory)
+		/*Don't do a scan, just returned cached data*/
 		filesToScan = [metaFiles allKeys];
 	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 	{
+		/*Check predicate*/
 		BOOL include = NO;
 		if([metaFiles objectForKey:file] != nil)
 		{
@@ -268,47 +362,63 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		else
 			include = [predicate accept:[path stringByAppendingPathComponent:file] meta:nil];
 		if(include)
+			/*Predicate matched*/
 			return YES;
 	}
+	/*No matches found*/
 	return NO;
 }
 
-- (BOOL)hasXMLMetaData:(NSString *)file
-{
-//	NSString *extension = [file pathExtension] ;
-
-	return FALSE ;
-}
-
+/*!
+ * @brief Returns whether the directory has any directories which match the predicate
+ *
+ * @param predicate The predicate to match
+ * @return YES if a file exists, NO otherwise
+ */
 - (BOOL)hasPredicatedDirectories:(SapphirePredicate *)predicate
 {
+	/*Get directory listing*/
 	NSArray *directoriesToScan = directories;
 	if(!scannedDirectory)
+		/*Don't do a scan, just return cached data*/
 		directoriesToScan = [metaDirs allKeys];
 	NSEnumerator *directoryEnum = [directoriesToScan objectEnumerator];
 	NSString *directory = nil;
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
+		/*Check predicate*/
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
+		/*If we are not fast, go ahead and scan*/
 		if(![[SapphireSettings sharedSettings] fastSwitching])
 			[meta reloadDirectoryContents];
 		
+		/*If the dir has any files or any dirs, it matches*/
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
 			return YES;
 	}
+	/*No matches found*/
 	return NO;
 }
 
+/*!
+ * @brief Get a listing of predicate files
+ *
+ * @param predicate The predicate to match
+ * @return An NSArray of matches
+ */
 - (NSArray *)predicatedFiles:(SapphirePredicate *)predicate
 {
+	/*Get file listing*/
 	NSMutableArray *ret = [NSMutableArray array];
 	NSArray *filesToScan = files;
 	if(!scannedDirectory)
+		/*Don't do a scan, just return cached data*/
 		filesToScan = [metaFiles allKeys];
 	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 	{
+		/*Check predicate*/
 		BOOL include = NO;
 		if([metaFiles objectForKey:file] != nil)
 		{
@@ -318,66 +428,109 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		else
 			include = [predicate accept:[path stringByAppendingPathComponent:file] meta:nil];
 		if(include)
+			/*Predicate matched, add to list*/
 			[ret addObject:file];
 	}
+	/*Return the list*/
 	return ret;
 }
+
+/*!
+ * @brief Get a listing of predicated directories
+ *
+ * @param predicate The predicate to match
+ * @return An NSArray of matches
+ */
 - (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate
 {
+	/*Get directory listing*/
 	NSMutableArray *ret = [NSMutableArray array];
 	NSArray *directoriesToScan = directories;
 	if(!scannedDirectory)
+		/*Don't do a scan, just return cached data*/
 		directoriesToScan = [metaDirs allKeys];
 	NSEnumerator *directoryEnum = [directoriesToScan objectEnumerator];
 	NSString *directory = nil;
 	while((directory = [directoryEnum nextObject]) != nil)
 	{
+		/*Check predicate*/
 		SapphireDirectoryMetaData *meta = [self metaDataForDirectory:directory];
 		if(![[SapphireSettings sharedSettings] fastSwitching])
 			[meta reloadDirectoryContents];
 
+		/*If dir has any files or any dirs, it matches*/
 		if([meta hasPredicatedFiles:predicate] || [meta hasPredicatedDirectories:predicate])
+			/*Add to list*/
 			[ret addObject:directory];
 	}
+	/*Return the list*/
 	return ret;
 }
 
+/*!
+ * @brief Get the meta data object for a file.  Creates one if it doesn't already exist
+ *
+ * @param file The file within this dir
+ * @return The file's meta data
+ */
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file
 {
+	/*Check cache*/
 	SapphireFileMetaData *ret = [cachedMetaFiles objectForKey:file];
 	if(ret == nil)
 	{
+		/*Create it*/
 		ret = [[SapphireFileMetaData alloc] initWithDictionary:[metaFiles objectForKey:file] parent:self path:[path stringByAppendingPathComponent:file]];
 		[metaFiles setObject:[ret dict] forKey:file];
+		/*Add to cache*/
 		[cachedMetaFiles setObject:ret forKey:file];
 		[ret autorelease];
 	}
+	/*Return it*/
 	return ret;
 }
 
-- (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)file
+/*!
+ * @brief Get the meta data object for a directory.  Creates one if it doesn't alreay exist
+ *
+ * @param dir The directory within this dir
+ * @return The directory's meta data
+ */
+- (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)dir
 {
-	SapphireDirectoryMetaData *ret = [cachedMetaDirs objectForKey:file];
+	/*Check cache*/
+	SapphireDirectoryMetaData *ret = [cachedMetaDirs objectForKey:dir];
 	if(ret == nil)
 	{
-		ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaDirs objectForKey:file] parent:self path:[path stringByAppendingPathComponent:file]];
-		[metaDirs setObject:[ret dict] forKey:file];
-		[cachedMetaDirs setObject:ret forKey:file];
+		/*Create it*/
+		ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaDirs objectForKey:dir] parent:self path:[path stringByAppendingPathComponent:dir]];
+		[metaDirs setObject:[ret dict] forKey:dir];
+		/*Add to cache*/
+		[cachedMetaDirs setObject:ret forKey:dir];
 		[ret autorelease];		
 	}
+	/*Return it*/
 	return ret;
 }
 
+/*!
+ * @brief Prunes off non-existing files and directories from the meta data.  This does not prune a directory's content if it contains no files and directories.  In addition, broken sym links are also not pruned.  The theory is these may be the signs of missing mounts.
+ *
+ * @return YES if any data was pruned, NO otherwise
+ */
 - (BOOL)pruneMetaData
 {
 	BOOL ret = NO;
+	/*Check for empty dir.  May be a missing mount, so skip*/
 	if([files count] + [directories count] == 0)
 		return ret;
+	/*Get missing file list*/
 	NSSet *existingSet = [NSSet setWithArray:files];
 	NSArray *metaArray = [metaFiles allKeys];
 	NSMutableSet *pruneSet = [NSMutableSet setWithArray:metaArray];
 	
 	[pruneSet minusSet:existingSet];
+	/*Prune each item*/
 	if([pruneSet anyObject] != nil)
 	{
 		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
@@ -386,19 +539,24 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		{
 			NSString *filePath = [path stringByAppendingPathComponent:pruneKey];
 			NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
+			/*If it is a broken link, skip*/
 			if(![[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
 			{
+				/*Remove and mark as we did an update*/
 				[metaFiles removeObjectForKey:pruneKey];
+				[cachedMetaFiles removeObjectForKey:pruneKey];
 				ret = YES;
 			}
 		}
 	}
 	
+	/*Get missing directory list*/
 	existingSet = [NSSet setWithArray:directories];
 	metaArray = [metaDirs allKeys];
 	pruneSet = [NSMutableSet setWithArray:metaArray];
 	
 	[pruneSet minusSet:existingSet];
+	/*Prune each item*/
 	if([pruneSet anyObject] != nil)
 	{
 		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
@@ -407,24 +565,35 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		{
 			NSString *filePath = [path stringByAppendingPathComponent:pruneKey];
 			NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
+			/*If it is a broken link, skip*/
 			if(![[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
 			{
+				/*Remove and mark as we did an update*/
 				[metaDirs removeObjectForKey:pruneKey];
+				[cachedMetaDirs removeObjectForKey:pruneKey];
 				ret = YES;
 			}
 		}
 	}
 	
+	/*Return whether we did a prune*/
 	return ret;
 }
 
+/*!
+ * @brief See if any files need to be updated
+ *
+ * @return YES if any files need an update, NO otherwise
+ */
 - (BOOL)updateMetaData
 {
+	/*Look at each file*/
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *fileName = nil;
 	importArray = [[NSMutableArray alloc] init];
 	while((fileName = [fileEnum nextObject]) != nil)
 	{
+		/*If the file exists, and no meta data, add to update list*/
 		NSDictionary *fileMeta = [metaFiles objectForKey:fileName];
 		if(fileMeta == nil)
 		{
@@ -433,6 +602,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		}
 		else
 		{
+			/*If file has been modified since last import, add to update list*/
 			NSString *filePath = [path stringByAppendingPathComponent:fileName];
 			struct stat sb;
 			memset(&sb, 0, sizeof(struct stat));
@@ -442,57 +612,89 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 				[importArray addObject:fileName];
 		}
 	}
+	/*We didn't do any updates yet, so return NO*/
 	return NO;
 }
 
+/*Timer function to process a single file*/
 - (void)processFiles:(NSTimer *)timer
 {
 	NSString *file = [importArray objectAtIndex:0];
 	
+	/*Get the file and update it*/
 	[[self metaDataForFile:file] updateMetaData];
 	
+	/*Write the file info out and tell delegate we updated*/
 	[self writeMetaData];
 	[delegate updateCompleteForFile:file];
 	
+	/*Remove from list and redo timer*/
 	[importArray removeObjectAtIndex:0];
 	[self resumeImport];
 }
 
+/*!
+ * @brief Cancel the import process
+ */
 - (void)cancelImport
 {
+	/*Kill the timer*/
 	[importTimer invalidate];
 	importTimer = nil;
 }
 
+/*!
+ * @brief Resume the import process
+ */
 - (void)resumeImport
 {
+	/*Sanity check*/
 	[importTimer invalidate];
+	/*Check if we need to import*/
 	if([importArray count])
+		/*Wait 1.1 seconds and do an import*/
 		importTimer = [NSTimer scheduledTimerWithTimeInterval:1.1 target:self selector:@selector(processFiles:) userInfo:nil repeats:NO];
 	else
 	{
+		/*No import, so clean up*/
 		importTimer = nil;
 		[importArray release];
 		importArray = nil;
 	}
 }
 
+/*!
+ * @brief Delay the import process a while before starting again
+ */
 - (void)resumeDelayedImport
 {
+	/*Sanity check*/
 	[importTimer invalidate];
+	/*Check if we need to import*/
 	if([importArray count])
+		/*Wait 5 seconds before starting the import process*/
 		importTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(resumeImport) userInfo:nil repeats:NO];
 	else
+		/*No import, clean up*/
 		importTimer = nil;
 }
 
+/*!
+ * @brief Get the meta data for some file or directory beneath this one
+ *
+ * @param subPath The subpath to get the meta data
+ * @return The meta data object
+ */
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)subPath
 {
+	/*Get next level to examine*/
 	NSArray *components = [subPath pathComponents];
 	if(![components count])
+		/*Must mean ourself*/
 		return self;
 	NSString *file = [components objectAtIndex:0];
 	
+	/*Go to the next dir*/
 	if([self isDirectory:[path stringByAppendingPathComponent:file]])
 	{
 		NSMutableArray *newComp = [components mutableCopy];
@@ -501,31 +703,52 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		SapphireDirectoryMetaData *nextLevel = [self metaDataForDirectory:file];
 		return [nextLevel metaDataForSubPath:[NSString pathWithComponents:newComp]];
 	}
+	/*If it matches a file, and more path components, this doesn't exist, return nil*/
 	else if([components count] > 1)
 		return nil;
+	/*Return our file's meta data*/
 	return [self metaDataForFile:file];
 }
 
+/*!
+ * @brief Get the meta data for all the files contained within this directory tree
+ *
+ * @param subDelegate The delegate to inform when scan is complete
+ * @param skip A set of directories to skip.  Note, this set is modified
+ */
 - (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip
 {
+	/*Scan dir and create scanner*/
 	[self reloadDirectoryContents];
 	SapphireMetaDataScanner *scanner = [[SapphireMetaDataScanner alloc] initWithDirectoryMetaData:self delegate:subDelegate];
+	/*Add ourselves to not rescan*/
 	[skip addObject:[self path]];
 	[scanner setSkipDirectories:skip];
+	/*We want results*/
 	[scanner setGivesResults:YES];
 	[scanner release];
 }
 
+/*!
+ * @brief Scan for all files contained within this directory tree
+ *
+ * @param subDelegate The delegate to inform when scan is complete
+ * @param skip A set of directories to skip.  Note, this set is modified
+ */
 - (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip
 {
+	/*Scan dir and create scanner*/
 	[self reloadDirectoryContents];
 	SapphireMetaDataScanner *scanner = [[SapphireMetaDataScanner alloc] initWithDirectoryMetaData:self delegate:subDelegate];
+	/*Add ourselves to not rescan*/
 	[skip addObject:[self path]];
 	[scanner setSkipDirectories:skip];
+	/*We don't want results*/
 	[scanner setGivesResults:NO];
 	[scanner release];
 }
 
+/*Quick function to setup file and directory lists for other functions*/
 - (void)setupFiles:(NSArray * *)filesToScan andDirectories:(NSArray * *)directoriesToScan arraysForPredicate:(SapphirePredicate *)predicate
 {
 	if(predicate)
@@ -535,55 +758,73 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 	else if(!scannedDirectory)
 	{
-		//Likely haven't scanned the directory yet, so use cached
+		/*Haven't scanned the directory yet, so use cached*/
 		*filesToScan = [metaFiles allKeys];
 		*directoriesToScan = [metaDirs allKeys];
 	}
 }
 
+/*Function to check a result in a subtree*/
 - (BOOL)checkResult:(BOOL)result recursivelyOnFiles:(NSInvocation *)fileInv forPredicate:(SapphirePredicate *)predicate
 {
+	/*Get file and directory list*/
 	NSArray *filesToScan = files;
 	NSArray *directoriesToScan = directories;
 	[self setupFiles:&filesToScan andDirectories:&directoriesToScan arraysForPredicate:predicate];
 	NSEnumerator *fileEnum = [filesToScan objectEnumerator];
 	NSString *file = nil;
+	/*Check for a file which matches result*/
 	while((file = [fileEnum nextObject]) != nil)
 	{
 		[fileInv invokeWithTarget:[self metaDataForFile:file]];
 		BOOL thisResult = NO;
 		[fileInv getReturnValue:&thisResult];
 		if(thisResult == result)
+			/*Found, return it*/
 			return result;
 	}
 
+	/*Check the directories now*/
 	NSEnumerator *dirEnum = [directoriesToScan objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
 		if([[self metaDataForDirectory:dir] checkResult:result recursivelyOnFiles:fileInv forPredicate:predicate] == result)
+			/*Found, return it*/
 			return result;
 	
+	/*Not found*/
 	return !result;
 }
 
+/*Function to invoke a command on all files in a subtree*/
 - (void)invokeRecursivelyOnFiles:(NSInvocation *)fileInv withPredicate:(SapphirePredicate *)predicate
 {
+	/*Get all files and dirs*/
 	[self reloadDirectoryContents];
 	NSEnumerator *dirEnum = [directories objectEnumerator];
 	NSString *dir = nil;
+	/*Invoke same thing on directories*/
 	while((dir = [dirEnum nextObject]) != nil)
 		[[self metaDataForDirectory:dir] invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 	
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSString *file = nil;
+	/*Invoke on the files*/
 	while((file = [fileEnum nextObject]) != nil)
 	{
 		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		/*Only if they match a predicate, or if there is not predicate*/
 		if(!predicate || [predicate accept:[fileMeta path] meta:fileMeta])
 			[fileInv invokeWithTarget:fileMeta];
 	}
 }
 
+/*!
+ * @brief Returns if directory contains any watched files
+ *
+ * @param predicate The predicate to match on
+ * @return YES if at least one exists, NO otherwise
+ */
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(watched);
@@ -592,6 +833,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [self checkResult:NO recursivelyOnFiles:fileInv forPredicate:predicate];
 }
 
+/*!
+ * @brief Set subtree as watched
+ *
+ * @param watched YES if set to watched, NO if set to unwatched
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(setWatched:);
@@ -601,6 +848,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
+/*!
+ * @brief Returns if directory contains any favorite files
+ *
+ * @param predicate The predicate to match on
+ * @return YES if at least one exists, NO otherwise
+ */
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(favorite);
@@ -609,6 +862,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return [self checkResult:YES recursivelyOnFiles:fileInv forPredicate:predicate];	
 }
 
+/*!
+ * @brief Set subtree as favorite
+ *
+ * @param watched YES if set to favorite, NO if set to not favorite
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(setFavorite:);
@@ -618,6 +877,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
+/*!
+ * @brief Set subtree to re-import from the specified source
+ *
+ * @param source The source on which to re-import
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setToImportFromSource:(NSString *)source ForPredicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(setToImportFromSource:);
@@ -627,6 +892,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
+/*See super documentation*/
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 {
 	if(order != nil)
@@ -645,6 +911,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireFileMetaData
 
+/*Makes meta data easier to deal with in terms of display*/
 static NSDictionary *metaDataSubstitutions = nil;
 static NSSet *displayedMetaData = nil;
 static NSArray *displayedMetaDataOrder = nil;
@@ -680,6 +947,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		nil];
 	displayedMetaData = [[NSSet alloc] initWithArray:displayedMetaDataOrder];
 	
+	/*Remove non-displayed data from the displayed order, and use the display keys*/
 	int excludedKeys = 5;
 	NSMutableArray *modified = [[displayedMetaDataOrder subarrayWithRange:NSMakeRange(excludedKeys, [displayedMetaDataOrder count] - excludedKeys)] mutableCopy];
 	
@@ -700,25 +968,31 @@ static NSArray *displayedMetaDataOrder = nil;
 	[super dealloc];
 }
 
+/*See super documentation*/
 - (BOOL) updateMetaData
 {
+	/*Check modified date*/
 	NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
 	int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
 	BOOL updated =FALSE;
 	
 	if(props == nil)
-		//No file
+		/*No file*/
 		return FALSE;
 	
+	/*Has it been modified since last import?*/
 	if(modTime != [self modified] || [[metaData objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
 	{
+		/*We did an update*/
 		updated=TRUE ;
 		NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
 		
+		/*Set modified, size, and version*/
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 		[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
 		[fileMeta setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
 		
+		/*Open the movie*/
 		NSError *error = nil;
 		QTMovie *movie = [QTMovie movieWithFile:path error:&error];
 		QTTime duration = [movie duration];
@@ -727,11 +1001,13 @@ static NSArray *displayedMetaDataOrder = nil;
 		NSNumber *audioSampleRate = nil;
 		if([audioTracks count])
 		{
+			/*Get the audio track*/
 			QTTrack *track = [audioTracks objectAtIndex:0];
 			QTMedia *media = [track media];
 			audioSampleRate = [media attributeForKey:QTMediaTimeScaleAttribute];
 			if(media != nil)
 			{
+				/*Get the audio description*/
 				Media qtMedia = [media quickTimeMedia];
 				Handle sampleDesc = NewHandle(1);
 				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
@@ -742,20 +1018,24 @@ static NSArray *displayedMetaDataOrder = nil;
 				
 				if(userText != nil)
 				{
+					/*Set the description*/
 					[fileMeta setObject:(NSString *)userText forKey:AUDIO_DESC_KEY];
 					CFRelease(userText);
 				}
 			}
 		}
+		/*Set the sample rate*/
 		if(audioSampleRate != nil)
 			[fileMeta setObject:audioSampleRate forKey:SAMPLE_RATE_KEY];
 		NSArray *videoTracks = [movie tracksOfMediaType:@"vide"];
 		if([videoTracks count])
 		{
+			/*Get the video track*/
 			QTTrack *track = [videoTracks objectAtIndex:0];
 			QTMedia *media = [track media];
 			if(media != nil)
 			{
+				/*Get the video description*/
 				Media qtMedia = [media quickTimeMedia];
 				Handle sampleDesc = NewHandle(1);
 				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
@@ -766,93 +1046,99 @@ static NSArray *displayedMetaDataOrder = nil;
 				
 				if(userText != nil)
 				{
+					/*Set the description*/
 					[fileMeta setObject:(NSString *)userText forKey:VIDEO_DESC_KEY];
 					CFRelease(userText);
 				}
 			}
 		}
+		/*Add the meta data*/
 		[metaData addEntriesFromDictionary:fileMeta];
 	}
 	return updated ;
 }
 
+/*!
+ * @brief Get date of last modification of the file
+ *
+ * @return Seconds since 1970 of last modification
+ */
 - (int)modified
 {
 	return [[metaData objectForKey:MODIFIED_KEY] intValue];
 }
 
+/*!
+ * @brief Returns whether the file has been watched
+ *
+ * @return YES if watched, NO otherwise
+ */
 - (BOOL)watched
 {
 	return [[metaData objectForKey:WATCHED_KEY] boolValue];
 }
 
+/*!
+ * @brief Sets the file as watch or not watched
+ *
+ * @param watched YES if set to watched, NO if set to unwatched
+ */
 - (void)setWatched:(BOOL)watched
 {
 	[metaData setObject:[NSNumber numberWithBool:watched] forKey:WATCHED_KEY];
 }
 
+/*!
+ * @brief Returns whether the file is favorite
+ *
+ * @return YES if favorite, NO otherwise
+ */
 - (BOOL)favorite
 {
 	return [[metaData objectForKey:FAVORITE_KEY] boolValue];
 }
 
+/*!
+ * @brief Sets the file as favorite or not favorite
+ *
+ * @param watched YES if set to favorite, NO if set to not favorite
+ */
 - (void)setFavorite:(BOOL)favorite
 {
 	[metaData setObject:[NSNumber numberWithBool:favorite] forKey:FAVORITE_KEY];
 }
 
-- (unsigned int)resumeTime
-{
-	return [[metaData objectForKey:RESUME_KEY] unsignedIntValue];
-}
-
-- (void)setResumeTime:(unsigned int)resumeTime
-{
-	[metaData setObject:[NSNumber numberWithUnsignedInt:resumeTime] forKey:RESUME_KEY];
-}
-
-- (long long)size
-{
-	return [[metaData objectForKey:SIZE_KEY] longLongValue];
-}
-
-- (float)duration
-{
-	return [[metaData objectForKey:DURATION_KEY] floatValue];
-}
-
-- (int)sampleRate
-{
-	return [[metaData objectForKey:SAMPLE_RATE_KEY] intValue];
-}
-
-- (void)constructCombinedData
-{
-	if(combinedInfo != nil)
-		return;
-	NSMutableDictionary *ret = [metaData mutableCopy];
-	[ret addEntriesFromDictionary:[ret objectForKey:META_TVRAGE_IMPORT_KEY]];
-	[ret addEntriesFromDictionary:[ret objectForKey:META_XML_IMPORT_KEY]];
-	combinedInfo = ret;
-}
-
-- (void)combinedDataChanged
-{
-	[combinedInfo release];
-	combinedInfo = nil;
-}
-
+/*!
+ * @brief Returns the time of import from a source
+ *
+ * @param source The source to check
+ * @return The seconds since 1970 of the import
+ */
 - (long)importedTimeFromSource:(NSString *)source
 {
 	return [[[metaData objectForKey:source] objectForKey:MODIFIED_KEY] longValue];
 }
 
+/*!
+ * @brief Sets the file to re-import from source
+ *
+ * @param source The source to re-import
+ */
 - (void)setToImportFromSource:(NSString *)source
 {
+	/*Kill data*/
 	[metaData removeObjectForKey:source];
+	/*Redo cache*/
 	[self combinedDataChanged];
 }
 
+/*!
+ * @brief Add data to import from a source
+ *
+ * @param newMeta The new meta data
+ * @param source The source we imported from
+ * @param modTime The modification time of the source
+ */
 - (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime
 {
 	[newMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
@@ -860,54 +1146,148 @@ static NSArray *displayedMetaDataOrder = nil;
 	[self combinedDataChanged];
 }
 
+/*!
+ * @brief The resume time of the file
+ *
+ * @return The number of seconds from the begining of the file to resume
+ */
+- (unsigned int)resumeTime
+{
+	return [[metaData objectForKey:RESUME_KEY] unsignedIntValue];
+}
+
+/*!
+ * @brief Sets the resume time of the file
+ *
+ * @param resumeTime The number of seconds from the beginning of the file to resume
+ */
+- (void)setResumeTime:(unsigned int)resumeTime
+{
+	[metaData setObject:[NSNumber numberWithUnsignedInt:resumeTime] forKey:RESUME_KEY];
+}
+
+/*!
+ * @brief Returns the file size
+ *
+ * @return The file size
+ */
+- (long long)size
+{
+	return [[metaData objectForKey:SIZE_KEY] longLongValue];
+}
+
+/*!
+ * @brief Returns the file's duration
+ *
+ * @return The file's duration
+ */
+- (float)duration
+{
+	return [[metaData objectForKey:DURATION_KEY] floatValue];
+}
+
+/*!
+ * @brief Returns the sample rate of the file
+ *
+ * @return The sample rate of the file
+ */
+- (int)sampleRate
+{
+	return [[metaData objectForKey:SAMPLE_RATE_KEY] intValue];
+}
+
+/*Combine the meta data from multiple sources*/
+- (void)constructCombinedData
+{
+	/*Return cached data*/
+	if(combinedInfo != nil)
+		return;
+	/*Combine from in order of priority: xml, tvrage, and file*/
+	NSMutableDictionary *ret = [metaData mutableCopy];
+	[ret addEntriesFromDictionary:[ret objectForKey:META_TVRAGE_IMPORT_KEY]];
+	[ret addEntriesFromDictionary:[ret objectForKey:META_XML_IMPORT_KEY]];
+	combinedInfo = ret;
+}
+
+/*Destroy cached meta data*/
+- (void)combinedDataChanged
+{
+	/*Remove cached data*/
+	[combinedInfo release];
+	combinedInfo = nil;
+}
+
+/*!
+ * @brief Returns the epsiode number of the file
+ *
+ * @return The episode number of the file
+ */
 - (int)episodeNumber
 {
 	[self constructCombinedData];
 	return [[combinedInfo objectForKey:META_EPISODE_NUMBER_KEY] intValue] ;
 }
 
+/*!
+ * @brief Returns the season number of the file
+ *
+ * @return The season number of the file
+ */
 - (int)seasonNumber
 {
 	[self constructCombinedData];
 	return [[combinedInfo objectForKey:META_SEASON_NUMBER_KEY] intValue];
 }
 
+/*!
+ * @brief Returns the title of the file
+ *
+ * @return The title of the file
+ */
 - (NSString *)episodeTitle
 {
 	[self constructCombinedData];
 	return [combinedInfo objectForKey:META_TITLE_KEY] ;
 }
 
+/*Makes a pretty size string for the file*/
 - (NSString *)sizeString
 {
+	/*Get size*/
 	float size = [self size];
 	if(size == 0)
 		return @"-";
+	/*The letter for magnitude*/
 	char letter = ' ';
 	if(size >= 1024000)
 	{
 		if(size >= 1024*1024000)
 		{
+			/*GB*/
 			size /= 1024 * 1024 * 1024;
 			letter = 'G';
 		}
 		else
 		{
+			/*MB*/
 			size /= 1024 * 1024;
 			letter = 'M';
 		}
 	}
 	else if (size >= 1000)
 	{
+		/*KB*/
 		size /= 1024;
 		letter = 'K';
 	}
 	return [NSString stringWithFormat:@"%.1f%cB", size, letter];	
 }
 
+/*See super documentation*/
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 {
 	NSString *name = [path lastPathComponent];
+	/*Create duration string*/
 	int duration = [self duration];
 	int secs = duration % 60;
 	int mins = (duration /60) % 60;
@@ -919,15 +1299,17 @@ static NSArray *displayedMetaDataOrder = nil;
 		durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
 	else
 		durationStr = [NSString stringWithFormat:@"%ds", secs];
+	/*Set the order*/
 	if(order != nil)
 		*order = displayedMetaDataOrder;
 	[self constructCombinedData];
 	NSMutableDictionary *ret = [combinedInfo mutableCopy];
-	//Pretty this up now
+	/*Remove keys we don't display*/
 	NSMutableSet *currentKeys = [NSMutableSet setWithArray:[ret allKeys]];
 	[currentKeys minusSet:displayedMetaData];
 	[ret removeObjectsForKeys:[currentKeys allObjects]];
 	
+	/*Substitute display titles for internal keys*/
 	NSEnumerator *subEnum = [metaDataSubstitutions keyEnumerator];
 	NSString *key = nil;
 	while((key = [subEnum nextObject]) != nil)
@@ -935,6 +1317,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		NSString *value = [ret objectForKey:key];
 		if(value != nil)
 		{
+			/*Found object at a key, set it for the display title*/
 			[ret setObject:value forKey:[metaDataSubstitutions objectForKey:key]];
 			[ret removeObjectForKey:key];
 		}
@@ -943,19 +1326,25 @@ static NSArray *displayedMetaDataOrder = nil;
 	{
 		if([self size])
 		{
+			/*If we have a duration and size, combine into a single line*/
 			[ret setObject:[NSString stringWithFormat:@"%@ (%@)", durationStr, [self sizeString]] forKey:DURATION_KEY];
 			[ret removeObjectForKey:SIZE_KEY];
 		}
 		else
+			/*Otherwse, just set the duration*/
 			[ret setObject:durationStr forKey:DURATION_KEY];
 	}
 	else if([self size])
+		/*If no duration, set the size*/
 		[ret setObject:[self sizeString] forKey:SIZE_KEY];
 	else
+		/*Otherwise, remove the size*/
 		[ret removeObjectForKey:SIZE_KEY];
-		
+	
+	/*Set the title*/
 	if([ret objectForKey:META_TITLE_KEY] == nil)
-		[ret setObject:name forKey:META_TITLE_KEY];\
+		[ret setObject:name forKey:META_TITLE_KEY];
+	/*Set the season and episode*/
 	int season = [self seasonNumber];
 	int ep = [self episodeNumber];
 	if(season != 0 && ep != 0)
@@ -963,9 +1352,11 @@ static NSArray *displayedMetaDataOrder = nil;
 	return ret;
 }
 
-// Custom TV Episode handler 
+/*Custom TV Episode handler*/
 - (NSComparisonResult) episodeCompare:(SapphireFileMetaData *)other
 {
+	/*Sort by season first*/
+	/*Put shows with no season at the bottom*/
 	int myNum = [self seasonNumber];
 	int theirNum = [other seasonNumber];
 	if(myNum == 0)
@@ -977,6 +1368,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	if(theirNum > myNum)
 		return NSOrderedAscending;
 	
+	/*Sort by episode next*/
 	myNum = [self episodeNumber];
 	theirNum = [other episodeNumber];
 	if(myNum == 0)
@@ -987,6 +1379,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		return NSOrderedDescending;
 	if(theirNum > myNum)
 		return NSOrderedAscending;
+	/*Finally sort by name*/
 	return [[path lastPathComponent] compare:[[other path] lastPathComponent] options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
 

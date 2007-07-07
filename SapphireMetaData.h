@@ -95,7 +95,7 @@
 - (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate;
 
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
-- (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)file;
+- (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)dir;
 
 - (BOOL)pruneMetaData;
 - (BOOL)updateMetaData;
