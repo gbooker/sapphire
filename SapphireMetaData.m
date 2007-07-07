@@ -511,6 +511,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self reloadDirectoryContents];
 	SapphireMetaDataScanner *scanner = [[SapphireMetaDataScanner alloc] initWithDirectoryMetaData:self delegate:subDelegate];
 	[scanner setGivesResults:YES];
+	[scanner release];
 }
 
 - (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate
@@ -518,6 +519,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self reloadDirectoryContents];
 	SapphireMetaDataScanner *scanner = [[SapphireMetaDataScanner alloc] initWithDirectoryMetaData:self delegate:subDelegate];
 	[scanner setGivesResults:NO];
+	[scanner release];
 }
 
 - (void)setupFiles:(NSArray * *)filesToScan andDirectories:(NSArray * *)directoriesToScan arraysForPredicate:(SapphirePredicate *)predicate

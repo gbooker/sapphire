@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by Graham Booker on 7/6/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
 #import "SapphireMetaDataScanner.h"
@@ -49,7 +49,6 @@
 			[results addObject:fileMeta];
 	}
 	[delegate gotSubFiles:results];
-	[self autorelease];
 }
 
 - (void)gotSubFiles:(NSArray *)subs
