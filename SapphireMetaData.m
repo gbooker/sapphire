@@ -18,7 +18,8 @@
 #define FILES_KEY					@"Files"
 #define DIRS_KEY					@"Dirs"
 #define META_VERSION_KEY			@"Version"
-#define META_VERSION				1
+#define META_FILE_VERSION			1
+#define META_COLLECTION_VERSION		1
 
 //File Specific Keys
 #define MODIFIED_KEY				@"Modified"
@@ -167,7 +168,7 @@ static NSSet *extensions = nil;
 	/*Get the mutable meta data back*/
 	metaData = [[mainDirectory dict] retain];
 	/*version it*/
-	[metaData setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
+	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
 	
 	return self;
 }
@@ -614,7 +615,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			memset(&sb, 0, sizeof(struct stat));
 			stat([filePath fileSystemRepresentation], &sb);
 			long modTime = sb.st_mtimespec.tv_sec;
-			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != modTime || [[fileMeta objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
+			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != modTime || [[fileMeta objectForKey:META_VERSION_KEY] intValue] != META_FILE_VERSION)
 				[importArray addObject:fileName];
 		}
 	}
@@ -987,7 +988,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		return FALSE;
 	
 	/*Has it been modified since last import?*/
-	if(modTime != [self modified] || [[metaData objectForKey:META_VERSION_KEY] intValue] != META_VERSION)
+	if(modTime != [self modified] || [[metaData objectForKey:META_VERSION_KEY] intValue] != META_FILE_VERSION)
 	{
 		/*We did an update*/
 		updated=TRUE ;
@@ -996,7 +997,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		/*Set modified, size, and version*/
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 		[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
-		[fileMeta setObject:[NSNumber numberWithInt:META_VERSION] forKey:META_VERSION_KEY];
+		[fileMeta setObject:[NSNumber numberWithInt:META_FILE_VERSION] forKey:META_VERSION_KEY];
 		
 		/*Open the movie*/
 		NSError *error = nil;
