@@ -48,7 +48,7 @@
 {
 	skipDirectories = [skip retain];
 	int i;
-	for(i = [remaining count]-1; i>=0; i++)
+	for(i = [remaining count]-1; i>=0; i--)
 	{
 		/*Remove any in our remaining that are to be skipped*/
 		NSString *checkPath = [[metaDir metaDataForDirectory:[remaining objectAtIndex:i]] path];
