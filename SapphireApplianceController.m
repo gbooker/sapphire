@@ -41,7 +41,7 @@
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	[theme setScene:[self scene]];
 
-	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"] path:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"]];
 
 	masterNames = [[NSArray alloc] initWithObjects:	UNWATCHED_MENU_ITEM,
 													FAVORITE_MENU_ITEM,
@@ -50,11 +50,12 @@
 													SETTINGS_MENU_ITEM,
 													RESET_MENU_ITEM, nil];
 	
-	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
-	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
-	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory] predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
-	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection rootDirectory]];	
-	settings									= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:[metaCollection rootDirectory]] ;
+	SapphireDirectoryMetaData *rootDir = [metaCollection directoryForPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir predicate:[[[SapphireUnwatchedPredicate alloc] init] autorelease]];
+	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir predicate:[[[SapphireFavoritePredicate alloc] init] autorelease]];
+	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
+	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir];	
+	settings									= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:rootDir] ;
 	[self setListTitle:							BRLocalizedString(@"Main Menu", @"")];
 	[unwatchedBrowser setListTitle:			BRLocalizedString(@"Unwatched Shows", @"Unwatched Browser Menu Item")];
 	[favoriteShowsBrowser setListTitle:		BRLocalizedString(@"Favorite Shows", @"Favorite Browser Menu Item")];

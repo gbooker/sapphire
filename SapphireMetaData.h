@@ -64,28 +64,31 @@
 @end
 
 @interface SapphireMetaDataCollection : SapphireMetaData {
-	SapphireDirectoryMetaData	*mainDirectory;
+	NSMutableDictionary			*directories;
 	NSString					*dictionaryPath;
 }
-- (id)initWithFile:(NSString *)dictionary path:(NSString *)myPath;
-- (SapphireDirectoryMetaData *)rootDirectory;
+- (id)initWithFile:(NSString *)dictionary;
+- (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
 
 @end
 
 @interface SapphireDirectoryMetaData : SapphireMetaData {
 	/*These two are not retained*/
-	NSMutableDictionary	*metaFiles;
-	NSMutableDictionary	*metaDirs;
+	NSMutableDictionary			*metaFiles;
+	NSMutableDictionary			*metaDirs;
 	
-	NSMutableDictionary	*cachedMetaFiles;
-	NSMutableDictionary	*cachedMetaDirs;
+	NSMutableDictionary			*cachedMetaFiles;
+	NSMutableDictionary			*cachedMetaDirs;
 
-	NSMutableArray		*files;
-	NSMutableArray		*directories;
+	NSMutableArray				*files;
+	NSMutableArray				*directories;
 	
-	NSTimer				*importTimer;
-	NSMutableArray		*importArray;
-	BOOL				scannedDirectory;
+	NSTimer						*importTimer;
+	NSMutableArray				*importArray;
+	BOOL						scannedDirectory;
+	
+	/*This is not retained*/
+	SapphireMetaDataCollection	*collection;
 }
 
 - (void)reloadDirectoryContents;

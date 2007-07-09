@@ -19,7 +19,7 @@
 #define DIRS_KEY					@"Dirs"
 #define META_VERSION_KEY			@"Version"
 #define META_FILE_VERSION			1
-#define META_COLLECTION_VERSION		1
+#define META_COLLECTION_VERSION		2
 
 //File Specific Keys
 #define MODIFIED_KEY				@"Modified"
@@ -127,6 +127,11 @@ static NSSet *extensions = nil;
 	[parent writeMetaData];
 }
 
+- (SapphireMetaDataCollection *)collection
+{
+	return nil;
+}
+
 - (BOOL)isDirectory:(NSString *)fullPath
 {
 	BOOL isDir = NO;
@@ -155,18 +160,23 @@ static NSSet *extensions = nil;
  * @param myPath The path to browse for the meta data
  * @return The meta data collection
  */
-- (id)initWithFile:(NSString *)dictionary path:(NSString *)myPath
+- (id)initWithFile:(NSString *)dictionary
 {
-	self = [super init];
+	/*Read the meta data*/
+	dictionaryPath = [dictionary retain];
+	NSDictionary *mainDict = [NSDictionary dictionaryWithContentsOfFile:dictionary];
+	self = [super initWithDictionary:mainDict parent:nil path:nil];
 	if(!self)
 		return nil;
 	
-	/*Read the meta data*/
-	dictionaryPath = [dictionary retain];
-	NSDictionary *metaDict = [NSDictionary dictionaryWithContentsOfFile:dictionary];
-	mainDirectory = [[SapphireDirectoryMetaData alloc] initWithDictionary:metaDict parent:self path:myPath];
-	/*Get the mutable meta data back*/
-	metaData = [[mainDirectory dict] retain];
+	/*Version upgrade*/
+	if([[metaData objectForKey:META_VERSION_KEY] intValue] == 1)
+	{
+		[metaData removeObjectForKey:META_VERSION_KEY];
+		NSMutableDictionary *newRoot = [NSMutableDictionary new];
+		[newRoot setObject:metaData forKey:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+		metaData = newRoot;
+	}
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
 	
@@ -175,19 +185,52 @@ static NSSet *extensions = nil;
 
 - (void)dealloc
 {
-	[mainDirectory release];
 	[dictionaryPath release];
 	[super dealloc];
 }
 
 /*!
- * @brief Returns the primary directory meta data
+ * @brief Returns the directory meta data for a particular path
  *
- * @return The root meta data
+ * @param path The path to find
+ * @return The directory meta data for the path, or nil if none exists
  */
-- (SapphireDirectoryMetaData *)rootDirectory
+- (SapphireDirectoryMetaData *)directoryForPath:(NSString *)absPath
 {
-	return mainDirectory;
+	NSEnumerator *dirsEnum = [metaData keyEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirsEnum nextObject]) != nil)
+	{
+		if([absPath hasPrefix:dir])
+			break;
+	}
+	if(dir != nil)
+	{
+		SapphireDirectoryMetaData *ret = [directories objectForKey:dir];
+		if(ret == nil)
+		{
+			ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:dir] parent:self path:dir];
+			if(ret == nil)
+				return nil;
+			[directories setObject:ret forKey:dir];
+			[metaData setObject:[ret dict] forKey:dir];
+		}
+		NSMutableArray *pathComp = [[absPath pathComponents] mutableCopy];
+		int prefixCount = [[dir pathComponents] count];
+		int i;
+		for(i=0; i<prefixCount; i++)
+			[pathComp removeObjectAtIndex:0];
+		
+		if([pathComp count])
+		{
+			NSString *subPath = [NSString pathWithComponents:pathComp];
+			ret = (SapphireDirectoryMetaData *)[ret metaDataForSubPath:subPath];
+		}
+		[pathComp release];
+		
+		return ret;
+	}
+	return nil;
 }
 
 /*Makes a director at a path, including its parents*/
@@ -213,7 +256,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void)writeMetaData
 {
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
-	[[mainDirectory dict] writeToFile:dictionaryPath atomically:YES];
+	[metaData writeToFile:dictionaryPath atomically:YES];
+}
+
+- (SapphireMetaDataCollection *)collection
+{
+	return self;
 }
 
 @end
@@ -899,6 +947,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 
+- (SapphireMetaDataCollection *)collection
+{
+	if(collection == nil)
+		collection = [parent collection];
+	
+	return collection;
+}
+
 /*See super documentation*/
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 {
@@ -1061,6 +1117,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		}
 		/*Add the meta data*/
 		[metaData addEntriesFromDictionary:fileMeta];
+		[self combinedDataChanged];
 	}
 	return updated ;
 }
