@@ -530,9 +530,9 @@
 		if(![[SapphireSettings sharedSettings] disableAnonymousReporting])
 		{
 			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
-			int ep = [currentPlayFile episodeNumber];
+/*			int ep = [currentPlayFile episodeNumber];
 			int season = [currentPlayFile seasonNumber];
-			NSString *showID = [currentPlayFile showID];
+			NSString *showID = [currentPlayFile showID];*/
 			NSMutableString *reqData = nil;
 			
 			NSMutableArray *reqComp = [NSMutableArray array];
