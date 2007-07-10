@@ -496,8 +496,10 @@
 		/*Get metadata*/
 		if(row < dirCount)
 			meta = [metaData metaDataForDirectory:name];
-		else
+		else if (row < dirCount + fileCount)
 			meta = [metaData metaDataForFile:name];
+		else
+			return;
 		/*Do mark menu*/
 		id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
 		[(SapphireMarkMenu *)controller setPredicate:predicate];
