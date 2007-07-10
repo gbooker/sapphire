@@ -530,7 +530,31 @@
 		if(![[SapphireSettings sharedSettings] disableAnonymousReporting])
 		{
 			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
-			NSString *reqData = [NSString stringWithFormat:@"path=%@", [path URLEncode]];
+			int ep = [currentPlayFile episodeNumber];
+			int season = [currentPlayFile seasonNumber];
+			NSString *showID = [currentPlayFile showID];
+			NSMutableString *reqData = nil;
+			
+			NSMutableArray *reqComp = [NSMutableArray array];
+			
+/*			if(season != 0)
+				[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
+			if(ep != 0)
+				[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
+			if(showID != 0)
+				[reqComp addObject:[NSString stringWithFormat:@"show=%d", showID]];*/
+			if(path != 0)
+				[reqComp addObject:[NSString stringWithFormat:@"path=%d", path]];
+			
+			int count = [reqComp count];
+			int i;
+			for(i=0; i<count-1; i++)
+			{
+				[reqData appendFormat:@"%@&", [reqComp objectAtIndex:i]];
+			}
+			if(count)
+				[reqData appendFormat:@"%@", [reqComp objectAtIndex:i]];
+			
 			NSData *postData = [reqData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 			
 			[request setHTTPMethod:@"POST"];
@@ -578,6 +602,15 @@
 - (void)gotSubFiles:(NSArray *)subs
 {
 	[self reloadDirectoryContents];	
+}
+
+/*!
+* @brief Meta data delegate method to inform on its scanning progress
+ *
+ * @param dir The current directory it is scanning
+ */
+- (void)scanningDir:(NSString *)dir
+{
 }
 
 /*!

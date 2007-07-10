@@ -47,6 +47,7 @@
 - (void)setSkipDirectories:(NSMutableSet *)skip
 {
 	skipDirectories = [skip retain];
+	[delegate scanningDir:[metaDir path]];
 	int i;
 	for(i = [remaining count]-1; i>=0; i--)
 	{
@@ -102,6 +103,16 @@
 	[results addObjectsFromArray:subs];
 	/*Resume*/
 	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(nextFile:) userInfo:nil repeats:NO];
+}
+
+/*!
+ * @brief Lets the delegate know it is scanning a directory
+ *
+ * @param dir The directory it is scanning
+ */
+- (void)scanningDir:(NSString *)dir
+{
+	[delegate scanningDir:dir];
 }
 
 /*!

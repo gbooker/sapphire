@@ -45,6 +45,7 @@
 
 @protocol SapphireMetaDataScannerDelegate <NSObject>
 - (void)gotSubFiles:(NSArray *)subs;
+- (void)scanningDir:(NSString *)dir;
 - (BOOL)getSubFilesCanceled;
 @end
 

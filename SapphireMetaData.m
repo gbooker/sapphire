@@ -957,7 +957,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	SEL select = @selector(setToImportFromSource:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
-	[fileInv setArgument:source atIndex:2];
+	[fileInv setArgument:&source atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
 }
 

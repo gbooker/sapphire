@@ -185,7 +185,19 @@
 	updated = 0 ;
 	current = 0;
 	max = [importItems count];
-	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+	if(!canceled)
+		importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+}
+
+/*!
+ * @brief Meta data delegate method to inform on its scanning progress
+ *
+ * @param dir The current directory it is scanning
+ */
+- (void)scanningDir:(NSString *)dir
+{
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Scanning Directory: %@", "Current scann import process format, directory"),dir]];
+	[[self scene] renderScene];
 }
 
 /*!
