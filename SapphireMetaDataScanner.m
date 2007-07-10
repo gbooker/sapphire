@@ -126,14 +126,14 @@
 	if(![delegate getSubFilesCanceled] && [remaining count])
 	{
 		/*Scan the next directory*/
-		SapphireDirectoryMetaData *next = [metaDir metaDataForDirectory:[remaining lastObject]];
+		SapphireDirectoryMetaData *next = [metaDir metaDataForDirectory:[remaining objectAtIndex:0]];
 		/*State whether we care for results*/
 		if(results != nil)
 			[next getSubFileMetasWithDelegate:self skipDirectories:skipDirectories];
 		else
 			[next scanForNewFilesWithDelegate:self skipDirectories:skipDirectories];
 		/*remove this item*/
-		[remaining removeLastObject];
+		[remaining removeObjectAtIndex:0];
 	}
 	else
 		/*We are done, send results and quit*/

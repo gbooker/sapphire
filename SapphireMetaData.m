@@ -170,12 +170,14 @@ static NSSet *extensions = nil;
 		return nil;
 	
 	/*Version upgrade*/
-	if([[metaData objectForKey:META_VERSION_KEY] intValue] == 1)
+	if([[metaData objectForKey:META_VERSION_KEY] intValue] < 2)
 	{
+		NSString *oldRoot = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
 		[metaData removeObjectForKey:META_VERSION_KEY];
 		NSMutableDictionary *newRoot = [NSMutableDictionary new];
-		[newRoot setObject:metaData forKey:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+		[newRoot setObject:metaData forKey:oldRoot];
 		metaData = newRoot;
+		[[self directoryForPath:oldRoot] setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:nil];
 	}
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
@@ -255,6 +257,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)writeMetaData
 {
+	if(importing)
+		return;
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
 	[metaData writeToFile:dictionaryPath atomically:YES];
 }
@@ -262,6 +266,16 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (SapphireMetaDataCollection *)collection
 {
 	return self;
+}
+
+/*!
+ * @brief Set whether or not we are currently importing.  If YES, this defers writes of the metadata until later
+ *
+ * @param isImporting YES if importing, NO otherwise
+ */
+- (void)setImporting:(BOOL)isImporting
+{
+	importing = isImporting;
 }
 
 @end
@@ -894,7 +908,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  * @param watched YES if set to watched, NO if set to unwatched
  * @param predicate The predicate which to restrict setting
  */
-- (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate
+- (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(setWatched:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
@@ -923,7 +937,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  * @param watched YES if set to favorite, NO if set to not favorite
  * @param predicate The predicate which to restrict setting
  */
-- (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate
+- (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(setFavorite:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
@@ -938,7 +952,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  * @param source The source on which to re-import
  * @param predicate The predicate which to restrict setting
  */
-- (void)setToImportFromSource:(NSString *)source ForPredicate:(SapphirePredicate *)predicate
+- (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate
 {
 	SEL select = @selector(setToImportFromSource:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
@@ -1190,10 +1204,13 @@ static NSArray *displayedMetaDataOrder = nil;
  */
 - (void)setToImportFromSource:(NSString *)source
 {
-	/*Kill data*/
-	[metaData removeObjectForKey:source];
-	/*Redo cache*/
-	[self combinedDataChanged];
+	NSMutableDictionary *sourceDict = [[metaData objectForKey:source] mutableCopy];
+	if(sourceDict != nil)
+	{
+		[metaData setObject:sourceDict forKey:source];
+		[sourceDict removeObjectForKey:MODIFIED_KEY];
+		[sourceDict release];
+	}
 }
 
 /*!
@@ -1312,6 +1329,17 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	[self constructCombinedData];
 	return [combinedInfo objectForKey:META_TITLE_KEY] ;
+}
+
+/*!
+ * @brief Returns the show ID of the file
+ *
+ * @return The show ID of the file
+ */
+- (NSString *)showID
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_SHOW_IDENTIFIER_KEY];
 }
 
 /*Makes a pretty size string for the file*/

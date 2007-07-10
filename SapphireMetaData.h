@@ -22,6 +22,7 @@
 #define META_RATING_KEY					@"Rating"
 #define META_SUMMARY_KEY				@"Summary"
 #define META_ABSOLUTE_EP_NUMBER_KEY		@"Episode Number"
+#define META_SHOW_IDENTIFIER_KEY		@"Show ID"
 
 //ATV Extra Info
 #define META_SHOW_BROADCASTER_KEY		@"Broadcast Company"
@@ -36,7 +37,7 @@
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
 
-@class SapphireMetaData, SapphireFileMetaData, SapphireDirectoryMetaData;
+@class SapphireMetaData, SapphireMetaDataCollection, SapphireFileMetaData, SapphireDirectoryMetaData;
 
 @protocol SapphireMetaDataDelegate <NSObject>
 - (void)updateCompleteForFile:(NSString *)file;
@@ -59,6 +60,7 @@
 
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
 - (void)writeMetaData;
+- (SapphireMetaDataCollection *)collection;
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 
 @end
@@ -66,9 +68,11 @@
 @interface SapphireMetaDataCollection : SapphireMetaData {
 	NSMutableDictionary			*directories;
 	NSString					*dictionaryPath;
+	BOOL						importing;
 }
 - (id)initWithFile:(NSString *)dictionary;
 - (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
+- (void)setImporting:(BOOL)isImporting;
 
 @end
 
@@ -112,10 +116,10 @@
 - (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
 
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
-- (void)setWatched:(BOOL)watched predicate:(SapphirePredicate *)predicate;
+- (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate;
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
-- (void)setFavorite:(BOOL)favorite predicate:(SapphirePredicate *)predicate;
-- (void)setToImportFromSource:(NSString *)source ForPredicate:(SapphirePredicate *)predicate;
+- (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate;
+- (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate;
 
 @end
 
@@ -139,8 +143,10 @@
 - (long long)size;
 - (float)duration;
 - (int)sampleRate;
-- (int)episodeNumber ;
-- (NSString *)episodeTitle ;
+- (int)episodeNumber;
+- (int)seasonNumber;
+- (NSString *)episodeTitle;
+- (NSString *)showID;
 
 - (NSString *)sizeString;
 

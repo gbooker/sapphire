@@ -207,19 +207,19 @@
 		switch(row)
 		{
 			case 0:
-				[dirMeta setWatched:YES predicate:predicate];
+				[dirMeta setWatched:YES forPredicate:predicate];
 				break;
 			case 1:
-				[dirMeta setWatched:NO predicate:predicate];
+				[dirMeta setWatched:NO forPredicate:predicate];
 				break;
 			case 2:
-				[dirMeta setFavorite:YES predicate:predicate];
+				[dirMeta setFavorite:YES forPredicate:predicate];
 				break;
 			case 3:
-				[dirMeta setFavorite:NO predicate:predicate];
+				[dirMeta setFavorite:NO forPredicate:predicate];
 				break;
 			case 4:
-				[dirMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY ForPredicate:predicate];
+				[dirMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:predicate];
 				break;
 		}
 	}

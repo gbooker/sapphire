@@ -170,6 +170,7 @@
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[[self scene] renderScene];
 	/*Initialize the import process*/
+	[[meta collection] setImporting:YES];
 	[self getItems];
 }
 
@@ -244,6 +245,7 @@
 	{
 		[importTimer invalidate];
 		importTimer = nil;
+		[[meta collection] setImporting:NO];
 		[meta writeMetaData];
 		/*Update display*/
 		[button setHidden:YES];
@@ -267,6 +269,7 @@
 	importTimer = nil;
 	/*Reset the display and write data*/
 	[self resetUIElements];
+	[[meta collection] setImporting:NO];
 	[meta writeMetaData];
 }
 

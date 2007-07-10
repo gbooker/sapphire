@@ -17,8 +17,6 @@
 #define TVRAGE_SCREEN_CAP_XPATH @"//img[contains(@src, 'screencap')]"
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
- 
-#define LINK_KEY @"Link" 
 
 #define TRANSLATIONS_KEY		@"Translations"
 
@@ -174,7 +172,7 @@
 	if(epTitle != nil)
 		[epDict setObject:epTitle forKey:META_TITLE_KEY];
 	if(epLink != nil)
-		[epDict setObject:epLink forKey:LINK_KEY];
+		[epDict setObject:epLink forKey:META_SHOW_IDENTIFIER_KEY];
 	if(summary != nil)
 		[epDict setObject:summary forKey:META_DESCRIPTION_KEY];
 	if(epNumber != nil)
@@ -493,7 +491,7 @@
 		return NO;
 	
 	/*Check for screen cap locally and on server*/
-	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
+	NSString *showInfoUrl = [info objectForKey:META_SHOW_IDENTIFIER_KEY];
 	NSString *image = nil;
 	NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"];
 	NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
@@ -514,8 +512,6 @@
 		[myDelegate release];
 	}
 	
-	/*Don't want to save the ep url in the meta data as it is clutter*/
-	[info removeObjectForKey:LINK_KEY];
 	/*Import the info*/
 	[fileMeta importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	
