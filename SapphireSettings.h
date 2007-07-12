@@ -14,7 +14,6 @@
 	NSArray						*keys;
 	NSArray						*gems;
 	NSMutableDictionary			*options;
-	SapphirePopulateDataMenu	*populateShowDataController;
 	NSString					*path;
 	NSDictionary				*defaults;
 	SapphireDirectoryMetaData	*metaData;

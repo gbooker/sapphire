@@ -112,8 +112,6 @@ static SapphireSettings *sharedInstance = nil;
 	if(options == nil)
 		options = [[NSMutableDictionary alloc] init];
 
-	populateShowDataController=[[SapphirePopulateDataMenu alloc] initWithScene: scene metaData:metaData];
-	
 	/*display*/
 	[[self list] setDatasource:self];
 	[[self list] addDividerAtIndex:2];
@@ -360,8 +358,9 @@ static SapphireSettings *sharedInstance = nil;
 	/*Check for populate show data*/
 	if(row==0)
 	{
-		id controller = populateShowDataController;
-		[[self stack] pushController:controller];
+		SapphirePopulateDataMenu *menu = [[SapphirePopulateDataMenu alloc] initWithScene:[self scene] metaData:metaData];
+		[[self stack] pushController:menu];
+		[menu release];
 	}
 	/*Check for import of TV data*/
 	else if(row == 1)
