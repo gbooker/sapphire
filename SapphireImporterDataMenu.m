@@ -170,6 +170,8 @@
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[[self scene] renderScene];
 	/*Initialize the import process*/
+	canceled = NO;
+	suspended = NO;
 	[[meta collection] setImporting:YES];
 	[self getItems];
 }
