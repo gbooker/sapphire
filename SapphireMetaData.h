@@ -144,6 +144,7 @@
 - (long long)size;
 - (float)duration;
 - (int)sampleRate;
+- (UInt32)audioFormatID;
 - (int)episodeNumber;
 - (int)seasonNumber;
 - (NSString *)episodeTitle;

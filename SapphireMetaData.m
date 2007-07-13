@@ -18,7 +18,7 @@
 #define FILES_KEY					@"Files"
 #define DIRS_KEY					@"Dirs"
 #define META_VERSION_KEY			@"Version"
-#define META_FILE_VERSION			1
+#define META_FILE_VERSION			2
 #define META_COLLECTION_VERSION		2
 
 //File Specific Keys
@@ -31,6 +31,7 @@
 #define AUDIO_DESC_KEY				@"Audio Description"
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
+#define AUDIO_FORMAT_KEY			@"Audio Format"
 
 @implementation NSString (episodeSorting)
 
@@ -1103,24 +1104,27 @@ static NSArray *displayedMetaDataOrder = nil;
 		{
 			/*Get the audio track*/
 			QTTrack *track = [audioTracks objectAtIndex:0];
+			NSString *formatText = [track attributeForKey:@"QTTrackFormatSummaryAttribute"];
+			if(formatText != nil)
+				[fileMeta setObject:formatText forKey:AUDIO_DESC_KEY];
 			QTMedia *media = [track media];
 			audioSampleRate = [media attributeForKey:QTMediaTimeScaleAttribute];
 			if(media != nil)
 			{
-				/*Get the audio description*/
+				/*Get the audio format*/
 				Media qtMedia = [media quickTimeMedia];
 				Handle sampleDesc = NewHandle(1);
 				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
-				CFStringRef userText = nil;
+				AudioStreamBasicDescription asbd;
 				ByteCount	propSize = 0;
-				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_UserReadableText, sizeof(userText), &userText, &propSize);
+				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_AudioStreamBasicDescription, sizeof(asbd), &asbd, &propSize);
 				DisposeHandle(sampleDesc);
 				
-				if(userText != nil)
+				if(propSize != 0)
 				{
-					/*Set the description*/
-					[fileMeta setObject:(NSString *)userText forKey:AUDIO_DESC_KEY];
-					CFRelease(userText);
+					/*Set the format*/
+					NSNumber *format = [NSNumber numberWithUnsignedInt:asbd.mFormatID];
+					[fileMeta setObject:format forKey:AUDIO_FORMAT_KEY];
 				}
 			}
 		}
@@ -1132,25 +1136,9 @@ static NSArray *displayedMetaDataOrder = nil;
 		{
 			/*Get the video track*/
 			QTTrack *track = [videoTracks objectAtIndex:0];
-			QTMedia *media = [track media];
-			if(media != nil)
-			{
-				/*Get the video description*/
-				Media qtMedia = [media quickTimeMedia];
-				Handle sampleDesc = NewHandle(1);
-				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
-				CFStringRef userText = nil;
-				ByteCount	propSize = 0;
-				ICMImageDescriptionGetProperty((ImageDescriptionHandle)sampleDesc, kQTPropertyClass_ImageDescription, kICMImageDescriptionPropertyID_SummaryString, sizeof(userText), &userText, &propSize);
-				DisposeHandle(sampleDesc);
-				
-				if(userText != nil)
-				{
-					/*Set the description*/
-					[fileMeta setObject:(NSString *)userText forKey:VIDEO_DESC_KEY];
-					CFRelease(userText);
-				}
-			}
+			NSString *formatText = [track attributeForKey:QTTrackDisplayNameAttribute];
+			if(formatText != nil)
+				[fileMeta setObject:formatText forKey:VIDEO_DESC_KEY];			
 		}
 		/*Add the meta data*/
 		[metaData addEntriesFromDictionary:fileMeta];
@@ -1298,6 +1286,16 @@ static NSArray *displayedMetaDataOrder = nil;
 - (int)sampleRate
 {
 	return [[metaData objectForKey:SAMPLE_RATE_KEY] intValue];
+}
+
+/*!
+ * @brief Returns the audio format of the file
+ *
+ * @return The audio format of the file
+ */
+- (UInt32)audioFormatID
+{
+	return [[metaData objectForKey:AUDIO_FORMAT_KEY] unsignedIntValue];
 }
 
 /*Combine the meta data from multiple sources*/
