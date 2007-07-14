@@ -56,7 +56,7 @@ static NSSet *extensions = nil;
 +(void)load
 {
 	extensions = [[NSSet alloc] initWithObjects:
-		@"avi", @"divx", @"xvid"
+		@"avi", @"divx", @"xvid",
 		@"mov",
 		@"mpg", @"mpeg", @"m2v", @"ts",
 		@"wmv", @"asx", @"asf",
