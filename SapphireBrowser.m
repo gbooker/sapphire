@@ -532,21 +532,21 @@
 		if(![[SapphireSettings sharedSettings] disableAnonymousReporting])
 		{
 			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
-/*			int ep = [currentPlayFile episodeNumber];
+			int ep = [currentPlayFile episodeNumber];
 			int season = [currentPlayFile seasonNumber];
-			NSString *showID = [currentPlayFile showID];*/
-			NSMutableString *reqData = nil;
+			NSString *showID = [currentPlayFile showID];
+			NSMutableString *reqData = [NSMutableString string];
 			
 			NSMutableArray *reqComp = [NSMutableArray array];
 			
-/*			if(season != 0)
+			if(season != 0)
 				[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
 			if(ep != 0)
 				[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
 			if(showID != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"show=%d", showID]];*/
+				[reqComp addObject:[NSString stringWithFormat:@"show=%@", showID]];
 			if(path != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"path=%d", path]];
+				[reqComp addObject:[NSString stringWithFormat:@"path=%@", path]];
 			
 			int count = [reqComp count];
 			int i;
@@ -557,7 +557,7 @@
 			if(count)
 				[reqData appendFormat:@"%@", [reqComp objectAtIndex:i]];
 			
-			NSData *postData = [reqData dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+			NSData *postData = [reqData dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
 			
 			[request setHTTPMethod:@"POST"];
 			[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];

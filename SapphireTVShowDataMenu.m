@@ -19,6 +19,7 @@
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
 
 #define TRANSLATIONS_KEY		@"Translations"
+#define LINK_KEY				@"Link"
 
 /*Delegate class to download cover art*/
 @interface SapphireTVShowDataMenuDownloadDelegate : NSObject
@@ -147,7 +148,7 @@
  * @param airDate The episode's air date
  * @param dict The cache dictionary
  */
-- (void)addEp:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink  absEpNum:(int)epNumber airDate:(NSDate *)airDate toDict:(NSMutableDictionary *)dict
+- (void)addEp:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID toDict:(NSMutableDictionary *)dict
 {
 	/*Set the key by which to store this.  Either by season/ep or season/title*/
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
@@ -172,7 +173,9 @@
 	if(epTitle != nil)
 		[epDict setObject:epTitle forKey:META_TITLE_KEY];
 	if(epLink != nil)
-		[epDict setObject:epLink forKey:META_SHOW_IDENTIFIER_KEY];
+		[epDict setObject:epLink forKey:LINK_KEY];
+	if(showID != nil)
+		[epDict setObject:showID forKey:META_SHOW_IDENTIFIER_KEY];
 	if(summary != nil)
 		[epDict setObject:summary forKey:META_DESCRIPTION_KEY];
 	if(epNumber != nil)
@@ -278,7 +281,7 @@
 			}
 		}
 		/*Add to cache*/
-		[self addEp:epTitle season:season epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate toDict:ret];
+		[self addEp:epTitle season:season epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName toDict:ret];
 	}
 	return ret;
 }
@@ -491,7 +494,7 @@
 		return NO;
 	
 	/*Check for screen cap locally and on server*/
-	NSString *showInfoUrl = [info objectForKey:META_SHOW_IDENTIFIER_KEY];
+	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
 	NSString *image = nil;
 	NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"];
 	NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
@@ -513,6 +516,7 @@
 	}
 	
 	/*Import the info*/
+	[info removeObjectForKey:LINK_KEY];
 	[fileMeta importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	
 	/*We imported something*/
