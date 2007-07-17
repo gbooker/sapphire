@@ -190,7 +190,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 			[metaData setObject:newValue forKey:META_SHOW_AQUIRED_DATE];
 	}
 	/*Values which need to be converted to numbers*/
-	NSArray *convertToNumbers = [NSArray arrayWithObjects:META_SHOW_FAVORITE_RATING_KEY, META_RATING_KEY, META_ABSOLUTE_EP_NUMBER_KEY, META_SEASON_NUMBER_KEY, META_EPISODE_NUMBER_KEY, nil];
+	NSArray *convertToNumbers = [NSArray arrayWithObjects:META_SHOW_FAVORITE_RATING_KEY, META_ABSOLUTE_EP_NUMBER_KEY, META_SEASON_NUMBER_KEY, META_EPISODE_NUMBER_KEY, nil];
 	NSEnumerator *numEnum = [convertToNumbers objectEnumerator];
 	while((key = [numEnum nextObject]) != nil)
 	{
