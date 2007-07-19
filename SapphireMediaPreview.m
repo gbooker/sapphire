@@ -40,6 +40,7 @@ static NSSet *coverArtExtentions = nil;
 		@"tif",
 		@"tiff",
 		@"png",
+		@"gif",
 		nil];
 }
 
