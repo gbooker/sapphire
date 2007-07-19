@@ -1373,6 +1373,17 @@ static NSArray *displayedMetaDataOrder = nil;
 	return [combinedInfo objectForKey:META_SHOW_IDENTIFIER_KEY];
 }
 
+/*!
+ * @brief Returns the show name of the file
+ *
+ * @return The show name of the file
+ */
+- (NSString *)showName
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_SHOW_NAME_KEY];
+}
+
 /*Makes a pretty size string for the file*/
 - (NSString *)sizeString
 {
@@ -1470,8 +1481,8 @@ static NSArray *displayedMetaDataOrder = nil;
 	/*Set the season and episode*/
 	int season = [self seasonNumber];
 	int ep = [self episodeNumber];
-	if(season != 0 && ep != 0)
-		[ret setObject:[NSString stringWithFormat:@"%d / %d", season, ep] forKey:META_EPISODE_AND_SEASON_KEY];
+	if(season != 0 && ep != 0) 
+		[ret setObject:[NSString stringWithFormat:@"%@ - %d / %d",[self showName], season, ep] forKey:META_EPISODE_AND_SEASON_KEY];
 	return ret;
 }
 
