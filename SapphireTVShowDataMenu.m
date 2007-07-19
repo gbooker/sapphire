@@ -11,6 +11,7 @@
 #import "NSString-Extensions.h"
 #import "SapphireShowChooser.h"
 
+#define TVRAGE_SHOWNAME_XPATH @".//h3/text()"
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
 #define TVRAGE_EP_INFO @".//*[@class='b2']/*"
 #define TVRAGE_EP_TEXT @".//*[@class='b2']/text()"
@@ -139,6 +140,7 @@
 /*!
  * @brief Add an episode's info into our cache dict
  *
+ * @param showName The TV Show's name
  * @param epTitle The episode's title
  * @param season The episode's season
  * @param ep The episodes's episode number within the season
@@ -148,7 +150,7 @@
  * @param airDate The episode's air date
  * @param dict The cache dictionary
  */
-- (void)addEp:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID toDict:(NSMutableDictionary *)dict
+- (void)addEp:(NSString *)showName title:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID toDict:(NSMutableDictionary *)dict
 {
 	/*Set the key by which to store this.  Either by season/ep or season/title*/
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
@@ -166,6 +168,8 @@
 		[epDict release];
 	}
 	/*Add info*/
+	if(showName)
+		[epDict setObject:showName forKey:META_SHOW_NAME_KEY] ;
 	if(ep != 0)
 		[epDict setObject:epNum forKey:META_EPISODE_NUMBER_KEY];
 	if(season != 0)
@@ -187,7 +191,7 @@
 /*!
  * @brief Fetch information about a season of a show
  *
- * @param seriesname The tvrage series name (part of the show's URL)
+ * @param seriesName The tvrage series name (part of the show's URL)
  * @param season The season to fech
  * @return A cached dictionary of the season's episodes
  */
@@ -200,9 +204,27 @@
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@/episode_guide/%d", seriesName, season]];
 	NSError *error = nil;
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-	
+	/* Dump XML document to disk (Dev Only) */
+/*	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
+	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@%@.xml",documentPath,seriesName] atomically:YES] ;*/
 	/*Get the episode list*/
+	NSString *showName= nil;
+	
+	
 	NSXMLElement *html = [document rootElement];
+	
+	NSArray *titleArray=[html objectsForXQuery:TVRAGE_SHOWNAME_XPATH error:&error];
+	if([titleArray count])
+	{
+		showName=[[titleArray objectAtIndex:0] stringValue];
+		int length = [showName length];
+		if([showName characterAtIndex:length - 1] == '\n')
+			showName = [showName substringToIndex:length - 1];
+/*		int index = [showName rangeOfString:@"Season" options:0].location;
+		if(index != NSNotFound)
+			showName = [showName substringToIndex:index - 1];*/
+	}
+
 	NSArray *eps = [html objectsForXQuery:TVRAGE_EPLIST_XPATH error:&error];
 	NSEnumerator *epEnum = [eps objectEnumerator];
 	NSXMLNode *epNode = nil;
@@ -281,7 +303,7 @@
 			}
 		}
 		/*Add to cache*/
-		[self addEp:epTitle season:season epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName toDict:ret];
+		[self addEp:showName title:epTitle season:season epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName toDict:ret];
 	}
 	return ret;
 }
@@ -412,7 +434,8 @@
 	/*Check regexes to see if this is a tv show*/
 	int index = NSNotFound;
 	regmatch_t matches[3];
-	const char *theFileName = [fileName fileSystemRepresentation];
+	NSData *fileNameData = [fileName dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+	const char *theFileName = [fileNameData bytes];
 	NSString *scanString = nil;
 	if(!regexec(&letterMarking, theFileName, 3, matches, 0))
 	{
