@@ -37,6 +37,12 @@
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
 
+typedef enum {
+	FILE_CLASS_UNKNOWN = 0,
+	FILE_CLASS_TV_SHOW = 1,
+	FILE_CLASS_MOVIE = 2,
+} FileClass;
+
 @class SapphireMetaData, SapphireMetaDataCollection, SapphireFileMetaData, SapphireDirectoryMetaData;
 
 @protocol SapphireMetaDataDelegate <NSObject>

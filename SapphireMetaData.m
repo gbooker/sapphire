@@ -205,6 +205,7 @@ static NSSet *extensions = nil;
 	}
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
+	[self writeMetaData];
 	
 	return self;
 }
@@ -934,11 +935,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate
 {
+	[[self collection] setImporting:YES];
 	SEL select = @selector(setWatched:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&watched atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
+	[[self collection] setImporting:NO];
+	[self writeMetaData];
 }
 
 /*!
@@ -963,11 +967,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate
 {
+	[[self collection] setImporting:YES];
 	SEL select = @selector(setFavorite:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&favorite atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
+	[[self collection] setImporting:NO];
+	[self writeMetaData];
 }
 
 /*!
@@ -978,11 +985,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate
 {
+	[[self collection] setImporting:YES];
 	SEL select = @selector(setToImportFromSource:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&source atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
+	[[self collection] setImporting:NO];
+	[self writeMetaData];
 }
 
 - (SapphireMetaDataCollection *)collection
