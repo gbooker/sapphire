@@ -24,6 +24,8 @@
 	<real>-0.245</real>
 	<key>FRAppliancePreferedOrderValue</key>
 	<integer>-1</integer>
+	<key>FRRemoteAppliance</key>
+	<true/>
 	<key>NSPrincipalClass</key>
 	<string>SapphireAppliance</string>
 </dict>
