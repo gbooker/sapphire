@@ -1114,9 +1114,6 @@ static NSArray *displayedMetaDataOrder = nil;
 		{
 			/*Get the audio track*/
 			QTTrack *track = [audioTracks objectAtIndex:0];
-			NSString *formatText = [track attributeForKey:@"QTTrackFormatSummaryAttribute"];
-			if(formatText != nil)
-				[fileMeta setObject:formatText forKey:AUDIO_DESC_KEY];
 			QTMedia *media = [track media];
 			audioSampleRate = [media attributeForKey:QTMediaTimeScaleAttribute];
 			if(media != nil)
@@ -1128,7 +1125,6 @@ static NSArray *displayedMetaDataOrder = nil;
 				AudioStreamBasicDescription asbd;
 				ByteCount	propSize = 0;
 				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_AudioStreamBasicDescription, sizeof(asbd), &asbd, &propSize);
-				DisposeHandle(sampleDesc);
 				
 				if(propSize != 0)
 				{
@@ -1136,6 +1132,17 @@ static NSArray *displayedMetaDataOrder = nil;
 					NSNumber *format = [NSNumber numberWithUnsignedInt:asbd.mFormatID];
 					[fileMeta setObject:format forKey:AUDIO_FORMAT_KEY];
 				}
+				
+				CFStringRef userText = nil;
+				propSize = 0;
+				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_UserReadableText, sizeof(userText), &userText, &propSize);
+				if(userText != nil)
+				{
+					/*Set the description*/
+					[fileMeta setObject:(NSString *)userText forKey:AUDIO_DESC_KEY];
+					CFRelease(userText);
+				}
+				DisposeHandle(sampleDesc);
 			}
 		}
 		/*Set the sample rate*/
@@ -1146,9 +1153,25 @@ static NSArray *displayedMetaDataOrder = nil;
 		{
 			/*Get the video track*/
 			QTTrack *track = [videoTracks objectAtIndex:0];
-			NSString *formatText = [track attributeForKey:QTTrackDisplayNameAttribute];
-			if(formatText != nil)
-				[fileMeta setObject:formatText forKey:VIDEO_DESC_KEY];			
+			QTMedia *media = [track media]; 
+			if(media != nil) 
+			{ 
+				/*Get the video description*/ 
+				Media qtMedia = [media quickTimeMedia]; 
+				Handle sampleDesc = NewHandle(1); 
+				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc); 
+				CFStringRef userText = nil; 
+				ByteCount propSize = 0; 
+				ICMImageDescriptionGetProperty((ImageDescriptionHandle)sampleDesc, kQTPropertyClass_ImageDescription, kICMImageDescriptionPropertyID_SummaryString, sizeof(userText), &userText, &propSize); 
+				DisposeHandle(sampleDesc); 
+				
+				if(userText != nil) 
+				{ 
+					/*Set the description*/ 
+					[fileMeta setObject:(NSString *)userText forKey:VIDEO_DESC_KEY]; 
+					CFRelease(userText); 
+				} 
+			} 
 		}
 		/*Add the meta data*/
 		[metaData addEntriesFromDictionary:fileMeta];
