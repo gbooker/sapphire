@@ -62,18 +62,7 @@
 - (void)dealloc
 {
 	[resetTimer invalidate];
-	[meta release];
 	[super dealloc];
-}
-
-/*!
- * @brief Set the File information
- *
- * @param newMeta the meta data
- */
-- (void)setMetaData:(SapphireFileMetaData *)newMeta
-{
-	meta = [newMeta retain];
 }
 
 - (BOOL)prerollMedia:(NSError * *)fp8

@@ -13,9 +13,6 @@
 	double					revTime;
 	BOOL					enabled;
 	NSTimer					*resetTimer;
-	SapphireFileMetaData	*meta;
 }
-
-- (void)setMetaData:(SapphireFileMetaData *)newMeta;
 
 @end

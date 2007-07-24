@@ -661,7 +661,6 @@
 
 		/*Get the player*/
 		SapphireVideoPlayer *player = [[SapphireVideoPlayer alloc] init];
-		[player setMetaData:currentPlayFile];
 		NSError *error = nil;
 		[player setMedia:asset error:&error];
 		
