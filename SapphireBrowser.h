@@ -17,7 +17,6 @@
 	SapphirePredicate			*predicate;
 	BRSegmentedSortControl		*modeControl;
 	SapphireFileMetaData		*currentPlayFile;
-	SapphireSettings			*settings;
 	int							dirCount;
 	int							fileCount;
 	BOOL						cancelScan;

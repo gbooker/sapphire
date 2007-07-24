@@ -28,6 +28,7 @@ static SapphireSettings *sharedInstance = nil;
 #define	HIDE_SPOILERS_KEY	@"HideSpoilers"
 #define HIDE_UI_QUIT_KEY	@"HideUIQuit"
 #define	ENABLE_FAST_SWITCHING_KEY	@"EnableFastSwitching"
+#define USE_AC3_PASSTHROUGH	@"EnableAC3Passthrough"
 #define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
 
 
@@ -75,6 +76,7 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"   Hide Show Spoilers", @"Hide show summarys menu item"),
 												BRLocalizedString(@"   Hide UI Quit", @"Hide the ui quitter menu item"),
 												BRLocalizedString(@"   Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
+												BRLocalizedString(@"   Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"),
 												BRLocalizedString(@"   Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
 	
 	keys = [[NSArray alloc] initWithObjects:		@"",
@@ -84,7 +86,8 @@ static SapphireSettings *sharedInstance = nil;
 													HIDE_UNWATCHED_KEY,  
 													HIDE_SPOILERS_KEY,
 													HIDE_UI_QUIT_KEY,
-													ENABLE_FAST_SWITCHING_KEY, 
+													ENABLE_FAST_SWITCHING_KEY,
+													USE_AC3_PASSTHROUGH,
 													DISABLE_ANON_KEY, nil];
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
@@ -93,6 +96,7 @@ static SapphireSettings *sharedInstance = nil;
 												/*[theme gem:GREEN_GEM_KEY],*/
 												[theme gem:BLUE_GEM_KEY],
 												[theme gem:RED_GEM_KEY],
+												[theme gem:CONE_GEM_KEY],
 												[theme gem:CONE_GEM_KEY],
 												[theme gem:CONE_GEM_KEY],
 												[theme gem:CONE_GEM_KEY], nil];		
@@ -107,6 +111,7 @@ static SapphireSettings *sharedInstance = nil;
 		[NSNumber numberWithBool:NO], HIDE_SPOILERS_KEY,
 		[NSNumber numberWithBool:YES], HIDE_UI_QUIT_KEY,
 		[NSNumber numberWithBool:YES], ENABLE_FAST_SWITCHING_KEY,
+		[NSNumber numberWithBool:NO], USE_AC3_PASSTHROUGH,
 		[NSNumber numberWithBool:NO], DISABLE_ANON_KEY,
 		nil];
 	if(options == nil)
@@ -214,6 +219,16 @@ static SapphireSettings *sharedInstance = nil;
 - (BOOL)disableAnonymousReporting;
 {
 	return [self boolForKey:DISABLE_ANON_KEY];
+}
+
+/*!
+ * @brief Returns whether to use AC3 passthrough
+ *
+ * @return YES if set, NO otherwise
+ */
+- (BOOL)useAC3Passthrough
+{
+	return [self boolForKey:USE_AC3_PASSTHROUGH];
 }
 
 /*!

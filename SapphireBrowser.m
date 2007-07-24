@@ -16,6 +16,10 @@
 #import "SapphireTheme.h"
 #import "SapphireSettings.h"
 #import "NSString-Extensions.h"
+#import <AudioUnit/AudioUnit.h>
+
+#define PASSTHROUGH_KEY		(CFStringRef)@"attemptPassthrough"
+#define A52_DOMIAN			(CFStringRef)@"com.cod3r.a52codec"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -360,6 +364,9 @@
 	else
 		/*Resume importing now that we are up again*/
 		[metaData resumeDelayedImport];
+	//Turn off the AC3 Passthrough hack
+	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
+	CFPreferencesAppSynchronize(A52_DOMIAN);
 }
 
 - (long) itemCount
@@ -521,15 +528,13 @@
 	else if(row < dirCount + fileCount)
 	{
 		/*Play the video*/
-		BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
-		
 		currentPlayFile = [[metaData metaDataForFile:name] retain];
-		[controller setAllowsResume:YES];
 		
 		NSString *path = [dir stringByAppendingPathComponent:name];
 		
 		/*Anonymous reporting*/
-		if(![[SapphireSettings sharedSettings] disableAnonymousReporting])
+		SapphireSettings *settings = [SapphireSettings sharedSettings];
+		if(![settings disableAnonymousReporting])
 		{
 			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
 			int ep = [currentPlayFile episodeNumber];
@@ -569,6 +574,86 @@
 			[download autorelease];
 		}
 		
+		/*AC3 passthrough*/
+		BOOL useAC3Passthrough = NO;
+		if([settings useAC3Passthrough])
+		{
+			Float64 sampleRate = [currentPlayFile sampleRate];
+			UInt32 type = [currentPlayFile audioFormatID];
+			BOOL correctType = NO;
+			
+			if(type == 'ac-3' || type == 0x6D732000)
+				correctType = YES;
+			
+			BOOL correctRate = NO;
+			
+			/*Get the output component*/
+			ComponentDescription compDesc;
+			Component comp;
+			
+			compDesc.componentType = kAudioUnitType_Output;
+			compDesc.componentSubType = kAudioUnitSubType_DefaultOutput;
+			compDesc.componentManufacturer = kAudioUnitManufacturer_Apple;
+			compDesc.componentFlags = 0;
+			compDesc.componentFlagsMask = 0;
+			
+			comp = FindNextComponent(NULL, &compDesc);
+			ComponentInstance compInstance;
+			if (comp != NULL)
+			{
+				OSErr err = OpenAComponent(comp, &compInstance);
+				UInt32 numRates = 0;
+				if(err == noErr)
+				{
+					err = AudioUnitGetPropertyInfo(compInstance, kAudioDevicePropertyAvailableNominalSampleRates, 0, 0, &numRates, NULL);
+					numRates /= sizeof(AudioValueRange);
+				}
+				AudioValueRange *ranges = NULL;
+				if(err == noErr)
+				{
+					UInt32 dataSize = sizeof(AudioValueRange) * numRates;
+					ranges = malloc(dataSize);
+					err = AudioUnitGetProperty(compInstance, kAudioDevicePropertyAvailableNominalSampleRates, 0, 0, ranges, &dataSize);
+					numRates = dataSize / sizeof(AudioValueRange);
+				}
+				if(err == noErr)
+				{
+					int power = 0;
+					for(power = 0; power < 3; power++)
+					{
+						int i;
+						for(i=0; i<numRates; i++)
+						{
+							if(sampleRate <= ranges[i].mMaximum && sampleRate >= ranges[i].mMinimum)
+							{
+								correctRate = YES;
+								break;
+							}
+						}
+						if(correctRate)
+							break;
+						else
+							sampleRate *= 2;
+					}
+				}
+				if(ranges != NULL)
+					free(ranges);
+			}
+			if(correctRate)
+			{
+				UInt32 size = sizeof(Float64);
+				AudioUnitSetProperty(compInstance, kAudioDevicePropertyNominalSampleRate, 0, 0, &sampleRate, size);
+				if(correctType)
+					useAC3Passthrough = YES;
+			}
+		}
+		
+		if(useAC3Passthrough)
+			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:1], A52_DOMIAN);			
+		else
+			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
+		CFPreferencesAppSynchronize(A52_DOMIAN);
+		
 		/*Set the asset resume time*/
 		NSURL *url = [NSURL fileURLWithPath:path];
 		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
@@ -581,6 +666,8 @@
 		[player setMedia:asset error:&error];
 		
 		/*and go*/
+		BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
+		[controller setAllowsResume:YES];
 		[controller setVideoPlayer:player];
 		[[self stack] pushController:controller];
 

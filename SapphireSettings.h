@@ -31,6 +31,7 @@
 - (BOOL)displaySpoilers;
 - (BOOL)disableUIQuit;
 - (BOOL)disableAnonymousReporting;
+- (BOOL)useAC3Passthrough;
 - (BOOL)fastSwitching ;
 
 - (void) willBePushed;
