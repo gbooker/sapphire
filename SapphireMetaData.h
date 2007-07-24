@@ -149,7 +149,7 @@ typedef enum {
 
 - (long long)size;
 - (float)duration;
-- (int)sampleRate;
+- (Float64)sampleRate;
 - (UInt32)audioFormatID;
 - (int)episodeNumber;
 - (int)seasonNumber;

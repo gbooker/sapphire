@@ -1115,7 +1115,6 @@ static NSArray *displayedMetaDataOrder = nil;
 			/*Get the audio track*/
 			QTTrack *track = [audioTracks objectAtIndex:0];
 			QTMedia *media = [track media];
-			audioSampleRate = [media attributeForKey:QTMediaTimeScaleAttribute];
 			if(media != nil)
 			{
 				/*Get the audio format*/
@@ -1128,9 +1127,10 @@ static NSArray *displayedMetaDataOrder = nil;
 				
 				if(propSize != 0)
 				{
-					/*Set the format*/
+					/*Set the format and sample rate*/
 					NSNumber *format = [NSNumber numberWithUnsignedInt:asbd.mFormatID];
 					[fileMeta setObject:format forKey:AUDIO_FORMAT_KEY];
+					audioSampleRate = [NSNumber numberWithDouble:asbd.mSampleRate];
 				}
 				
 				CFStringRef userText = nil;
@@ -1316,7 +1316,7 @@ static NSArray *displayedMetaDataOrder = nil;
  *
  * @return The sample rate of the file
  */
-- (int)sampleRate
+- (Float64)sampleRate
 {
 	return [[metaData objectForKey:SAMPLE_RATE_KEY] intValue];
 }
