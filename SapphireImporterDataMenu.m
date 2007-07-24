@@ -34,14 +34,10 @@
 	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
 	/*Set the size*/
 	NSRect frame = [[self masterLayer] frame];
-	frame.origin.y = frame.size.height * 0.80f;
+	frame.origin.y += frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
 	[title setFrame: frame];
 	
-	/*Setup the Header Control with default contents*/
-	frame.origin.y = frame.size.height * 0.80f;
-	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
-
 	/*Setup the button control*/
 	frame = [[self masterLayer] frame];
 	button = [[BRButtonControl alloc] initWithScene: scene masterLayerSize: frame.size];
@@ -55,7 +51,7 @@
 	/*Setup the progress bar*/
 	bar = [[BRProgressBarWidget alloc] initWithScene: scene];
 	frame = [[self masterLayer] frame];
-	frame.origin.y = frame.size.height * 5.0f / 16.0f;
+	frame.origin.y += frame.size.height * 5.0f / 16.0f;
 	frame.origin.x = frame.size.width / 6.0f;
 	frame.size.height = frame.size.height / 16.0f;
 	frame.size.width = frame.size.width * 2.0f / 3.0f;
@@ -91,7 +87,7 @@
 	
 	NSRect frame;
 	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
-	frame.origin.y = (master.size.height * 0.4f - txtSize.height) + master.size.height * 0.3f/0.8f;
+	frame.origin.y = (master.size.height * 0.4f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
 	frame.size = txtSize;
 	[text setFrame:frame];
 }
@@ -112,7 +108,7 @@
 	
 	NSRect frame;
 	frame.origin.x =  (master.size.width) * 0.1f;
-	frame.origin.y = (master.size.height * 0.12f) ;
+	frame.origin.y = (master.size.height * 0.12f) + master.origin.y;
 	frame.size = progressSize;
 	[fileProgress setFrame:frame];
 }
@@ -133,7 +129,7 @@
 	
 	NSRect frame;
 	frame.origin.x =  (master.size.width) * 0.1f;
-	frame.origin.y = (master.size.height * 0.09f) ;
+	frame.origin.y = (master.size.height * 0.09f) + master.origin.y;
 	frame.size = currentFileSize;
 	[currentFile setFrame:frame];
 }
