@@ -578,6 +578,8 @@
 		BOOL useAC3Passthrough = NO;
 		if([settings useAC3Passthrough])
 		{
+			if([currentPlayFile updateMetaData])
+				[currentPlayFile writeMetaData];
 			Float64 sampleRate = [currentPlayFile sampleRate];
 			UInt32 type = [currentPlayFile audioFormatID];
 			BOOL correctType = NO;
@@ -598,7 +600,7 @@
 			compDesc.componentFlagsMask = 0;
 			
 			comp = FindNextComponent(NULL, &compDesc);
-			ComponentInstance compInstance;
+			ComponentInstance compInstance = NULL;
 			if (comp != NULL)
 			{
 				OSErr err = OpenAComponent(comp, &compInstance);
@@ -638,6 +640,8 @@
 				}
 				if(ranges != NULL)
 					free(ranges);
+				if(compInstance)
+					CloseComponent(compInstance);
 			}
 			if(correctRate)
 			{
