@@ -6,6 +6,20 @@
 	objectVersion = 42;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		FE7810640C56F08A0037779D /* Make SVN Rev */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = FE7810670C56F0B30037779D /* Build configuration list for PBXAggregateTarget "Make SVN Rev" */;
+			buildPhases = (
+				FE7810630C56F08A0037779D /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Make SVN Rev";
+			productName = "Make SVN Rev";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		38FAF9B40C0129D500853CFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
 		38FAF9B60C0129E400853CFE /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
@@ -39,6 +53,16 @@
 		FE88FD100C2F564700C55E3F /* SapphirePopulateDataMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FD0F0C2F564700C55E3F /* SapphirePopulateDataMenu.m */; };
 		FE8D57D40C2DE4AF00BC1768 /* SapphireSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FE7810650C56F0950037779D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE7810640C56F08A0037779D /* Make SVN Rev */;
+			remoteInfo = "Make SVN Rev";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -265,6 +289,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				FE7810660C56F0950037779D /* PBXTargetDependency */,
 			);
 			name = Sapphire;
 			productInstallPath = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
@@ -283,6 +308,7 @@
 			projectDirPath = "";
 			targets = (
 				8D5B49AC048680CD000E48DA /* Sapphire */,
+				FE7810640C56F08A0037779D /* Make SVN Rev */,
 			);
 		};
 /* End PBXProject section */
@@ -306,6 +332,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		FE7810630C56F08A0037779D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.svn/dir-wcprops",
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/include/SVNRevision.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "source scripts/getSVNRevision";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D5B49B1048680CD000E48DA /* Sources */ = {
@@ -333,6 +377,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FE7810660C56F0950037779D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE7810640C56F08A0037779D /* Make SVN Rev */;
+			targetProxy = FE7810650C56F0950037779D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
@@ -363,6 +415,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/SVNRevision.h";
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -388,6 +443,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/SVNRevision.h";
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -418,6 +476,28 @@
 			};
 			name = Release;
 		};
+		FE7810680C56F0B30037779D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make SVN Rev";
+			};
+			name = Debug;
+		};
+		FE7810690C56F0B30037779D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Make SVN Rev";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -435,6 +515,15 @@
 			buildConfigurations = (
 				1DEB913F08733D840010E9CD /* Debug */,
 				1DEB914008733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE7810670C56F0B30037779D /* Build configuration list for PBXAggregateTarget "Make SVN Rev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE7810680C56F0B30037779D /* Debug */,
+				FE7810690C56F0B30037779D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
