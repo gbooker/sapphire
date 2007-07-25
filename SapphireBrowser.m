@@ -540,6 +540,7 @@
 			int ep = [currentPlayFile episodeNumber];
 			int season = [currentPlayFile seasonNumber];
 			NSString *showID = [currentPlayFile showID];
+			NSString *showName= [currentPlayFile showName];
 			NSMutableString *reqData = [NSMutableString string];
 			
 			NSMutableArray *reqComp = [NSMutableArray array];
@@ -548,8 +549,10 @@
 				[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
 			if(ep != 0)
 				[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
+			if(showName != 0)
+				[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
 			if(showID != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"show=%@", showID]];
+				[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
 			if(path != 0)
 				[reqComp addObject:[NSString stringWithFormat:@"path=%@", path]];
 			
