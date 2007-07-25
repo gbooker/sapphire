@@ -554,7 +554,7 @@
 /*See super documentation*/
 - (void)setCompletionText
 {
-	[self setText:BRLocalizedString(@"All availble TV Show data has been imported", @"The TV Show import complete")];
+	[self setText:BRLocalizedString(@"All availble TV Show & Movie data has been imported", @"The TV Show import complete")];
 }
 
 /*See super documentation*/
@@ -570,9 +570,9 @@
 - (void)resetUIElements
 {
 	[super resetUIElements];
-	[title setTitle: BRLocalizedString(@"Populate TV Show Data", @"Title")];
-	[self setText:BRLocalizedString(@"This will attempt to fetch information about TV shows automatically.  This procedure may take quite some time and could ask you questions", @"Description of the tv show import")];
-	[button setTitle: BRLocalizedString(@"Import TV Show Data", @"Button")];
+	[title setTitle: BRLocalizedString(@"Fetch Internet Data", @"Title")];
+	[self setText:BRLocalizedString(@"This tool will attempt to fetch information about your TV Show & Movie files from the Internet (TVRage, IMDB, IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the tv show import")];
+	[button setTitle: BRLocalizedString(@"Start Fetching Data", @"Button")];
 }
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller

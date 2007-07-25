@@ -68,8 +68,8 @@ static SapphireSettings *sharedInstance = nil;
 	
 	/*Setup display*/
 	metaData = [meta retain];
-	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate Show Data", @"Populate File Data menu item"),
-												BRLocalizedString(@"   Fetch TV Data", @"Populate TV Data menu item"),
+	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
+												BRLocalizedString(@"   Fetch Internet Data", @"Populate Internet Data menu item"),
 												BRLocalizedString(@"   Hide \"Favorite Shows\"", @"Hide Favorite shows menu item"),
 /*												BRLocalizedString(@"   Hide \"Top Shows\"", @"Hide Top shows menu item"),*/
 												BRLocalizedString(@"   Hide \"Unwatched Shows\"", @"Hide Unwatched shows menu item"), 

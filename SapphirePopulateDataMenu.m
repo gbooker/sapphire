@@ -229,8 +229,8 @@ static NSDictionary *xmlMultiAttributes = nil;
 - (void)resetUIElements
 {
 	[super resetUIElements];
-	[title setTitle: BRLocalizedString(@"Import File Data", @"Title")];
-	[self setText:BRLocalizedString(@"This will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time", @"Description of the import processes")];
-	[button setTitle: BRLocalizedString(@"Import File Data", @"Button")];
+	[title setTitle: BRLocalizedString(@"Populate File Data", @"Title")];
+	[self setText:BRLocalizedString(@"This tool will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time.", @"Description of the import processes")];
+	[button setTitle: BRLocalizedString(@"Start Populating Data", @"Button")];
 }
 @end
