@@ -37,6 +37,7 @@ static NSSet *coverArtExtentions = nil;
 	/*Initialize the set of cover art extensions*/
 	coverArtExtentions = [[NSSet alloc] initWithObjects:
 		@"jpg",
+		@"jpeg",
 		@"tif",
 		@"tiff",
 		@"png",
