@@ -111,25 +111,52 @@
 	return ret;
 }
 
+- (double)getPreviousChapterMark
+{
+	/*Compute our previous chapter*/
+	double current = [self elapsedPlaybackTime];
+	double ret = current - revTime;
+	
+	/*Make sure we don't go past the beginning of the file*/
+	if(ret < 0.0f)
+		ret = 0.0f;
+	
+	return ret;
+}
+
 - (double)_previousChapterMark
 {
 	/*Get the location of the previous chapter mark*/
 	if(!enabled)
 		return [super _previousChapterMark];
+	
 	/*Compute our's*/
-	double current = [self elapsedPlaybackTime];
-	double ret = current - revTime;
+	double ret = [self getPreviousChapterMark];
+	
 	/*Double the rev time and reset the ff time*/
 	revTime *= 2.0f;
 	ffTime = 5.0f;
 	
-	/*Make sure we don't go past the beginning of the file*/
-	if(ret < 0.0f)
-		ret = 0.0f;
 	/*Start the reset timer*/
 	[self setNewTimer];
 
 	return ret;
+}
+
+- (double)_virtualChapterMark
+{
+	if(!enabled)
+		return [super _virtualChapterMark];
+	/*If we are enabled, disable the virtual chapter marks*/
+	return 0.0f;
+}
+
+- (double)_currentChapterMark
+{
+	if(!enabled)
+		return [super _currentChapterMark];
+	
+	return [self getPreviousChapterMark];
 }
 
 @end
