@@ -71,6 +71,8 @@
 
 @end
 
+static BOOL is10Version = NO;
+
 @implementation SapphireBrowser
 
 /*!
@@ -125,6 +127,7 @@
 		[self replaceControlText:[[modeControl gimmieDate] gimmieShow] withString:name2];
 		[self replaceControlText:[[modeControl gimmieShow] gimmieDate] withString:name1];
 		[self replaceControlText:[[modeControl gimmieShow] gimmieShow] withString:name2];
+		is10Version = YES;
 	}
 }
 
@@ -184,10 +187,6 @@
  */
 - (void)reloadDirectoryContents
 {
-	/*Remove the dividers*/
-	BRListControl *list = [self list];
-	[list removeDividerAtIndex:dirCount];
-	[list removeDividerAtIndex:[_names count] - 1];
 	/*Tell the metadata to get new data*/
 	[metaData reloadDirectoryContents];
 	/*Flush our cache*/
@@ -224,13 +223,22 @@
 		[items addObject:[NSNull null]];
 	}
 
+	/*Remove the dividers*/
+	BRListControl *list = [self list];
+	[list setDividerIndex:0];
+	[list removeDividerAtIndex:0];
 	/*Do a reload*/
 	[list reload];
 	/*Add dividers*/
-	if(dirCount && dirCount != [_names count])
+	int indexOffset = 0;
+	if(dirCount && fileCount)
+	{
 		[list addDividerAtIndex:dirCount];
+		if(!is10Version)
+			indexOffset++;
+	}
 	if(predicate != NULL && [[SapphireSettings sharedSettings] fastSwitching])
-		[list addDividerAtIndex:[_names count] -1];
+		[list addDividerAtIndex:dirCount + fileCount + indexOffset];
 	/*Draw*/
 	[[self scene] renderScene];
 }
