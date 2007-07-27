@@ -155,7 +155,7 @@ typedef enum {
 - (int)seasonNumber;
 - (NSString *)episodeTitle;
 - (NSString *)showID;
-
+- (NSString *)showName;
 - (NSString *)sizeString;
 
 @end
