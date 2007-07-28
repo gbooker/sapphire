@@ -272,20 +272,15 @@
 			else if(summary == nil && [nodeName isEqualToString:@"font"])
 			{
 				/*Get the summary*/
-				NSArray *summarys = [epInfo objectsForXQuery:@".//text()" error:&error];
+				NSArray *summarys = [epInfo objectsForXQuery:@"replace(string(), '\n\n', '\n')" error:&error];
 				summary = [NSMutableString string];
 				NSEnumerator *sumEnum = [summarys objectEnumerator];
 				NSXMLNode *sum = nil;
-				NSXMLNode *lastSum = nil;
 				while((sum = [sumEnum nextObject]) != nil)
-				{
-					if([sum parent] == epInfo && [lastSum parent] == epInfo)
-						[summary appendFormat:@"\n%@", [sum stringValue]];
-					else
-						[summary appendFormat:@"%@", [sum stringValue]];
-					lastSum = sum;
-				}
-				if(![summary length])
+					[summary appendFormat:@"\n%@", sum];
+				if([summary length])
+					[summary deleteCharactersInRange:NSMakeRange(0,1)];
+				else
 					summary = nil;
 			}
 		}
