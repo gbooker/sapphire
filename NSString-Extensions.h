@@ -9,3 +9,11 @@
 @interface NSString (PostStrings)
 - (NSString *)URLEncode;
 @end
+
+@interface NSString (Replacements)
+- (NSString *)stringByReplacingAllOccurancesOf:(NSString *)search withString:(NSString *)replacement;
+@end
+
+@interface NSMutableString (Replacements)
+- (void)replaceAllOccurancesOf:(NSString *)search withString:(NSString *)replacement;
+@end

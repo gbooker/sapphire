@@ -22,3 +22,19 @@
 	return [result autorelease];
 }
 @end
+
+@implementation NSString (Replacements)
+- (NSString *)stringByReplacingAllOccurancesOf:(NSString *)search withString:(NSString *)replacement
+{
+	NSMutableString *mut = [[self mutableCopy] autorelease];
+	[mut replaceAllOccurancesOf:search withString:replacement];
+	return [NSString stringWithString:mut];
+}
+@end
+
+@implementation NSMutableString (Replacements)
+- (void)replaceAllOccurancesOf:(NSString *)search withString:(NSString *)replacement
+{
+	[self replaceOccurrencesOfString:search withString:replacement options:0 range:NSMakeRange(0, [self length])];
+}
+@end
