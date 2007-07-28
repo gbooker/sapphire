@@ -1512,6 +1512,24 @@ static NSArray *displayedMetaDataOrder = nil;
 /*Custom TV Episode handler*/
 - (NSComparisonResult) episodeCompare:(SapphireFileMetaData *)other
 {
+	/*Sort by show first*/
+	/*Put items with no show at the bottom*/
+	NSString *myShow = [self showName];
+	NSString *theirShow = [other showName];
+	if(myShow == nil)
+	{
+		if(theirShow != nil)
+			return NSOrderedDescending;
+	}
+	if(theirShow == nil)
+		return NSOrderedAscending;
+	else
+	{
+		/*Both have a show*/
+		NSComparisonResult result = [myShow compare:theirShow options:NSCaseInsensitiveSearch];
+		if(result != NSOrderedSame)
+			return result;
+	}
 	/*Sort by season first*/
 	/*Put shows with no season at the bottom*/
 	int myNum = [self seasonNumber];
