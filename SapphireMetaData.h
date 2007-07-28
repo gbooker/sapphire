@@ -63,6 +63,8 @@ typedef enum {
 	id <SapphireMetaDataDelegate>	delegate;
 }
 
++ (NSSet *)videoExtensions;
++ (NSSet *)audioExtensions;
 - (NSString *)path;
 
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
@@ -151,6 +153,7 @@ typedef enum {
 - (float)duration;
 - (Float64)sampleRate;
 - (UInt32)audioFormatID;
+- (BOOL)hasVideo;
 - (int)episodeNumber;
 - (int)seasonNumber;
 - (NSString *)episodeTitle;

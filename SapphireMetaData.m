@@ -51,11 +51,13 @@
 @implementation SapphireMetaData
 
 // Static set of file extensions to filter
-static NSSet *extensions = nil;
+static NSSet *videoExtensions = nil;
+static NSSet *audioExtensions = nil;
+static NSSet *allExtensions = nil;
 
 +(void)load
 {
-	extensions = [[NSSet alloc] initWithObjects:
+	videoExtensions = [[NSSet alloc] initWithObjects:
 		@"avi", @"divx", @"xvid",
 		@"mov",
 		@"mpg", @"mpeg", @"m2v", @"ts",
@@ -69,7 +71,8 @@ static NSSet *extensions = nil;
 		@"ogm",
 		@"dv",
 		@"fli",
-		/*Audio*/
+		nil];
+	audioExtensions = [[NSSet alloc] initWithObjects:
 		@"m4b", @"m4a",
 		@"mp3", @"mp2",
 		@"wma",
@@ -79,6 +82,30 @@ static NSSet *extensions = nil;
 		@"alac",
 		@"m3u",
 		nil];
+	NSMutableSet *mutSet = [videoExtensions mutableCopy];
+	[mutSet unionSet:audioExtensions];
+	allExtensions = [[NSSet alloc] initWithSet:mutSet];
+	[mutSet release];
+}
+
+/*!
+ * @brief Returns a set of all the video extensions
+ *
+ * @return The set of all video extensions
+ */
++ (NSSet *)videoExtensions
+{
+	return videoExtensions;
+}
+
+/*!
+ * @brief Returns a set of all the audio extensions
+ *
+ * @return The set of all audio extensions
+ */
++ (NSSet *)audioExtensions
+{
+	return audioExtensions;
 }
 
 /*!
@@ -390,7 +417,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		NSString *extension = [name pathExtension];
 		if([self isDirectory:[path stringByAppendingPathComponent:name]])
 			[directories addObject:name];
-		else if([extensions containsObject:extension])
+		else if([allExtensions containsObject:extension])
 			[fileMetas addObject:[self metaDataForFile:name]];
 	}
 	/*Sort them*/
@@ -1329,6 +1356,16 @@ static NSArray *displayedMetaDataOrder = nil;
 - (UInt32)audioFormatID
 {
 	return [[metaData objectForKey:AUDIO_FORMAT_KEY] unsignedIntValue];
+}
+
+/*!
+ * @brief Returns whether the file has video
+ *
+ * @return YES if the file has video, NO otherwise
+ */
+- (BOOL)hasVideo
+{
+	return [metaData objectForKey:VIDEO_DESC_KEY] != nil;
 }
 
 /*Combine the meta data from multiple sources*/

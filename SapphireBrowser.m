@@ -16,7 +16,11 @@
 #import "SapphireTheme.h"
 #import "SapphireSettings.h"
 #import "NSString-Extensions.h"
+#import "SapphireAudioPlayer.h"
+#import "SapphireAudioMedia.h"
+
 #import <AudioUnit/AudioUnit.h>
+#import <objc/objc-class.h>
 
 #define PASSTHROUGH_KEY		(CFStringRef)@"attemptPassthrough"
 #define A52_DOMIAN			(CFStringRef)@"com.cod3r.a52codec"
@@ -37,6 +41,11 @@
 @interface BRTVShowsSortSelectorStateLayer (bypassAccess)
 - (BRTextLayer *)gimmieDate;
 - (BRTextLayer *)gimmieShow;
+@end
+
+@interface BRMusicNowPlayingController (bypassAccess)
+- (void)setPlayer:(BRMusicPlayer *)player;
+- (BRMusicPlayer *)player;
 @end
 
 /*Private variables access, but only on BR 1.0; not used otherwise*/
@@ -67,6 +76,26 @@
 - (BRTextLayer *)gimmieShow
 {
 	return _showLayer;
+}
+
+@end
+
+@implementation BRMusicNowPlayingController (bypassAccess)
+- (void)setPlayer:(BRMusicPlayer *)player
+{
+	Class myClass = [self class];
+	Ivar ret = class_getInstanceVariable(myClass, "_player");
+	BRMusicPlayer * *thePlayer = (BRMusicPlayer * *)(((char *)self)+ret->ivar_offset);	
+	
+	[*thePlayer release];
+	*thePlayer = [player retain];
+}
+
+- (BRMusicPlayer *)player
+{
+	Class myClass = [self class];
+	Ivar ret = class_getInstanceVariable(myClass, "_player");
+	return *(BRMusicPlayer * *)(((char *)self)+ret->ivar_offset);	
 }
 
 @end
@@ -334,23 +363,33 @@ static BOOL is10Version = NO;
     
 	/*Check to see if the user stopped playing something*/
 	id controller = [[self stack] peekController];
+	float elapsed = 0.0;
+	float duration = 0.0000001; //prevent a div by 0
 	if([controller isKindOfClass:[BRVideoPlayerController class]])
 	{
 		/*Check for 90% completion*/
 		BRVideoPlayer *player = [(BRVideoPlayerController *)controller player];
-		float elapsed = [player elapsedPlaybackTime];
-		float duration = [player trackDuration];
-		if(elapsed / duration > 0.9f)
-			/*Mark as watched and reload info*/
-			[currentPlayFile setWatched:YES];
-
-		/*Get the resume time to save*/
-		if(elapsed < duration - 2)
-			[currentPlayFile setResumeTime:[player elapsedPlaybackTime]];
-		else
-			[currentPlayFile setResumeTime:0];
-		[currentPlayFile writeMetaData];
+		elapsed = [player elapsedPlaybackTime];
+		duration = [player trackDuration];
 	}
+	else if([controller isKindOfClass:[BRMusicNowPlayingController class]])
+	{
+		BRMusicPlayer *player = [(BRMusicNowPlayingController *)controller player];
+		elapsed = [player elapsedPlaybackTime];
+		duration = [player trackDuration];
+		[player stop];
+	}
+	if(elapsed / duration > 0.9f)
+		/*Mark as watched and reload info*/
+		[currentPlayFile setWatched:YES];
+	
+	/*Get the resume time to save*/
+	if(elapsed < duration - 2)
+		[currentPlayFile setResumeTime:elapsed];
+	else
+		[currentPlayFile setResumeTime:0];
+	[currentPlayFile writeMetaData];
+
 	/*cleanup*/
 	[currentPlayFile release];
 	currentPlayFile = nil;
@@ -535,7 +574,7 @@ static BOOL is10Version = NO;
 	}
 	else if(row < dirCount + fileCount)
 	{
-		/*Play the video*/
+		/*Play the file*/
 		currentPlayFile = [[metaData metaDataForFile:name] retain];
 		
 		NSString *path = [dir stringByAppendingPathComponent:name];
@@ -587,10 +626,10 @@ static BOOL is10Version = NO;
 		
 		/*AC3 passthrough*/
 		BOOL useAC3Passthrough = NO;
+		if([currentPlayFile updateMetaData])
+			[currentPlayFile writeMetaData];
 		if([settings useAC3Passthrough])
 		{
-			if([currentPlayFile updateMetaData])
-				[currentPlayFile writeMetaData];
 			Float64 sampleRate = [currentPlayFile sampleRate];
 			UInt32 type = [currentPlayFile audioFormatID];
 			BOOL correctType = NO;
@@ -669,25 +708,52 @@ static BOOL is10Version = NO;
 			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
 		CFPreferencesAppSynchronize(A52_DOMIAN);
 		
-		/*Set the asset resume time*/
-		NSURL *url = [NSURL fileURLWithPath:path];
-		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
-		[asset setResumeTime:[currentPlayFile resumeTime]];
+		if([[SapphireMetaData videoExtensions] containsObject:[path pathExtension]] && [currentPlayFile hasVideo])
+		{
+			/*Video*/
+			/*Set the asset resume time*/
+			NSURL *url = [NSURL fileURLWithPath:path];
+			SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
+			[asset setResumeTime:[currentPlayFile resumeTime]];
+			
+			/*Get the player*/
+			SapphireVideoPlayer *player = [[SapphireVideoPlayer alloc] init];
+			NSError *error = nil;
+			[player setMedia:asset error:&error];
+			
+			/*and go*/
+			BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
+			[controller setAllowsResume:YES];
+			[controller setVideoPlayer:player];
+			[[self stack] pushController:controller];
 
-		/*Get the player*/
-		SapphireVideoPlayer *player = [[SapphireVideoPlayer alloc] init];
-		NSError *error = nil;
-		[player setMedia:asset error:&error];
-		
-		/*and go*/
-		BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
-		[controller setAllowsResume:YES];
-		[controller setVideoPlayer:player];
-		[[self stack] pushController:controller];
-
-		[asset release];
-		[player release];
-		[controller release];
+			[asset release];
+			[player release];
+			[controller release];
+		}
+		else
+		{
+			/*Audio*/
+			/*Set the asset*/
+			NSURL *url = [NSURL fileURLWithPath:path];
+			SapphireAudioMedia *asset  =[[SapphireAudioMedia alloc] initWithMediaURL:url];
+			[asset setResumeTime:[currentPlayFile resumeTime]];
+			
+			SapphireAudioPlayer *player = [[SapphireAudioPlayer alloc] init];
+			NSError *error = nil;
+			[player setMedia:asset inTracklist:[NSArray arrayWithObject:asset] error:&error];
+			
+			/*and go*/
+			BRMusicNowPlayingController *controller = [[BRMusicNowPlayingController alloc] initWithScene:[self scene]];
+			[controller setPlayer:player];
+			[player setElapsedPlaybackTime:[currentPlayFile resumeTime]];
+			[player play];
+			[[self stack] pushController:controller];
+			
+			[asset release];
+			[player release];
+			[controller release];
+		}
 	}
 	else
 	{
