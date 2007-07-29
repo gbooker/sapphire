@@ -185,6 +185,7 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				F575839F0C5D215E0079617A /* Players */,
 				F56B6D8F0C34713400E934AA /* Browser */,
 				F56B6D900C34713A00E934AA /* MetaData */,
 				F56B6D920C34717200E934AA /* Settings */,
@@ -217,16 +218,8 @@
 			children = (
 				38FAFC2E0C012A7800853CFE /* SapphireBrowser.h */,
 				38FAFC310C012A7800853CFE /* SapphireBrowser.m */,
-				F5EA91330C3063F500B1EC7D /* SapphireMedia.h */,
-				F5EA91340C3063F500B1EC7D /* SapphireMedia.m */,
-				F51DCDB70C30AE010046F25E /* SapphireVideoPlayer.h */,
-				F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */,
 				F56A1B930C31B52B0022918E /* SapphireMediaPreview.h */,
 				F56A1B940C31B52B0022918E /* SapphireMediaPreview.m */,
-				F565A1FB0C5BE81F00AE7110 /* SapphireAudioPlayer.h */,
-				F565A1FC0C5BE81F00AE7110 /* SapphireAudioPlayer.m */,
-				F565A3480C5BF69D00AE7110 /* SapphireAudioMedia.h */,
-				F565A3490C5BF69D00AE7110 /* SapphireAudioMedia.m */,
 			);
 			name = Browser;
 			sourceTree = "<group>";
@@ -283,6 +276,21 @@
 				F56B74D50C3753E300E934AA /* NSString-Extensions.m */,
 			);
 			name = Extensions;
+			sourceTree = "<group>";
+		};
+		F575839F0C5D215E0079617A /* Players */ = {
+			isa = PBXGroup;
+			children = (
+				F565A3480C5BF69D00AE7110 /* SapphireAudioMedia.h */,
+				F565A3490C5BF69D00AE7110 /* SapphireAudioMedia.m */,
+				F565A1FB0C5BE81F00AE7110 /* SapphireAudioPlayer.h */,
+				F565A1FC0C5BE81F00AE7110 /* SapphireAudioPlayer.m */,
+				F5EA91330C3063F500B1EC7D /* SapphireMedia.h */,
+				F5EA91340C3063F500B1EC7D /* SapphireMedia.m */,
+				F51DCDB70C30AE010046F25E /* SapphireVideoPlayer.h */,
+				F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */,
+			);
+			name = Players;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
