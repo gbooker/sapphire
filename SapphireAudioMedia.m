@@ -14,13 +14,86 @@
 - (void) dealloc
 {
 	[movie release];
+	if(coverArt != NULL)
+		CGImageRelease(coverArt);
 	[super dealloc];
+}
+
+- (NSData *)dataForMetaDataKey:(OSType)key
+{
+	QTMetaDataItem item = kQTMetaDataItemUninitialized;
+	QTMetaDataRef metaData = NULL;
+	OSStatus err = QTCopyMovieMetaData([movie quickTimeMovie], &metaData);
+	if(err == noErr)
+		err = QTMetaDataGetNextItem(metaData, kQTMetaDataStorageFormatiTunes, item, kQTMetaDataKeyFormatCommon, (const UInt8 *)&key, sizeof(key), &item);
+	
+	QTPropertyValuePtr value = NULL;
+	ByteCount valueSize;
+	if(err == noErr && item != kQTMetaDataNoMoreItemsErr)
+	{
+		err = QTMetaDataGetItemValue(metaData, item, NULL, 0, &valueSize);
+		if(err == noErr)
+		{
+			value = malloc(valueSize);
+			err = QTMetaDataGetItemValue(metaData, item, value, valueSize, NULL);
+		}
+	}
+	if(metaData != NULL)
+		QTMetaDataRelease(metaData);
+
+	NSData *ret = nil;
+	if(value != NULL)
+	{
+		ret = [NSData dataWithBytes:value length:valueSize];
+		free(value);
+	}
+	
+	return ret;
+}
+
+- (NSString *)stringForKeyMetaData:(OSType)key
+{
+	NSData *stringData = [self dataForMetaDataKey:key];
+	if(stringData != NULL)
+		return [[[NSString alloc] initWithData:stringData encoding:NSUTF8StringEncoding] autorelease];
+	return nil;
 }
 
 - (void)setMovie:(QTMovie *)newMovie
 {
 	[movie release];
+	if(coverArt != NULL)
+		CGImageRelease(coverArt);
+	coverArt = NULL;
 	movie = [newMovie retain];
+	
+	NSData *data = [self dataForMetaDataKey:kQTMetaDataCommonKeyArtwork];
+	if(data != NULL)
+	{
+		CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)data, nil);
+		if(source != NULL)
+		{
+			coverArt = CGImageSourceCreateImageAtIndex(source, 1, nil);
+			CFRelease(source);
+		}
+	}
+	
+	if(coverArt == NULL)
+	{
+		NSString *path = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
+		NSURL *url = [NSURL fileURLWithPath:path];
+		coverArt = CreateImageForURL(url);		
+	}
+}
+
+- (NSString *)artist
+{
+	return [self stringForKeyMetaData:kQTMetaDataCommonKeyArtist];
+}
+
+- (NSString *)copyright
+{
+	return [self stringForKeyMetaData:kQTMetaDataCommonKeyCopyright];
 }
 
 - (NSString *)title
@@ -38,32 +111,7 @@
 
 - (CGImageRef)coverArt
 {
-	NSImage *retNSI = [movie posterImage];
-	if(retNSI != nil)
-	{
-		int bytesPerPixel = 4;
-		int bitsPerComponent = 8;
-		int bytesPerRow = [retNSI size].width * bytesPerPixel;
-		int imageSize = bytesPerRow * [retNSI size].height;
-		Ptr contextMemory = NewPtr( imageSize );
-		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-		
-		CGContextRef cgContext = CGBitmapContextCreate (contextMemory, [retNSI size].width, [retNSI size].height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast);
-		NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithGraphicsPort:cgContext flipped:NO];
-		
-		[NSGraphicsContext setCurrentContext:nsContext];
-		[NSGraphicsContext saveGraphicsState];
-		[retNSI drawAtPoint:NSMakePoint(0,0) fromRect:NSMakeRect(0,0,[retNSI size].width, [retNSI size].height) operation:NSCompositeSourceOver fraction:1.0];
-		[NSGraphicsContext restoreGraphicsState];
-		
-		CGImageRef cgImage = CGBitmapContextCreateImage(cgContext);
-		if(cgImage != NULL)
-			return cgImage;
-	}
-	
-	NSString *path = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
-	NSURL *url = [NSURL fileURLWithPath:path];
-	return CreateImageForURL(url);
+	return coverArt;
 }
 
 @end

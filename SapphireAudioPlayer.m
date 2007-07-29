@@ -10,6 +10,17 @@
 #import "SapphireAudioMedia.h"
 #import <QTKit/QTKit.h>
 
+#define SKIP_INTERVAL 0.5
+
+@interface SapphireAudioPlayer (private)
+- (void)setState:(int)newState;
+- (void)stopUITimer;
+- (void)setSkipTimer;
+- (void)doSkip:(NSTimer *)timer;
+- (void)stopSkip;
+- (void)updateUI:(NSTimer *)Timer;
+@end
+
 @implementation SapphireAudioPlayer
 
 - (id) init {
@@ -25,7 +36,8 @@
 - (void) dealloc
 {
 	[movie release];
-	[updateTimer invalidate];
+	[self stopUITimer];
+	[self stopSkip];
 	[super dealloc];
 }
 
@@ -79,42 +91,120 @@
 	return YES;
 }
 
+- (void)setState:(int)newState
+{
+	state = newState;
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPStateChanged" object:self];
+}
+
 - (void)play
 {
 	updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateUI:) userInfo:nil repeats:YES];
-	state = 3;
+	[self setState:3];
 	[movie play];
 }
 
 - (void)pause
 {
-	[updateTimer invalidate];
-	updateTimer = nil;
-	state = 1;
+	[self stopSkip];
+	[self stopUITimer];
+	[self setState:1];
 	[movie stop];
 }
 
 - (void)stop
 {
-	[updateTimer invalidate];
-	updateTimer = nil;
-	state = 0;
+	[self stopSkip];
+	[self stopUITimer];
+	[self setState:0];
 	[movie stop];
-	[movie gotoBeginning];
 }
 
-/*- (void)pressAndHoldLeftArrow;
-- (void)pressAndHoldRightArrow;*/
+- (void)stopUITimer
+{
+	[updateTimer invalidate];
+	updateTimer = nil;
+}
+
+- (void)pressAndHoldLeftArrow
+{
+	[self setSkipTimer];
+	skipSpeed = -1;
+}
+
+- (void)pressAndHoldRightArrow
+{
+	[self setSkipTimer];
+	skipSpeed = 1;
+}
+
+- (void)setSkipTimer
+{
+	[self stopSkip];
+	skipTimer = [NSTimer scheduledTimerWithTimeInterval:SKIP_INTERVAL target:self selector:@selector(doSkip:) userInfo:nil repeats:YES];
+	[self doSkip:nil];
+}
+
+- (void)doSkip:(NSTimer *)timer
+{
+	float time = [self elapsedPlaybackTime];
+	if(skipSpeed < 0)
+		time += skipSpeed * SKIP_INTERVAL * 3;
+	else
+		time += skipSpeed * SKIP_INTERVAL * 2;
+	double duration = [self trackDuration];
+	if(time < 0)
+	{
+		time = 0;
+		[self stopSkip];
+	}
+	else if(time > duration)
+	{
+		time = duration;
+		[self stop];
+	}
+	[self setElapsedPlaybackTime:time];
+	[self updateUI:timer];
+}
+
+- (void)stopSkip
+{
+	skipSpeed = 0;
+	[skipTimer invalidate];
+	skipTimer = nil;
+}
+
 - (void)resume
 {
 	[self play];
 }
 
-/*- (void)leftArrowClick;
-- (void)rightArrowClick;*/
+- (void)leftArrowClick
+{
+	if(skipSpeed > 0)
+		skipSpeed = MIN(skipSpeed / 2, 16);
+	else if(skipSpeed > 0)
+		skipSpeed = MAX(skipSpeed * 2, 1);
+	else
+		[movie gotoBeginning];
+	[self updateUI:nil];
+}
+
+- (void)rightArrowClick
+{
+	if(skipSpeed < 0)
+		skipSpeed = MIN(skipSpeed / 2, 16);
+	else if(skipSpeed > 0)
+		skipSpeed = MAX(skipSpeed * 2, 1);
+	else
+		[movie gotoEnd];
+	[self updateUI:nil];
+}
 
 - (void)updateUI:(NSTimer *)Timer
 {
+	if([self elapsedPlaybackTime] >= [self trackDuration])
+		[self stop];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPPlaybackProgressChanged" object:nil];
 }
 

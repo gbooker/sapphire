@@ -10,6 +10,7 @@
 
 @interface SapphireAudioMedia : SapphireMedia {
 	QTMovie		*movie;
+	CGImageRef	coverArt;
 }
 - (void)setMovie:(QTMovie *)newMovie;
 
