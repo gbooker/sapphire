@@ -11,6 +11,7 @@
 #import <QTKit/QTKit.h>
 
 #define SKIP_INTERVAL 0.5
+#define SKIP_ACCELL 0.5 * SKIP_INTERVAL
 
 @interface SapphireAudioPlayer (private)
 - (void)setState:(int)newState;
@@ -69,6 +70,7 @@
 {
 	QTTime newTime = QTMakeTimeWithTimeInterval((double)time);
 	[movie setCurrentTime:newTime];
+	[self updateUI:nil];
 }
 
 - (double)trackDuration
@@ -99,6 +101,7 @@
 
 - (void)play
 {
+	[self stopSkip];
 	updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateUI:) userInfo:nil repeats:YES];
 	[self setState:3];
 	[movie play];
@@ -149,9 +152,15 @@
 {
 	float time = [self elapsedPlaybackTime];
 	if(skipSpeed < 0)
+	{
 		time += skipSpeed * SKIP_INTERVAL * 3;
+		skipSpeed = MAX(skipSpeed - SKIP_ACCELL, -16);
+	}
 	else
+	{
 		time += skipSpeed * SKIP_INTERVAL * 2;
+		skipSpeed = MIN(skipSpeed + SKIP_ACCELL, 16);
+	}
 	double duration = [self trackDuration];
 	if(time < 0)
 	{
@@ -161,7 +170,6 @@
 	else if(time > duration)
 	{
 		time = duration;
-		[self stop];
 	}
 	[self setElapsedPlaybackTime:time];
 	[self updateUI:timer];
@@ -181,23 +189,13 @@
 
 - (void)leftArrowClick
 {
-	if(skipSpeed > 0)
-		skipSpeed = MIN(skipSpeed / 2, 16);
-	else if(skipSpeed > 0)
-		skipSpeed = MAX(skipSpeed * 2, 1);
-	else
-		[movie gotoBeginning];
+	[movie gotoBeginning];
 	[self updateUI:nil];
 }
 
 - (void)rightArrowClick
 {
-	if(skipSpeed < 0)
-		skipSpeed = MIN(skipSpeed / 2, 16);
-	else if(skipSpeed > 0)
-		skipSpeed = MAX(skipSpeed * 2, 1);
-	else
-		[movie gotoEnd];
+	[movie gotoEnd];
 	[self updateUI:nil];
 }
 

@@ -12,7 +12,7 @@
 	QTMovie		*movie;
 	int			state;
 	NSTimer		*updateTimer;
-	int			skipSpeed;
+	float		skipSpeed;
 	NSTimer		*skipTimer;
 }
 
