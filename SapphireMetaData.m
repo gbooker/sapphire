@@ -81,6 +81,7 @@ static NSSet *allExtensions = nil;
 		@"flac",
 		@"alac",
 		@"m3u",
+		@"ac3",
 		nil];
 	NSMutableSet *mutSet = [videoExtensions mutableCopy];
 	[mutSet unionSet:audioExtensions];
