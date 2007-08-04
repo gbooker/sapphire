@@ -529,6 +529,120 @@ static BOOL is10Version = NO;
     return ( result );
 }
 
+BOOL findCorrectDescriptionForStream(AudioStreamID streamID, int sampleRate)
+{
+	OSStatus err;
+	UInt32 propertySize = 0;
+	err = AudioStreamGetPropertyInfo(streamID, 0, kAudioStreamPropertyPhysicalFormats, &propertySize, NULL);
+	
+	if(err != noErr || propertySize == 0)
+		return NO;
+	
+	AudioStreamBasicDescription *descs = malloc(propertySize);
+	if(descs == NULL)
+		return NO;
+	
+	int formatCount = propertySize / sizeof(AudioStreamBasicDescription);
+	err = AudioStreamGetProperty(streamID, 0, kAudioStreamPropertyPhysicalFormats, &propertySize, descs);
+	
+	if(err != noErr)
+	{
+		free(descs);
+		return NO;
+	}
+	
+	int i;
+	BOOL ret = NO;
+	for(i=0; i<formatCount; i++)
+	{
+		if (descs[i].mBitsPerChannel == 16 && descs[i].mFormatID == kAudioFormatLinearPCM)
+		{
+			if(descs[i].mSampleRate == sampleRate)
+			{
+				err = AudioStreamSetProperty(streamID, NULL, 0, kAudioStreamPropertyPhysicalFormat, sizeof(AudioStreamBasicDescription), descs + i);
+				if(err != noErr)
+					continue;
+				ret = YES;
+				break;
+			}
+		}
+	}
+	free(descs);
+	return ret;
+}
+
+BOOL setupDevice(AudioDeviceID devID, int sampleRate)
+{
+	OSStatus err;
+	UInt32 propertySize = 0;
+	err = AudioDeviceGetPropertyInfo(devID, 0, FALSE, kAudioDevicePropertyStreams, &propertySize, NULL);
+	
+	if(err != noErr || propertySize == 0)
+		return NO;
+	
+	AudioStreamID *streams = malloc(propertySize);
+	if(streams == NULL)
+		return NO;
+	
+	int streamCount = propertySize / sizeof(AudioStreamID);
+	err = AudioDeviceGetProperty(devID, 0, FALSE, kAudioDevicePropertyStreams, &propertySize, streams);
+	if(err != noErr)
+	{
+		free(streams);
+		return NO;
+	}
+	
+	int i;
+	BOOL ret = NO;
+	for(i=0; i<streamCount; i++)
+	{
+		if(findCorrectDescriptionForStream(streams[i], sampleRate))
+		{
+			ret = YES;
+			break;
+		}
+	}
+	free(streams);
+	return ret;
+}
+
+BOOL setupAudioOutput(int sampleRate)
+{
+	OSErr err;
+	UInt32 propertySize = 0;
+	
+	err = AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &propertySize, NULL);
+	if(err != noErr || propertySize == 0)
+		return NO;
+	
+	AudioDeviceID *devs = malloc(propertySize);
+	if(devs == NULL)
+		return NO;
+	
+	err = AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &propertySize, devs);
+	if(err != noErr)
+	{
+		free(devs);
+		return NO;
+	}
+	
+	int i, devCount = propertySize/sizeof(AudioDeviceID);
+	BOOL ret = NO;
+	for(i=0; i<devCount; i++)
+	{
+		if(setupDevice(devs[i], sampleRate))
+		{
+			err = AudioHardwareSetProperty(kAudioHardwarePropertyDefaultOutputDevice, sizeof(AudioDeviceID), devs + i);
+			if(err != noErr)
+				continue;
+			ret = YES;
+			break;
+		}
+	}
+	free(devs);
+	return ret;
+}
+
 - (void) itemSelected: (long) row
 {
     // This is called when the user presses play/pause on a list item
@@ -632,74 +746,9 @@ static BOOL is10Version = NO;
 		{
 			Float64 sampleRate = [currentPlayFile sampleRate];
 			UInt32 type = [currentPlayFile audioFormatID];
-			BOOL correctType = NO;
 			
-			if(type == 'ac-3' || type == 0x6D732000)
-				correctType = YES;
-			
-			BOOL correctRate = NO;
-			
-			/*Get the output component*/
-			ComponentDescription compDesc;
-			Component comp;
-			
-			compDesc.componentType = kAudioUnitType_Output;
-			compDesc.componentSubType = kAudioUnitSubType_DefaultOutput;
-			compDesc.componentManufacturer = kAudioUnitManufacturer_Apple;
-			compDesc.componentFlags = 0;
-			compDesc.componentFlagsMask = 0;
-			
-			comp = FindNextComponent(NULL, &compDesc);
-			ComponentInstance compInstance = NULL;
-			if (comp != NULL)
-			{
-				OSErr err = OpenAComponent(comp, &compInstance);
-				UInt32 numRates = 0;
-				if(err == noErr)
-				{
-					err = AudioUnitGetPropertyInfo(compInstance, kAudioDevicePropertyAvailableNominalSampleRates, 0, 0, &numRates, NULL);
-					numRates /= sizeof(AudioValueRange);
-				}
-				AudioValueRange *ranges = NULL;
-				if(err == noErr)
-				{
-					UInt32 dataSize = sizeof(AudioValueRange) * numRates;
-					ranges = malloc(dataSize);
-					err = AudioUnitGetProperty(compInstance, kAudioDevicePropertyAvailableNominalSampleRates, 0, 0, ranges, &dataSize);
-					numRates = dataSize / sizeof(AudioValueRange);
-				}
-				if(err == noErr)
-				{
-					int power = 0;
-					for(power = 0; power < 3; power++)
-					{
-						int i;
-						for(i=0; i<numRates; i++)
-						{
-							if(sampleRate <= ranges[i].mMaximum && sampleRate >= ranges[i].mMinimum)
-							{
-								correctRate = YES;
-								break;
-							}
-						}
-						if(correctRate)
-							break;
-						else
-							sampleRate *= 2;
-					}
-				}
-				if(ranges != NULL)
-					free(ranges);
-				if(compInstance)
-					CloseComponent(compInstance);
-			}
-			if(correctRate)
-			{
-				UInt32 size = sizeof(Float64);
-				AudioUnitSetProperty(compInstance, kAudioDevicePropertyNominalSampleRate, 0, 0, &sampleRate, size);
-				if(correctType)
-					useAC3Passthrough = YES;
-			}
+			if((type == 'ac-3' || type == 0x6D732000) && setupAudioOutput((int)sampleRate))
+				useAC3Passthrough = YES;
 		}
 		
 		if(useAC3Passthrough)
