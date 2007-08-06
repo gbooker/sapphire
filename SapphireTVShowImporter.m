@@ -6,7 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import "SapphireTVShowDataMenu.h"
+#import "SapphireTVShowImporter.h"
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
 #import "SapphireShowChooser.h"
@@ -66,11 +66,11 @@
 }
 @end
  
-@interface SapphireTVShowDataMenu (private)
+@interface SapphireTVShowImporter (private)
 - (void)writeSettings;
 @end
 
-@implementation SapphireTVShowDataMenu
+@implementation SapphireTVShowImporter
 
 /*!
  * @brief Create a new TV Show data importer
@@ -80,9 +80,9 @@
  * @param path Location of the saved settings dictionary
  * @return The importer
  */
-- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData savedSetting:(NSString *)path
+- (id) initWithSavedSetting:(NSString *)path
 {
-	self = [super initWithScene:scene metaData:metaData];
+	self = [super init];
 	if(!self)
 		return nil;
 	
@@ -105,6 +105,7 @@
 
 - (void)dealloc
 {
+	[dataMenu release];
 	[showTranslations release];
 	[showInfo release];
 	[settingsPath release];
@@ -112,6 +113,17 @@
 	regfree(&seasonByEpisode);
 	regfree(&seasonEpisodeTriple);
 	[super dealloc];
+}
+
+/*!
+ * @brief Sets the importer's data menu
+ *
+ * @param theDataMenu The importer's menu
+ */
+- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
+{
+	[dataMenu release];
+	dataMenu = [theDataMenu retain];
 }
 
 /*!
@@ -278,6 +290,8 @@
 				NSXMLNode *sum = nil;
 				while((sum = [sumEnum nextObject]) != nil)
 					[summary appendFormat:@"\n%@", sum];
+				if([[summary substringFromIndex:3] isEqualToString:@"No Summary (Add Here)"])
+					summary = nil;
 				if([summary length])
 					[summary deleteCharactersInRange:NSMakeRange(0,1)];
 				else
@@ -419,15 +433,20 @@
 	[settings writeToFile:settingsPath atomically:YES];
 }
 
-/*See super documentation*/
-- (BOOL)doImport
+/*!
+ * @brief Import a single File
+ *
+ * @param metaData The file to import
+ * @return YES if imported, NO otherwise
+ */
+- (BOOL) importMetaData:(SapphireFileMetaData *)metaData
 {
+	currentData = metaData;
 	/*Check to see if it is already imported*/
-	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	if([fileMeta importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
+	if([metaData importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
 		return NO;
 	/*Get path*/
-	NSString *path = [fileMeta path];
+	NSString *path = [metaData path];
 //	NSArray *pathComponents = [path pathComponents];
 	NSString *fileName = [path lastPathComponent];
 	
@@ -470,14 +489,15 @@
 		/*Ask the user what show this is*/
 		NSArray *shows = [self searchResultsForSeries:searchStr];
 		/*Pause for the user's input*/
-		[self pause];
+		[dataMenu pause];
 		/*Bring up the prompt*/
-		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[self scene]];
+		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setShows:shows];
 		[chooser setListTitle:[BRLocalizedString(@"Show? ", @"Prompt the user for showname with a file") stringByAppendingString:fileName]];
 		[chooser setSearchStr:searchStr];
 		/*And display prompt*/
-		[[self stack] pushController:chooser];
+		[[dataMenu stack] pushController:chooser];
+		[chooser release];
 		return NO;
 	}
 	
@@ -540,39 +560,59 @@
 	
 	/*Import the info*/
 	[info removeObjectForKey:LINK_KEY];
-	[fileMeta importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+	[metaData importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	
 	/*We imported something*/
 	return YES;
 }
 
-/*See super documentation*/
-- (void)setCompletionText
+/*!
+ * @brief The completion text to display
+ *
+ * @return The completion text to display
+ */
+- (NSString *)completionText
 {
-	[self setText:BRLocalizedString(@"All availble TV Show & Movie data has been imported", @"The TV Show import complete")];
+	return BRLocalizedString(@"All availble TV Show & Movie data has been imported", @"The TV Show import complete");
 }
 
-/*See super documentation*/
-- (void)importNextItem:(NSTimer *)timer
+/*!
+ * @brief The initial text to display
+ *
+ * @return The initial text to display
+ */
+- (NSString *)initialText
 {
-	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	NSString * fileName=[[fileMeta path] lastPathComponent] ;
-	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
-	[super importNextItem:timer];
+	return BRLocalizedString(@"Fetch Internet Data", @"Title");
 }
 
-/*See super documentation*/
-- (void)resetUIElements
+/*!
+ * @brief The informative text to display
+ *
+ * @return The informative text to display
+ */
+- (NSString *)informativeText
 {
-	[super resetUIElements];
-	[title setTitle: BRLocalizedString(@"Fetch Internet Data", @"Title")];
-	[self setText:BRLocalizedString(@"This tool will attempt to fetch information about your TV Show & Movie files from the Internet (TVRage, IMDB, IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the tv show import")];
-	[button setTitle: BRLocalizedString(@"Start Fetching Data", @"Button")];
+	return BRLocalizedString(@"This tool will attempt to fetch information about your TV Show & Movie files from the Internet (TVRage, IMDB, IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the tv show import");
 }
 
+/*!
+ * @brief The button title
+ *
+ * @return The button title
+ */
+- (NSString *)buttonTitle
+{
+	return BRLocalizedString(@"Start Fetching Data", @"Button");
+}
+
+/*!
+ * @brief The data menu was exhumed
+ *
+ * @param controller The Controller which was on top
+ */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
-	[super wasExhumedByPoppingController:controller];
 	/*See if it was a show chooser*/
 	if(![controller isKindOfClass:[SapphireShowChooser class]])
 		return;
@@ -582,10 +622,10 @@
 	int selection = [chooser selection];
 	if(selection == SHOW_CHOOSE_CANCEL)
 		/*They aborted, skip*/
-		[self skipNextItem];
+		[dataMenu skipNextItem];
 	else if(selection == SHOW_CHOOSE_NOT_SHOW)
 		/*They said it is not a show, so put in empty data so they are not asked again*/
-		[[importItems objectAtIndex:0] importInfo:[NSMutableDictionary dictionary] fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	else
 	{
 		/*They selected a show, save the translation and write it*/
@@ -594,7 +634,7 @@
 		[self writeSettings];
 	}
 	/*We can resume now*/
-	[self resume];
+	[dataMenu resume];
 }
 
 @end

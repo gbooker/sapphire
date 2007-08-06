@@ -15,6 +15,7 @@
 	NSMutableArray				*items ;
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
+	SapphirePredicate			*origPredicate;
 	BRSegmentedSortControl		*modeControl;
 	SapphireFileMetaData		*currentPlayFile;
 	int							dirCount;

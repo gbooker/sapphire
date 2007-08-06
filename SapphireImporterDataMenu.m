@@ -6,7 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import "SapphirePopulateDataMenu.h"
+#import "SapphireImporterDataMenu.h"
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
 
@@ -24,11 +24,13 @@
  * @praam meta The metadata for the directory to browse
  * @return The Menu
  */
-- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData
+- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData  importer:(id <SapphireImporter>)import;
 {
 	if ( [super initWithScene: scene] == nil )
 	return ( nil );
 	meta = [metaData retain];
+	importer = [import retain];
+	[importer setImporterDataMenu:self];
 	/*Setup the Header Control with default contents*/
 	title = [[BRHeaderControl alloc] initWithScene: scene];
 	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
@@ -69,6 +71,19 @@
 	[self addControl: button];
 
     return ( self );
+}
+
+- (void) dealloc
+{
+	[title release];
+	[text release];
+	[fileProgress release] ;
+	[bar release];
+	[button release];
+	[meta release];
+	[importer release];
+	[importTimer invalidate];
+	[super dealloc];
 }
 
 /*!
@@ -132,19 +147,6 @@
 	frame.origin.y = (master.size.height * 0.09f) + master.origin.y;
 	frame.size = currentFileSize;
 	[currentFile setFrame:frame];
-}
-
-
-- (void) dealloc
-{
-	[title release];
-	[text release];
-	[fileProgress release] ;
-	[bar release];
-	[button release];
-	[meta release];
-	[importTimer invalidate];
-	[super dealloc];
 }
 
 /*!
@@ -215,7 +217,7 @@
  */
 - (BOOL)doImport
 {
-	return NO;
+	return [importer importMetaData:[importItems objectAtIndex:0]];
 }
 
 /*!
@@ -223,6 +225,7 @@
  */
 - (void)setCompletionText
 {
+	[self setText:[importer completionText]];
 }
 
 /*!
@@ -233,6 +236,10 @@
 - (void)importNextItem:(NSTimer *)timer
 {
 	/*Update the display*/
+	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
+	NSString * fileName=[[fileMeta path] lastPathComponent] ;
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
+
 	current++ ;
 	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 	/*Update the imported count*/
@@ -327,6 +334,9 @@
 	[button setTarget:self];
 	[button setAction: @selector(import)];
 	[button setHidden:NO];
+	[title setTitle:[importer initialText]];
+	[self setText:[importer informativeText]];
+	[button setTitle:[importer buttonTitle]];
 }
 
 - (void)wasPopped
@@ -334,6 +344,12 @@
 	/*Someone hit menu, so cancel*/
 	[self cancel];
 	[super wasPopped];
+}
+
+- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+{
+	[importer wasExhumedByPoppingController:controller];
+	[super wasExhumedByPoppingController:controller];
 }
 
 @end

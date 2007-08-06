@@ -6,7 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-@class SapphireMetaDataCollection, SapphireSettings,SapphireTheme;
+@class SapphireMetaDataCollection, SapphireSettings, SapphireTheme, SapphirePredicate;
 @protocol SapphireMetaDataDelegate;
 
 @interface SapphireApplianceController : BRMediaMenuController
@@ -19,8 +19,9 @@
 	SapphireSettings			*settings;
 }
 
++ (SapphirePredicate *)nextPredicate:(SapphirePredicate *)predicate;
++ (BRTexture *)gemForPredicate:(SapphirePredicate *)predicate;
 + (NSString *) rootMenuLabel ;
-
 
 - (id) initWithScene: (BRRenderScene *) scene;
 - (void) dealloc;

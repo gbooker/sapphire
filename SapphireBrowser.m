@@ -18,6 +18,7 @@
 #import "NSString-Extensions.h"
 #import "SapphireAudioPlayer.h"
 #import "SapphireAudioMedia.h"
+#import "SapphireApplianceController.h"
 
 #import <AudioUnit/AudioUnit.h>
 #import <objc/objc-class.h>
@@ -30,6 +31,7 @@
 - (void)processFiles:(NSArray *)files;
 - (void)filesProcessed:(NSDictionary *)files;
 - (NSMutableDictionary *)metaDataForPath:(NSString *)path;
+- (void)setNewPredicate:(SapphirePredicate *)newPredicate;
 @end
 
 @interface BRTVShowsSortControl (bypassAccess)
@@ -177,11 +179,13 @@ static BOOL is10Version = NO;
 	metaData = [meta retain];
 	[metaData setDelegate:self];
 	predicate = [newPredicate retain];
+	origPredicate = [predicate retain];
 
 	/*Create the mode menu*/
 	NSArray *names = [NSArray arrayWithObjects:
 		BRLocalizedString(@"Select", @"Select Menu Item"),
 		BRLocalizedString(@"Mark File", @"Mark File Menu Item"),
+		BRLocalizedString(@"Filter", @"Filter Menu Item"),
 		nil];
 	[self createModeControlWithScene:scene names:names];
 	[self addControl:modeControl];
@@ -294,6 +298,7 @@ static BOOL is10Version = NO;
 	[items release];
 	[metaData release];
 	[predicate release];
+	[origPredicate release];
 	[modeControl release];
     [super dealloc];
 }
@@ -334,6 +339,7 @@ static BOOL is10Version = NO;
 {
     // The user pressed Menu, removing us from the screen
     
+	[self setNewPredicate:origPredicate];
     // always call super
     [super wasPopped];
 }
@@ -643,6 +649,15 @@ BOOL setupAudioOutput(int sampleRate)
 	return ret;
 }
 
+- (void)setNewPredicate:(SapphirePredicate *)newPredicate
+{
+	[newPredicate retain];
+	[predicate release];
+	predicate = newPredicate;
+	[self setListIcon:[SapphireApplianceController gemForPredicate:predicate]];
+	[self reloadDirectoryContents];	
+}
+
 - (void) itemSelected: (long) row
 {
     // This is called when the user presses play/pause on a list item
@@ -673,6 +688,11 @@ BOOL setupAudioOutput(int sampleRate)
 		[(SapphireMarkMenu *)controller setPredicate:predicate];
 		[[self stack] pushController:controller];
 		[controller release];
+		return;
+	}
+	else if([self selectedMode] == 2)
+	{
+		[self setNewPredicate:[SapphireApplianceController nextPredicate:predicate]];
 		return;
 	}
 	

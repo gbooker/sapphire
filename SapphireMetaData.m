@@ -418,7 +418,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		NSString *extension = [name pathExtension];
 		if([self isDirectory:[path stringByAppendingPathComponent:name]])
 			[directories addObject:name];
-		else if([allExtensions containsObject:extension])
+		else if([allExtensions containsObject:[extension lowercaseString]])
 			[fileMetas addObject:[self metaDataForFile:name]];
 	}
 	/*Sort them*/
@@ -1554,19 +1554,17 @@ static NSArray *displayedMetaDataOrder = nil;
 	/*Put items with no show at the bottom*/
 	NSString *myShow = [self showName];
 	NSString *theirShow = [other showName];
-	if(myShow == nil)
+	if(myShow != nil || theirShow != nil)
 	{
-		if(theirShow != nil)
+		if(myShow == nil)
 			return NSOrderedDescending;
-	}
-	if(theirShow == nil)
-		return NSOrderedAscending;
-	else
-	{
-		/*Both have a show*/
-		NSComparisonResult result = [myShow compare:theirShow options:NSCaseInsensitiveSearch];
-		if(result != NSOrderedSame)
-			return result;
+		else
+		{
+			/*Both have a show*/
+			NSComparisonResult result = [myShow compare:theirShow options:NSCaseInsensitiveSearch];
+			if(result != NSOrderedSame)
+				return result;
+		}		
 	}
 	/*Sort by season first*/
 	/*Put shows with no season at the bottom*/

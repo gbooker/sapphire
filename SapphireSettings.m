@@ -11,7 +11,8 @@
 #import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"
-#import "SapphireTVShowDataMenu.h"
+#import "SapphireFileDataImporter.h"
+#import "SapphireTVShowImporter.h"
 
 static SapphireSettings *sharedInstance = nil;
 
@@ -373,16 +374,20 @@ static SapphireSettings *sharedInstance = nil;
 	/*Check for populate show data*/
 	if(row==0)
 	{
-		SapphirePopulateDataMenu *menu = [[SapphirePopulateDataMenu alloc] initWithScene:[self scene] metaData:metaData];
+		SapphireFileDataImporter *importer = [[SapphireFileDataImporter alloc] init];
+		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaData:metaData importer:importer];
 		[[self stack] pushController:menu];
 		[menu release];
+		[importer release];
 	}
 	/*Check for import of TV data*/
 	else if(row == 1)
 	{
-		SapphireTVShowDataMenu *menu = [[SapphireTVShowDataMenu alloc] initWithScene:[self scene] metaData:metaData savedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
+		SapphireTVShowImporter *importer = [[SapphireTVShowImporter alloc] initWithSavedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
+		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaData:metaData importer:importer];
 		[[self stack] pushController:menu];
 		[menu release];
+		[importer release];
 	}
 	/*Change setting*/
 	else

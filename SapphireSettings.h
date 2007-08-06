@@ -6,7 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-@class SapphireDirectoryMetaData, SapphirePopulateDataMenu;
+@class SapphireDirectoryMetaData;
 
 @interface SapphireSettings : BRMediaMenuController 
 {

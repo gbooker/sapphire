@@ -1,5 +1,5 @@
 //
-//  SapphirePopulateDataMenu.h
+//  SapphireFileDataImporter.h
 //  Sapphire
 //
 //  Created by pnmerrill on 6/24/07.
@@ -9,7 +9,7 @@
 #import "SapphireImporterDataMenu.h"
 @class SapphireFileMetaData;
 
-@interface SapphirePopulateDataMenu : SapphireImporterDataMenu
+@interface SapphireFileDataImporter : NSObject <SapphireImporter>
 {
 	int  xmlFileCount ;
 	BOOL xmlPathIsDir ;

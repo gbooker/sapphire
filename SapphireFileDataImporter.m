@@ -1,12 +1,12 @@
 //
-//  SapphirePopulateDataMenu.m
+//  SapphireFileDataImporter.m
 //  Sapphire
 //
 //  Created by pnmerrill on 6/24/07.
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import "SapphirePopulateDataMenu.h"
+#import "SapphireFileDataImporter.h"
 #import "SapphireMetaData.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -33,7 +33,7 @@
 #define DIRECTORS_XML_QUERY			@"/media/directors/name/text()"
 #define PRODUCERS_XML_QUERY			@"/media/producers/name/text()"
 
-@implementation SapphirePopulateDataMenu
+@implementation SapphireFileDataImporter
 
 /*Information to make the XML import easier*/
 static NSDictionary *xmlSingleAttributes = nil;
@@ -62,23 +62,40 @@ static NSDictionary *xmlMultiAttributes = nil;
 		@"Directors",			DIRECTORS_XML_QUERY,nil];
 }
 
-/*See super documentation*/
-- (void)getItems
+- (id)init
 {
-	[super getItems];
-	xmlFileCount=0 ;
+	self = [super init];
+	if(self == nil)
+		return nil;
+	
+	xmlFileCount=0;
+	
+	return self;
 }
 
-/*See super documentation*/
-- (BOOL)doImport
+/*!
+* @brief Sets the importer's data menu
+ *
+ * @param theDataMenu The importer's menu
+ */
+- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
+{
+}
+
+/*!
+ * @brief Import a single File
+ *
+ * @param metaData The file to import
+ * @return YES if imported, NO otherwise
+ */
+- (BOOL) importMetaData:(SapphireFileMetaData *)metaData
 {
 	/*Initialization*/
 	BOOL ret = NO;
 	NSFileManager *fm = [NSFileManager defaultManager];
 	/*Get the file*/
-	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
 	/*Check for XML file*/
-	NSString * xmlFilePath=[fileMeta path] ;
+	NSString * xmlFilePath=[metaData path] ;
 	xmlPathIsDir = NO;
 	xmlFilePath=[[xmlFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
 	if([fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] && !xmlPathIsDir)
@@ -88,27 +105,30 @@ static NSDictionary *xmlMultiAttributes = nil;
 		memset(&sb, 0, sizeof(struct stat));
 		stat([xmlFilePath fileSystemRepresentation], &sb);
 		long modTime = sb.st_mtimespec.tv_sec;
-		long oldTime = [fileMeta importedTimeFromSource:META_XML_IMPORT_KEY];
+		long oldTime = [metaData importedTimeFromSource:META_XML_IMPORT_KEY];
 		if(oldTime < modTime)
 		{
 			/*Import the XML file and update counts*/
-			[self importXMLFile:xmlFilePath forMeta:fileMeta] ;
+			[self importXMLFile:xmlFilePath forMeta:metaData] ;
 			xmlFileCount++ ;
 			ret = YES;
 		}
 	}
 	/*Import file if necessary*/
-	if ([fileMeta updateMetaData])
+	if ([metaData updateMetaData])
 		ret = YES;
 	/*Return whether we imported or not*/
 	return ret;
 }
 
-/*See super documentation*/
-- (void)setCompletionText
+/*!
+ * @brief The completion text to display
+ *
+ * @return The completion text to display
+ */
+- (NSString *)completionText
 {
-	[self setText:BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete")];
-	[self setCurrentFile:[NSString stringWithFormat:@"Imported %d XML file(s)",xmlFileCount]];
+	return BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete");
 }
 
 /*!
@@ -215,22 +235,42 @@ static NSDictionary *xmlMultiAttributes = nil;
 	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY withTime:modTime];
 }
 
-/*See super documentation*/
-- (void)importNextItem:(NSTimer *)timer
+/*!
+ * @brief The initial text to display
+ *
+ * @return The initial text to display
+ */
+- (NSString *)initialText
 {
-	/*Set the current file in the progress*/
-	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	NSString * fileName=[[fileMeta path] lastPathComponent] ;
-	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", @"Current file processes in import format"),fileName]];
-	[super importNextItem:timer];
+	return BRLocalizedString(@"Populate File Data", @"Title");
 }
 
-/*See super documentation*/
-- (void)resetUIElements
+/*!
+ * @brief The informative text to display
+ *
+ * @return The informative text to display
+ */
+- (NSString *)informativeText
 {
-	[super resetUIElements];
-	[title setTitle: BRLocalizedString(@"Populate File Data", @"Title")];
-	[self setText:BRLocalizedString(@"This tool will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time.", @"Description of the import processes")];
-	[button setTitle: BRLocalizedString(@"Start Populating Data", @"Button")];
+	return BRLocalizedString(@"This tool will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time.", @"Description of the import processes");
+}
+
+/*!
+ * @brief The button title
+ *
+ * @return The button title
+ */
+- (NSString *)buttonTitle
+{
+	return BRLocalizedString(@"Start Populating Data", @"Button");
+}
+
+/*!
+* @brief The data menu was exhumed
+ *
+ * @param controller The Controller which was on top
+ */
+- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+{
 }
 @end
