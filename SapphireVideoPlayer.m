@@ -44,6 +44,13 @@
 }
 @end
 
+#define LOW_SKIP_TIME 5.0f
+
+typedef enum {
+	STATE_COMMAND_RESET,
+	STATE_COMMAND_FORWARD,
+	STATE_COMMAND_BACKWARD,
+} StateCommand;
 
 @implementation SapphireVideoPlayer
 
@@ -54,7 +61,8 @@
 		return nil;
 	
 	/* Initial skip times */
-	revTime = ffTime = 5.0f;
+	skipTime = LOW_SKIP_TIME;
+	state = SKIP_STATE_NONE;
 	
 	return self;
 }
@@ -77,6 +85,8 @@
 	if(![myMovie hasChapters])
 		enabled = TRUE;
 	
+	QTGetTimeInterval([myMovie duration], &duration);
+	
 	return ret;
 }
 
@@ -87,11 +97,61 @@
 	resetTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(resetTimes) userInfo:nil repeats:NO];
 }
 
+- (double)offsetForCommand:(StateCommand)command
+{
+	double ret = 0.0f;
+	
+	switch(command)
+	{
+		case STATE_COMMAND_RESET:
+			state = SKIP_STATE_NONE;
+			skipTime = LOW_SKIP_TIME;
+			break;
+
+		case STATE_COMMAND_FORWARD:
+			switch(state)
+			{
+				case SKIP_STATE_NONE:
+				case SKIP_STATE_FORWARD_INCREASING:
+					state = SKIP_STATE_FORWARD_INCREASING;
+					ret = skipTime;
+					skipTime *= 2;
+					break;
+				case SKIP_STATE_BACKWARD_INCREASING:
+					state = SKIP_STATE_DECREASING;
+					skipTime /= 4;
+				case SKIP_STATE_DECREASING:
+					ret = skipTime;
+					skipTime = MAX(skipTime / 2, LOW_SKIP_TIME);
+			}
+			break;
+			
+		case STATE_COMMAND_BACKWARD:
+			switch(state)
+			{
+				case SKIP_STATE_NONE:
+				case SKIP_STATE_BACKWARD_INCREASING:
+					state = SKIP_STATE_BACKWARD_INCREASING;
+					ret = -skipTime;
+					skipTime *= 2;
+					break;
+				case SKIP_STATE_FORWARD_INCREASING:
+					state = SKIP_STATE_DECREASING;
+					skipTime /= 4;
+				case SKIP_STATE_DECREASING:
+					ret = -skipTime;
+					skipTime = MAX(skipTime / 2, LOW_SKIP_TIME);
+			}
+			break;
+	}
+	return ret;
+}
+
 - (void)resetTimes
 {
 	/*Reset the times from the timer above*/
 	resetTimer = nil;
-	ffTime = revTime = 5.0f;
+	[self offsetForCommand:STATE_COMMAND_RESET];
 }
 
 - (double)_nextChapterMark
@@ -101,21 +161,29 @@
 		return [super _nextChapterMark];
 	/*Compute our's*/
 	double current = [self elapsedPlaybackTime];
-	double ret = current + ffTime;
-	/*Double the ff time and reset the rev time*/
-	ffTime *= 2.0f;
-	revTime = 5.0f;
+	double ret = current + [self offsetForCommand:STATE_COMMAND_FORWARD];
+	
+	if(ret > duration + 10.0f)
+		/*Halve the distance to the end of the file if skipping so much*/
+		ret = (current + duration) / 2;
+	
 	/*Start the reset timer*/
 	[self setNewTimer];
 	
 	return ret;
 }
 
-- (double)getPreviousChapterMark
+- (double)getPreviousChapterMarkAndUpdate:(BOOL)update
 {
 	/*Compute our previous chapter*/
 	double current = [self elapsedPlaybackTime];
-	double ret = current - revTime;
+	double ret;
+	if(update)
+		ret = current - [self offsetForCommand:STATE_COMMAND_BACKWARD];
+	else if(state == SKIP_STATE_DECREASING)
+		ret = current - skipTime * 2;
+	else
+		ret = current - skipTime / 2;
 	
 	/*Make sure we don't go past the beginning of the file*/
 	if(ret < 0.0f)
@@ -131,11 +199,7 @@
 		return [super _previousChapterMark];
 	
 	/*Compute our's*/
-	double ret = [self getPreviousChapterMark];
-	
-	/*Double the rev time and reset the ff time*/
-	revTime *= 2.0f;
-	ffTime = 5.0f;
+	double ret = [self getPreviousChapterMarkAndUpdate:YES];
 	
 	/*Start the reset timer*/
 	[self setNewTimer];
@@ -156,7 +220,7 @@
 	if(!enabled)
 		return [super _currentChapterMark];
 	
-	return [self getPreviousChapterMark];
+	return [self getPreviousChapterMarkAndUpdate:NO];
 }
 
 @end

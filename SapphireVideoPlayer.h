@@ -8,11 +8,19 @@
 
 @class SapphireFileMetaData;
 
+typedef enum {
+	SKIP_STATE_NONE,
+	SKIP_STATE_FORWARD_INCREASING,
+	SKIP_STATE_BACKWARD_INCREASING,
+	SKIP_STATE_DECREASING,
+} SkipState;
+
 @interface SapphireVideoPlayer : BRQTKitVideoPlayer {
-	double					ffTime;
-	double					revTime;
+	double					skipTime;
+	SkipState				state;
 	BOOL					enabled;
 	NSTimer					*resetTimer;
+	NSTimeInterval			duration;
 }
 
 @end
