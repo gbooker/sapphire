@@ -76,7 +76,7 @@ static NSArray *predicates = nil;
 - (SapphireImporterDataMenu *)allImporterForRootDir:(SapphireDirectoryMetaData *)rootDir
 {
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"]];
+	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
 	
 	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:fileImp, tvImp, nil]];
 	[fileImp release];
