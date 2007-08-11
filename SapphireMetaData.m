@@ -1558,6 +1558,8 @@ static NSArray *displayedMetaDataOrder = nil;
 	{
 		if(myShow == nil)
 			return NSOrderedDescending;
+		else if(theirShow == nil)
+			return NSOrderedAscending;
 		else
 		{
 			/*Both have a show*/
