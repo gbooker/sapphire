@@ -148,6 +148,8 @@ typedef enum {
 - (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime;
 - (unsigned int)resumeTime;
 - (void)setResumeTime:(unsigned int)resumeTime;
+- (FileClass)fileClass;
+- (void)setFileClass:(FileClass)fileClass;
 
 - (long long)size;
 - (float)duration;

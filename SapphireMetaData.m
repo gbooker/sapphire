@@ -32,6 +32,7 @@
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
 #define AUDIO_FORMAT_KEY			@"Audio Format"
+#define FILE_CLASS_KEY				@"File Class"
 
 @implementation NSString (episodeSorting)
 
@@ -1317,6 +1318,26 @@ static NSArray *displayedMetaDataOrder = nil;
 - (void)setResumeTime:(unsigned int)resumeTime
 {
 	[metaData setObject:[NSNumber numberWithUnsignedInt:resumeTime] forKey:RESUME_KEY];
+}
+
+/*!
+ * @brief The file type
+ *
+ * @return The file type
+ */
+- (FileClass)fileClass
+{
+	return [[metaData objectForKey:FILE_CLASS_KEY] intValue];
+}
+
+/*!
+ * @brief Sets the file type
+ *
+ * @param fileClass The file type
+ */
+- (void)setFileClass:(FileClass)fileClass
+{
+	[metaData setObject:[NSNumber numberWithInt:fileClass] forKey:FILE_CLASS_KEY];
 }
 
 /*!

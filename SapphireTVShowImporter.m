@@ -561,6 +561,7 @@
 	/*Import the info*/
 	[info removeObjectForKey:LINK_KEY];
 	[metaData importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+	[metaData setFileClass:FILE_CLASS_TV_SHOW];
 	
 	/*We imported something*/
 	return YES;
@@ -624,8 +625,12 @@
 		/*They aborted, skip*/
 		[dataMenu skipNextItem];
 	else if(selection == SHOW_CHOOSE_NOT_SHOW)
+	{
 		/*They said it is not a show, so put in empty data so they are not asked again*/
 		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+		if ([currentData fileClass] == FILE_CLASS_TV_SHOW)
+			[currentData setFileClass:FILE_CLASS_UNKNOWN];
+	}
 	else
 	{
 		/*They selected a show, save the translation and write it*/
