@@ -6,12 +6,9 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import "SapphireImporterDataMenu.h"
+#import "SapphireMultipleImporter.h"
 
-@interface SapphireAllImporter : NSObject <SapphireImporter>{
-	NSArray		*importers;
+@interface SapphireAllImporter : SapphireMultipleImporter <SapphireImporter>{
 }
-
-- (id)initWithImporters:(NSArray *)importerList;
 
 @end

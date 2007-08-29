@@ -1,15 +1,38 @@
 //
-//  SapphireAllImporter.m
+//  SapphireMultipleImporter.m
 //  Sapphire
 //
-//  Created by Graham Booker on 8/6/07.
+//  Created by Graham Booker on 8/29/07.
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import "SapphireAllImporter.h"
+#import "SapphireMultipleImporter.h"
 
 
-@implementation SapphireAllImporter
+@implementation SapphireMultipleImporter
+
+/*!
+ * @brief Creates a new importer set
+ *
+ * @param importerList The list of importers to use
+ * @return The importer if successful, nil otherwise
+ */
+- (id)initWithImporters:(NSArray *)importerList
+{
+	self = [super init];
+	if(self == nil)
+		return nil;
+	
+	importers = [importerList retain];
+	
+	return self;
+}
+
+- (void) dealloc
+{
+	[importers release];
+	[super dealloc];
+}
 
 /*!
  * @brief Import a single File
@@ -19,7 +42,13 @@
  */
 - (BOOL)importMetaData:(SapphireFileMetaData *)metaData
 {
-	return [super importMetaData:metaData];
+	BOOL ret = NO;
+	NSEnumerator *importEnum = [importers objectEnumerator];
+	id <SapphireImporter> importer = nil;
+	while((importer = [importEnum nextObject]) != nil)
+		ret |= [importer importMetaData:metaData];
+	
+	return ret;
 }
 
 /*!
@@ -29,7 +58,7 @@
  */
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
-	[super setImporterDataMenu:theDataMenu];
+	[importers makeObjectsPerformSelector:@selector(setImporterDataMenu:) withObject:theDataMenu];
 }
 
 /*!
@@ -39,7 +68,7 @@
  */
 - (NSString *)completionText
 {
-	return BRLocalizedString(@"All availble metadata has been imported", @"The group metadata import complete");
+	return @"";
 }
 
 /*!
@@ -49,7 +78,7 @@
  */
 - (NSString *)initialText
 {
-	return BRLocalizedString(@"Import All Data", @"Title");
+	return @"";
 }
 
 /*!
@@ -59,7 +88,7 @@
  */
 - (NSString *)informativeText
 {
-	return BRLocalizedString(@"This tool will import all the meta data it can find.  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of all meta import");
+	return @"";
 }
 
 /*!
@@ -69,7 +98,7 @@
  */
 - (NSString *)buttonTitle
 {
-	return BRLocalizedString(@"Start Importing Data", @"Button");
+	return @"";
 }
 
 /*!
@@ -79,7 +108,7 @@
  */
 - (void) wasExhumedByPoppingController:(BRLayerController *) controller
 {
-	[super wasExhumedByPoppingController:controller];
+	[importers makeObjectsPerformSelector:@selector(wasExhumedByPoppingController:) withObject:controller];
 }
 
 @end
