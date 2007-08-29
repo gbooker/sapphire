@@ -106,7 +106,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 		stat([xmlFilePath fileSystemRepresentation], &sb);
 		long modTime = sb.st_mtimespec.tv_sec;
 		long oldTime = [metaData importedTimeFromSource:META_XML_IMPORT_KEY];
-		if(oldTime < modTime)
+		if(oldTime != modTime)
 		{
 			/*Import the XML file and update counts*/
 			[self importXMLFile:xmlFilePath forMeta:metaData] ;
