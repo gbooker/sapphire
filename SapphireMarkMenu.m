@@ -11,6 +11,13 @@
 
 @implementation SapphireMarkMenu
 
+typedef enum {
+	COMMAND_TOGGLE_WATCHED,
+	COMMAND_TOGGLE_FAVORITE,
+	COMMAND_MARK_TO_REFETCH_TV,
+	COMMAND_MARK_AS_MOVIE,
+} MarkCommand;
+
 /*!
  * @brief Create a mark menu for a directory or file
  *
@@ -27,21 +34,22 @@
 	/*Check to see if it is directory or file*/
 	isDir = [meta isKindOfClass:[SapphireDirectoryMetaData class]];
 	metaData = [meta retain];
+	commands = nil;
 	/*Create the menu*/
 	if(isDir)
-		names = [[NSArray alloc] initWithObjects:
+		names = [[NSMutableArray alloc] initWithObjects:
 			BRLocalizedString(@"Mark All as Watched", @"Mark whole directory as watched"),
 			BRLocalizedString(@"Mark All as Unwatched", @"Mark whole directory as unwatched"),
 			BRLocalizedString(@"Mark All as Favorite", @"Mark whole directory as favorite"),
 			BRLocalizedString(@"Mark All as Not Favorite", @"Mark whole directory as not favorite"),
 			BRLocalizedString(@"Mark All to Refetch TV Data", @"Mark whole directory to re-fetch its tv data"),
+			BRLocalizedString(@"Mark All as a Movie", @"Mark whole directory as a Movie file"),
 			nil];
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
 		SapphireFileMetaData *fileMeta = (SapphireFileMetaData *)metaData;
 		NSString *watched = nil;
 		NSString *favorite = nil;
-		NSString *reimport = nil;
 		
 		if([fileMeta watched])
 			watched = BRLocalizedString(@"Mark as Unwatched", @"Mark file as unwatched");
@@ -52,9 +60,18 @@
 			favorite = BRLocalizedString(@"Mark as Not Favorite", @"Mark file as a favorite");
 		else
 			favorite = BRLocalizedString(@"Mark as Favorite", @"Mark file as not a favorite");
+		names = [[NSMutableArray alloc] initWithObjects:watched, favorite, nil];
+		commands = [[NSMutableArray alloc] initWithObjects: [NSNumber numberWithInt:COMMAND_TOGGLE_WATCHED], [NSNumber numberWithInt:COMMAND_TOGGLE_FAVORITE], nil];
 		if([fileMeta importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
-			reimport = BRLocalizedString(@"Mark to Refetch TV Data", @"Mark file to re-fetch its tv data");
-		names = [[NSArray alloc] initWithObjects:watched, favorite, reimport, nil];
+		{
+			[names addObject:BRLocalizedString(@"Mark to Refetch TV Data", @"Mark file to re-fetch its tv data")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_TV]];
+		}
+		if([fileMeta fileClass] != FILE_CLASS_MOVIE)
+		{
+			[names addObject:BRLocalizedString(@"Mark as a Movie", @"Mark a file as a movie")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_AS_MOVIE]];
+		}
 	}
 	else
 	{
@@ -226,17 +243,19 @@
 	else
 	{
 		SapphireFileMetaData *fileMeta = (SapphireFileMetaData *)metaData;
-		switch(row)
+		switch([[commands objectAtIndex:row] intValue])
 		{
-			case 0:
+			case COMMAND_TOGGLE_WATCHED:
 				[fileMeta setWatched:![fileMeta watched]];
 				break;
-			case 1:
+			case COMMAND_TOGGLE_FAVORITE:
 				[fileMeta setFavorite:![fileMeta favorite]];
 				break;
-			case 2:
+			case COMMAND_MARK_TO_REFETCH_TV:
 				[fileMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY];
 				break;
+			case COMMAND_MARK_AS_MOVIE:
+				[fileMeta setFileClass:FILE_CLASS_MOVIE];
 		}
 	}
 	/*Save and exit*/

@@ -129,6 +129,7 @@ typedef enum {
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
 - (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate;
 - (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate;
+- (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate;
 
 @end
 

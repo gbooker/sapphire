@@ -1024,6 +1024,24 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self writeMetaData];
 }
 
+/*!
+ * @brief Set subtree to the specified class
+ *
+ * @param fileClass The file class
+ * @param predicate The predicate which to restrict setting
+ */
+- (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate
+{
+	[[self collection] setImage:YES];
+	SEL select = @selector(setFileClass:);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodForSelector:select]];
+	[fileInv setSelector:select];
+	[fileInv setArgument:&fileClass atIndex:2];
+	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
+	[[self collection] setImporting:NO];
+	[self writeMetaData];
+}
+
 - (SapphireMetaDataCollection *)collection
 {
 	if(collection == nil)

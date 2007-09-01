@@ -123,34 +123,22 @@ static BOOL is10Version = NO;
 }
 
 /*!
- * @brief Create a new normal browser
- *
- * @param scene The scene
- * @param meta The metadata for the directory to browse
- * @return The Browser
- */
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta
-{
-	return [self initWithScene:scene metaData:meta predicate:NULL];
-}
-
-/*!
  * @brief Creates the mode control in a compatible way
  *
  * @param scene The scene
  * @param names The names in the menu
- */
+ *
 - (void)createModeControlWithScene:(BRRenderScene *)scene names:(NSArray *)names
 {
-	/*Check for the new way to do this*/
+	/*Check for the new way to do this*
 	Class modeClass = NSClassFromString(@"BRSegmentedSortControl");
 	if(modeClass != nil)
-		/*Use the new method*/
+		/*Use the new method*
 		//Ignore this warning if compiling with backrow 1.0
 		modeControl = [[modeClass alloc] initWithScene:scene segmentNames:names selectedSegment:0];
 	else
 	{
-		/*Hack in the old way*/
+		/*Hack in the old way*
 		modeControl = [[BRTVShowsSortControl alloc] initWithScene:scene state:1];
 		NSString *name1 = [names objectAtIndex:0];
 		NSString *name2 = [names objectAtIndex:1];
@@ -170,7 +158,7 @@ static BOOL is10Version = NO;
  * @param newPredicate The predicate to use
  * @return The Browser
  */
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 		
@@ -178,17 +166,16 @@ static BOOL is10Version = NO;
 	items = [NSMutableArray new];
 	metaData = [meta retain];
 	[metaData setDelegate:self];
-	predicate = [newPredicate retain];
-	origPredicate = [predicate retain];
+	predicate = [[SapphireApplianceController predicate] retain];
 
 	/*Create the mode menu*/
-	NSArray *names = [NSArray arrayWithObjects:
+/*	NSArray *names = [NSArray arrayWithObjects:
 		BRLocalizedString(@"Select", @"Select Menu Item"),
 		BRLocalizedString(@"Mark File", @"Mark File Menu Item"),
 		BRLocalizedString(@"Filter", @"Filter Menu Item"),
 		nil];
 	[self createModeControlWithScene:scene names:names];
-	[self addControl:modeControl];
+	[self addControl:modeControl];*/
 	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
@@ -198,17 +185,17 @@ static BOOL is10Version = NO;
 
 /*!
  * @brief Override the layout
- */
+ *
 - (void)_doLayout
 {
 	[super _doLayout];
 	NSRect listFrame = [[_listControl layer] frame];
-	/*Position the mode menu below the list*/
+	/*Position the mode menu below the list*
 	NSRect modeRect;
 	modeRect.size = [modeControl preferredSizeForScreenHeight:[self masterLayerFrame].size.height];
 	modeRect.origin.y = listFrame.origin.y * 1.5f;
 	modeRect.origin.x = (listFrame.size.width - modeRect.size.width)/2 + listFrame.origin.x;
-	/*Shrink the list to make room for the mode*/
+	/*Shrink the list to make room for the mode*
 	listFrame.size.height -= listFrame.origin.y;
 	listFrame.origin.y *= 2;
 	[[_listControl layer] setFrame:listFrame];
@@ -280,17 +267,17 @@ static BOOL is10Version = NO;
  * @brief Get the mode in a compatible way
  *
  * @return The mode selection
- */
+ *
 - (int)selectedMode
 {
-	/*Get if using the old method*/
+	/*Get if using the old method*
 	if([modeControl isKindOfClass:[BRTVShowsSortControl class]])
 		return [modeControl gimmieState] - 1;
 	
-	/*Get it from the new method*/
+	/*Get it from the new method*
 	return [modeControl selectedSegment];
 }
-
+*/
 - (void) dealloc
 {
     // always remember to deallocate your resources
@@ -298,8 +285,7 @@ static BOOL is10Version = NO;
 	[items release];
 	[metaData release];
 	[predicate release];
-	[origPredicate release];
-	[modeControl release];
+//	[modeControl release];
     [super dealloc];
 }
 
@@ -338,8 +324,6 @@ static BOOL is10Version = NO;
 - (void) wasPopped
 {
     // The user pressed Menu, removing us from the screen
-    
-	[self setNewPredicate:origPredicate];
     // always call super
     [super wasPopped];
 }
@@ -672,18 +656,18 @@ BOOL setupAudioOutput(int sampleRate)
 	NSString *name = [_names objectAtIndex:row];
 	NSString *dir = [metaData path];
 	
-	/*Check mode for mark*/
+	/*Check mode for mark*
 	if([self selectedMode] == 1)
 	{
 		id meta = nil;
-		/*Get metadata*/
+		/*Get metadata*
 		if(row < dirCount)
 			meta = [metaData metaDataForDirectory:name];
 		else if (row < dirCount + fileCount)
 			meta = [metaData metaDataForFile:name];
 		else
 			return;
-		/*Do mark menu*/
+		/*Do mark menu*
 		id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
 		[(SapphireMarkMenu *)controller setPredicate:predicate];
 		[[self stack] pushController:controller];
@@ -700,7 +684,7 @@ BOOL setupAudioOutput(int sampleRate)
 	if(row < dirCount)
 	{
 		/*Browse the subdir*/
-		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name] predicate:predicate];
+		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name]];
 		[controller setListTitle:name];
 		[controller setListIcon:[self listIcon]];
 		[[self stack] pushController:controller];
@@ -884,11 +868,44 @@ BOOL setupAudioOutput(int sampleRate)
     return ( nil );
 }
 
-- (BOOL)brEventAction:(id)fp8
+- (BOOL)brEventAction:(BREvent *)event
 {
 	/*Cancel imports on an action*/
 	[metaData resumeDelayedImport];
-	return [super brEventAction:fp8];
+	
+	BREventPageUsageHash hashVal = [event pageUsageHash];
+	if ([(BRControllerStack *)[self stack] peekController] != self)
+		hashVal = 0;
+	
+	switch (hashVal)
+	{
+		case kBREventTapRight:
+		{
+			id meta = nil;
+			int row = [(BRListControl *)[self list] selection];
+			NSString *name = [_names objectAtIndex:row];
+			
+			/*Get metadata*/
+			if(row < dirCount)
+				meta = [metaData metaDataForDirectory:name];
+			else if (row < dirCount + fileCount)
+				meta = [metaData metaDataForFile:name];
+			else
+				return NO;
+			/*Do mark menu*/
+			id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
+			[(SapphireMarkMenu *)controller setPredicate:predicate];
+			[[self stack] pushController:controller];
+			[controller release];
+			return YES;
+		}
+		case kBREventTapLeft:
+			[self setNewPredicate:[SapphireApplianceController nextPredicate]];
+			return YES;
+		default:
+			return [super brEventAction:event];
+	}
+	return NO;
 }
 
 /*!

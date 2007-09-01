@@ -32,7 +32,9 @@
 - (BOOL)disableUIQuit;
 - (BOOL)disableAnonymousReporting;
 - (BOOL)useAC3Passthrough;
-- (BOOL)fastSwitching ;
+- (BOOL)fastSwitching;
+- (int)indexOfLastPredicate;
+- (void)setIndexOfLastPredicate:(int)index;
 
 - (void) willBePushed;
 - (void) wasPushed;

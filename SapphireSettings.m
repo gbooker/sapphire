@@ -31,7 +31,7 @@ static SapphireSettings *sharedInstance = nil;
 #define	ENABLE_FAST_SWITCHING_KEY	@"EnableFastSwitching"
 #define USE_AC3_PASSTHROUGH	@"EnableAC3Passthrough"
 #define	DISABLE_ANON_KEY	@"DisableAnonymousReporting"
-
+#define LAST_PREDICATE		@"LastPredicate"
 
 /*!
  * @brief Get the shared settings object
@@ -114,6 +114,7 @@ static SapphireSettings *sharedInstance = nil;
 		[NSNumber numberWithBool:YES], ENABLE_FAST_SWITCHING_KEY,
 		[NSNumber numberWithBool:NO], USE_AC3_PASSTHROUGH,
 		[NSNumber numberWithBool:NO], DISABLE_ANON_KEY,
+		[NSNumber numberWithInt:NSNotFound], LAST_PREDICATE,
 		nil];
 	if(options == nil)
 		options = [[NSMutableDictionary alloc] init];
@@ -144,6 +145,22 @@ static SapphireSettings *sharedInstance = nil;
 	[defaults release];
 	[metaData release];
 	[super dealloc];
+}
+
+/*!
+ * @brief Get a setting
+ *
+ * @param key The setting to retrieve
+ * @return The setting in an NSNumber
+ */
+- (NSNumber *)numberForKey:(NSString *)key
+{
+	/*Check the user's setting*/
+	NSNumber *num = [options objectForKey:key];
+	if(!num)
+		/*User hasn't set yet, use default then*/
+		num = [defaults objectForKey:key];
+	return num;
 }
 
 /*!
@@ -241,6 +258,28 @@ static SapphireSettings *sharedInstance = nil;
 {
 	return [self boolForKey:ENABLE_FAST_SWITCHING_KEY];
 
+}
+
+/*!
+ * @brief Returns the index of the last predicate used
+ *
+ * @return The index of the last predicate used
+ */
+- (int)indexOfLastPredicate
+{
+	return [[self numberForKey:LAST_PREDICATE] intValue];
+}
+
+/*!
+ * @brief Sets the index of the last predicate
+ *
+ * @param index The index of the last predicate used
+ */
+- (void)setIndexOfLastPredicate:(int)index
+{
+	[options setObject:[NSNumber numberWithInt:index] forKey:LAST_PREDICATE];
+	/*Save our settings*/
+	[self writeSettings];
 }
 
 - (void) willBePushed

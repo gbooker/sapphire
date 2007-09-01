@@ -15,8 +15,7 @@
 	NSMutableArray				*items ;
 	SapphireDirectoryMetaData	*metaData;
 	SapphirePredicate			*predicate;
-	SapphirePredicate			*origPredicate;
-	BRSegmentedSortControl		*modeControl;
+//	BRSegmentedSortControl		*modeControl;
 	SapphireFileMetaData		*currentPlayFile;
 	int							dirCount;
 	int							fileCount;
@@ -24,7 +23,6 @@
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta predicate:(SapphirePredicate *)newPredicate;
 - (void) dealloc;
 
 - (void) willBePushed;

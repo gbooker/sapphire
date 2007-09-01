@@ -10,7 +10,8 @@
 
 @interface SapphireMarkMenu : BRMediaMenuController {
 	BOOL				isDir;
-	NSArray				*names;
+	NSMutableArray		*names;
+	NSMutableArray		*commands;
 	SapphireMetaData	*metaData;
 	SapphirePredicate	*predicate;
 }

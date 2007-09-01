@@ -41,15 +41,11 @@ static NSArray *predicates = nil;
 	[predicates makeObjectsPerformSelector:@selector(release)];
 }
 
-+ (SapphirePredicate *)nextPredicate:(SapphirePredicate *)predicate
++ (SapphirePredicate *)predicate
 {
-	if(predicate == nil)
-		predicate = (SapphirePredicate *)[NSNull null];
-	
-	int index = [predicates indexOfObject:predicate];
-	int count = [predicates count];
-	index = (index + 1) % count;
-	if(index == count - 1)
+	SapphireSettings *settings = [SapphireSettings sharedSettings];
+	int index = [settings indexOfLastPredicate];
+	if(index == NSNotFound)
 		return nil;
 	return [predicates objectAtIndex:index];
 }

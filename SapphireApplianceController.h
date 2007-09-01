@@ -19,7 +19,8 @@
 	SapphireSettings			*settings;
 }
 
-+ (SapphirePredicate *)nextPredicate:(SapphirePredicate *)predicate;
++ (SapphirePredicate *)predicate;
++ (SapphirePredicate *)nextPredicate;
 + (BRTexture *)gemForPredicate:(SapphirePredicate *)predicate;
 + (NSString *) rootMenuLabel ;
 
