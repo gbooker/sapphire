@@ -255,14 +255,18 @@ static NSSet *allExtensions = nil;
 {
 	NSEnumerator *dirsEnum = [metaData keyEnumerator];
 	NSString *dir = nil;
+	NSString *match = nil;
 	while((dir = [dirsEnum nextObject]) != nil)
 	{
 		if([absPath hasPrefix:dir])
-			break;
+		{
+			if([dir length] > [match length])
+				match = dir;
+		}
 	}
-	if(dir != nil)
+	if(match != nil)
 	{
-		SapphireDirectoryMetaData *ret = [directories objectForKey:dir];
+		SapphireDirectoryMetaData *ret = [directories objectForKey:match];
 		if(ret == nil)
 		{
 			ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:dir] parent:self path:dir];
@@ -1032,9 +1036,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate
 {
-	[[self collection] setImage:YES];
+	[[self collection] setImporting:YES];
 	SEL select = @selector(setFileClass:);
-	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodForSelector:select]];
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&fileClass atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
