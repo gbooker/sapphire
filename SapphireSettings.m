@@ -60,7 +60,7 @@ static SapphireSettings *sharedInstance = nil;
  * @param meta The top level meta data
  * @return The settings object
  */
-- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)meta
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaDataCollection:(SapphireMetaDataCollection *)collection
 {
 	if(sharedInstance != nil)
 		return sharedInstance;
@@ -68,7 +68,7 @@ static SapphireSettings *sharedInstance = nil;
 	self = [super initWithScene:scene];
 	
 	/*Setup display*/
-	metaData = [meta retain];
+	metaCollection = [collection retain];
 	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
 												BRLocalizedString(@"   Fetch Internet Data", @"Populate Internet Data menu item"),
 												BRLocalizedString(@"   Hide \"Favorite Shows\"", @"Hide Favorite shows menu item"),
@@ -143,7 +143,7 @@ static SapphireSettings *sharedInstance = nil;
 	[gems release];
 	[path release];
 	[defaults release];
-	[metaData release];
+	[metaCollection release];
 	[super dealloc];
 }
 
@@ -414,7 +414,7 @@ static SapphireSettings *sharedInstance = nil;
 	if(row==0)
 	{
 		SapphireFileDataImporter *importer = [[SapphireFileDataImporter alloc] init];
-		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaData:metaData importer:importer];
+		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:metaCollection importer:importer];
 		[[self stack] pushController:menu];
 		[menu release];
 		[importer release];
@@ -423,7 +423,7 @@ static SapphireSettings *sharedInstance = nil;
 	else if(row == 1)
 	{
 		SapphireTVShowImporter *importer = [[SapphireTVShowImporter alloc] initWithSavedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
-		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaData:metaData importer:importer];
+		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:metaCollection importer:importer];
 		[[self stack] pushController:menu];
 		[menu release];
 		[importer release];

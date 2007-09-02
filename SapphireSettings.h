@@ -16,13 +16,13 @@
 	NSMutableDictionary			*options;
 	NSString					*path;
 	NSDictionary				*defaults;
-	SapphireDirectoryMetaData	*metaData;
+	SapphireMetaDataCollection	*metaCollection;
 }
 
 + (SapphireSettings *)sharedSettings;
 + (void)relinquishSettings;
 
-- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaData:(SapphireDirectoryMetaData *)metaData;
+- (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaDataCollection:(SapphireMetaDataCollection *)collection;
 - (void) dealloc;
 
 - (BOOL)displayUnwatched;

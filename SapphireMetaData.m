@@ -269,14 +269,14 @@ static NSSet *allExtensions = nil;
 		SapphireDirectoryMetaData *ret = [directories objectForKey:match];
 		if(ret == nil)
 		{
-			ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:dir] parent:self path:dir];
+			ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:match] parent:self path:match];
 			if(ret == nil)
 				return nil;
-			[directories setObject:ret forKey:dir];
-			[metaData setObject:[ret dict] forKey:dir];
+			[directories setObject:ret forKey:match];
+			[metaData setObject:[ret dict] forKey:match];
 		}
 		NSMutableArray *pathComp = [[absPath pathComponents] mutableCopy];
-		int prefixCount = [[dir pathComponents] count];
+		int prefixCount = [[match pathComponents] count];
 		int i;
 		for(i=0; i<prefixCount; i++)
 			[pathComp removeObjectAtIndex:0];
@@ -291,6 +291,33 @@ static NSSet *allExtensions = nil;
 		return ret;
 	}
 	return nil;
+}
+
+/*!
+ * @brief Gets a listing of all valid collection directories.  These are all mounted disks
+ * plus homedir/Movies
+ *
+ * @return All the directory locations
+ */
+
+- (NSArray *)collectionDirectories
+{
+	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
+	NSMutableArray *ret = [[mywork mountedLocalVolumePaths] mutableCopy];
+	[ret removeObject:@"/"];
+	[ret removeObject:@"/mnt"];
+	[ret removeObject:@"/CIFS"];
+	[ret removeObject:NSHomeDirectory()];
+	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	
+	NSEnumerator *dirEnum = [ret objectEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+	{
+		if([metaData objectForKey:dir] == nil)
+			[metaData setObject:[NSDictionary dictionary] forKey:dir];
+	}
+	return [ret autorelease];
 }
 
 /*Makes a director at a path, including its parents*/

@@ -81,6 +81,7 @@ typedef enum {
 }
 - (id)initWithFile:(NSString *)dictionary;
 - (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
+- (NSArray *)collectionDirectories;
 - (void)setImporting:(BOOL)isImporting;
 
 @end

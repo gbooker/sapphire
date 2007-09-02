@@ -883,6 +883,9 @@ BOOL setupAudioOutput(int sampleRate)
 		{
 			id meta = nil;
 			int row = [(BRListControl *)[self list] selection];
+			if(row > [_names count])
+				return NO;
+			
 			NSString *name = [_names objectAtIndex:row];
 			
 			/*Get metadata*/

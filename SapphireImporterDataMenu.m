@@ -21,16 +21,18 @@
  * @brief Creates a new Importer Data Menu
  *
  * @param scene The scene
- * @praam meta The metadata for the directory to browse
+ * @praam collection The metadata collection to browse
  * @return The Menu
  */
-- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData  importer:(id <SapphireImporter>)import;
+- (id) initWithScene: (BRRenderScene *) scene metaDataCollection:(SapphireMetaDataCollection *)collection  importer:(id <SapphireImporter>)import
 {
 	if ( [super initWithScene: scene] == nil )
 	return ( nil );
-	meta = [metaData retain];
+	metaCollection = [collection retain];
+	collectionDirectories = [[collection collectionDirectories] retain];
 	importer = [import retain];
 	[importer setImporterDataMenu:self];
+	importItems = [[NSMutableArray alloc] init];
 	/*Setup the Header Control with default contents*/
 	title = [[BRHeaderControl alloc] initWithScene: scene];
 	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
@@ -76,13 +78,16 @@
 - (void) dealloc
 {
 	[title release];
-	[text release];
-	[fileProgress release] ;
-	[bar release];
 	[button release];
-	[meta release];
-	[importer release];
+	[text release];
+	[fileProgress release];
+	[currentFile release];
+	[bar release];
+	[metaCollection release];
+	[collectionDirectories release];
+	[importItems release];
 	[importTimer invalidate];
+	[importer release];
 	[super dealloc];
 }
 
@@ -154,7 +159,10 @@
  */
 - (void)getItems
 {
+	NSString *path = [collectionDirectories objectAtIndex:collectionIndex];
+	SapphireDirectoryMetaData *meta = [metaCollection directoryForPath:path];
 	[meta getSubFileMetasWithDelegate:self skipDirectories:[NSMutableSet set]];
+	collectionIndex++;
 }
 
 /*!
@@ -170,7 +178,8 @@
 	/*Initialize the import process*/
 	canceled = NO;
 	suspended = NO;
-	[[meta collection] setImporting:YES];
+	[metaCollection setImporting:YES];
+	collectionIndex = 0;
 	[self getItems];
 }
 
@@ -181,7 +190,12 @@
  */
 - (void)gotSubFiles:(NSArray *)subs
 {
-	importItems = [subs mutableCopy];
+	[importItems addObjectsFromArray:subs];
+	if(collectionIndex != [collectionDirectories count])
+	{
+		[self getItems];
+		return;
+	}
 	updated = 0 ;
 	current = 0;
 	max = [importItems count];
@@ -262,8 +276,8 @@
 	{
 		[importTimer invalidate];
 		importTimer = nil;
-		[[meta collection] setImporting:NO];
-		[meta writeMetaData];
+		[metaCollection setImporting:NO];
+		[metaCollection writeMetaData];
 		/*Update display*/
 		[button setHidden:YES];
 		[button setTarget:nil];
@@ -286,8 +300,8 @@
 	importTimer = nil;
 	/*Reset the display and write data*/
 	[self resetUIElements];
-	[[meta collection] setImporting:NO];
-	[meta writeMetaData];
+	[metaCollection setImporting:NO];
+	[metaCollection writeMetaData];
 }
 
 /*!

@@ -6,7 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-@class SapphireDirectoryMetaData, SapphireFileMetaData, SapphireImporterDataMenu;
+@class SapphireMetaDataCollection, SapphireFileMetaData, SapphireImporterDataMenu;
 @protocol SapphireMetaDataScannerDelegate;
 
 @protocol SapphireImporter <NSObject>
@@ -28,7 +28,9 @@
 	BRTextControl					*currentFile;
 	BRProgressBarWidget				*bar;
 
-	SapphireDirectoryMetaData		*meta;
+	SapphireMetaDataCollection		*metaCollection;
+	NSArray							*collectionDirectories;
+	int								collectionIndex;
 	NSMutableArray					*importItems;
 	NSTimer							*importTimer;
 	float							max;
@@ -39,7 +41,7 @@
 	
 	id <SapphireImporter>			importer;
 }
-- (id) initWithScene: (BRRenderScene *) scene metaData:(SapphireDirectoryMetaData *)metaData importer:(id <SapphireImporter>)import;
+- (id) initWithScene: (BRRenderScene *) scene metaDataCollection:(SapphireMetaDataCollection *)collection  importer:(id <SapphireImporter>)import;
 - (void)getItems;
 @end
 

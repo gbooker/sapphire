@@ -94,7 +94,7 @@ static NSArray *predicates = nil;
 	return (@"net.pmerrill.Sapphire" );
 }
 
-- (SapphireImporterDataMenu *)allImporterForRootDir:(SapphireDirectoryMetaData *)rootDir
+- (SapphireImporterDataMenu *)allImporterForCollection:(SapphireMetaDataCollection *)collection
 {
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
 	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
@@ -102,7 +102,7 @@ static NSArray *predicates = nil;
 	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:fileImp, tvImp, nil]];
 	[fileImp release];
 	[tvImp release];
-	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaData:rootDir importer:allImp];
+	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
 	return [ret autorelease];
 }
 
@@ -116,24 +116,41 @@ static NSArray *predicates = nil;
 	[theme setScene:[self scene]];
 
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"]];
-
-	masterNames = [[NSArray alloc] initWithObjects:	BROWSER_MENU_ITEM,
-													ALL_IMPORT_MENU_ITEM,
-													SETTINGS_MENU_ITEM,
-													RESET_MENU_ITEM, nil];
 	
-	SapphireDirectoryMetaData *rootDir		= [metaCollection directoryForPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:rootDir] ;
-	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir];
-	SapphireImporterDataMenu *allImporter	= [self allImporterForRootDir:rootDir];
-	[self setListTitle:							BRLocalizedString(@"Main Menu", @"")];
-	[playBrowser setListTitle:				BRLocalizedString(@"Show Browser", @"Browser Menu Item")];
+	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaDataCollection:metaCollection] ;
+	SapphireImporterDataMenu *allImporter	= [self allImporterForCollection:metaCollection];
+	[self setListTitle:						BRLocalizedString(@"Main Menu", @"")];
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
+	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	
-	[settings setListIcon:[theme gem:GEAR_GEM_KEY]];
-	[playBrowser setListIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
-	masterControllers = [[NSArray alloc] initWithObjects:playBrowser,allImporter,settings,nil];
-	[playBrowser release];
+	NSMutableArray *mutableMasterNames = [[NSMutableArray alloc] init];
+	NSMutableArray *mutableMasterControllers = [[NSMutableArray alloc] init];
+
+	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
+	NSString *browserPoint = nil;
+	while((browserPoint = [browserPointsEnum nextObject]) != nil)
+	{
+		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
+		[browser setListTitle:[browserPoint lastPathComponent]];
+		[browser setListIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
+		[mutableMasterNames addObject:[NSString stringWithFormat:@"   %@", browserPoint]];
+		[mutableMasterControllers addObject:browser];
+		[browser release];
+	}
+	[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
+		ALL_IMPORT_MENU_ITEM,
+		SETTINGS_MENU_ITEM,
+		RESET_MENU_ITEM,
+		nil]];
+	[mutableMasterControllers addObjectsFromArray:[NSArray arrayWithObjects:
+		allImporter,
+		settings,
+		nil]];
+	masterNames = [[NSArray alloc] initWithArray:mutableMasterNames];
+	masterControllers = [[NSArray alloc] initWithArray:mutableMasterControllers];
+	[mutableMasterNames release];
+	[mutableMasterControllers release];
+
 	names = [[NSMutableArray alloc] init];
 	controllers = [[NSMutableArray alloc] init];
 	[self setMenuFromSettings];
