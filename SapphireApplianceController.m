@@ -19,10 +19,7 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireAllImporter.h"
 
-#define UNWATCHED_MENU_ITEM		BRLocalizedString(@"   Unwatched", @"Unwatched Browser Menu Item")
-#define FAVORITE_MENU_ITEM		BRLocalizedString(@"   Favorite Shows", @"Favorite Browser Menu Item")
-#define TOP_SHOWS_MENU_ITEM		BRLocalizedString(@"   Top Shows", @"Top Shows Browser Menu Item")
-#define BROWSER_MENU_ITEM		BRLocalizedString(@"   Browse Shows", @"Browser Menu Item")
+#define BROWSER_MENU_ITEM		BRLocalizedString(@"   Browse", @"Browser Menu Item")
 #define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"   Import All Data", @"All Importer Menu Item")
 #define SETTINGS_MENU_ITEM		BRLocalizedString(@"   Settings", @"Settings Menu Item")
 #define RESET_MENU_ITEM			BRLocalizedString(@"   Reset the thing already", @"UI Quit")
@@ -37,7 +34,7 @@ static NSArray *predicates = nil;
 
 + (void)initialize
 {
-	predicates = [[NSArray alloc] initWithObjects:[[SapphireUnwatchedPredicate alloc] init], [[SapphireFavoritePredicate alloc] init], /*[[SapphireTopShowPredicate alloc] init], */[[NSNull alloc] init], nil];
+	predicates = [[NSArray alloc] initWithObjects:[[SapphireUnwatchedPredicate alloc] init], [[SapphireFavoritePredicate alloc] init], [[SapphireTopShowPredicate alloc] init], nil];
 	[predicates makeObjectsPerformSelector:@selector(release)];
 }
 
@@ -48,6 +45,34 @@ static NSArray *predicates = nil;
 	if(index == NSNotFound)
 		return nil;
 	return [predicates objectAtIndex:index];
+}
+
++ (SapphirePredicate *)nextPredicate
+{
+	SapphireSettings *settings = [SapphireSettings sharedSettings];
+	int index = [settings indexOfLastPredicate];
+	int newIndex;
+	switch(index)
+	{
+		case NSNotFound:
+			newIndex = 0;
+			if([settings displayUnwatched])
+				break;
+		case 0:
+			newIndex = 1;
+			if([settings displayFavorites])
+				break;
+		case 1:
+			newIndex = 2;
+			if([settings displayTopShows])
+				break;
+		default:
+			newIndex = NSNotFound;
+	}
+	[settings setIndexOfLastPredicate:newIndex];
+	if(newIndex == NSNotFound)
+		return nil;
+	return [predicates objectAtIndex:newIndex];
 }
 
 + (BRTexture *)gemForPredicate:(SapphirePredicate *)predicate
@@ -92,37 +117,22 @@ static NSArray *predicates = nil;
 
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"]];
 
-	masterNames = [[NSArray alloc] initWithObjects:	UNWATCHED_MENU_ITEM,
-													FAVORITE_MENU_ITEM,
-													TOP_SHOWS_MENU_ITEM,
-													BROWSER_MENU_ITEM,
+	masterNames = [[NSArray alloc] initWithObjects:	BROWSER_MENU_ITEM,
 													ALL_IMPORT_MENU_ITEM,
 													SETTINGS_MENU_ITEM,
 													RESET_MENU_ITEM, nil];
 	
-	SapphireDirectoryMetaData *rootDir = [metaCollection directoryForPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-	SapphireBrowser *unwatchedBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir predicate:[predicates objectAtIndex:0]];
-	SapphireBrowser *favoriteShowsBrowser	= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir predicate:[predicates objectAtIndex:1]];
-	SapphireBrowser *topShowsBrowser		= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir predicate:[[[SapphireTopShowPredicate alloc] init] autorelease]];
+	SapphireDirectoryMetaData *rootDir		= [metaCollection directoryForPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:rootDir] ;
 	SapphireBrowser *playBrowser			= [[SapphireBrowser alloc] initWithScene:[self scene] metaData:rootDir];
 	SapphireImporterDataMenu *allImporter	= [self allImporterForRootDir:rootDir];
-	settings									= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaData:rootDir] ;
 	[self setListTitle:							BRLocalizedString(@"Main Menu", @"")];
-	[unwatchedBrowser setListTitle:			BRLocalizedString(@"Unwatched Shows", @"Unwatched Browser Menu Item")];
-	[favoriteShowsBrowser setListTitle:		BRLocalizedString(@"Favorite Shows", @"Favorite Browser Menu Item")];
-	[topShowsBrowser setListTitle:			BRLocalizedString(@"Top Shows", @"Top Shows Browser Menu Item")];
 	[playBrowser setListTitle:				BRLocalizedString(@"Show Browser", @"Browser Menu Item")];
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
 	
 	[settings setListIcon:[theme gem:GEAR_GEM_KEY]];
-	[playBrowser setListIcon:[theme gem:RED_GEM_KEY]];
-	[topShowsBrowser setListIcon:[theme gem:GREEN_GEM_KEY]];
-	[favoriteShowsBrowser setListIcon:[theme gem:YELLOW_GEM_KEY]];
-	[unwatchedBrowser setListIcon:[theme gem:BLUE_GEM_KEY]];
-	masterControllers = [[NSArray alloc] initWithObjects:unwatchedBrowser,favoriteShowsBrowser,topShowsBrowser,playBrowser,allImporter,settings,nil];
-	[unwatchedBrowser release];
-	[favoriteShowsBrowser release];
-	[topShowsBrowser release];
+	[playBrowser setListIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
+	masterControllers = [[NSArray alloc] initWithObjects:playBrowser,allImporter,settings,nil];
 	[playBrowser release];
 	names = [[NSMutableArray alloc] init];
 	controllers = [[NSMutableArray alloc] init];
@@ -148,30 +158,10 @@ static NSArray *predicates = nil;
 {
 	[names removeAllObjects];
 	[controllers removeAllObjects];
-	
-	if([settings displayUnwatched])
-	{
-		[names addObject:[masterNames objectAtIndex:0]];
-		[controllers addObject:[masterControllers objectAtIndex:0]];
-	}
-	if([settings displayFavorites])
-	{
-		[names addObject:[masterNames objectAtIndex:1]];
-		[controllers addObject:[masterControllers objectAtIndex:1]];
-	}
-	if([settings displayTopShows])
-	{
-		[names addObject:[masterNames objectAtIndex:2]];
-		[controllers addObject:[masterControllers objectAtIndex:2]];
-	}
-	[names addObject:[masterNames objectAtIndex:3]];
-	[controllers addObject:[masterControllers objectAtIndex:3]];
-	[names addObject:[masterNames objectAtIndex:4]];
-	[controllers addObject:[masterControllers objectAtIndex:4]];
-	[names addObject:[masterNames objectAtIndex:5]];
-	[controllers addObject:[masterControllers objectAtIndex:5]];
-	if(![settings disableUIQuit])
-		[names addObject:[masterNames objectAtIndex:6]];
+	[names addObjectsFromArray:masterNames];
+	[controllers addObjectsFromArray:masterControllers];
+	if([settings disableUIQuit])
+		[names removeLastObject];
 }
 
 - (void) willBePushed
@@ -260,15 +250,11 @@ static NSArray *predicates = nil;
 	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
 	
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	if([name isEqual: UNWATCHED_MENU_ITEM]) [result setLeftIcon:[theme gem:BLUE_GEM_KEY]];
-	if([name isEqual: FAVORITE_MENU_ITEM])  [result setLeftIcon:[theme gem:YELLOW_GEM_KEY]];
-	if([name isEqual: TOP_SHOWS_MENU_ITEM])  [result setLeftIcon:[theme gem:GREEN_GEM_KEY]];
-	if([name isEqual: BROWSER_MENU_ITEM])  [result setLeftIcon:[theme gem:RED_GEM_KEY]];
 	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
-	if([name isEqual: SETTINGS_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
-	if([name isEqual: RESET_MENU_ITEM]) [result setLeftIcon:[theme gem:CONE_GEM_KEY]];
-
-			
+	else if([name isEqual: SETTINGS_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
+	else if([name isEqual: RESET_MENU_ITEM]) [result setLeftIcon:[theme gem:CONE_GEM_KEY]];
+	else [result setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
+	
 	// add text
 	[[result textItem] setTitle: name] ;
 				
