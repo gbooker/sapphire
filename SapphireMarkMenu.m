@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by Graham Booker on 6/25/07.
-//  Copyright 2007 __www.nanopi.net__. All rights reserved.
+//  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
 #import "SapphireMarkMenu.h"

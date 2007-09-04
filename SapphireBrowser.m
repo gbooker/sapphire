@@ -3,7 +3,7 @@
 //  Sapphire
 //
 //  Created by pnmerrill on 6/20/07.
-//  Copyright 2007 __www.nanopi.net__. All rights reserved.
+//  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
 #import "SapphireBrowser.h"
