@@ -76,6 +76,8 @@ typedef enum {
 
 @interface SapphireMetaDataCollection : SapphireMetaData {
 	NSMutableDictionary			*directories;
+	NSMutableDictionary			*skipCollection;
+	NSMutableDictionary			*hideCollection;
 	NSString					*dictionaryPath;
 	BOOL						importing;
 }
@@ -83,6 +85,10 @@ typedef enum {
 - (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
 - (NSArray *)collectionDirectories;
 - (void)setImporting:(BOOL)isImporting;
+- (BOOL)hideCollection:(NSString *)collection;
+- (void)setHide:(BOOL)hide forCollection:(NSString *)collection;
+- (BOOL)skipCollection:(NSString *)collection;
+- (void)setSkip:(BOOL)skip forCollection:(NSString *)collection;
 
 @end
 

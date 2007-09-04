@@ -130,6 +130,8 @@ static NSArray *predicates = nil;
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
 	{
+		if([metaCollection hideCollection:browserPoint])
+			continue;
 		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
 		[browser setListTitle:[browserPoint lastPathComponent]];
 		[browser setListIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];

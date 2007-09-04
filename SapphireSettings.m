@@ -13,6 +13,7 @@
 #import "SapphireTheme.h"
 #import "SapphireFileDataImporter.h"
 #import "SapphireTVShowImporter.h"
+#import "SapphireCollectionSettings.h"
 
 static SapphireSettings *sharedInstance = nil;
 
@@ -70,10 +71,12 @@ static SapphireSettings *sharedInstance = nil;
 	/*Setup display*/
 	metaCollection = [collection retain];
 	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
-												BRLocalizedString(@"   Fetch Internet Data", @"Populate Internet Data menu item"),
-												BRLocalizedString(@"   Hide \"Favorite Shows\"", @"Hide Favorite shows menu item"),
-/*												BRLocalizedString(@"   Hide \"Top Shows\"", @"Hide Top shows menu item"),*/
-												BRLocalizedString(@"   Hide \"Unwatched Shows\"", @"Hide Unwatched shows menu item"), 
+												BRLocalizedString(@"   Fetch Internet Data", @"Fetch Internet Data menu item"),
+												BRLocalizedString(@"   Hide Collections", @"Hide Collections menu item"),
+												BRLocalizedString(@"   Don't Import Collections", @"Don't Import Collections menu item"),
+												BRLocalizedString(@"   Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"),
+/*												BRLocalizedString(@"   Skip \"Top Shows\" filter", @"Skip Top shows menu item"),*/
+												BRLocalizedString(@"   Skip \"Unwatched Shows\" filter", @"Skip Unwatched shows menu item"), 
 												BRLocalizedString(@"   Hide Show Spoilers", @"Hide show summarys menu item"),
 												BRLocalizedString(@"   Hide UI Quit", @"Hide the ui quitter menu item"),
 												BRLocalizedString(@"   Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
@@ -81,6 +84,8 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"   Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
 	
 	keys = [[NSArray alloc] initWithObjects:		@"",
+													@"",
+													@"",
 													@"",
 													HIDE_FAVORITE_KEY, 
 													/*HIDE_TOP_SHOWS_KEY, */
@@ -92,6 +97,8 @@ static SapphireSettings *sharedInstance = nil;
 													DISABLE_ANON_KEY, nil];
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
+												[theme gem:EYE_GEM_KEY],
+												[theme gem:EYE_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
 												[theme gem:YELLOW_GEM_KEY],
 												/*[theme gem:GREEN_GEM_KEY],*/
@@ -121,7 +128,7 @@ static SapphireSettings *sharedInstance = nil;
 
 	/*display*/
 	[[self list] setDatasource:self];
-	[[self list] addDividerAtIndex:2];
+	[[self list] addDividerAtIndex:4];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 
@@ -365,7 +372,7 @@ static SapphireSettings *sharedInstance = nil;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if( row > 1 && [self boolForKey:[keys objectAtIndex:row]])
+	if( row > 3 && [self boolForKey:[keys objectAtIndex:row]])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
@@ -427,6 +434,24 @@ static SapphireSettings *sharedInstance = nil;
 		[[self stack] pushController:menu];
 		[menu release];
 		[importer release];
+	}
+	else if(row == 2)
+	{
+		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
+		[colSettings setGettingSelector:@selector(hideCollection:)];
+		[colSettings setSettingSelector:@selector(setHide:forCollection:)];
+		[colSettings setListTitle:BRLocalizedString(@"Hide Collections", @"Hide Collections Menu Title")] ;
+		[[self stack] pushController:colSettings];
+		[colSettings release];
+	}
+	else if(row == 3)
+	{
+		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
+		[colSettings setGettingSelector:@selector(skipCollection:)];
+		[colSettings setSettingSelector:@selector(setSkip:forCollection:)];
+		[colSettings setListTitle:BRLocalizedString(@"Skip Collections", @"Skip Collections Menu Title")] ;
+		[[self stack] pushController:colSettings];
+		[colSettings release];
 	}
 	/*Change setting*/
 	else

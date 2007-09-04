@@ -160,6 +160,12 @@
 - (void)getItems
 {
 	NSString *path = [collectionDirectories objectAtIndex:collectionIndex];
+	if([metaCollection skipCollection:path])
+	{
+		collectionIndex++;
+		[self performSelector:@selector(gotSubFiles:) withObject:[NSArray array] afterDelay:0.0];
+		return;
+	}
 	SapphireDirectoryMetaData *meta = [metaCollection directoryForPath:path];
 	[meta getSubFileMetasWithDelegate:self skipDirectories:[NSMutableSet set]];
 	collectionIndex++;

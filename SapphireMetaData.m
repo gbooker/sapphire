@@ -18,6 +18,9 @@
 #define FILES_KEY					@"Files"
 #define DIRS_KEY					@"Dirs"
 #define META_VERSION_KEY			@"Version"
+#define META_COLLECTION_OPTIONS		@"Options"
+#define META_COLLECTION_HIDE		@"Hide"
+#define META_COLLECTION_SKIP_SCAN	@"Skip"
 #define META_FILE_VERSION			2
 #define META_COLLECTION_VERSION		2
 
@@ -204,6 +207,13 @@ static NSSet *allExtensions = nil;
 
 @end
 
+@interface SapphireMetaDataCollection (private)
+- (SapphireDirectoryMetaData *)directoryForCollectionDir:(NSString *)dir;
+- (SapphireDirectoryMetaData *)directoryForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory;
+- (void)linkCollections;
+- (NSArray *)collections;
+@end
+
 @implementation SapphireMetaDataCollection
 
 /*!
@@ -234,15 +244,88 @@ static NSSet *allExtensions = nil;
 	}
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
+
+	NSMutableDictionary *collectionOptions = [[metaData objectForKey:META_COLLECTION_OPTIONS] mutableCopy];
+	if(collectionOptions == nil)
+		collectionOptions = [[NSMutableDictionary alloc] init];
+	[metaData setObject:collectionOptions forKey:META_COLLECTION_OPTIONS];
+	[collectionOptions release];
+	
+	skipCollection = [[collectionOptions objectForKey:META_COLLECTION_SKIP_SCAN] mutableCopy];
+	if(skipCollection == nil)
+		skipCollection = [[NSMutableDictionary alloc] init];
+	[collectionOptions setObject:skipCollection forKey:META_COLLECTION_SKIP_SCAN];
+	
+	hideCollection = [[collectionOptions objectForKey:META_COLLECTION_HIDE] mutableCopy];
+	if(hideCollection == nil)
+		hideCollection = [[NSMutableDictionary alloc] init];
+	[collectionOptions setObject:hideCollection forKey:META_COLLECTION_HIDE];
+	
 	[self writeMetaData];
 	
 	return self;
 }
 
+- (void)linkCollections
+{
+	NSMutableArray *collections = [[self collections] mutableCopy];
+	[collections sortUsingSelector:@selector(compare:)];
+	NSEnumerator *collectionEnum = [collections objectEnumerator];
+	NSString *dir = nil;
+	SapphireDirectoryMetaData *highestMetaData = nil;
+	while((dir = [collectionEnum nextObject]) != nil)
+	{
+		if(highestMetaData != nil && [dir hasPrefix:[highestMetaData path]])
+		{
+			[directories setObject:[self directoryForSubPath:dir inDirectory:highestMetaData] forKey:dir];
+		}
+		else
+			highestMetaData = [self directoryForCollectionDir:dir];
+	}
+	
+	[collections release];
+}
+
 - (void)dealloc
 {
 	[dictionaryPath release];
+	[skipCollection release];
+	[hideCollection release];
+	[dictionaryPath release];
 	[super dealloc];
+}
+
+- (SapphireDirectoryMetaData *)directoryForCollectionDir:(NSString *)dir
+{
+	SapphireDirectoryMetaData *ret = [directories objectForKey:dir];
+	if(ret == nil)
+	{
+		ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:dir] parent:self path:dir];
+		if(ret == nil)
+			return nil;
+		[directories setObject:ret forKey:dir];
+		[metaData setObject:[ret dict] forKey:dir];
+	}
+	return ret;
+}
+
+- (SapphireDirectoryMetaData *)directoryForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory
+{
+	SapphireDirectoryMetaData *ret = directory;
+	NSString *dirPath = [directory path];
+	NSMutableArray *pathComp = [[absPath pathComponents] mutableCopy];
+	int prefixCount = [[dirPath pathComponents] count];
+	int i;
+	for(i=0; i<prefixCount; i++)
+		[pathComp removeObjectAtIndex:0];
+	
+	if([pathComp count])
+	{
+		NSString *subPath = [NSString pathWithComponents:pathComp];
+		ret = (SapphireDirectoryMetaData *)[ret metaDataForSubPath:subPath];
+	}
+	[pathComp release];
+	return ret;
 }
 
 /*!
@@ -266,31 +349,23 @@ static NSSet *allExtensions = nil;
 	}
 	if(match != nil)
 	{
-		SapphireDirectoryMetaData *ret = [directories objectForKey:match];
-		if(ret == nil)
-		{
-			ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:match] parent:self path:match];
-			if(ret == nil)
-				return nil;
-			[directories setObject:ret forKey:match];
-			[metaData setObject:[ret dict] forKey:match];
-		}
-		NSMutableArray *pathComp = [[absPath pathComponents] mutableCopy];
-		int prefixCount = [[match pathComponents] count];
-		int i;
-		for(i=0; i<prefixCount; i++)
-			[pathComp removeObjectAtIndex:0];
-		
-		if([pathComp count])
-		{
-			NSString *subPath = [NSString pathWithComponents:pathComp];
-			ret = (SapphireDirectoryMetaData *)[ret metaDataForSubPath:subPath];
-		}
-		[pathComp release];
-		
+		SapphireDirectoryMetaData *ret = [self directoryForCollectionDir:match];
+		ret = [self directoryForSubPath:absPath inDirectory:ret];
 		return ret;
 	}
 	return nil;
+}
+
+- (NSArray *)collections
+{
+	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
+	NSMutableArray *ret = [[mywork mountedLocalVolumePaths] mutableCopy];
+	[ret removeObject:@"/"];
+	[ret removeObject:@"/mnt"];
+	[ret removeObject:@"/CIFS"];
+	[ret removeObject:NSHomeDirectory()];
+	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	return [ret autorelease];
 }
 
 /*!
@@ -302,14 +377,7 @@ static NSSet *allExtensions = nil;
 
 - (NSArray *)collectionDirectories
 {
-	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
-	NSMutableArray *ret = [[mywork mountedLocalVolumePaths] mutableCopy];
-	[ret removeObject:@"/"];
-	[ret removeObject:@"/mnt"];
-	[ret removeObject:@"/CIFS"];
-	[ret removeObject:NSHomeDirectory()];
-	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-	
+	NSArray *ret = [self collections];
 	NSEnumerator *dirEnum = [ret objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
@@ -317,7 +385,7 @@ static NSSet *allExtensions = nil;
 		if([metaData objectForKey:dir] == nil)
 			[metaData setObject:[NSDictionary dictionary] forKey:dir];
 	}
-	return [ret autorelease];
+	return ret;
 }
 
 /*Makes a director at a path, including its parents*/
@@ -361,6 +429,48 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void)setImporting:(BOOL)isImporting
 {
 	importing = isImporting;
+}
+
+/*!
+ * @brief Returns whether the collection is hidden or not
+ *
+ * @return YES if the collection is hidden, NO otherwise
+ */
+- (BOOL)hideCollection:(NSString *)collection
+{
+	return [[hideCollection objectForKey:collection] boolValue];
+}
+
+/*!
+ * @brief Set whether to hide the collection or not
+ *
+ * @param hide YES to hide this collection, NO otherwise
+ */
+- (void)setHide:(BOOL)hide forCollection:(NSString *)collection
+{
+	[hideCollection setObject:[NSNumber numberWithBool:hide] forKey:collection];
+	[self writeMetaData];
+}
+
+/*!
+ * @brief Returns whether the collection is skipped or not
+ *
+ * @return YES if the collection is skipped, NO otherwise
+ */
+- (BOOL)skipCollection:(NSString *)collection
+{
+	return [[skipCollection objectForKey:collection] boolValue];
+}
+
+/*!
+ * @brief Set whether to skip the collection or not
+ *
+ * @param skip YES to skip this collection, NO otherwise
+ */
+- (void)setSkip:(BOOL)skip forCollection:(NSString *)collection
+{
+	[skipCollection setObject:[NSNumber numberWithBool:skip] forKey:collection];
+	[self writeMetaData];
 }
 
 @end
