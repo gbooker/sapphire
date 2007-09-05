@@ -481,6 +481,16 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireDirectoryMetaData
 
+//Just to shut up the compiler since it doesn't think to look at the super class to see if a method is implemented or not
+- (NSString *)path
+{
+	return [super path];
+}
+- (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate
+{
+	[super setDelegate:newDelegate];
+}
+
 /*!
  * @brief Creates a new meta data object
  *
@@ -522,6 +532,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (void)dealloc
 {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	NSEnumerator *filesEnum = [cachedMetaFiles objectEnumerator];
+	SapphireFileMetaData *meta = nil;
+	while((meta = [filesEnum nextObject]) != nil)
+		[nc postNotificationName:META_DATA_FILE_REMOVED_NOTIFICATION object:meta];
+	
 	[importTimer invalidate];
 	[importArray release];
 	[cachedMetaDirs release];
@@ -807,6 +823,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			if(![[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
 			{
 				/*Remove and mark as we did an update*/
+				SapphireMetaData *meta = [cachedMetaFiles objectForKey:pruneKey];
+				if(meta != nil)
+					[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_REMOVED_NOTIFICATION object:meta];
 				[metaFiles removeObjectForKey:pruneKey];
 				[cachedMetaFiles removeObjectForKey:pruneKey];
 				ret = YES;
@@ -1261,6 +1280,17 @@ static NSArray *displayedMetaDataOrder = nil;
 	[modified release];
 }
 
+- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
+{
+	self = [super initWithDictionary:dict parent:myParent path:myPath];
+	if(self == nil)
+		return nil;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_ADDED_NOTIFICATION object:self];
+	
+	return self;
+}
+
 - (void)dealloc
 {
 	[combinedInfo release];
@@ -1454,9 +1484,13 @@ static NSArray *displayedMetaDataOrder = nil;
  */
 - (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime
 {
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	NSDictionary *info = [NSDictionary dictionaryWithObject:source forKey:META_DATA_FILE_INFO_KIND];
+	[nc postNotificationName:META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION object:self userInfo:info];
 	[newMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 	[metaData setObject:newMeta forKey:source];
 	[self combinedDataChanged];
+	[nc postNotificationName:META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION object:self userInfo:info];
 }
 
 /*!

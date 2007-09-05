@@ -37,6 +37,12 @@
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
 
+#define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
+#define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"
+#define META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION	@"MetaDataFileInfoWillChange"
+#define META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION	@"MetaDataFileInfoHasChanged"
+#define META_DATA_FILE_INFO_KIND						@"MetaDataFileInfoKind"
+
 typedef enum {
 	FILE_CLASS_UNKNOWN = 0,
 	FILE_CLASS_TV_SHOW = 1,
@@ -53,6 +59,35 @@ typedef enum {
 - (void)gotSubFiles:(NSArray *)subs;
 - (void)scanningDir:(NSString *)dir;
 - (BOOL)getSubFilesCanceled;
+@end
+
+@protocol SapphireMetaData <NSObject>
+@end
+
+@protocol SapphireDirectoryMetaData <NSObject>
+- (NSString *)path;
+- (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
+
+- (void)reloadDirectoryContents;
+- (NSArray *)files;
+- (NSArray *)directories;
+- (NSArray *)predicatedFiles:(SapphirePredicate *)predicate;
+- (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate;
+
+- (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
+- (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)dir;
+
+- (void)cancelImport;
+- (void)resumeDelayedImport;
+
+- (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
+
+- (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
+- (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate;
+- (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
+- (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate;
+- (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate;
+- (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate;
 @end
 
 @interface SapphireMetaData : NSObject {
@@ -92,7 +127,7 @@ typedef enum {
 
 @end
 
-@interface SapphireDirectoryMetaData : SapphireMetaData {
+@interface SapphireDirectoryMetaData : SapphireMetaData <SapphireDirectoryMetaData>{
 	/*These two are not retained*/
 	NSMutableDictionary			*metaFiles;
 	NSMutableDictionary			*metaDirs;
@@ -111,33 +146,13 @@ typedef enum {
 	SapphireMetaDataCollection	*collection;
 }
 
-- (void)reloadDirectoryContents;
-- (NSArray *)files;
-- (NSArray *)directories;
-- (NSArray *)predicatedFiles:(SapphirePredicate *)predicate;
-- (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate;
-
-- (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
-- (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)dir;
-
 - (BOOL)pruneMetaData;
 - (BOOL)updateMetaData;
 
-- (void)cancelImport;
 - (void)resumeImport;
-- (void)resumeDelayedImport;
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
-- (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
-
-- (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
-- (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate;
-- (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
-- (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate;
-- (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate;
-- (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate;
-
 @end
 
 @interface SapphireFileMetaData : SapphireMetaData {
