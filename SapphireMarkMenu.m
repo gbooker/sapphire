@@ -32,7 +32,7 @@ typedef enum {
 		return nil;
 	
 	/*Check to see if it is directory or file*/
-	isDir = [meta conformsToProtocol:@protocol(SapphireDirectoryMetaData)];
+	isDir = [meta isKindOfClass:[SapphireDirectoryMetaData class]];
 	metaData = [meta retain];
 	commands = nil;
 	/*Create the menu*/
@@ -220,7 +220,7 @@ typedef enum {
 	/*Do action on dir or file*/
 	if(isDir)
 	{
-		id <SapphireDirectoryMetaData> dirMeta = (SapphireDirectoryMetaData *)metaData;
+		SapphireDirectoryMetaData *dirMeta = (SapphireDirectoryMetaData *)metaData;
 		switch(row)
 		{
 			case 0:

@@ -6,14 +6,14 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
-@class SapphireFileMetaData, SapphireMetaDataCollection, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
-@protocol SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate, SapphireDirectoryMetaData;
+@class SapphireFileMetaData, SapphireMetaDataCollection, SapphireDirectoryMetaData, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
+@protocol SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate;
 
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate>
 {
 	NSMutableArray					*_names ;
 	NSMutableArray					*items ;
-	id <SapphireDirectoryMetaData>	metaData;
+	SapphireDirectoryMetaData		*metaData;
 	SapphirePredicate				*predicate;
 	SapphireFileMetaData			*currentPlayFile;
 	int								dirCount;
@@ -21,7 +21,7 @@
 	BOOL							cancelScan;
 }
 
-- (id) initWithScene: (BRRenderScene *) scene metaData: (id <SapphireDirectoryMetaData>)meta;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
 - (void) dealloc;
 
 - (void) willBePushed;

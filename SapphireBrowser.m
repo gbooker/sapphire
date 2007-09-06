@@ -158,7 +158,7 @@ static BOOL is10Version = NO;
  * @param newPredicate The predicate to use
  * @return The Browser
  */
-- (id) initWithScene: (BRRenderScene *) scene metaData: (id <SapphireDirectoryMetaData>)meta
+- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
 		
@@ -448,7 +448,7 @@ static BOOL is10Version = NO;
 	if(row < dirCount)
 	{
 		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: scene] ;
-		id <SapphireDirectoryMetaData> meta = [metaData metaDataForDirectory:name];
+		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watchedForPredicate:predicate];
 		favorite = [meta favoriteForPredicate:predicate];
 	}

@@ -553,10 +553,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void)reloadDirectoryContents
 {
 	/*Flush saved information*/
-	[files release];
-	[directories release];
-	files = [NSMutableArray new];
-	directories = [NSMutableArray new];
+	[files removeAllObjects];
+	[directories removeAllObjects];
 	NSMutableArray *fileMetas = [NSMutableArray array];
 	
 	/*Get content*/
