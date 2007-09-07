@@ -384,7 +384,7 @@ static BOOL is10Version = NO;
 	[currentPlayFile release];
 	currentPlayFile = nil;
 	/*Reload our display*/
-	[self reloadDirectoryContents];
+	[self setNewPredicate:[SapphireApplianceController predicate]];
     // always call super
     [super willBeExhumed];
 }
@@ -655,30 +655,6 @@ BOOL setupAudioOutput(int sampleRate)
 	
 	NSString *name = [_names objectAtIndex:row];
 	NSString *dir = [metaData path];
-	
-	/*Check mode for mark*
-	if([self selectedMode] == 1)
-	{
-		id meta = nil;
-		/*Get metadata*
-		if(row < dirCount)
-			meta = [metaData metaDataForDirectory:name];
-		else if (row < dirCount + fileCount)
-			meta = [metaData metaDataForFile:name];
-		else
-			return;
-		/*Do mark menu*
-		id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
-		[(SapphireMarkMenu *)controller setPredicate:predicate];
-		[[self stack] pushController:controller];
-		[controller release];
-		return;
-	}
-	else if([self selectedMode] == 2)
-	{
-		[self setNewPredicate:[SapphireApplianceController nextPredicate:predicate]];
-		return;
-	}
 	
 	/*Check for dir*/
 	if(row < dirCount)

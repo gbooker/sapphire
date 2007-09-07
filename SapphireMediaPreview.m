@@ -59,6 +59,12 @@ static NSSet *coverArtExtentions = nil;
 - (void)setMetaData:(SapphireMetaData *)newMeta
 {
 	[meta release];
+	NSString *path = [newMeta path];
+	if(path == nil)
+	{
+		meta = nil;
+		return;
+	}
 	meta = [newMeta retain];
 	/*Now that we know the file, set the asset*/
 	NSURL *url = [NSURL fileURLWithPath:[meta path]];

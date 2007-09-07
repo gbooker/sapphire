@@ -481,16 +481,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireDirectoryMetaData
 
-//Just to shut up the compiler since it doesn't think to look at the super class to see if a method is implemented or not
-- (NSString *)path
-{
-	return [super path];
-}
-- (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate
-{
-	[super setDelegate:newDelegate];
-}
-
 /*!
  * @brief Creates a new meta data object
  *
@@ -522,6 +512,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		metaDirs = [metaDirs mutableCopy];
 	[metaData setObject:metaDirs forKey:DIRS_KEY];
 	[metaDirs release];
+	
+	directories = [[NSMutableArray alloc] init];
+	files = [[NSMutableArray alloc] init];
 	
 	/*Setup the cache*/
 	cachedMetaDirs = [NSMutableDictionary new];
@@ -1027,6 +1020,25 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	/*We don't want results*/
 	[scanner setGivesResults:NO];
 	[scanner release];
+}
+
+/*!
+ * @brief Load all the cached meta data so that dynamic directories can build
+ */
+- (void)loadMetaData
+{
+	NSEnumerator *dirEnum = [metaDirs keyEnumerator];
+	NSString *dir = nil;
+	while((dir = [dirEnum nextObject]) != nil)
+	{
+		[[self metaDataForDirectory:dir] loadMetaData];
+	}
+	NSEnumerator *fileEnum = [metaFiles keyEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		[self metaDataForFile:file];
+	}
 }
 
 /*Quick function to setup file and directory lists for other functions*/

@@ -136,6 +136,7 @@ typedef enum {
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 - (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
 - (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
+- (void)loadMetaData;
 
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
 - (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate;

@@ -13,6 +13,7 @@
 #import "SapphirePredicates.h"
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"
+#import "SapphireTVDirectory.h"
 
 #import "SapphireImporterDataMenu.h"
 #import "SapphireFileDataImporter.h"
@@ -125,16 +126,29 @@ static NSArray *predicates = nil;
 	
 	NSMutableArray *mutableMasterNames = [[NSMutableArray alloc] init];
 	NSMutableArray *mutableMasterControllers = [[NSMutableArray alloc] init];
+	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
+	
+	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] init];
+	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
+	[tvBrowser setListTitle:BRLocalizedString(@"TV Shows", nil)];
+	[tvBrowser setListIcon:predicateGem];
+	[mutableMasterNames addObject:BRLocalizedString(@"   TV Shows", nil)];
+	[mutableMasterControllers addObject:tvBrowser];
+	[tvBrowser release];
+	
+	
 
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
 	{
+		if(![metaCollection skipCollection:browserPoint])
+			[[metaCollection directoryForPath:browserPoint] loadMetaData];
 		if([metaCollection hideCollection:browserPoint])
 			continue;
 		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
 		[browser setListTitle:[browserPoint lastPathComponent]];
-		[browser setListIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
+		[browser setListIcon:predicateGem];
 		[mutableMasterNames addObject:[NSString stringWithFormat:@"   %@", browserPoint]];
 		[mutableMasterControllers addObject:browser];
 		[browser release];

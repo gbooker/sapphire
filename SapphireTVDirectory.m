@@ -9,17 +9,27 @@
 #import "SapphireTVDirectory.h"
 #import "SapphireMetaData.h"
 
+@interface SapphireDirectoryMetaData (privateFunctions)
+- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
+@end
+
 @implementation SapphireTVBaseDirectory
-- (id)init
+- (id)initWithParent:(SapphireTVBaseDirectory *)myParent path:(NSString *)myPath
 {
-	self = [super init];
+	self = [super initWithDictionary:nil parent:myParent path:myPath];
 	if(self == nil)
 		return nil;
 	
 	directory = [[NSMutableDictionary alloc] init];
 	reloadTimer = nil;
+	scannedDirectory = YES;
 	
 	return self;
+}
+
+- (id)init
+{
+	return [self initWithParent:nil path:@"@TV"];
 }
 
 - (void) dealloc
@@ -31,6 +41,12 @@
 
 - (void)reloadDirectoryContents
 {
+	[files removeAllObjects];
+	[directories removeAllObjects];
+	[metaFiles removeAllObjects];
+	[metaDirs removeAllObjects];
+	[cachedMetaFiles removeAllObjects];
+	[cachedMetaDirs removeAllObjects];
 	[reloadTimer invalidate];
 	reloadTimer = nil;
 }
@@ -47,9 +63,9 @@
 @end
 
 @implementation SapphireTVDirectory
-- (id)init
+- (id)initWithParent:(SapphireTVBaseDirectory *)myParent path:(NSString *)myPath
 {
-	self = [super init];
+	self = [super initWithParent:myParent path:myPath];
 	if(self == nil)
 		return nil;
 	
@@ -66,20 +82,22 @@
 
 - (void)reloadDirectoryContents
 {
-	[files removeAllObjects];
-	[directories removeAllObjects];
+	[super reloadDirectoryContents];
 	[directories addObjectsFromArray:[directory allKeys]];
 	[directories sortUsingSelector:@selector(directoryNameCompare:)];
-	[super reloadDirectoryContents];
+	[cachedMetaDirs addEntriesFromDictionary:directory];
+	[metaDirs addEntriesFromDictionary:directory];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	NSString *show = [file showName];
+	if(show == nil)
+		return;
 	SapphireShowDirectory *showInfo = [directory objectForKey:show];
 	if(showInfo == nil)
 	{
-		showInfo = [[SapphireShowDirectory alloc] init];
+		showInfo = [[SapphireShowDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:show]];
 		[directory setObject:showInfo forKey:show];
 		[showInfo release];
 		[self setReloadTimer];
@@ -91,20 +109,23 @@
 @implementation SapphireShowDirectory
 - (void)reloadDirectoryContents
 {
-	[files removeAllObjects];
-	[directories removeAllObjects];
+	[super reloadDirectoryContents];
 	[directories addObjectsFromArray:[directory allKeys]];
 	[directories sortUsingSelector:@selector(directoryNameCompare:)];
-	[super reloadDirectoryContents];
+	[cachedMetaDirs addEntriesFromDictionary:directory];
+	[metaDirs addEntriesFromDictionary:directory];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	NSNumber *season = [NSNumber numberWithInt:[file seasonNumber]];
+	int seasonNum = [file seasonNumber];
+	if(seasonNum == 0)
+		return;
+	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
 	SapphireSeasonDirectory *seasonInfo = [directory objectForKey:season];
 	if(seasonInfo == nil)
 	{
-		seasonInfo = [[SapphireShowDirectory alloc] init];
+		seasonInfo = [[SapphireSeasonDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:season]];
 		[directory setObject:seasonInfo forKey:season];
 		[seasonInfo release];
 		[self setReloadTimer];
@@ -116,23 +137,19 @@
 @implementation SapphireSeasonDirectory
 - (void)reloadDirectoryContents
 {
-	[files removeAllObjects];
-	[directories removeAllObjects];
-
-	NSMutableArray *fileMetas = [NSMutableArray array];
-	[fileMetas addObjectsFromArray:[directory allValues]];
-	[fileMetas sortUsingSelector:@selector(episodeCompare:)];
-
-	NSEnumerator *fileEnum = [fileMetas objectEnumerator];
-	SapphireFileMetaData *fileMeta = nil;
-	while((fileMeta = [fileEnum nextObject]) != nil)
-		[files addObject:[[fileMeta path] lastPathComponent]];
 	[super reloadDirectoryContents];
+	[files addObjectsFromArray:[directory allKeys]];
+	[files sortUsingSelector:@selector(directoryNameCompare:)];
+	[cachedMetaFiles addEntriesFromDictionary:directory];
+	[metaFiles addEntriesFromDictionary:directory];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	NSNumber *ep = [NSNumber numberWithInt:[file episodeNumber]];
+	int epNum = [file episodeNumber];
+	if(epNum == 0)
+		return;
+	NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), epNum];
 	[directory setObject:file forKey:ep];
 	[self setReloadTimer];
 }
