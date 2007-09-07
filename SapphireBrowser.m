@@ -263,21 +263,6 @@ static BOOL is10Version = NO;
 	[[self scene] renderScene];
 }
 
-/*!
- * @brief Get the mode in a compatible way
- *
- * @return The mode selection
- *
-- (int)selectedMode
-{
-	/*Get if using the old method*
-	if([modeControl isKindOfClass:[BRTVShowsSortControl class]])
-		return [modeControl gimmieState] - 1;
-	
-	/*Get it from the new method*
-	return [modeControl selectedSegment];
-}
-*/
 - (void) dealloc
 {
     // always remember to deallocate your resources
@@ -844,6 +829,25 @@ BOOL setupAudioOutput(int sampleRate)
     return ( nil );
 }
 
+- (int)getSelection
+{
+	BRListControl *list = [self list];
+	int row;
+	NSMethodSignature *signature = [list methodSignatureForSelector:@selector(selection)];
+	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
+	[selInv setSelector:@selector(selection)];
+	[selInv invokeWithTarget:list];
+	if([signature methodReturnLength] == 8)
+	{
+		double retDoub = 0;
+		[selInv getReturnValue:&retDoub];
+		row = retDoub;
+	}
+	else
+		[selInv getReturnValue:&row];
+	return row;
+}
+
 - (BOOL)brEventAction:(BREvent *)event
 {
 	/*Cancel imports on an action*/
@@ -858,7 +862,7 @@ BOOL setupAudioOutput(int sampleRate)
 		case kBREventTapRight:
 		{
 			id meta = nil;
-			int row = [(BRListControl *)[self list] selection];
+			int row = [self getSelection];
 			if(row > [_names count])
 				return NO;
 			
