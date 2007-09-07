@@ -138,10 +138,21 @@
 - (void)reloadDirectoryContents
 {
 	[super reloadDirectoryContents];
-	[files addObjectsFromArray:[directory allKeys]];
+	NSFileManager *fm = [NSFileManager defaultManager];
+	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] initWithDictionary:directory];
+	NSEnumerator *keyEnum = [directory keyEnumerator];
+	NSString *key = nil;
+	while((key = [keyEnum nextObject]) != nil)
+	{
+		SapphireFileMetaData *file = [directory objectForKey:key];
+		if(![fm fileExistsAtPath:[file path]])
+			[mutDict removeObjectForKey:key];
+	}
+	[files addObjectsFromArray:[mutDict allKeys]];
 	[files sortUsingSelector:@selector(directoryNameCompare:)];
-	[cachedMetaFiles addEntriesFromDictionary:directory];
-	[metaFiles addEntriesFromDictionary:directory];
+	[cachedMetaFiles addEntriesFromDictionary:mutDict];
+	[metaFiles addEntriesFromDictionary:mutDict];
+	[mutDict release];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
