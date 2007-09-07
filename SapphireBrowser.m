@@ -639,7 +639,6 @@ BOOL setupAudioOutput(int sampleRate)
 	}
 	
 	NSString *name = [_names objectAtIndex:row];
-	NSString *dir = [metaData path];
 	
 	/*Check for dir*/
 	if(row < dirCount)
@@ -656,7 +655,7 @@ BOOL setupAudioOutput(int sampleRate)
 		/*Play the file*/
 		currentPlayFile = [[metaData metaDataForFile:name] retain];
 		
-		NSString *path = [dir stringByAppendingPathComponent:name];
+		NSString *path = [currentPlayFile path];
 		
 		/*Anonymous reporting*/
 		SapphireSettings *settings = [SapphireSettings sharedSettings];
