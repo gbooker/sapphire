@@ -60,6 +60,10 @@
 - (void)processFile:(SapphireFileMetaData *)file
 {
 }
+
+- (void)removeFile:(SapphireFileMetaData *)file
+{
+}
 @end
 
 @implementation SapphireTVDirectory
@@ -70,6 +74,9 @@
 		return nil;
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileAdded:) name:META_DATA_FILE_ADDED_NOTIFICATION object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileRemoved:) name:META_DATA_FILE_REMOVED_NOTIFICATION object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileInfoHasChanged:) name:META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileInfoWillChanged:) name:META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION object:nil];
 	
 	return self;
 }
@@ -78,6 +85,30 @@
 {
 	SapphireFileMetaData *file = [notification object];
 	[self processFile:file];
+}
+
+- (void)fileRemoved:(NSNotification *)notification
+{
+	SapphireFileMetaData *file = [notification object];
+	[self removeFile:file];
+}
+
+- (void)fileInfoHasChanged:(NSNotification *)notification
+{
+	NSDictionary *info = [notification userInfo];
+	if(![[info objectForKey:META_DATA_FILE_INFO_KIND] isEqualToString:META_TVRAGE_IMPORT_KEY])
+		return;
+	SapphireFileMetaData *file = [notification object];
+	[self processFile:file];
+}
+
+- (void)fileInfoWillChanged:(NSNotification *)notification
+{
+	NSDictionary *info = [notification userInfo];
+	if(![[info objectForKey:META_DATA_FILE_INFO_KIND] isEqualToString:META_TVRAGE_IMPORT_KEY])
+		return;
+	SapphireFileMetaData *file = [notification object];
+	[self removeFile:file];
 }
 
 - (void)reloadDirectoryContents
@@ -103,6 +134,23 @@
 		[self setReloadTimer];
 	}
 	[showInfo processFile:file];
+}
+
+- (void)removeFile:(SapphireFileMetaData *)file
+{
+	NSString *show = [file showName];
+	if(show == nil)
+		return;
+	SapphireShowDirectory *showInfo = [directory objectForKey:show];
+	if(showInfo != nil)
+	{
+		[showInfo removeFile:file];
+		if([[showInfo directories] count] == 0)
+		{
+			[directory removeObjectForKey:show];
+			[self setReloadTimer];
+		}
+	}
 }
 @end
 
@@ -131,6 +179,24 @@
 		[self setReloadTimer];
 	}
 	[seasonInfo processFile:file];
+}
+
+- (void)removeFile:(SapphireFileMetaData *)file
+{
+	int seasonNum = [file seasonNumber];
+	if(seasonNum == 0)
+		return;
+	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
+	SapphireSeasonDirectory *seasonInfo = [directory objectForKey:season];
+	if(seasonInfo == nil)
+	{
+		[seasonInfo removeFile:file];
+		if([[seasonInfo directories] count] == 0)
+		{
+			[directory removeObjectForKey:season];
+			[self setReloadTimer];
+		}
+	}
 }
 @end
 
@@ -162,6 +228,16 @@
 		return;
 	NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), epNum];
 	[directory setObject:file forKey:ep];
+	[self setReloadTimer];
+}
+
+- (void)removeFile:(SapphireFileMetaData *)file
+{
+	int epNum = [file episodeNumber];
+	if(epNum == 0)
+		return;
+	NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), epNum];
+	[directory removeObjectForKey:ep];
 	[self setReloadTimer];
 }
 @end

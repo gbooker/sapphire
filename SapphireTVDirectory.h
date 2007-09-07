@@ -13,6 +13,7 @@
 	NSTimer					*reloadTimer;
 }
 - (void)processFile:(SapphireFileMetaData *)file;
+- (void)removeFile:(SapphireFileMetaData *)file;
 @end
 
 @interface SapphireTVDirectory : SapphireTVBaseDirectory {
