@@ -205,14 +205,17 @@
 {
 	[super reloadDirectoryContents];
 	NSFileManager *fm = [NSFileManager defaultManager];
-	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] initWithDictionary:directory];
+	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
 	NSEnumerator *keyEnum = [directory keyEnumerator];
 	NSString *key = nil;
 	while((key = [keyEnum nextObject]) != nil)
 	{
 		SapphireFileMetaData *file = [directory objectForKey:key];
-		if(![fm fileExistsAtPath:[file path]])
-			[mutDict removeObjectForKey:key];
+		if([fm fileExistsAtPath:[file path]])
+		{
+			NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), [file episodeNumber]];
+			[mutDict setObject:file forKey:ep];
+		}
 	}
 	[files addObjectsFromArray:[mutDict allKeys]];
 	[files sortUsingSelector:@selector(directoryNameCompare:)];
@@ -226,8 +229,7 @@
 	int epNum = [file episodeNumber];
 	if(epNum == 0)
 		return;
-	NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), epNum];
-	[directory setObject:file forKey:ep];
+	[directory setObject:file forKey:[file path]];
 	[self setReloadTimer];
 }
 
@@ -236,8 +238,7 @@
 	int epNum = [file episodeNumber];
 	if(epNum == 0)
 		return;
-	NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), epNum];
-	[directory removeObjectForKey:ep];
+	[directory removeObjectForKey:[file path]];
 	[self setReloadTimer];
 }
 @end
