@@ -27,6 +27,7 @@
 
 @interface SapphireApplianceController (private)
 - (void)setMenuFromSettings;
+- (void)recreateMenu;
 @end
 
 @implementation SapphireApplianceController
@@ -119,11 +120,30 @@ static NSArray *predicates = nil;
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"]];
 	
 	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaDataCollection:metaCollection] ;
-	SapphireImporterDataMenu *allImporter	= [self allImporterForCollection:metaCollection];
 	[self setListTitle:						BRLocalizedString(@"Main Menu", @"")];
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
-	
+	[[self list] setDatasource:self];
+
+	return self;
+}
+
+- (void)dealloc
+{
+	[names release];
+	[controllers release];
+	[masterNames release];
+	[masterControllers release];
+	[metaCollection release];
+	[SapphireSettings relinquishSettings];
+	[settings release];
+	[super dealloc];
+}
+
+- (void)recreateMenu
+{
+	SapphireImporterDataMenu *allImporter	= [self allImporterForCollection:metaCollection];
+
 	NSMutableArray *mutableMasterNames = [[NSMutableArray alloc] init];
 	NSMutableArray *mutableMasterControllers = [[NSMutableArray alloc] init];
 	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
@@ -136,8 +156,6 @@ static NSArray *predicates = nil;
 	[mutableMasterControllers addObject:tvBrowser];
 	[tvBrowser release];
 	
-	
-
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
@@ -166,25 +184,10 @@ static NSArray *predicates = nil;
 	masterControllers = [[NSArray alloc] initWithArray:mutableMasterControllers];
 	[mutableMasterNames release];
 	[mutableMasterControllers release];
-
+	
 	names = [[NSMutableArray alloc] init];
 	controllers = [[NSMutableArray alloc] init];
 	[self setMenuFromSettings];
-	[[self list] setDatasource:self];
-
-	return self;
-}
-
-- (void)dealloc
-{
-	[names release];
-	[controllers release];
-	[masterNames release];
-	[masterControllers release];
-	[metaCollection release];
-	[SapphireSettings relinquishSettings];
-	[settings release];
-	[super dealloc];
 }
 
 - (void)setMenuFromSettings
@@ -200,7 +203,8 @@ static NSArray *predicates = nil;
 - (void) willBePushed
 {
     // We're about to be placed on screen, but we're not yet there
-    
+    [self recreateMenu];
+	[[self list] reload];
     // always call super
     [super willBePushed];
 }
