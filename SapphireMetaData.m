@@ -22,7 +22,7 @@
 #define META_COLLECTION_HIDE		@"Hide"
 #define META_COLLECTION_SKIP_SCAN	@"Skip"
 #define META_FILE_VERSION			2
-#define META_COLLECTION_VERSION		2
+#define META_COLLECTION_VERSION		3
 
 //File Specific Keys
 #define MODIFIED_KEY				@"Modified"
@@ -208,13 +208,66 @@ static NSSet *allExtensions = nil;
 @end
 
 @interface SapphireMetaDataCollection (private)
-- (SapphireDirectoryMetaData *)directoryForCollectionDir:(NSString *)dir;
-- (SapphireDirectoryMetaData *)directoryForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory;
+- (SapphireMetaData *)dataForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory;
 - (void)linkCollections;
-- (NSArray *)collections;
 @end
 
 @implementation SapphireMetaDataCollection
+
+- (void)insertDictionary:(NSDictionary *)dict atPath:(NSMutableArray *)pathComponents withinDictionary:(NSMutableDictionary *)source
+{
+	NSString *element = [pathComponents firstObject];
+	NSMutableDictionary *dir = [source objectForKey:element];
+	if(dir == nil)
+		dir = [[NSMutableDictionary alloc] init];
+	else
+		dir = [dir mutableCopy];
+	[source setObject:dir forKey:element];
+	[dir release];
+	if([pathComponents count] == 1)
+	{
+		/* insert here */
+		[dir setDictionary:dict];
+	}
+	else
+	{
+		NSMutableDictionary *dirs = [dir objectForKey:DIRS_KEY];
+		if(dirs == nil)
+			dirs = [[NSMutableDictionary alloc] init];
+		else
+			dirs = [dirs mutableCopy];
+		[dir setObject:dirs forKey:DIRS_KEY];
+		[dirs release];
+		
+		[pathComponents removeObjectAtIndex:0];
+		[self insertDictionary:dict atPath:pathComponents withinDictionary:dirs];
+	}
+}
+
+- (int)upgradeFromVersion1
+{
+	NSString *oldRoot = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
+	[metaData removeObjectForKey:META_VERSION_KEY];
+	NSMutableDictionary *newRoot = [NSMutableDictionary new];
+	NSMutableArray *pathComponents = [[oldRoot pathComponents] mutableCopy];
+	[self insertDictionary:metaData atPath:pathComponents withinDictionary:newRoot];
+	[pathComponents release];
+	metaData = newRoot;
+	[(SapphireDirectoryMetaData *)[self dataForPath:oldRoot] setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:nil];
+	
+	return 3;
+}
+
+- (int)upgradeFromVersion2
+{
+	NSString *oldRoot = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
+	NSMutableArray *pathComponents = [[oldRoot pathComponents] mutableCopy];
+	NSDictionary *info = [metaData objectForKey:oldRoot];
+	[self insertDictionary:info atPath:pathComponents withinDictionary:metaData];
+	[pathComponents release];
+	[metaData removeObjectForKey:oldRoot];
+	return 3;
+}
 
 /*!
  * @brief Create a collection from a file and browsing a directory
@@ -233,14 +286,14 @@ static NSSet *allExtensions = nil;
 		return nil;
 	
 	/*Version upgrade*/
-	if([[metaData objectForKey:META_VERSION_KEY] intValue] < 2)
+	int version = [[metaData objectForKey:META_VERSION_KEY] intValue];
+
+	if(version < META_COLLECTION_VERSION)
 	{
-		NSString *oldRoot = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
-		[metaData removeObjectForKey:META_VERSION_KEY];
-		NSMutableDictionary *newRoot = [NSMutableDictionary new];
-		[newRoot setObject:metaData forKey:oldRoot];
-		metaData = newRoot;
-		[[self directoryForPath:oldRoot] setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:nil];
+		if(version < 2)
+			version = [self upgradeFromVersion1];
+		if(version < 3)
+			version = [self upgradeFromVersion2];		
 	}
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
@@ -261,6 +314,15 @@ static NSSet *allExtensions = nil;
 		hideCollection = [[NSMutableDictionary alloc] init];
 	[collectionOptions setObject:hideCollection forKey:META_COLLECTION_HIDE];
 	
+	directories = [[NSMutableDictionary alloc] init];
+	
+	/* Hide and skip the / collection */
+	[self setHide:YES forCollection:@"/"];
+	[self setSkip:YES forCollection:@"/"];
+	SapphireDirectoryMetaData *slash = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:@"/"] parent:self path:@"/"];
+	[directories setObject:slash forKey:@"/"];
+	[slash release];
+	[self linkCollections];
 	[self writeMetaData];
 	
 	return self;
@@ -268,19 +330,14 @@ static NSSet *allExtensions = nil;
 
 - (void)linkCollections
 {
-	NSMutableArray *collections = [[self collections] mutableCopy];
+	NSMutableArray *collections = [[self collectionDirectories] mutableCopy];
 	[collections sortUsingSelector:@selector(compare:)];
 	NSEnumerator *collectionEnum = [collections objectEnumerator];
 	NSString *dir = nil;
-	SapphireDirectoryMetaData *highestMetaData = nil;
+	SapphireDirectoryMetaData *highestMetaData = [directories objectForKey:[collectionEnum nextObject]];
 	while((dir = [collectionEnum nextObject]) != nil)
 	{
-		if(highestMetaData != nil && [dir hasPrefix:[highestMetaData path]])
-		{
-			[directories setObject:[self directoryForSubPath:dir inDirectory:highestMetaData] forKey:dir];
-		}
-		else
-			highestMetaData = [self directoryForCollectionDir:dir];
+		[directories setObject:[self dataForSubPath:dir inDirectory:highestMetaData] forKey:dir];
 	}
 	
 	[collections release];
@@ -295,36 +352,50 @@ static NSSet *allExtensions = nil;
 	[super dealloc];
 }
 
-- (SapphireDirectoryMetaData *)directoryForCollectionDir:(NSString *)dir
+- (SapphireMetaData *)dataForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory
 {
-	SapphireDirectoryMetaData *ret = [directories objectForKey:dir];
-	if(ret == nil)
-	{
-		ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:dir] parent:self path:dir];
-		if(ret == nil)
-			return nil;
-		[directories setObject:ret forKey:dir];
-		[metaData setObject:[ret dict] forKey:dir];
-	}
-	return ret;
-}
-
-- (SapphireDirectoryMetaData *)directoryForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory
-{
-	SapphireDirectoryMetaData *ret = directory;
+	SapphireMetaData *ret = directory;
 	NSString *dirPath = [directory path];
 	NSMutableArray *pathComp = [[absPath pathComponents] mutableCopy];
 	int prefixCount = [[dirPath pathComponents] count];
-	int i;
-	for(i=0; i<prefixCount; i++)
-		[pathComp removeObjectAtIndex:0];
+	[pathComp removeObjectsInRange:NSMakeRange(0, prefixCount)];
 	
 	if([pathComp count])
 	{
 		NSString *subPath = [NSString pathWithComponents:pathComp];
-		ret = (SapphireDirectoryMetaData *)[ret metaDataForSubPath:subPath];
+		ret = [directory metaDataForSubPath:subPath];
 	}
 	[pathComp release];
+	return ret;
+}
+
+/*!
+ * @brief Returns the meta data for a particular path
+ *
+ * @param path The path to find
+ * @return The directory meta data for the path, or nil if none exists
+ */
+- (SapphireMetaData *)dataForPath:(NSString *)absPath
+{
+	SapphireDirectoryMetaData *directory = [directories objectForKey:@"/"];
+	return [self dataForSubPath:absPath inDirectory:directory];
+}
+
+/*!
+ * @brief Returns the meta data for a particular path
+ *
+ * @param path The path to find
+ * @param data The meta data to use in place of the source's data
+ * @return The directory meta data for the path, or nil if none exists
+ */
+- (SapphireMetaData *)dataForPath:(NSString *)absPath withData:(NSDictionary *)data
+{
+	SapphireMetaData *ret = [self dataForPath:absPath];
+	
+	NSMutableDictionary *retDict = [ret dict];
+	if([data count] != 0)
+		[retDict addEntriesFromDictionary:data];
+	
 	return ret;
 }
 
@@ -336,36 +407,10 @@ static NSSet *allExtensions = nil;
  */
 - (SapphireDirectoryMetaData *)directoryForPath:(NSString *)absPath
 {
-	NSEnumerator *dirsEnum = [metaData keyEnumerator];
-	NSString *dir = nil;
-	NSString *match = nil;
-	while((dir = [dirsEnum nextObject]) != nil)
-	{
-		if([absPath hasPrefix:dir])
-		{
-			if([dir length] > [match length])
-				match = dir;
-		}
-	}
-	if(match != nil)
-	{
-		SapphireDirectoryMetaData *ret = [self directoryForCollectionDir:match];
-		ret = [self directoryForSubPath:absPath inDirectory:ret];
-		return ret;
-	}
+	SapphireMetaData *ret = [self dataForPath:absPath];
+	if([ret isKindOfClass:[SapphireDirectoryMetaData class]])
+		return (SapphireDirectoryMetaData *)ret;
 	return nil;
-}
-
-- (NSArray *)collections
-{
-	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
-	NSMutableArray *ret = [[mywork mountedLocalVolumePaths] mutableCopy];
-	[ret removeObject:@"/"];
-	[ret removeObject:@"/mnt"];
-	[ret removeObject:@"/CIFS"];
-	[ret removeObject:NSHomeDirectory()];
-	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-	return [ret autorelease];
 }
 
 /*!
@@ -377,15 +422,13 @@ static NSSet *allExtensions = nil;
 
 - (NSArray *)collectionDirectories
 {
-	NSArray *ret = [self collections];
-	NSEnumerator *dirEnum = [ret objectEnumerator];
-	NSString *dir = nil;
-	while((dir = [dirEnum nextObject]) != nil)
-	{
-		if([metaData objectForKey:dir] == nil)
-			[metaData setObject:[NSDictionary dictionary] forKey:dir];
-	}
-	return ret;
+	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
+	NSMutableArray *ret = [[mywork mountedLocalVolumePaths] mutableCopy];
+	[ret removeObject:@"/mnt"];
+	[ret removeObject:@"/CIFS"];
+	[ret removeObject:NSHomeDirectory()];
+	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	return [ret autorelease];
 }
 
 /*Makes a director at a path, including its parents*/
@@ -548,6 +591,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	/*Flush saved information*/
 	[files removeAllObjects];
 	[directories removeAllObjects];
+	[cachedMetaFiles removeAllObjects];
+	[cachedMetaDirs removeAllObjects];
 	NSMutableArray *fileMetas = [NSMutableArray array];
 	
 	/*Get content*/
@@ -555,6 +600,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	NSEnumerator *nameEnum = [names objectEnumerator];
 	NSString *name = nil;
+	NSFileManager *fm = [NSFileManager defaultManager];
 	while((name = [nameEnum nextObject]) != nil)
 	{
 		/*Skip hidden files*/
@@ -563,12 +609,36 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		/*Skip the Cover Art directory*/
 		if([name isEqualToString:@"Cover Art"])
 			continue;
+		NSString *filePath = [path stringByAppendingPathComponent:name];
+		NSDictionary *attributes = [fm fileAttributesAtPath:filePath traverseLink:NO];
+		SapphireMetaData *resolvedObject = nil;
+		if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+		{
+			/* Symbolic link, handle with care */
+			NSMutableDictionary *refDict = nil;
+			if([self isDirectory:filePath])
+				refDict = metaDirs;
+			else
+				refDict = metaFiles;
+			resolvedObject = [[self collection] dataForPath:[fm pathContentOfSymbolicLinkAtPath:filePath] withData:[refDict objectForKey:name]];
+			if(resolvedObject != nil)
+				[refDict removeObjectForKey:name];
+		}
 		/*Only accept if it is a directory or right extension*/
 		NSString *extension = [name pathExtension];
-		if([self isDirectory:[path stringByAppendingPathComponent:name]])
+		if([self isDirectory:filePath])
+		{
 			[directories addObject:name];
+			if(resolvedObject != nil)
+				[cachedMetaDirs setObject:resolvedObject forKey:name];
+		}
 		else if([allExtensions containsObject:[extension lowercaseString]])
-			[fileMetas addObject:[self metaDataForFile:name]];
+		{
+			if(resolvedObject == nil)
+				resolvedObject = [self metaDataForFile:name];
+			[fileMetas addObject:resolvedObject];
+			[cachedMetaFiles setObject:resolvedObject forKey:name];
+		}
 	}
 	/*Sort them*/
 	[directories sortUsingSelector:@selector(directoryNameCompare:)];
@@ -968,8 +1038,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		return self;
 	NSString *file = [components objectAtIndex:0];
 	
+	NSString *fullPath = [path stringByAppendingPathComponent:file];
 	/*Go to the next dir*/
-	if([self isDirectory:[path stringByAppendingPathComponent:file]])
+	if([self isDirectory:fullPath])
 	{
 		NSMutableArray *newComp = [components mutableCopy];
 		[newComp removeObjectAtIndex:0];
@@ -978,7 +1049,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		return [nextLevel metaDataForSubPath:[NSString pathWithComponents:newComp]];
 	}
 	/*If it matches a file, and more path components, this doesn't exist, return nil*/
-	else if([components count] > 1)
+	else if([components count] > 1 || ![[NSFileManager defaultManager] fileExistsAtPath:fullPath])
 		return nil;
 	/*Return our file's meta data*/
 	return [self metaDataForFile:file];

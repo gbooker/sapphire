@@ -29,7 +29,7 @@
 	BRProgressBarWidget				*bar;
 
 	SapphireMetaDataCollection		*metaCollection;
-	NSArray							*collectionDirectories;
+	NSMutableArray					*collectionDirectories;
 	int								collectionIndex;
 	NSMutableArray					*importItems;
 	NSTimer							*importTimer;

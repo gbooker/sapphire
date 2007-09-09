@@ -37,6 +37,7 @@
 	setInv = [[NSInvocation invocationWithMethodSignature:[metaCollection methodSignatureForSelector:selector]] retain];
 	[setInv setTarget:metaCollection];
 	[setInv setSelector:selector];
+	[[self list] reload];
 }
 - (void)setGettingSelector:(SEL)selector
 {
