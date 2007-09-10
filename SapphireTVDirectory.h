@@ -11,6 +11,7 @@
 @interface SapphireTVBaseDirectory : SapphireDirectoryMetaData {
 	NSMutableDictionary		*directory;
 	NSTimer					*reloadTimer;
+	int						displayCount;
 }
 - (void)processFile:(SapphireFileMetaData *)file;
 - (void)removeFile:(SapphireFileMetaData *)file;

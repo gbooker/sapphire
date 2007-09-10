@@ -143,9 +143,12 @@
 	[directories sortUsingSelector:@selector(directoryNameCompare:)];
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
+	NSLog(@"All shows is now %@\n", [mutDict allKeys]);
 	[mutDict release];
-	if([directories count] == 0)
+	int newCount = [directories count];
+	if(newCount != displayCount)
 		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
+	displayCount = newCount;
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -208,8 +211,10 @@
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	if([directories count] == 0)
+	int newCount = [directories count];
+	if(newCount != displayCount)
 		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
+	displayCount = newCount;
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -278,8 +283,10 @@
 	[cachedMetaFiles addEntriesFromDictionary:mutDict];
 	[metaFiles addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	if([files count] == 0)
+	int newCount = [directories count];
+	if(newCount != displayCount)
 		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
+	displayCount = newCount;
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
