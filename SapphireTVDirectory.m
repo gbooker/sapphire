@@ -143,7 +143,6 @@
 	[directories sortUsingSelector:@selector(directoryNameCompare:)];
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
-	NSLog(@"All shows is now %@\n", [mutDict allKeys]);
 	[mutDict release];
 	int newCount = [directories count];
 	if(newCount != displayCount)
@@ -283,7 +282,7 @@
 	[cachedMetaFiles addEntriesFromDictionary:mutDict];
 	[metaFiles addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	int newCount = [directories count];
+	int newCount = [files count];
 	if(newCount != displayCount)
 		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
 	displayCount = newCount;
