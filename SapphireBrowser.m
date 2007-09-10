@@ -281,7 +281,7 @@ static BOOL is10Version = NO;
     // always call super
     [super willBePushed];
 	/*Reload upon display*/
-	[self reloadDirectoryContents];
+	[self setNewPredicate:[SapphireApplianceController predicate]];
 }
 
 - (void) wasPushed
