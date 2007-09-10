@@ -145,6 +145,13 @@ static NSSet *allExtensions = nil;
 	[super dealloc];
 }
 
+- (void)replaceInfoWithDict:(NSDictionary *)dict
+{
+	NSMutableDictionary *newDict = [dict mutableCopy];
+	[metaData release];
+	metaData = newDict;
+}
+
 /*!
  * @brief Returns the mutable dictionary object containing all the meta data
  *
@@ -320,6 +327,7 @@ static NSSet *allExtensions = nil;
 	[self setHide:YES forCollection:@"/"];
 	[self setSkip:YES forCollection:@"/"];
 	SapphireDirectoryMetaData *slash = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:@"/"] parent:self path:@"/"];
+	[metaData setObject:[slash dict] forKey:@"/"];
 	[directories setObject:slash forKey:@"/"];
 	[slash release];
 	[self linkCollections];
@@ -392,9 +400,8 @@ static NSSet *allExtensions = nil;
 {
 	SapphireMetaData *ret = [self dataForPath:absPath];
 	
-	NSMutableDictionary *retDict = [ret dict];
 	if([data count] != 0)
-		[retDict addEntriesFromDictionary:data];
+		[ret replaceInfoWithDict:data];
 	
 	return ret;
 }
@@ -524,6 +531,27 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireDirectoryMetaData
 
+- (void)createSubDicts
+{
+	/*Get the file listing*/
+	metaFiles = [metaData objectForKey:FILES_KEY];
+	if(metaFiles == nil)
+		metaFiles = [NSMutableDictionary new];
+	else
+		metaFiles = [metaFiles mutableCopy];
+	[metaData setObject:metaFiles forKey:FILES_KEY];
+	[metaFiles release];
+	
+	/*Get the directory listing*/
+	metaDirs = [metaData objectForKey:DIRS_KEY];
+	if(metaDirs == nil)
+		metaDirs = [NSMutableDictionary new];
+	else
+		metaDirs = [metaDirs mutableCopy];
+	[metaData setObject:metaDirs forKey:DIRS_KEY];
+	[metaDirs release];	
+}
+
 /*!
  * @brief Creates a new meta data object
  *
@@ -538,24 +566,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if(!self)
 		return nil;
 	
-	/*Get the file listing*/
-	metaFiles = [metaData objectForKey:FILES_KEY];
-	if(metaFiles == nil)
-		metaFiles = [NSMutableDictionary new];
-	else
-		metaFiles = [metaFiles mutableCopy];
-	[metaData setObject:metaFiles forKey:FILES_KEY];
-	[metaFiles release];
-
-	/*Get the directory listing*/
-	metaDirs = [metaData objectForKey:DIRS_KEY];
-	if(metaDirs == nil)
-		metaDirs = [NSMutableDictionary new];
-	else
-		metaDirs = [metaDirs mutableCopy];
-	[metaData setObject:metaDirs forKey:DIRS_KEY];
-	[metaDirs release];
-	
+	[self createSubDicts];
 	directories = [[NSMutableArray alloc] init];
 	files = [[NSMutableArray alloc] init];
 	
@@ -566,14 +577,18 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return self;
 }
 
-- (void)dealloc
+- (void)postAllFilesRemoved
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	NSEnumerator *filesEnum = [cachedMetaFiles objectEnumerator];
 	SapphireFileMetaData *meta = nil;
 	while((meta = [filesEnum nextObject]) != nil)
-		[nc postNotificationName:META_DATA_FILE_REMOVED_NOTIFICATION object:meta];
-	
+		[nc postNotificationName:META_DATA_FILE_REMOVED_NOTIFICATION object:meta];	
+}
+
+- (void)dealloc
+{
+	[self postAllFilesRemoved];
 	[importTimer invalidate];
 	[importArray release];
 	[cachedMetaDirs release];
@@ -581,6 +596,22 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[files release];
 	[directories release];
 	[super dealloc];
+}
+
+- (void)replaceInfoWithDict:(NSDictionary *)dict
+{
+	[self postAllFilesRemoved];
+	[super replaceInfoWithDict:dict];
+	[self createSubDicts];
+	[directories removeAllObjects];
+	[files removeAllObjects];
+	[cachedMetaDirs removeAllObjects];
+	[cachedMetaFiles removeAllObjects];
+	[importArray release];
+	importArray = nil;
+	[importTimer invalidate];
+	importTimer = nil;
+	scannedDirectory = NO;
 }
 
 /*!
@@ -598,7 +629,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	NSEnumerator *nameEnum = [names objectEnumerator];
 	NSString *name = nil;
-	NSFileManager *fm = [NSFileManager defaultManager];
+//	NSFileManager *fm = [NSFileManager defaultManager];
 	while((name = [nameEnum nextObject]) != nil)
 	{
 		/*Skip hidden files*/
@@ -608,11 +639,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if([name isEqualToString:@"Cover Art"])
 			continue;
 		NSString *filePath = [path stringByAppendingPathComponent:name];
-		NSDictionary *attributes = [fm fileAttributesAtPath:filePath traverseLink:NO];
 		SapphireMetaData *resolvedObject = nil;
-		if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+/*		if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
 		{
-			/* Symbolic link, handle with care */
+			/* Symbolic link, handle with care *
+			NSDictionary *attributes = [fm fileAttributesAtPath:filePath traverseLink:NO];
 			NSMutableDictionary *refDict = nil;
 			if([self isDirectory:filePath])
 				refDict = metaDirs;
@@ -620,8 +651,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 				refDict = metaFiles;
 			resolvedObject = [[self collection] dataForPath:[fm pathContentOfSymbolicLinkAtPath:filePath] withData:[refDict objectForKey:name]];
 			if(resolvedObject != nil)
+			{
+				BOOL rewrite = NO;
+				if([refDict objectForKey:name] != nil)
+					rewrite = YES;
 				[refDict removeObjectForKey:name];
-		}
+				if(rewrite)
+					[self writeMetaData];
+			}
+		}*/
 		/*Only accept if it is a directory or right extension*/
 		NSString *extension = [name pathExtension];
 		if([self isDirectory:filePath])
@@ -1375,6 +1413,13 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	[combinedInfo release];
 	[super dealloc];
+}
+
+- (void)replaceInfoWithDict:(NSDictionary *)dict
+{
+	[super replaceInfoWithDict:dict];
+	[combinedInfo release];
+	combinedInfo = nil;
 }
 
 /*See super documentation*/
