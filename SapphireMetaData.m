@@ -591,8 +591,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	/*Flush saved information*/
 	[files removeAllObjects];
 	[directories removeAllObjects];
-	[cachedMetaFiles removeAllObjects];
-	[cachedMetaDirs removeAllObjects];
 	NSMutableArray *fileMetas = [NSMutableArray array];
 	
 	/*Get content*/
@@ -634,10 +632,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		}
 		else if([allExtensions containsObject:[extension lowercaseString]])
 		{
-			if(resolvedObject == nil)
+			if(resolvedObject != nil)
+				[cachedMetaFiles setObject:resolvedObject forKey:name];
+			else
 				resolvedObject = [self metaDataForFile:name];
 			[fileMetas addObject:resolvedObject];
-			[cachedMetaFiles setObject:resolvedObject forKey:name];
 		}
 	}
 	/*Sort them*/
