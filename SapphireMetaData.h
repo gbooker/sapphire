@@ -49,6 +49,9 @@ typedef enum {
 	FILE_CLASS_UNKNOWN = 0,
 	FILE_CLASS_TV_SHOW = 1,
 	FILE_CLASS_MOVIE = 2,
+	FILE_CLASS_AUDIO = 3,
+	FILE_CLASS_IMAGE = 4,
+	FILE_CLASS_OTHER = 5,
 } FileClass;
 
 @class SapphireMetaData, SapphireMetaDataCollection, SapphireFileMetaData, SapphireDirectoryMetaData;
@@ -180,8 +183,6 @@ typedef enum {
 - (NSString *)episodeTitle;
 - (NSString *)showID;
 - (NSString *)showName ;
-- (void)setMediaType: (unsigned int) type ;
-- (int)mediaType ;
 - (NSString *)sizeString;
 
 @end
