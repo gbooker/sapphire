@@ -36,6 +36,15 @@
 #define VIDEO_DESC_KEY				@"Video Description"
 #define AUDIO_FORMAT_KEY			@"Audio Format"
 #define FILE_CLASS_KEY				@"File Class"
+#define MEDIA_TYPE_KEY				@"Media Type"
+/* Media Types:
+*	0=	Unknown Media Type (init)
+*	1=	TV Show
+*	2=	Movie
+*	3=	Audio
+*	4=	Image
+*	5=	Other	(User Selected)
+*/
 
 @implementation NSString (episodeSorting)
 
@@ -1444,6 +1453,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		/*Set modified, size, and version*/
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 		[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
+		[fileMeta setObject:[NSNumber numberWithUnsignedInt:0] forKey:MEDIA_TYPE_KEY] ;
 		[fileMeta setObject:[NSNumber numberWithInt:META_FILE_VERSION] forKey:META_VERSION_KEY];
 		
 		/*Open the movie*/
@@ -1782,6 +1792,27 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	[self constructCombinedData];
 	return [combinedInfo objectForKey:META_SHOW_NAME_KEY];
+}
+
+/*!
+* @brief Sets the media type of the file
+ *
+ * @param mediaType The media type of the file
+ */
+- (void)setMediaType: (unsigned int) type
+{
+	[metaData setObject:[NSNumber numberWithUnsignedInt:type] forKey:MEDIA_TYPE_KEY];
+}
+
+/*!
+* @brief Returns the media type of the file
+ *
+ * @return The media type of the file
+ */
+- (int)mediaType
+{
+	[self constructCombinedData] ;
+	return [[combinedInfo objectForKey:MEDIA_TYPE_KEY] intValue] ;
 }
 
 /*Makes a pretty size string for the file*/

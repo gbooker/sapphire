@@ -13,6 +13,7 @@
 #import "SapphireTheme.h"
 #import "SapphireFileDataImporter.h"
 #import "SapphireTVShowImporter.h"
+#import "SapphireMovieImporter.h"
 #import "SapphireCollectionSettings.h"
 
 static SapphireSettings *sharedInstance = nil;
@@ -72,6 +73,7 @@ static SapphireSettings *sharedInstance = nil;
 	metaCollection = [collection retain];
 	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
 												BRLocalizedString(@"   Fetch Internet Data", @"Fetch Internet Data menu item"),
+												BRLocalizedString(@"   Start Movie Import", @"Start Movie Import menu item"),
 												BRLocalizedString(@"   Hide Collections", @"Hide Collections menu item"),
 												BRLocalizedString(@"   Don't Import Collections", @"Don't Import Collections menu item"),
 												BRLocalizedString(@"   Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"),
@@ -87,6 +89,7 @@ static SapphireSettings *sharedInstance = nil;
 													@"",
 													@"",
 													@"",
+													@"",
 													HIDE_FAVORITE_KEY, 
 													/*HIDE_TOP_SHOWS_KEY, */
 													HIDE_UNWATCHED_KEY,  
@@ -98,6 +101,7 @@ static SapphireSettings *sharedInstance = nil;
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
+												[theme gem:CONE_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
 												[theme gem:YELLOW_GEM_KEY],
@@ -128,7 +132,7 @@ static SapphireSettings *sharedInstance = nil;
 
 	/*display*/
 	[[self list] setDatasource:self];
-	[[self list] addDividerAtIndex:4];
+	[[self list] addDividerAtIndex:5];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 
@@ -372,7 +376,7 @@ static SapphireSettings *sharedInstance = nil;
 	NSString *name = [names objectAtIndex:row];
 	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
 
-	if( row > 3 && [self boolForKey:[keys objectAtIndex:row]])
+	if( row > 4 && [self boolForKey:[keys objectAtIndex:row]])
 	{
 		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
 	}
@@ -435,7 +439,16 @@ static SapphireSettings *sharedInstance = nil;
 		[menu release];
 		[importer release];
 	}
+	/*Start Importing Movie Data*/
 	else if(row == 2)
+	{
+		SapphireMovieImporter *importer = [[SapphireMovieImporter alloc] initWithSavedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
+		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:metaCollection importer:importer];
+		[[self stack] pushController:menu];
+		[menu release];
+		[importer release];
+	}
+	else if(row == 3)
 	{
 		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
 		[colSettings setGettingSelector:@selector(hideCollection:)];
@@ -444,7 +457,7 @@ static SapphireSettings *sharedInstance = nil;
 		[[self stack] pushController:colSettings];
 		[colSettings release];
 	}
-	else if(row == 3)
+	else if(row == 4)
 	{
 		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
 		[colSettings setGettingSelector:@selector(skipCollection:)];

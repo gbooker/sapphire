@@ -25,6 +25,19 @@
 	
 	selection = -1;
 	
+	/* Set a control to display the fileName */
+	fileName = [[BRTextControl alloc] initWithScene: scene];
+	[fileName setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+	[fileName setText:@"File:"];
+	NSRect 	frame = [[self masterLayer] frame];
+//	frame.size.height = frame.size.height / 16.0f;
+//	frame.size.width = frame.size.width * 2.0f / 3.0f;
+	frame.origin.y = frame.size.height / 4.0f;
+	frame.origin.x = frame.size.width * (2.0f / 9.0f);
+	[fileName setFrame: frame];
+	
+	
+	[self addControl: fileName];	
 	[[self list] setDatasource:self];
 	
 	return self;
@@ -71,6 +84,16 @@
 }
 
 /*!
+* @brief Sets the filename to display
+ *
+ * @param choosingForFileName The filename being choosen for
+ */
+- (void)setFileName:(NSString*)choosingForFileName
+{
+	[fileName setText:choosingForFileName];	
+}
+
+/*!
  * @brief The string we searched for
  *
  * @return The string we searched for
@@ -98,13 +121,18 @@
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
 	BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
+
 	
 	if(row == 0)
+	{
 		/*Put in the special "this is not a show"*/
 		[[result textItem] setTitle:BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser")];
+	}
 	else
+	{
 		/*Put in the show*/
 		[[result textItem] setTitle:[[shows objectAtIndex:row-1] objectForKey:@"name"]];
+	}
 	
 	return result;
 }

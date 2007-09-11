@@ -11,6 +11,7 @@
 #import "NSString-Extensions.h"
 #import "SapphireShowChooser.h"
 
+/* TVRage XPATHS  */
 #define TVRAGE_SHOWNAME_XPATH @".//h3/text()"
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
 #define TVRAGE_EP_INFO @".//*[@class='b2']/*"
@@ -18,6 +19,11 @@
 #define TVRAGE_SCREEN_CAP_XPATH @"//img[contains(@src, 'screencap')]"
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
+ 
+/* IMDB XPATHS */
+#define	IMDB_SEARCH_XPATH @"//td[starts-with(a/@href,'/title')]"
+#define IMDB_RESULT_LINK_XPATH @"a/@href"
+#define	IMDB_RESULT_NAME_XPATH @"normalize-space(string())"
 
 #define TRANSLATIONS_KEY		@"Translations"
 #define LINK_KEY				@"Link"
@@ -493,7 +499,9 @@
 		/*Bring up the prompt*/
 		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setShows:shows];
-		[chooser setListTitle:[BRLocalizedString(@"Show? ", @"Prompt the user for showname with a file") stringByAppendingString:fileName]];
+		[chooser setFileName:fileName];
+		//[chooser setListTitle:[BRLocalizedString(@"Show? ", @"Prompt the user for showname with a file") stringByAppendingString:fileName]];
+		[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
 		[chooser setSearchStr:searchStr];
 		/*And display prompt*/
 		[[dataMenu stack] pushController:chooser];
@@ -574,7 +582,7 @@
  */
 - (NSString *)completionText
 {
-	return BRLocalizedString(@"All availble TV Show & Movie data has been imported", @"The TV Show import complete");
+	return BRLocalizedString(@"All availble TV Show data has been imported", @"The TV Show import complete");
 }
 
 /*!
@@ -594,7 +602,7 @@
  */
 - (NSString *)informativeText
 {
-	return BRLocalizedString(@"This tool will attempt to fetch information about your TV Show & Movie files from the Internet (TVRage, IMDB, IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the tv show import");
+	return BRLocalizedString(@"This tool will attempt to fetch information about your Movie files from the Internet (IMDB/IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the movie import");
 }
 
 /*!

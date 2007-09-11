@@ -10,6 +10,7 @@
 #import "SapphirePredicates.h"
 
 #define META_TVRAGE_IMPORT_KEY			@"TVRage Source"
+#define META_IMDB_IMPORT_KEY			@"IMDB Source"
 #define META_XML_IMPORT_KEY				@"XML Source"
 
 //TV Show Specific Keys
@@ -33,6 +34,7 @@
 #define META_COPYRIGHT_KEY				@"Copyright"
 
 //IMDB Type Info
+#define META_MOVIE_TITLE				@"Title"
 
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
@@ -177,7 +179,9 @@ typedef enum {
 - (int)seasonNumber;
 - (NSString *)episodeTitle;
 - (NSString *)showID;
-- (NSString *)showName;
+- (NSString *)showName ;
+- (void)setMediaType: (unsigned int) type ;
+- (int)mediaType ;
 - (NSString *)sizeString;
 
 @end

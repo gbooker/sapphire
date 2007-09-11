@@ -13,9 +13,11 @@
 	NSArray			*shows;
 	NSString		*searchStr;
 	int				selection;
+	BRTextControl	*fileName;
 }
 
 - (void)setShows:(NSArray *)showList;
+- (void)setFileName:(NSString *)choosingForFileName;
 - (NSArray *)shows;
 - (void)setSearchStr:(NSString *)search;
 - (NSString *)searchStr;

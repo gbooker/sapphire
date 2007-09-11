@@ -18,6 +18,7 @@
 #import "SapphireImporterDataMenu.h"
 #import "SapphireFileDataImporter.h"
 #import "SapphireTVShowImporter.h"
+#import "SapphireMovieImporter.h"
 #import "SapphireAllImporter.h"
 
 #define BROWSER_MENU_ITEM		BRLocalizedString(@"   Browse", @"Browser Menu Item")
@@ -108,7 +109,7 @@ static NSArray *predicates = nil;
 	return [ret autorelease];
 }
 
-// 
+
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
@@ -143,7 +144,6 @@ static NSArray *predicates = nil;
 - (void)recreateMenu
 {
 	SapphireImporterDataMenu *allImporter	= [self allImporterForCollection:metaCollection];
-
 	NSMutableArray *mutableMasterNames = [[NSMutableArray alloc] init];
 	NSMutableArray *mutableMasterControllers = [[NSMutableArray alloc] init];
 	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
@@ -288,6 +288,7 @@ static NSArray *predicates = nil;
 	
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
+//	else if([name isEqual: AGENT_IMPORT_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
 	else if([name isEqual: SETTINGS_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
 	else if([name isEqual: RESET_MENU_ITEM]) [result setLeftIcon:[theme gem:CONE_GEM_KEY]];
 	else [result setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
