@@ -125,8 +125,7 @@
 	/* Dump XML document to disk (Dev Only) */
 	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
 	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@%@_page.xml",documentPath,movieName] atomically:YES] ;
-	NSXMLElement *html = [document rootElement];	
-	NSString *movieTitle= [document objectsForXQuery:@"//div[@id='tn15title']/h1/replace(string(), '\n', '')" error:&error];
+	NSString *movieTitle= [[document objectsForXQuery:@"//div[@id='tn15title']/h1/replace(string(), '\n', '')" error:&error] objectAtIndex:0];
 	
 	[ret setObject:movieTitle forKey:META_MOVIE_TITLE];
 	return ret;
