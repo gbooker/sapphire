@@ -131,7 +131,7 @@ static NSSet *allExtensions = nil;
 	if(dict == nil)
 		metaData = [NSMutableDictionary new];
 	else
-		metaData = [dict mutableCopy];
+		metaData = [dict retain];
 	path = [myPath retain];
 	parent = myParent;
 	
@@ -288,7 +288,12 @@ static NSSet *allExtensions = nil;
 {
 	/*Read the meta data*/
 	dictionaryPath = [dictionary retain];
-	NSDictionary *mainDict = [NSDictionary dictionaryWithContentsOfFile:dictionary];
+	NSData *fileData = [NSData dataWithContentsOfFile:dictionary];
+	NSString *error = nil;
+	NSMutableDictionary *mainDict = [NSPropertyListSerialization propertyListFromData:fileData mutabilityOption:NSPropertyListMutableContainersAndLeaves format:NULL errorDescription:&error];
+	[error release];
+	if(mainDict == nil)
+		mainDict = [NSMutableDictionary dictionary];
 	self = [super initWithDictionary:mainDict parent:nil path:nil];
 	if(!self)
 		return nil;
@@ -475,7 +480,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[writeTimer invalidate];
 	writeTimer = nil;
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
-	[metaData writeToFile:dictionaryPath atomically:YES];
+	NSString *error = nil;
+	NSData *data = [NSPropertyListSerialization dataFromPropertyList:metaData format:NSPropertyListBinaryFormat_v1_0 errorDescription:&error];
+	if(error == nil)
+		[data writeToFile:dictionaryPath atomically:YES];
+	else
+		[error release];
 }
 
 - (SapphireMetaDataCollection *)collection
