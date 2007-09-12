@@ -184,7 +184,6 @@
 	/*Initialize the import process*/
 	canceled = NO;
 	suspended = NO;
-	[metaCollection setImporting:YES];
 	collectionIndex = 0;
 	[self getItems];
 }
@@ -282,7 +281,6 @@
 	{
 		[importTimer invalidate];
 		importTimer = nil;
-		[metaCollection setImporting:NO];
 		[metaCollection writeMetaData];
 		/*Update display*/
 		[button setHidden:YES];
@@ -306,7 +304,6 @@
 	importTimer = nil;
 	/*Reset the display and write data*/
 	[self resetUIElements];
-	[metaCollection setImporting:NO];
 	[metaCollection writeMetaData];
 }
 

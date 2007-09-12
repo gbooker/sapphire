@@ -217,6 +217,7 @@ static NSSet *allExtensions = nil;
 @interface SapphireMetaDataCollection (private)
 - (SapphireMetaData *)dataForSubPath:(NSString *)absPath inDirectory:(SapphireDirectoryMetaData *)directory;
 - (void)linkCollections;
+- (void)realWriteMetaData;
 @end
 
 @implementation SapphireMetaDataCollection
@@ -357,6 +358,11 @@ static NSSet *allExtensions = nil;
 	[skipCollection release];
 	[hideCollection release];
 	[dictionaryPath release];
+	if(writeTimer != nil)
+	{
+		[writeTimer invalidate];
+		[self realWriteMetaData];
+	}
 	[super dealloc];
 }
 
@@ -460,8 +466,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)writeMetaData
 {
-	if(importing)
-		return;
+	[writeTimer invalidate];
+	writeTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(realWriteMetaData) userInfo:nil repeats:NO];
+}
+
+- (void)realWriteMetaData
+{
+	[writeTimer invalidate];
+	writeTimer = nil;
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
 	[metaData writeToFile:dictionaryPath atomically:YES];
 }
@@ -469,16 +481,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (SapphireMetaDataCollection *)collection
 {
 	return self;
-}
-
-/*!
- * @brief Set whether or not we are currently importing.  If YES, this defers writes of the metadata until later
- *
- * @param isImporting YES if importing, NO otherwise
- */
-- (void)setImporting:(BOOL)isImporting
-{
-	importing = isImporting;
 }
 
 /*!
@@ -1242,13 +1244,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate
 {
-	[[self collection] setImporting:YES];
 	SEL select = @selector(setWatched:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&watched atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
-	[[self collection] setImporting:NO];
 	[self writeMetaData];
 }
 
@@ -1274,13 +1274,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate
 {
-	[[self collection] setImporting:YES];
 	SEL select = @selector(setFavorite:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&favorite atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
-	[[self collection] setImporting:NO];
 	[self writeMetaData];
 }
 
@@ -1292,13 +1290,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate
 {
-	[[self collection] setImporting:YES];
 	SEL select = @selector(setToImportFromSource:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&source atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
-	[[self collection] setImporting:NO];
 	[self writeMetaData];
 }
 
@@ -1310,13 +1306,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate
 {
-	[[self collection] setImporting:YES];
 	SEL select = @selector(setFileClass:);
 	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[fileInv setSelector:select];
 	[fileInv setArgument:&fileClass atIndex:2];
 	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
-	[[self collection] setImporting:NO];
 	[self writeMetaData];
 }
 

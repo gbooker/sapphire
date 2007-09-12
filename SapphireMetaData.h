@@ -90,14 +90,13 @@ typedef enum {
 	NSMutableDictionary			*skipCollection;
 	NSMutableDictionary			*hideCollection;
 	NSString					*dictionaryPath;
-	BOOL						importing;
+	NSTimer						*writeTimer;
 }
 - (id)initWithFile:(NSString *)dictionary;
 - (SapphireMetaData *)dataForPath:(NSString *)path;
 - (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
 - (SapphireMetaData *)dataForPath:(NSString *)path withData:(NSDictionary *)data;
 - (NSArray *)collectionDirectories;
-- (void)setImporting:(BOOL)isImporting;
 - (BOOL)hideCollection:(NSString *)collection;
 - (void)setHide:(BOOL)hide forCollection:(NSString *)collection;
 - (BOOL)skipCollection:(NSString *)collection;
