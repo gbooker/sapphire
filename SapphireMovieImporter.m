@@ -122,10 +122,13 @@
 	/*Get the movie html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMDB.com%@",movieName]];
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
+
+	NSString *movieTitle= [[document objectsForXQuery:@"//div[@id='tn15title']/h1/replace(string(), '\n', '')" error:&error] objectAtIndex:0];
 	/* Dump XML document to disk (Dev Only) */
 	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@%@_page.xml",documentPath,movieName] atomically:YES] ;
-	NSString *movieTitle= [[document objectsForXQuery:@"//div[@id='tn15title']/h1/replace(string(), '\n', '')" error:&error] objectAtIndex:0];
+	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@/%@_title_result.xml",documentPath,movieTitle] atomically:YES] ;
+		
+
 	
 	[ret setObject:movieTitle forKey:META_MOVIE_TITLE];
 	return ret;
@@ -162,41 +165,60 @@
  */
 - (NSArray *)searchResultsForMovie:(NSString *)searchStr
 {
+	/* prep the search string */
+	searchStr = [searchStr stringByDeletingPathExtension];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"_" withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"." withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"-" withString:@" "];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com/Title?%@", [searchStr URLEncode]]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com/find?s=all&q=%@", [searchStr URLEncode]]];
 	NSError *error = nil;
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
 	/* Dump XML document to disk (Dev Only) */
 	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"%@/%@.xml",documentPath,searchStr] atomically:YES] ;
-	/*Get the results list*/
+	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"%@/%@_search_result.xml",documentPath,searchStr] atomically:YES] ;
+	
 	NSXMLElement *root = [document rootElement];
-	NSArray *results = [root objectsForXQuery:IMDB_SEARCH_XPATH error:&error];
-	//Need to clean out (VG) entries <Video Game>
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[results count]];
-	if([results count])
+	
+	NSString *resultTitle=[[[root objectsForXQuery:@"//title" error:&error]objectAtIndex:0] stringValue];
+	
+	if([resultTitle isEqualToString:@"IMDb Search"])/*Make sure we didn't get back a unique result */
 	{
-		/*Get each result*/
-		NSEnumerator *resultEnum = [results objectEnumerator];
-		NSXMLElement *result = nil;
-		while((result = [resultEnum nextObject]) != nil)
+		/*Get the results list*/
+		NSArray *results = [root objectsForXQuery:IMDB_SEARCH_XPATH error:&error];
+
+		//Need to clean out (VG) entries <Video Game>
+		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[results count]];
+		if([results count])
 		{
-			/*Add the result to the list*/
-			//			NSURL *resultURL = [NSURL URLWithString:[[result attributeForName:@"href"] stringValue]];
-			NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_RESULT_LINK_XPATH error:&error] objectAtIndex:0] stringValue]] ;
-			
-			if(resultURL == nil)
-				continue;
+			/*Get each result*/
+			NSEnumerator *resultEnum = [results objectEnumerator];
+			NSXMLElement *result = nil;
+			while((result = [resultEnum nextObject]) != nil)
 			{
-				[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+				/*Add the result to the list*/
+
+				NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_RESULT_LINK_XPATH error:&error] objectAtIndex:0] stringValue]] ;
+			
+				if(resultURL == nil)
+					continue;
+				{
+					[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					[[result objectsForXQuery:IMDB_RESULT_NAME_XPATH error:&error] objectAtIndex:0], @"name",
 					[resultURL path], @"link",
 					nil]];
+				}
 			}
+			return ret;
 		}
-		return ret;
+	}
+	else /* IMDB directly linked to a unique movie title */
+	{
+		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:1];
+		[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		resultTitle, @"name",
+		[[url relativeString] stringByReplacingAllOccurancesOf:@"http://www.imdb.com" withString:@""], @"link",
+		nil]];
+		return ret ;
 	}
 	/*No results found*/
 	return nil;

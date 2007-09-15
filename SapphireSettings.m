@@ -442,7 +442,7 @@ static SapphireSettings *sharedInstance = nil;
 	/*Start Importing Movie Data*/
 	else if(row == 2)
 	{
-		SapphireMovieImporter *importer = [[SapphireMovieImporter alloc] initWithSavedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"tvdata.plist"]];
+		SapphireMovieImporter *importer = [[SapphireMovieImporter alloc] initWithSavedSetting:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"movieData.plist"]];
 		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:metaCollection importer:importer];
 		[[self stack] pushController:menu];
 		[menu release];

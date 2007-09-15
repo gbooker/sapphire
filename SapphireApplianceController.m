@@ -101,7 +101,7 @@ static NSArray *predicates = nil;
 {
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
 	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
-	
+//	SapphireMovieImporter *movImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
 	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:fileImp, tvImp, nil]];
 	[fileImp release];
 	[tvImp release];
