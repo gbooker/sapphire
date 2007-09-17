@@ -6,8 +6,10 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#define MOVIE_CHOOSE_CANCEL -2
-#define MOVIE_CHOOSE_NOT_MOVIE -1
+#define MOVIE_CHOOSE_CANCEL		-4
+#define MOVIE_CHOOSE_TV_SHOW	-3
+#define MOVIE_CHOOSE_OTHER		-2
+#define MOVIE_CHOOSE_NOT_MOVIE	-1
 
 @interface SapphireMovieChooser : BRCenteredMenuController {
 	NSArray			*movies;

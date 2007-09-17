@@ -125,8 +125,8 @@
 
 	NSString *movieTitle= [[document objectsForXQuery:@"//div[@id='tn15title']/h1/replace(string(), '\n', '')" error:&error] objectAtIndex:0];
 	/* Dump XML document to disk (Dev Only) */
-	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@/%@_title_result.xml",documentPath,movieTitle] atomically:YES] ;
+	//NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
+	//[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@/%@_title_result.xml",documentPath,movieTitle] atomically:YES] ;
 		
 
 	
@@ -174,8 +174,8 @@
 	NSError *error = nil;
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
 	/* Dump XML document to disk (Dev Only) */
-	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"%@/%@_search_result.xml",documentPath,searchStr] atomically:YES] ;
+	//NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
+	//[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"%@/%@_search_result.xml",documentPath,searchStr] atomically:YES] ;
 	
 	NSXMLElement *root = [document rootElement];
 	
@@ -224,6 +224,7 @@
 	return nil;
 }
 
+
 /*!
 * @brief Write our setings out
  */
@@ -233,6 +234,19 @@
 		movieTranslations, TRANSLATIONS_KEY,
 		nil];
 	[settings writeToFile:settingsPath atomically:YES];
+}
+
+/*!
+* @brief verify file extention of a file
+ *
+ * @param filePAth The file's path 
+ * @return YES if candidate, NO otherwise
+ */
+- (BOOL)isMovieCandidate:(NSString*)fileExt
+{
+	if([[SapphireMetaData videoExtensions] member:fileExt])
+		return YES;
+	else return NO ;
 }
 
 /*!
@@ -249,8 +263,13 @@
 		return NO;
 	/*Get path*/
 	NSString *path = [metaData path];
+	if(![self isMovieCandidate:[path pathExtension]])
+		return NO;
 	/*Get fineName*/
 	NSString *fileName = [path lastPathComponent];
+	
+	if([metaData fileClass]==FILE_CLASS_TV_SHOW) /* File is a TV Show - skip it */
+		return NO ;
 	
 	/*Get the movie title*/
 	NSString *searchStr = fileName;
@@ -344,7 +363,7 @@
  */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
-	/*See if it was a show chooser*/
+	/*See if it was a movie chooser*/
 	if(![controller isKindOfClass:[SapphireMovieChooser class]])
 		return;
 	
@@ -358,12 +377,22 @@
 	{
 		/*They said it is not a movie, so put in empty data so they are not asked again*/
 		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
-		if ([currentData fileClass] == FILE_CLASS_MOVIE && [currentData fileClass] != FILE_CLASS_TV_SHOW)//check to make sure it's not already a tv show?
+		if ([currentData fileClass] != FILE_CLASS_TV_SHOW)
 			[currentData setFileClass:FILE_CLASS_UNKNOWN];
+	}
+	else if(selection==MOVIE_CHOOSE_OTHER)
+	{
+		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+		[currentData setFileClass:FILE_CLASS_OTHER] ;
+	}
+	else if(selection==MOVIE_CHOOSE_TV_SHOW)
+	{
+		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+		[currentData setFileClass:FILE_CLASS_TV_SHOW] ;	
 	}
 	else
 	{
-		/*They selected a show, save the translation and write it*/
+		/*They selected a movie title, save the translation and write it*/
 		NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
 		[movieTranslations setObject:[movie objectForKey:@"link"] forKey:[[chooser searchStr] lowercaseString]];
 		[self writeSettings];

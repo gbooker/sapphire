@@ -68,7 +68,7 @@
 {
 	movies = [movieList retain];
 	[[self list] reload];
-	[[self list] addDividerAtIndex:1];
+	[[self list] addDividerAtIndex:3];
 	[[self scene] renderScene];
 }
 
@@ -112,24 +112,27 @@
  */
 - (int)selection
 {
-	return selection - 1;
+	return selection - 3;
 }
 
 - (long) itemCount
 {
-	return [movies count] + 1;
+	return [movies count] + 3;
 }
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
 	BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
 	
-	if(row == 0)
-		/*Put in the special "this is not a movie"*/
-		[[result textItem] setTitle:BRLocalizedString(@"<This is not a Movie>", @"Mark a file that is not a movie in the movie chooser")];
+	if(row == 0)/*Put in the special "this is not a movie"*/
+		[[result textItem] setTitle:BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser")];
+	else if(row==1)/*Put in the special "this is something else"*/
+			[[result textItem] setTitle:BRLocalizedString(@"<This is something else>", @"Mark a file that something else in the movie chooser")];
+	else if(row==2)/*Put in the special "this is a tv show"*/
+		[[result textItem] setTitle:BRLocalizedString(@"<This is a TV Show>", @"Mark a file that is tv show in the movie chooser")];
 	else
-		/*Put in the movie*/
-		[[result textItem] setTitle:[[movies objectAtIndex:row-1] objectForKey:@"name"]];
+		/*Put in the movie results*/
+		[[result textItem] setTitle:[[movies objectAtIndex:row-3] objectForKey:@"name"]];
 	
 	return result;
 }
@@ -139,12 +142,15 @@
 	if(row > [movies count])
 		return nil;
 	
-	if(row == 0)
-		/*Put in the special "this is not a movie"*/
-		return BRLocalizedString(@"<This is not a Movie>", @"Mark a file that is not a movie in the movie chooser");
+	if(row == 0)/*Put in the special "this is not a movie"*/
+		return BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser");
+	else if(row==1)/*Put in the special "this is something else"*/
+		return BRLocalizedString(@"<This is something else>", @"Mark a file that is something else in the movie chooser");
+	else if(row==2)/*Put in the special "this is a tv show"*/
+		return BRLocalizedString(@"<This is a TV Show>", @"Mark a file that is a tv show in the movie chooser");
 	else
 		/*Put in the movie*/
-		return [[movies objectAtIndex:row-1] objectForKey:@"name"];
+		return [[movies objectAtIndex:row-3] objectForKey:@"name"];
 }
 
 
