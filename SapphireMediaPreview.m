@@ -182,8 +182,10 @@ static NSSet *coverArtExtentions = nil;
 	}	
 }
 
+
+
 /*!
- * @brief Override the populating of metadata
+ * @brief populate metadata for TV Shows
  */
 - (void)_populateMetadata
 {
@@ -196,46 +198,65 @@ static NSSet *coverArtExtentions = nil;
 	NSArray *order = nil;
 	NSMutableDictionary *allMeta = [meta getDisplayedMetaDataInOrder:&order];
 	/*Pull out the special ones*/
-	/*Get the title*/
-	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
-	if(value != nil)
-	{
-		/*If there is an air date, put it in the title*/
-		NSDate *airDate = [allMeta objectForKey:META_SHOW_AIR_DATE];
-		if(airDate != nil)
-		{
-			NSDateFormatter *format = [[NSDateFormatter alloc] init];
-			[format setDateStyle:NSDateFormatterShortStyle];
-			[format setTimeZone:NSDateFormatterNoStyle];
-			value = [[format stringFromDate:airDate]stringByAppendingFormat:@" - %@", value];
-		}
-		[_metadataLayer setTitle:value];
-	}
-
-	/*Get the rating*/
-	value = [allMeta objectForKey:META_RATING_KEY];
-	if(value != nil)
-		[_metadataLayer setRating:value];
-
-	/*Get the description*/
-	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
-	if(value != nil)
-		if([[SapphireSettings sharedSettings] displaySpoilers])
-			[_metadataLayer setSummary:value];
-
-	/*Get the copyright*/
-	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
-	if(value != nil)
-		[_metadataLayer setCopyright:value];
 	
-	/*Get the season and epsiodes*/
-	value = [allMeta objectForKey:META_EPISODE_AND_SEASON_KEY];
-	if(value != nil)
+	
+//	int fileCls = nil ;
+//	fileCls =[allMeta objectForKey:FILE_CLASS_KEY];
+/*	
+//	 Movie Preview Handeling 
+	if(fileCls==FILE_CLASS_MOVIE)
 	{
-		/*Remove the individuals so we don't display them*/
-		[allMeta removeObjectForKey:META_EPISODE_NUMBER_KEY];
-		[allMeta removeObjectForKey:META_SEASON_NUMBER_KEY];
+		NSString *value = [allMeta objectForKey:META_TITLE_KEY];
+		[_metadataLayer setTitle:value];
+
 	}
+*/	
+	
+	/* TV Show Preview Handeling */
+//	if(fileCls==FILE_CLASS_TV_SHOW)
+//	{
+		/*Get the title*/
+		NSString *value = [allMeta objectForKey:META_TITLE_KEY];
+		if(value != nil)
+		{
+			/*If there is an air date, put it in the title*/
+			NSDate *airDate = [allMeta objectForKey:META_SHOW_AIR_DATE];
+			if(airDate != nil)
+			{
+				NSDateFormatter *format = [[NSDateFormatter alloc] init];
+				[format setDateStyle:NSDateFormatterShortStyle];
+				[format setTimeZone:NSDateFormatterNoStyle];
+				value = [[format stringFromDate:airDate]stringByAppendingFormat:@" - %@", value];
+			}
+			[_metadataLayer setTitle:value];
+		}
+
+		/*Get the rating*/
+		value = [allMeta objectForKey:META_RATING_KEY];
+		if(value != nil)
+			[_metadataLayer setRating:value];
+
+		/*Get the description*/
+		value = [allMeta objectForKey:META_DESCRIPTION_KEY];
+		if(value != nil)
+			if([[SapphireSettings sharedSettings] displaySpoilers])
+				[_metadataLayer setSummary:value];
+
+		/*Get the copyright*/
+		value = [allMeta objectForKey:META_COPYRIGHT_KEY];
+		if(value != nil)
+			[_metadataLayer setCopyright:value];
+	
+		/*Get the season and epsiodes*/
+		value = [allMeta objectForKey:META_EPISODE_AND_SEASON_KEY];
+		if(value != nil)
+		{
+			/*Remove the individuals so we don't display them*/
+			[allMeta removeObjectForKey:META_EPISODE_NUMBER_KEY];
+			[allMeta removeObjectForKey:META_SEASON_NUMBER_KEY];
+		}
+//	}
+	
 	
 	NSMutableArray *values = [NSMutableArray array];
 	NSMutableArray *keys = [NSMutableArray array];

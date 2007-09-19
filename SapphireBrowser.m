@@ -408,6 +408,7 @@ static BOOL is10Version = NO;
     return ( nil );
 */
 	NSString * displayName=nil ;
+	int fileCls=0 ;
 	/*Check for no items*/
 	int nameCount = [_names count];
 	if( nameCount == 0)
@@ -444,14 +445,34 @@ static BOOL is10Version = NO;
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
-			/*Display episode number if availble*/
-			int eps= [meta episodeNumber] ;
-			displayName=[meta episodeTitle] ;
-			if(eps>0)
-				[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps]];
-			else
-				/*Fallback to size*/
-				[[result textItem] setRightJustifiedText:[meta sizeString]];
+			fileCls=[meta fileClass] ;
+			if(fileCls==FILE_CLASS_TV_SHOW)
+			{
+				/*Display episode number if availble*/
+				int eps= [meta episodeNumber] ;
+				displayName=[meta episodeTitle] ;
+				if(eps>0)
+					[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps]];
+				else
+					/*Fallback to size*/
+					[[result textItem] setRightJustifiedText:[meta sizeString]];
+			}
+			if(fileCls==FILE_CLASS_MOVIE)
+			{
+				int duration = [meta duration];
+				int secs = duration % 60;
+				int mins = (duration /60) % 60;
+				int hours = duration / 3600;
+				NSString *durationStr = nil;
+				if(hours != 0)
+					durationStr = [NSString stringWithFormat:@"%d:%02d:%02d", hours, mins, secs];
+				else if (mins != 0)
+					durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
+				else
+					durationStr = [NSString stringWithFormat:@"%ds", secs];
+				displayName=[meta movieTitle] ;
+				[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %@",durationStr]];
+			}
 			watched = [meta watched];
 			favorite = [meta favorite] ;
 		}
@@ -467,6 +488,7 @@ static BOOL is10Version = NO;
 	if(gear) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
 	else if(!watched) [result setLeftIcon:[theme gem:BLUE_GEM_KEY]];
 	else if(favorite)[result setLeftIcon:[theme gem:YELLOW_GEM_KEY]];
+	else if(fileCls==FILE_CLASS_AUDIO)[result setLeftIcon:[theme gem:GREEN_GEM_KEY]];
 	else [result setLeftIcon:[theme gem:RED_GEM_KEY]];
 			
 	// add text

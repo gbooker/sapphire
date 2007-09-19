@@ -34,7 +34,8 @@
 #define META_COPYRIGHT_KEY				@"Copyright"
 
 //IMDB Type Info
-#define META_MOVIE_TITLE				@"Title"
+#define META_MOVIE_TITLE_KEY			@"Title"
+#define META_MOVIE_RELEASE_DATE			@"Released"
 
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
@@ -45,6 +46,7 @@
 #define META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION	@"MetaDataFileInfoHasChanged"
 #define META_DATA_FILE_INFO_KIND						@"MetaDataFileInfoKind"
 
+#define FILE_CLASS_KEY				@"File Class"
 typedef enum {
 	FILE_CLASS_UNKNOWN = 0,
 	FILE_CLASS_TV_SHOW = 1,
@@ -180,6 +182,7 @@ typedef enum {
 - (int)episodeNumber;
 - (int)seasonNumber;
 - (NSString *)episodeTitle;
+- (NSString *)movieTitle;
 - (NSString *)showID;
 - (NSString *)showName ;
 - (NSString *)sizeString;

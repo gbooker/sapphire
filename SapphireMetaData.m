@@ -35,7 +35,7 @@
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
 #define AUDIO_FORMAT_KEY			@"Audio Format"
-#define FILE_CLASS_KEY				@"File Class"
+//#define FILE_CLASS_KEY				@"File Class"
 
 @implementation NSString (episodeSorting)
 
@@ -1375,6 +1375,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		META_DESCRIPTION_KEY,
 		META_COPYRIGHT_KEY,
 		META_TITLE_KEY,
+		META_MOVIE_TITLE_KEY,
 		META_SHOW_AIR_DATE,
 		//These are displayed as line items
 		META_EPISODE_AND_SEASON_KEY,
@@ -1721,6 +1722,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	/*Combine from in order of priority: xml, tvrage, and file*/
 	NSMutableDictionary *ret = [metaData mutableCopy];
 	[ret addEntriesFromDictionary:[ret objectForKey:META_TVRAGE_IMPORT_KEY]];
+	[ret addEntriesFromDictionary:[ret objectForKey:META_IMDB_IMPORT_KEY]];
 	[ret addEntriesFromDictionary:[ret objectForKey:META_XML_IMPORT_KEY]];
 	combinedInfo = ret;
 }
@@ -1764,6 +1766,17 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	[self constructCombinedData];
 	return [combinedInfo objectForKey:META_TITLE_KEY] ;
+}
+
+/*!
+* @brief Returns the title of the file
+ *
+ * @return The title of the file
+ */
+- (NSString *)movieTitle
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_MOVIE_TITLE_KEY] ;
 }
 
 /*!

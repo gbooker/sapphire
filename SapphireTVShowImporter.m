@@ -19,11 +19,6 @@
 #define TVRAGE_SCREEN_CAP_XPATH @"//img[contains(@src, 'screencap')]"
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
- 
-/* IMDB XPATHS */
-#define	IMDB_SEARCH_XPATH @"//td[starts-with(a/@href,'/title')]"
-#define IMDB_RESULT_LINK_XPATH @"a/@href"
-#define	IMDB_RESULT_NAME_XPATH @"normalize-space(string())"
 
 #define TRANSLATIONS_KEY		@"Translations"
 #define LINK_KEY				@"Link"

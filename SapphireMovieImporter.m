@@ -12,9 +12,10 @@
 #import "SapphireMovieChooser.h"
 
  /* IMDB XPATHS */
-#define	IMDB_SEARCH_XPATH @"//td[starts-with(a/@href,'/title')]"
-#define IMDB_RESULT_LINK_XPATH @"a/@href"
-#define	IMDB_RESULT_NAME_XPATH @"normalize-space(string())"
+#define	IMDB_SEARCH_XPATH				@"//td[starts-with(a/@href,'/title')]"
+#define IMDB_RESULT_LINK_XPATH			@"a/@href"
+#define	IMDB_RESULT_NAME_XPATH			@"normalize-space(string())"
+#define IMDB_RESULT_TITLE_YEAR_XPATH	@"//div[@id='tn15title']/h1/replace(string(), '\n', '')"
  
  
 #define TRANSLATIONS_KEY		@"Translations"
@@ -24,30 +25,55 @@
 @interface SapphireMovieDataMenuDownloadDelegate : NSObject
 {
 	NSString *destination;
+	NSArray *requestList ;
+	
 }
-- (id)initWithDest:(NSString *)dest;
+- (id)initWithRequest:(NSArray*)reqList withDestination:(NSString *)dest;
+-(void)getCoverArt ;
 @end
 
 @implementation SapphireMovieDataMenuDownloadDelegate
 /*!
 * @brief Initialize a cover art downloader
  *
+ * @param reqList The list of url requests to try
  * @param dest The path to save the file
  */
-- (id)initWithDest:(NSString *)dest
+- (id)initWithRequest:(NSArray*)reqList withDestination:(NSString *)dest;
 {
 	self = [super init];
 	if(!self)
 		return nil;
 	
 	destination = [dest retain];
+	requestList = [reqList retain];
 	
 	return self;
+	
 }
+
+/*!
+* @brief Fire the delegate to start downloading
+ *
+ */
+-(void)getCoverArt
+{
+	NSEnumerator *reqEnum= [requestList objectEnumerator] ;
+	NSURLRequest *req=nil ;
+	while((req=[reqEnum nextObject]) !=nil)
+	{
+		NSURLDownload *currentDownload=[[NSURLDownload alloc] initWithRequest:req delegate:self] ;
+		[currentDownload release] ;
+	//	if(currentDownload)break;/*The download is going, no need to try another URL */
+	}
+	
+}
+
 
 - (void)dealloc
 {
 	[destination release];
+	[requestList release];
 	[super dealloc];
 }
 
@@ -60,8 +86,17 @@
  */
 - (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
 {
-	[download setDestination:destination allowOverwrite:YES];
+
+	[download setDestination:destination allowOverwrite:NO];
+	
 }
+
+- (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
+{
+	[download release];
+//	NSString *failed=[[error userInfo] objectForKey:NSErrorFailingURLStringKey] ;
+}
+
 @end
 
 @interface SapphireMovieImporter (private)
@@ -115,47 +150,90 @@
  * @param movieName The IMDB name (part of the show's URL)
  * @return A cached dictionary of the movie info
  */
-- (NSMutableDictionary *)getMetaForMovie:(NSString *)movieName
+- (NSMutableDictionary *)getMetaForMovie:(NSString *)movieName withPath:(NSString*)moviePath
 {
 	NSError *error = nil;
 	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
 	/*Get the movie html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMDB.com%@",movieName]];
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-
-	NSString *movieTitle= [[document objectsForXQuery:@"//div[@id='tn15title']/h1/replace(string(), '\n', '')" error:&error] objectAtIndex:0];
-	/* Dump XML document to disk (Dev Only) */
-	//NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-	//[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@/%@_title_result.xml",documentPath,movieTitle] atomically:YES] ;
+	
+	/* Get the movie title */
+	NSString *movieTitle= [[document objectsForXQuery:IMDB_RESULT_TITLE_YEAR_XPATH error:&error] objectAtIndex:0];
+	int titleYear= 0 ;
+	NSString *shortenedMovieTitle=nil ;
+	NSString *coverArtLinkA=nil ;
+	NSString *coverArtLinkB=nil ;
+	NSString *coverArtSavePath=nil ;
+	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
+	NSCharacterSet *skipSet = [NSCharacterSet characterSetWithCharactersInString:@"("];
+	NSScanner *titleScan= [NSScanner scannerWithString:movieTitle] ;
+	
+	/* Cover Art Processing */
+	[titleScan scanUpToCharactersFromSet:skipSet intoString:&shortenedMovieTitle];
+	[titleScan scanUpToCharactersFromSet:decimalSet intoString:nil];
+	[titleScan scanInt:&titleYear];
+	
+	/* Remove punctuation */
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@":" withString:@""];
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"'" withString:@""];
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"," withString:@""];
+	shortenedMovieTitle=[[shortenedMovieTitle stringByReplacingAllOccurancesOf:@" " withString:@"_"] lowercaseString];
+	
+	/*Convert roman to verbage*/
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_i_"	withString:@"_one_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_ii_"	withString:@"_two_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_iii_"	withString:@"_three_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_iv_"	withString:@"_four_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_v_"	withString:@"_five_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_1_"	withString:@"_one_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_2_"	withString:@"_two_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_3_"	withString:@"_three_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_4_"	withString:@"_four_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_5_"	withString:@"_five_"] ;
+	
+	/* Symbol Replacements */
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"&"	withString:@"_and_"] ;
+	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"®"	withString:@"ae"] ;
+		
+	/* Remove leading 'the' and 'a' */
+	if([shortenedMovieTitle hasPrefix:@"the_"])shortenedMovieTitle=[shortenedMovieTitle substringFromIndex:4];
+	else if([shortenedMovieTitle hasPrefix:@"a_"])shortenedMovieTitle=[shortenedMovieTitle substringFromIndex:2];
+	coverArtLinkA=[NSString stringWithFormat:@"http://www.impawards.com/%d/posters/%@ver1.jpg",titleYear,shortenedMovieTitle] ;
+	coverArtLinkB=[coverArtLinkA stringByReplacingAllOccurancesOf:@"_ver1" withString:@""];
+	coverArtSavePath=[[[moviePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:[[[moviePath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"]];
+	error = nil;
+	BOOL isDir = NO;
+	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:coverArtSavePath isDirectory:&isDir] && !isDir;
+	if(!imageExists)/*Get the screen cap*/
+	{
+		NSArray *requestURLList=[[NSArray alloc]  initWithObjects:
+			[NSURLRequest requestWithURL:[NSURL URLWithString:coverArtLinkA]
+							 cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0],
+			[NSURLRequest requestWithURL:[NSURL URLWithString:coverArtLinkB]
+				cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0],
+			nil];
 		
 
+//		SapphireMovieDataMenuDownloadDelegate *myDelegate= [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:requestURLList withDestination:coverArtSavePath];		
+//		[[NSFileManager defaultManager] createDirectoryAtPath:[coverArtSavePath stringByDeletingLastPathComponent] attributes:nil];
+//		[myDelegate getCoverArt];
+//		[[NSURLDownload alloc] initWithRequest:[requestURLList objectAtIndex:0] delegate:myDelegate];
+//		[myDelegate release];
+	}
+		
+	/* Dump XML document to disk (Dev Only) */
+//	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
+//	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@/%@_title_result.xml",documentPath,movieTitle] atomically:YES] ;
 	
-	[ret setObject:movieTitle forKey:META_MOVIE_TITLE];
+	
+	
+	/* populate metadata to return */
+	[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
 	return ret;
 }
 
-/*!
-* @brief Fetches the screencap URL from a show's info URL
- *
- * @param epUrl The show's info URL
- * @return The screencap URL if it exists, nil otherwise
- */
-- (NSString *)getScreencapUrl:(NSString *)epUrl
-{
-	/*Get the HTML document*/
-//	NSURL *url = [NSURL URLWithString:epUrl];
-//	NSError *error = nil;
-//	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-	
-	/*Search for a screencap*/
-//	NSXMLElement *html = [document rootElement];
-//	NSArray *caps = [html objectsForXQuery:TVRAGE_SCREEN_CAP_XPATH error:&error];
-//	if([caps count])
-		/*Found one; return it*/
-//		return [[(NSXMLElement *)[caps objectAtIndex:0] attributeForName:@"src"] stringValue];
-	/*None found*/
-	return nil;
-}
+
 
 /*!
 * @brief Searches for a movie based on the filename
@@ -294,19 +372,11 @@
 		//Data will be ready for access on the next exe
 	}
 	
-	/*Get The Release Date*/
-
-
-	
-	
-
-	NSMutableDictionary *info = nil;
-	info = [self getMetaForMovie:movie];
-	if(!info)
-		return NO;
-	
-	
 	/*Import the info*/
+	NSMutableDictionary *info = nil;
+	info = [self getMetaForMovie:movie withPath:path];
+	if(!info)
+		return NO;	
 	[info removeObjectForKey:LINK_KEY];
 	[metaData importInfo:info fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_MOVIE];
