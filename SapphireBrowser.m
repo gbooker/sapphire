@@ -290,6 +290,7 @@ static BOOL is10Version = NO;
     
     // always call super
     [super wasPushed];
+	[self reloadDirectoryContents];
 	/*Get metadata when we can*/
 	[metaData resumeDelayedImport];
 }
@@ -408,7 +409,7 @@ static BOOL is10Version = NO;
     return ( nil );
 */
 	NSString * displayName=nil ;
-	int fileCls=0 ;
+	FileClass fileCls=0 ;
 	/*Check for no items*/
 	int nameCount = [_names count];
 	if( nameCount == 0)
