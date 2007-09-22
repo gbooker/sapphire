@@ -54,7 +54,7 @@
 - (void)setReloadTimer
 {
 	[reloadTimer invalidate];
-	reloadTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(reloadDirectoryContents) userInfo:nil repeats:NO];
+	reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(reloadDirectoryContents) userInfo:nil repeats:NO];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -144,10 +144,7 @@
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	int newCount = [directories count];
-	if(newCount != displayCount)
-		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
-	displayCount = newCount;
+	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -210,10 +207,7 @@
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	int newCount = [directories count];
-	if(newCount != displayCount)
-		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
-	displayCount = newCount;
+	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -282,10 +276,7 @@
 	[cachedMetaFiles addEntriesFromDictionary:mutDict];
 	[metaFiles addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	int newCount = [files count];
-	if(newCount != displayCount)
-		[(SapphireTVBaseDirectory *)parent childDisplayChanged];
-	displayCount = newCount;
+	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
