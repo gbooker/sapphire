@@ -290,7 +290,6 @@ static BOOL is10Version = NO;
     
     // always call super
     [super wasPushed];
-	[self reloadDirectoryContents];
 	/*Get metadata when we can*/
 	[metaData resumeDelayedImport];
 }
