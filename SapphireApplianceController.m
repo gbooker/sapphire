@@ -148,7 +148,7 @@ static NSArray *predicates = nil;
 	NSMutableArray *mutableMasterControllers = [[NSMutableArray alloc] init];
 	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
 	
-	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] init];
+	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
 	[tvBrowser setListTitle:BRLocalizedString(@"TV Shows", nil)];
 	[tvBrowser setListIcon:predicateGem];

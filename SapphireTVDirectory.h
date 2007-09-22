@@ -18,6 +18,7 @@
 
 @interface SapphireTVDirectory : SapphireTVBaseDirectory {
 }
+- (id)initWithCollection:(SapphireMetaDataCollection *)myCollection;
 @end
 
 @interface SapphireShowDirectory : SapphireTVBaseDirectory {

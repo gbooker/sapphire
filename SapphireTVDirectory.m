@@ -27,11 +27,6 @@
 	return self;
 }
 
-- (id)init
-{
-	return [self initWithParent:nil path:@"@TV"];
-}
-
 - (void) dealloc
 {
 	[directory release];
@@ -95,6 +90,22 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileInfoWillChanged:) name:META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION object:nil];
 	
 	return self;
+}
+
+- (id)initWithCollection:(SapphireMetaDataCollection *)myCollection
+{
+	self = [self initWithParent:nil path:@"@TV"];
+	if(self == nil)
+		return nil;
+	
+	collection = myCollection;
+	
+	return self;
+}
+
+- (void)writeMetaData
+{
+	[collection writeMetaData];
 }
 
 - (void)fileAdded:(NSNotification *)notification
