@@ -22,7 +22,7 @@
 #define META_COLLECTION_HIDE		@"Hide"
 #define META_COLLECTION_SKIP_SCAN	@"Skip"
 #define META_FILE_VERSION			2
-#define META_COLLECTION_VERSION		3
+#define META_COLLECTION_VERSION		4
 
 //File Specific Keys
 #define MODIFIED_KEY				@"Modified"
@@ -50,6 +50,11 @@
 	return [self compare:other options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
 
+@end
+
+@interface SapphireDirectoryMetaData (private)
+- (void)reloadDirectoryContents;
+- (void)invokeRecursivelyOnFiles:(NSInvocation *)fileInv withPredicate:(SapphirePredicate *)predicate;
 @end
 
 @implementation SapphireMetaData
@@ -145,11 +150,16 @@ static NSSet *allExtensions = nil;
 	[super dealloc];
 }
 
+- (void)childDictionaryChanged:(SapphireMetaData *)child
+{
+}
+
 - (void)replaceInfoWithDict:(NSDictionary *)dict
 {
 	NSMutableDictionary *newDict = [dict mutableCopy];
 	[metaData release];
 	metaData = newDict;
+	[parent childDictionaryChanged:self];
 }
 
 /*!
@@ -261,8 +271,15 @@ static NSSet *allExtensions = nil;
 	[self insertDictionary:metaData atPath:pathComponents withinDictionary:newRoot];
 	[pathComponents release];
 	metaData = newRoot;
-	[(SapphireDirectoryMetaData *)[self dataForPath:oldRoot] setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:nil];
 	
+	return 3;
+}
+
+- (int)finalUpgradeFromVersion1
+{
+	NSString *oldRoot = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
+	[(SapphireDirectoryMetaData *)[self dataForPath:oldRoot] setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:nil];
+
 	return 3;
 }
 
@@ -275,6 +292,52 @@ static NSSet *allExtensions = nil;
 	[pathComponents release];
 	[metaData removeObjectForKey:oldRoot];
 	return 3;
+}
+
+- (int)finalUpgradeFromVersion2
+{
+	return 3;
+}
+
+void recurseSetFileClass(NSMutableDictionary *metaData)
+{
+	if(metaData == nil)
+		return;
+	
+	NSMutableDictionary *dirs = [metaData objectForKey:DIRS_KEY];
+	if(dirs != nil)
+	{
+		NSEnumerator *dirEnum = [dirs keyEnumerator];
+		NSString *dir = nil;
+		while((dir = [dirEnum nextObject]) != nil)
+			recurseSetFileClass([dirs objectForKey:dir]);		
+	}
+	
+	NSMutableDictionary *files = [metaData objectForKey:FILES_KEY];
+	if(files == nil)
+		return;
+	
+	NSEnumerator *fileEnum = [files keyEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		NSMutableDictionary *fileDict = [files objectForKey:file];
+		int epNum = [[[fileDict objectForKey:META_TVRAGE_IMPORT_KEY] objectForKey:META_EPISODE_NUMBER_KEY] intValue];
+		FileClass fileCls = [[fileDict objectForKey:FILE_CLASS_KEY] intValue];
+		if(epNum != 0 && fileCls == FILE_CLASS_UNKNOWN)
+			[fileDict setObject:[NSNumber numberWithInt:FILE_CLASS_TV_SHOW] forKey:FILE_CLASS_KEY];
+	}
+}
+
+- (int)upgradeFromVersion3
+{
+	recurseSetFileClass([metaData objectForKey:@"/"]);
+	return 4;
+}
+
+- (int)finalUpgradeFromVersion3
+{
+	return 4;
 }
 
 /*!
@@ -300,13 +363,16 @@ static NSSet *allExtensions = nil;
 	
 	/*Version upgrade*/
 	int version = [[metaData objectForKey:META_VERSION_KEY] intValue];
+	int oldVersion = version;
 
 	if(version < META_COLLECTION_VERSION)
 	{
 		if(version < 2)
 			version = [self upgradeFromVersion1];
 		if(version < 3)
-			version = [self upgradeFromVersion2];		
+			version = [self upgradeFromVersion2];
+		if(version < 4)
+			version = [self upgradeFromVersion3];
 	}
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
@@ -337,6 +403,15 @@ static NSSet *allExtensions = nil;
 	[directories setObject:slash forKey:@"/"];
 	[slash release];
 	[self linkCollections];
+	if(oldVersion < META_COLLECTION_VERSION)
+	{
+		if(oldVersion < 2)
+			oldVersion = [self finalUpgradeFromVersion1];
+		if(oldVersion < 3)
+			oldVersion = [self finalUpgradeFromVersion2];
+		if(oldVersion < 4)
+			oldVersion = [self finalUpgradeFromVersion3];
+	}
 	[self writeMetaData];
 	
 	return self;
@@ -537,10 +612,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @end
 
-@interface SapphireDirectoryMetaData (private)
-- (void)reloadDirectoryContents;
-@end
-
 @implementation SapphireDirectoryMetaData
 
 - (void)createSubDicts
@@ -610,6 +681,21 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[super dealloc];
 }
 
+- (void)childDictionaryChanged:(SapphireMetaData *)child
+{
+	NSMutableDictionary *refDict = nil;
+	if([child isKindOfClass:[SapphireDirectoryMetaData class]])
+		refDict = metaDirs;
+	else if([child isKindOfClass:[SapphireFileMetaData class]])
+		refDict = metaFiles;
+	else
+		return;
+	
+	NSString *name = [[child path] lastPathComponent];
+	[refDict removeObjectForKey:name];
+	[refDict setObject:[child dict] forKey:name];
+}
+
 - (void)replaceInfoWithDict:(NSDictionary *)dict
 {
 	[self postAllFilesRemoved];
@@ -641,7 +727,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	NSEnumerator *nameEnum = [names objectEnumerator];
 	NSString *name = nil;
-//	NSFileManager *fm = [NSFileManager defaultManager];
+	NSFileManager *fm = [NSFileManager defaultManager];
 	while((name = [nameEnum nextObject]) != nil)
 	{
 		/*Skip hidden files*/
@@ -652,26 +738,29 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			continue;
 		NSString *filePath = [path stringByAppendingPathComponent:name];
 		SapphireMetaData *resolvedObject = nil;
-/*		if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+		NSDictionary *attributes = [fm fileAttributesAtPath:filePath traverseLink:NO];
+		if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
 		{
-			/* Symbolic link, handle with care *
-			NSDictionary *attributes = [fm fileAttributesAtPath:filePath traverseLink:NO];
+			/* Symbolic link, handle with care */
 			NSMutableDictionary *refDict = nil;
-			if([self isDirectory:filePath])
+			NSString *resolvedPath = [fm pathContentOfSymbolicLinkAtPath:filePath];
+			if(![resolvedPath hasPrefix:@"/"])
+				resolvedPath = [[filePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:resolvedPath];
+			if([self isDirectory:resolvedPath])
 				refDict = metaDirs;
 			else
 				refDict = metaFiles;
-			resolvedObject = [[self collection] dataForPath:[fm pathContentOfSymbolicLinkAtPath:filePath] withData:[refDict objectForKey:name]];
-			if(resolvedObject != nil)
-			{
-				BOOL rewrite = NO;
-				if([refDict objectForKey:name] != nil)
-					rewrite = YES;
-				[refDict removeObjectForKey:name];
-				if(rewrite)
-					[self writeMetaData];
-			}
-		}*/
+			resolvedObject = [[self collection] dataForPath:resolvedPath withData:[refDict objectForKey:name]];
+			if(resolvedObject == nil)
+				continue;
+			
+			BOOL rewrite = NO;
+			if([refDict objectForKey:name] != nil)
+				rewrite = YES;
+			[refDict removeObjectForKey:name];
+			if(rewrite)
+				[self writeMetaData];
+		}
 		/*Only accept if it is a directory or right extension*/
 		NSString *extension = [name pathExtension];
 		if([self isDirectory:filePath])
@@ -1401,6 +1490,12 @@ static NSArray *displayedMetaDataOrder = nil;
 	}
 	displayedMetaDataOrder = [[NSArray alloc] initWithArray:modified];
 	[modified release];
+}
+
+- (void)fileClsUpgrade
+{
+	if([self fileClass] == FILE_CLASS_UNKNOWN && [self episodeNumber] != 0)
+		[self setFileClass:FILE_CLASS_TV_SHOW];
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
