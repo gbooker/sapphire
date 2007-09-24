@@ -54,6 +54,7 @@
 
 @interface SapphireDirectoryMetaData (private)
 - (void)reloadDirectoryContents;
+- (SapphireFileMetaData *)cachedMetaDataForFile:(NSString *)file;
 - (void)invokeRecursivelyOnFiles:(NSInvocation *)fileInv withPredicate:(SapphirePredicate *)predicate;
 @end
 
@@ -833,11 +834,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	{
 		/*Check predicate*/
 		BOOL include = NO;
-		if([metaFiles objectForKey:file] != nil)
-		{
-			SapphireFileMetaData *meta = [self metaDataForFile:file];
+		SapphireFileMetaData *meta = [self cachedMetaDataForFile:file];
+		if(meta != nil)
 			include = [predicate accept:[meta path] meta:meta];
-		}
 		else
 			include = [predicate accept:[path stringByAppendingPathComponent:file] meta:nil];
 		if(include)
@@ -899,11 +898,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	{
 		/*Check predicate*/
 		BOOL include = NO;
-		if([metaFiles objectForKey:file] != nil)
-		{
-			SapphireFileMetaData *meta = [self metaDataForFile:file];
+		SapphireFileMetaData *meta = [self cachedMetaDataForFile:file];
+		if(meta != nil)
 			include = [predicate accept:[meta path] meta:meta];
-		}
 		else
 			include = [predicate accept:[path stringByAppendingPathComponent:file] meta:nil];
 		if(include)
@@ -967,6 +964,14 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 	/*Return it*/
 	return ret;
+}
+
+- (SapphireFileMetaData *)cachedMetaDataForFile:(NSString *)file
+{
+	if([metaFiles objectForKey:file] != nil)
+		return [self metaDataForFile:file];
+	else
+		return [cachedMetaFiles objectForKey:file];
 }
 
 /*!
