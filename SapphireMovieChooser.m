@@ -31,15 +31,28 @@
 	NSRect 	frame = [[self masterLayer] frame];
 	//	frame.size.height = frame.size.height / 16.0f;
 	//	frame.size.width = frame.size.width * 2.0f / 3.0f;
-	frame.origin.y = frame.size.height / 4.0f;
-	frame.origin.x = frame.size.width * (2.0f / 9.0f);
+	frame.origin.y = frame.size.height / 1.25f;
+	frame.origin.x = (frame.size.width / 4.0f) ;
 	[fileName setFrame: frame];
-	
 	
 	[self addControl: fileName];	
 	[[self list] setDatasource:self];
 	
 	return self;
+}
+
+/*!
+* @brief Override the layout
+ *
+ */
+- (void)_doLayout
+{
+	//Shrink the list frame to make room for displaying the filename
+	[super _doLayout];
+	NSRect listFrame = [[_listControl layer] frame];
+	listFrame.size.height -= 2.5f*listFrame.origin.y;
+	listFrame.origin.y *= 2.0f;
+	[[_listControl layer] setFrame:listFrame];
 }
 
 - (void)dealloc
