@@ -10,16 +10,23 @@
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
 #import "SapphireMovieChooser.h"
-
+/* Translation Keys */
+#define TRANSLATIONS_KEY			@"Translations"
+#define IMDB_LINK_KEY				@"IMDB Link"
+#define IMP_LINK_KEY				@"IMP Link"
+#define IMP_POSTERS_KEY				@"IMP Poster Links"
  /* IMDB XPATHS */
 #define	IMDB_SEARCH_XPATH				@"//td[starts-with(a/@href,'/title')]"
+#define IMDB_UNIQUE_SEARCH_XPATH		@"//a[@class='tn15more inline']/@href"
 #define IMDB_RESULT_LINK_XPATH			@"a/@href"
+#define IMDB_POSTER_LINK_XPATH			@"//ul/li/a/@href"
 #define	IMDB_RESULT_NAME_XPATH			@"normalize-space(string())"
 #define IMDB_RESULT_TITLE_YEAR_XPATH	@"//div[@id='tn15title']/h1/replace(string(), '\n', '')"
- 
- 
-#define TRANSLATIONS_KEY		@"Translations"
-#define LINK_KEY				@"Link"
+/* IMP XPATHS */
+#define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
+
+
+
 
 /*Delegate class to download cover art*/
 @interface SapphireMovieDataMenuDownloadDelegate : NSObject
@@ -105,6 +112,7 @@
 
 @implementation SapphireMovieImporter
 
+
 - (id) initWithSavedSetting:(NSString *)path
 {
 	self = [super init];
@@ -118,7 +126,7 @@
 	movieTranslations = [[settings objectForKey:TRANSLATIONS_KEY] mutableCopy];
 	if(movieTranslations == nil)
 		movieTranslations = [NSMutableDictionary new];
-	/*Cached show info*/
+	/*Cached movie info*/
 	movieInfo = [NSMutableDictionary new];
 	
 	return self;
@@ -145,88 +153,103 @@
 }
 
 /*!
+* @brief Gets IMPAwards.com Poster page link
+ *
+ * @param candidateIMDBLink The functions IMDB Posters Path
+ */
+- (NSString *)getPosterPath:(NSString *)candidateIMDBLink
+{
+	NSError *error = nil ;
+	NSURL * url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com%@/posters",candidateIMDBLink]] ;
+	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
+	NSXMLElement *root = [document rootElement];
+
+	/*Get the results list*/
+	NSArray *results = [root objectsForXQuery:IMDB_POSTER_LINK_XPATH error:&error];
+	if([results count])
+	{
+		/*Get each result*/
+		NSEnumerator *resultEnum = [results objectEnumerator];
+		NSXMLElement *result = nil;
+		while((result = [resultEnum nextObject]) != nil)
+		{
+			/*Add the result to the list*/			
+			NSString *resultURL =[[result stringValue] lowercaseString];
+			if(resultURL == nil)
+				continue;
+			else if([resultURL hasPrefix:@"http://www.impawards.com"])/* See if the link is to IMP */
+			{
+				NSString * foundPosterLink =[resultURL stringByReplacingAllOccurancesOf:@"http://www.impawards.com" withString:@""];
+				return foundPosterLink;
+			}
+		}		
+	}
+	return nil;
+}
+
+/*!
+* @brief Compile IMPAwards.com Poster link list
+ *
+ * @param posterPageLink The Movie's IMP Poster link extention
+ * @return An array of canidate poster images
+ */
+- (NSArray *)getPosterLinks:(NSString *)posterPageLink
+{
+	NSError *error = nil ;
+	NSURL * url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",posterPageLink]] ;
+	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
+	NSXMLElement *root = [document rootElement];
+	NSArray * candidatePosterLinks=[NSArray arrayWithObjects:nil] ;
+	NSString * yearPathComponent=[posterPageLink stringByDeletingLastPathComponent];
+	
+	/*Get the results list*/
+	NSArray *results = [root objectsForXQuery:IMP_POSTER_CANDIDATES_XPATH error:&error];
+	if([results count])
+	{
+		/*Get each result*/
+		NSEnumerator *resultEnum = [results objectEnumerator];
+		NSXMLElement *result = nil;
+		while((result = [resultEnum nextObject]) != nil)
+		{
+			/*Add the result to the list*/			
+			NSString *resultURL =[[result stringValue] lowercaseString];
+			if(resultURL == nil)
+				continue;
+			if([resultURL hasPrefix:@"posters/"]) /* get the displayed poster link */
+			{
+				NSString * subPath=[resultURL substringFromIndex:7];
+				subPath=[NSString stringWithFormat:[NSString stringWithFormat:@"%@/posters%@",yearPathComponent,subPath]];
+				candidatePosterLinks=[candidatePosterLinks arrayByAddingObject:subPath];
+			}
+			else if([resultURL hasPrefix:@"thumbs/"]) /* get the displayed poster link */
+			{
+				NSString * subPath=[resultURL substringFromIndex:11];
+				subPath=[NSString stringWithFormat:[NSString stringWithFormat:@"%@/posters/%@",yearPathComponent,subPath]];
+				candidatePosterLinks=[candidatePosterLinks arrayByAddingObject:subPath];
+			}
+		}
+	}
+return candidatePosterLinks;
+}
+
+
+/*!
 * @brief Fetch information for a movie
  *
- * @param movieName The IMDB name (part of the show's URL)
+ * @param movieTitleLink The IMDB link extention (part of the show's URL)
+ * @param moviePath The movie file's location
  * @return A cached dictionary of the movie info
  */
-- (NSMutableDictionary *)getMetaForMovie:(NSString *)movieName withPath:(NSString*)moviePath
+- (NSMutableDictionary *)getMetaForMovie:(NSString *)movieTitleLink withPath:(NSString*)moviePath
 {
 	NSError *error = nil;
 	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
 	/*Get the movie html*/
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMDB.com%@",movieName]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMDB.com%@",movieTitleLink]];
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
 	
 	/* Get the movie title */
 	NSString *movieTitle= [[document objectsForXQuery:IMDB_RESULT_TITLE_YEAR_XPATH error:&error] objectAtIndex:0];
-	int titleYear= 0 ;
-	NSString *shortenedMovieTitle=nil ;
-	NSString *coverArtLinkA=nil ;
-	NSString *coverArtLinkB=nil ;
-	NSString *coverArtSavePath=nil ;
-	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
-	NSCharacterSet *skipSet = [NSCharacterSet characterSetWithCharactersInString:@"("];
-	NSScanner *titleScan= [NSScanner scannerWithString:movieTitle] ;
-	
-	/* Cover Art Processing */
-	[titleScan scanUpToCharactersFromSet:skipSet intoString:&shortenedMovieTitle];
-	[titleScan scanUpToCharactersFromSet:decimalSet intoString:nil];
-	[titleScan scanInt:&titleYear];
-	
-	/* Remove punctuation */
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@":" withString:@""];
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"'" withString:@""];
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"," withString:@""];
-	shortenedMovieTitle=[[shortenedMovieTitle stringByReplacingAllOccurancesOf:@" " withString:@"_"] lowercaseString];
-	
-	/*Convert roman to verbage*/
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_i_"	withString:@"_one_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_ii_"	withString:@"_two_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_iii_"	withString:@"_three_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_iv_"	withString:@"_four_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_v_"	withString:@"_five_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_1_"	withString:@"_one_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_2_"	withString:@"_two_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_3_"	withString:@"_three_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_4_"	withString:@"_four_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"_5_"	withString:@"_five_"] ;
-	
-	/* Symbol Replacements */
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"&"	withString:@"_and_"] ;
-	shortenedMovieTitle=[shortenedMovieTitle stringByReplacingAllOccurancesOf:@"®"	withString:@"ae"] ;
-		
-	/* Remove leading 'the' and 'a' */
-	if([shortenedMovieTitle hasPrefix:@"the_"])shortenedMovieTitle=[shortenedMovieTitle substringFromIndex:4];
-	else if([shortenedMovieTitle hasPrefix:@"a_"])shortenedMovieTitle=[shortenedMovieTitle substringFromIndex:2];
-	coverArtLinkA=[NSString stringWithFormat:@"http://www.impawards.com/%d/posters/%@ver1.jpg",titleYear,shortenedMovieTitle] ;
-	coverArtLinkB=[coverArtLinkA stringByReplacingAllOccurancesOf:@"_ver1" withString:@""];
-	coverArtSavePath=[[[moviePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:[[[moviePath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"]];
-	error = nil;
-	BOOL isDir = NO;
-	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:coverArtSavePath isDirectory:&isDir] && !isDir;
-	if(!imageExists)/*Get the screen cap*/
-	{
-		NSArray *requestURLList=[[NSArray alloc]  initWithObjects:
-			[NSURLRequest requestWithURL:[NSURL URLWithString:coverArtLinkA]
-							 cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0],
-			[NSURLRequest requestWithURL:[NSURL URLWithString:coverArtLinkB]
-				cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:5.0],
-			nil];
-		
-
-//		SapphireMovieDataMenuDownloadDelegate *myDelegate= [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:requestURLList withDestination:coverArtSavePath];		
-//		[[NSFileManager defaultManager] createDirectoryAtPath:[coverArtSavePath stringByDeletingLastPathComponent] attributes:nil];
-//		[myDelegate getCoverArt];
-//		[[NSURLDownload alloc] initWithRequest:[requestURLList objectAtIndex:0] delegate:myDelegate];
-//		[myDelegate release];
-	}
-		
-	/* Dump XML document to disk (Dev Only) */
-//	NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-//	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@/%@_title_result.xml",documentPath,movieTitle] atomically:YES] ;
-	
-	
 	
 	/* populate metadata to return */
 	[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
@@ -249,57 +272,70 @@
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"." withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"-" withString:@" "];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com/find?s=all&q=%@", [searchStr URLEncode]]];
-	NSError *error = nil;
+	NSError * error = nil;
+	BOOL uniqueResult=NO ;
+	NSArray * results = nil;
+	NSMutableArray *ret=nil;
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-	/* Dump XML document to disk (Dev Only) */
-	//NSString *documentPath =[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/XML"];
-	//[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"%@/%@_search_result.xml",documentPath,searchStr] atomically:YES] ;
-	
-	NSXMLElement *root = [document rootElement];
-	
+	NSXMLElement *root = [document rootElement];	
 	NSString *resultTitle=[[[root objectsForXQuery:@"//title" error:&error]objectAtIndex:0] stringValue];
 	
 	if([resultTitle isEqualToString:@"IMDb Search"])/*Make sure we didn't get back a unique result */
 	{
-		/*Get the results list*/
-		NSArray *results = [root objectsForXQuery:IMDB_SEARCH_XPATH error:&error];
-
+		results = [root objectsForXQuery:IMDB_SEARCH_XPATH error:&error];
+		ret = [NSMutableArray arrayWithCapacity:[results count]];
 		//Need to clean out (VG) entries <Video Game>
-		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[results count]];
-		if([results count])
-		{
-			/*Get each result*/
-			NSEnumerator *resultEnum = [results objectEnumerator];
-			NSXMLElement *result = nil;
-			while((result = [resultEnum nextObject]) != nil)
-			{
-				/*Add the result to the list*/
-
-				NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_RESULT_LINK_XPATH error:&error] objectAtIndex:0] stringValue]] ;
-			
-				if(resultURL == nil)
-					continue;
-				{
-					[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-					[[result objectsForXQuery:IMDB_RESULT_NAME_XPATH error:&error] objectAtIndex:0], @"name",
-					[resultURL path], @"link",
-					nil]];
-				}
-			}
-			return ret;
-		}
+		//Need to clean out (TV) entries <Television> ?
 	}
 	else /* IMDB directly linked to a unique movie title */
 	{
-		NSMutableArray *ret = [NSMutableArray arrayWithCapacity:1];
-		[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-		resultTitle, @"name",
-		[[url relativeString] stringByReplacingAllOccurancesOf:@"http://www.imdb.com" withString:@""], @"link",
-		nil]];
-		return ret ;
+		uniqueResult=YES ;
+		ret = [NSMutableArray arrayWithCapacity:1];
+		results = [root objectsForXQuery:IMDB_UNIQUE_SEARCH_XPATH error:&error];		
+	}	
+		
+	if([results count])
+	{
+		/*Get each result*/
+		NSEnumerator *resultEnum = [results objectEnumerator];
+		NSXMLElement *result = nil;
+		while((result = [resultEnum nextObject]) != nil)
+		{
+			if(uniqueResult)/*Check for a unique title link*/
+			{
+				NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_UNIQUE_SEARCH_XPATH error:&error] objectAtIndex:0] stringValue]] ;
+				if(resultURL == nil)
+					continue;
+				NSString *URLSubPath =[resultURL path] ;
+				if([URLSubPath hasPrefix:@"/rg/title-tease/"])
+				{
+					URLSubPath=[[URLSubPath stringByReplacingAllOccurancesOf:@"/rg/title-tease/" withString:@""]stringByDeletingLastPathComponent];
+					NSScanner * snipPrefix=[NSScanner scannerWithString:URLSubPath];
+					NSString *snip=nil ;
+					[snipPrefix scanUpToString:@"/" intoString:&snip] ;
+					URLSubPath=[URLSubPath stringByReplacingAllOccurancesOf:snip withString:@""];
+					[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+						resultTitle, @"name",
+						URLSubPath, IMDB_LINK_KEY,
+						nil]];
+					return ret ;
+				}
+			}
+			else
+			{
+				/*Add the result to the list*/
+				NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_RESULT_LINK_XPATH error:&error] objectAtIndex:0] stringValue]] ;
+				if(resultURL == nil)
+					continue;
+				[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+					[[result objectsForXQuery:IMDB_RESULT_NAME_XPATH error:&error] objectAtIndex:0], @"name",
+					[resultURL path], IMDB_LINK_KEY,
+					nil]];
+			}
+		}
+		if(!uniqueResult)return ret;
 	}
-	/*No results found*/
-	return nil;
+	return nil ;
 }
 
 
@@ -345,18 +381,17 @@
 		return NO;
 	/*Get fineName*/
 	NSString *fileName = [path lastPathComponent];
-	
 	if([metaData fileClass]==FILE_CLASS_TV_SHOW) /* File is a TV Show - skip it */
 		return NO ;
 	
 	/*Get the movie title*/
-	NSString *searchStr = fileName;
+	NSString *movieDataLink = nil ;
 	/*Check to see if we know this movie*/
-	NSString *movie = [movieTranslations objectForKey:[searchStr lowercaseString]];
-	if(movie == nil)
+	NSMutableDictionary *dict=[movieTranslations objectForKey:[fileName lowercaseString]];
+	if(dict == nil)
 	{
 		/*Ask the user what movie this is*/
-		NSArray *movies = [self searchResultsForMovie:searchStr];
+		NSArray *movies = [self searchResultsForMovie:fileName];
 		/*Pause for the user's input*/
 		[dataMenu pause];
 		/*Bring up the prompt*/
@@ -364,7 +399,6 @@
 		[chooser setMovies:movies];
 		[chooser setFileName:fileName];		
 		[chooser setListTitle:BRLocalizedString(@"Select Movie Title", @"Prompt the user for title of movie")];
-		[chooser setSearchStr:searchStr];
 		/*And display prompt*/
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
@@ -374,10 +408,11 @@
 	
 	/*Import the info*/
 	NSMutableDictionary *info = nil;
-	info = [self getMetaForMovie:movie withPath:path];
+	movieDataLink=[dict objectForKey:IMDB_LINK_KEY];
+	info = [self getMetaForMovie:movieDataLink withPath:path];
 	if(!info)
 		return NO;	
-	[info removeObjectForKey:LINK_KEY];
+	[info removeObjectForKey:IMDB_LINK_KEY];
 	[metaData importInfo:info fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_MOVIE];
 	
@@ -464,7 +499,42 @@
 	{
 		/*They selected a movie title, save the translation and write it*/
 		NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
-		[movieTranslations setObject:[movie objectForKey:@"link"] forKey:[[chooser searchStr] lowercaseString]];
+		NSMutableDictionary * transDict = [movieTranslations objectForKey:[[chooser fileName] lowercaseString]];
+		if(transDict == nil)
+		{
+			transDict=[NSMutableDictionary new] ;
+			[movieTranslations setObject:transDict forKey:[[chooser fileName] lowercaseString]];
+			[transDict release];
+		}
+		/* Add IMDB Key */
+		[transDict setObject:[movie objectForKey:IMDB_LINK_KEY] forKey:IMDB_LINK_KEY];
+		NSString *posterPath=nil ;
+		/* Get the IMP Key with the IMDB Posters page */
+		posterPath=[self getPosterPath:[transDict objectForKey:IMDB_LINK_KEY]] ;
+		if(posterPath!=nil)
+		{
+			[transDict setObject:posterPath forKey:IMP_LINK_KEY];
+			/*We got a posterPath, get the posterLinks */
+			NSArray *posterLinks=nil ;
+			posterLinks=[self getPosterLinks:posterPath];
+			if(posterLinks!=nil)
+			{
+				/* Add the poster links */
+				NSMutableDictionary *posterDict=[NSMutableDictionary new] ;
+				NSEnumerator *resultEnum = [posterLinks objectEnumerator];
+				NSXMLElement *result = nil;
+				int i=0 ;
+				while((result = [resultEnum nextObject]) != nil)
+				{
+					i+=1;
+					NSString *posterName=[NSString stringWithFormat:@"Poster Version %d",i];
+					[posterDict setObject:result forKey:posterName];
+				}
+				[transDict setObject:posterDict forKey:IMP_POSTERS_KEY];
+				
+			}
+			
+		}
 		[self writeSettings];
 	}
 	/*We can resume now*/
