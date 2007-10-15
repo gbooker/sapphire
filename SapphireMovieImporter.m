@@ -10,11 +10,12 @@
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
 #import "SapphireMovieChooser.h"
+#import "SapphirePosterChooser.h"
 /* Translation Keys */
 #define TRANSLATIONS_KEY			@"Translations"
 #define IMDB_LINK_KEY				@"IMDB Link"
 #define IMP_LINK_KEY				@"IMP Link"
-#define IMP_POSTERS_KEY				@"IMP Poster Links"
+#define IMP_POSTERS_KEY				@"IMP Posters"
  /* IMDB XPATHS */
 #define	IMDB_SEARCH_XPATH				@"//td[starts-with(a/@href,'/title')]"
 #define IMDB_UNIQUE_SEARCH_XPATH		@"//a[@class='tn15more inline']/@href"
@@ -111,7 +112,6 @@
 @end
 
 @implementation SapphireMovieImporter
-
 
 - (id) initWithSavedSetting:(NSString *)path
 {
@@ -232,6 +232,31 @@
 return candidatePosterLinks;
 }
 
+/*!
+* @brief Get the posters from IMPAwards.com
+ *
+ * @param posterLinks The Movie's IMP Poster links
+ * @return selected poster link
+ */
+- (NSString *)getPostersForMovie:(NSString *)movieTitle withPath:(NSString*)moviePath
+{
+//	NSError *error = nil ;
+	NSString *fileName=[[moviePath lastPathComponent]lowercaseString] ;
+	NSArray *posters=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:IMP_POSTERS_KEY];
+	if([posters count])
+	{
+		[dataMenu pause];
+		SapphireMovieChooser * chooser=[[SapphireMovieChooser alloc] initWithScene:[dataMenu scene]];
+//		[chooser setMovies:posters] ;
+//		[chooser setMovieTitle:movieTitle];
+//		[chooser setFileName:fileName];
+		[chooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
+		[[dataMenu stack] pushController:chooser];
+		[chooser release];
+	}
+	return nil;
+}
+
 
 /*!
 * @brief Fetch information for a movie
@@ -244,12 +269,17 @@ return candidatePosterLinks;
 {
 	NSError *error = nil;
 	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
+	
+	/* Gather IMDB Data */
 	/*Get the movie html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMDB.com%@",movieTitleLink]];
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-	
 	/* Get the movie title */
 	NSString *movieTitle= [[document objectsForXQuery:IMDB_RESULT_TITLE_YEAR_XPATH error:&error] objectAtIndex:0];
+	
+	/*Prompt User to Select an IMP Poster */
+	NSString *selectedPoster=nil ;
+	selectedPoster=[self getPostersForMovie:movieTitle withPath:moviePath];
 	
 	/* populate metadata to return */
 	[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
@@ -403,19 +433,19 @@ return candidatePosterLinks;
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
 		return NO ;
-		//Data will be ready for access on the next exe
+		//Data will be ready for access on the next call
 	}
 	
 	/*Import the info*/
-	NSMutableDictionary *info = nil;
+	/*IMDB Data */
+	NSMutableDictionary *infoIMDB = nil;
 	movieDataLink=[dict objectForKey:IMDB_LINK_KEY];
-	info = [self getMetaForMovie:movieDataLink withPath:path];
-	if(!info)
-		return NO;	
-	[info removeObjectForKey:IMDB_LINK_KEY];
-	[metaData importInfo:info fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+	infoIMDB = [self getMetaForMovie:movieDataLink withPath:path];
+	if(!infoIMDB)
+		return NO;
+	[infoIMDB removeObjectForKey:IMDB_LINK_KEY];
+	[metaData importInfo:infoIMDB fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_MOVIE];
-	
 	/*We imported something*/
 	return YES;
 }
@@ -469,74 +499,78 @@ return candidatePosterLinks;
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 	/*See if it was a movie chooser*/
-	if(![controller isKindOfClass:[SapphireMovieChooser class]])
-		return;
-	
-	/*Get the user's selection*/
-	SapphireMovieChooser *chooser = (SapphireMovieChooser *)controller;
-	int selection = [chooser selection];
-	if(selection == MOVIE_CHOOSE_CANCEL)
-		/*They aborted, skip*/
-		[dataMenu skipNextItem];
-	else if(selection == MOVIE_CHOOSE_NOT_MOVIE)
+	if([controller isKindOfClass:[SapphireMovieChooser class]])
 	{
-		/*They said it is not a movie, so put in empty data so they are not asked again*/
-		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
-		if ([currentData fileClass] != FILE_CLASS_TV_SHOW)
-			[currentData setFileClass:FILE_CLASS_UNKNOWN];
-	}
-	else if(selection==MOVIE_CHOOSE_OTHER)
-	{
-		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
-		[currentData setFileClass:FILE_CLASS_OTHER] ;
-	}
-	else if(selection==MOVIE_CHOOSE_TV_SHOW)
-	{
-		[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
-		[currentData setFileClass:FILE_CLASS_TV_SHOW] ;	
-	}
-	else
-	{
-		/*They selected a movie title, save the translation and write it*/
-		NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
-		NSMutableDictionary * transDict = [movieTranslations objectForKey:[[chooser fileName] lowercaseString]];
-		if(transDict == nil)
+		/*Get the user's selection*/
+		SapphireMovieChooser *chooser = (SapphireMovieChooser *)controller;
+		int selection = [chooser selection];
+		if(selection == MOVIE_CHOOSE_CANCEL)
+			/*They aborted, skip*/
+			[dataMenu skipNextItem];
+		else if(selection == MOVIE_CHOOSE_NOT_MOVIE)
 		{
-			transDict=[NSMutableDictionary new] ;
-			[movieTranslations setObject:transDict forKey:[[chooser fileName] lowercaseString]];
-			[transDict release];
+			/*They said it is not a movie, so put in empty data so they are not asked again*/
+			[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+			if ([currentData fileClass] != FILE_CLASS_TV_SHOW)
+				[currentData setFileClass:FILE_CLASS_UNKNOWN];
 		}
-		/* Add IMDB Key */
-		[transDict setObject:[movie objectForKey:IMDB_LINK_KEY] forKey:IMDB_LINK_KEY];
-		NSString *posterPath=nil ;
-		/* Get the IMP Key with the IMDB Posters page */
-		posterPath=[self getPosterPath:[transDict objectForKey:IMDB_LINK_KEY]] ;
-		if(posterPath!=nil)
+		else if(selection==MOVIE_CHOOSE_OTHER)
 		{
-			[transDict setObject:posterPath forKey:IMP_LINK_KEY];
-			/*We got a posterPath, get the posterLinks */
-			NSArray *posterLinks=nil ;
-			posterLinks=[self getPosterLinks:posterPath];
-			if(posterLinks!=nil)
+			[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+			[currentData setFileClass:FILE_CLASS_OTHER] ;
+		}
+		else if(selection==MOVIE_CHOOSE_TV_SHOW)
+		{
+			[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+			[currentData setFileClass:FILE_CLASS_TV_SHOW] ;	
+		}
+		else
+		{
+			/*They selected a movie title, save the translation and write it*/
+			NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
+			NSMutableDictionary * transDict = [movieTranslations objectForKey:[[chooser fileName] lowercaseString]];
+			if(transDict == nil)
 			{
-				/* Add the poster links */
-				NSMutableDictionary *posterDict=[NSMutableDictionary new] ;
-				NSEnumerator *resultEnum = [posterLinks objectEnumerator];
-				NSXMLElement *result = nil;
-				int i=0 ;
-				while((result = [resultEnum nextObject]) != nil)
+				transDict=[NSMutableDictionary new] ;
+				[movieTranslations setObject:transDict forKey:[[chooser fileName] lowercaseString]];
+				[transDict release];
+			}
+			/* Add IMDB Key */
+			[transDict setObject:[movie objectForKey:IMDB_LINK_KEY] forKey:IMDB_LINK_KEY];
+			NSString *posterPath=nil ;
+			/* Get the IMP Key with the IMDB Posters page */
+			posterPath=[self getPosterPath:[transDict objectForKey:IMDB_LINK_KEY]] ;
+			if(posterPath!=nil)
+			{
+				[transDict setObject:posterPath forKey:IMP_LINK_KEY];
+				/*We got a posterPath, get the posterLinks */
+				NSArray *posterLinks=nil ;
+				posterLinks=[self getPosterLinks:posterPath];
+				if(posterLinks!=nil)
 				{
-					i+=1;
-					NSString *posterName=[NSString stringWithFormat:@"Poster Version %d",i];
-					[posterDict setObject:result forKey:posterName];
+					/* Add the poster links */
+					[transDict setObject:posterLinks forKey:IMP_POSTERS_KEY];
 				}
-				[transDict setObject:posterDict forKey:IMP_POSTERS_KEY];
 				
 			}
-			
+			[self writeSettings];
 		}
-		[self writeSettings];
 	}
+	else if([controller isKindOfClass:[SapphirePosterChooser class]])
+	{
+		SapphirePosterChooser *chooser = (SapphirePosterChooser *)controller;
+		int selection = [chooser selection];
+		if(selection == POSTER_CHOOSE_CANCEL)
+			/*They aborted, skip*/
+			[dataMenu skipNextItem];
+		else
+		{
+			NSString *poster = [[chooser posters] objectAtIndex:selection];
+		}
+		
+	}
+	else
+		return;
 	/*We can resume now*/
 	[dataMenu resume];
 }
