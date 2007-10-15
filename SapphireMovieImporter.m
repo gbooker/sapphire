@@ -246,10 +246,10 @@ return candidatePosterLinks;
 	if([posters count])
 	{
 		[dataMenu pause];
-		SapphireMovieChooser * chooser=[[SapphireMovieChooser alloc] initWithScene:[dataMenu scene]];
-//		[chooser setMovies:posters] ;
-//		[chooser setMovieTitle:movieTitle];
-//		[chooser setFileName:fileName];
+		SapphirePosterChooser * chooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
+		[chooser setPosters:posters] ;
+		[chooser setMovieTitle:movieTitle];
+		[chooser setFileName:fileName];
 		[chooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
