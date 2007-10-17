@@ -55,14 +55,13 @@
 
 - (void)dealloc
 {
+	[posterMarch release];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	[posters release];
 	[posterLayers release];
 	[fileName release];
 	[movieTitle release];
-	[posterMarch release];
 	[fileInfoText release];
-	[posterMarch release];
 	[super dealloc];
 }
 
@@ -145,7 +144,6 @@
 - (void)setPosters:(NSArray *)posterList
 {
 	posters = [posterList retain];
-	//	[[self list] reload];
 	[self loadPosters];
 	[posterMarch _updateIcons] ;
 	[[self scene] renderScene];
@@ -216,10 +214,10 @@
 	//	[posterMarch setSelection:[selection floatValue];
 	return selectedPoster;
 }
-//@end
+@end
 
 
-//@implementation SapphirePosterChooser (IconDataSource)
+@implementation SapphirePosterChooser (IconDataSource)
 
 - (long) iconCount
 {
@@ -238,9 +236,9 @@
     return [posterLayers objectAtIndex:index];
 }
 
-//@end
+@end
 
-//@implementation SapphirePosterChooser (ListDataSource)
+@implementation SapphirePosterChooser (ListDataSource)
 
 - (long) itemCount
 {
@@ -282,9 +280,9 @@
     return ( result );
 }
 
-//@end
+@end
 
-//@implementation SapphirePosterChooser (IconListManagement)
+@implementation SapphirePosterChooser (IconListManagement)
 
 /*!
 * @brief load poster image layers
@@ -292,7 +290,7 @@
  */
 - (void) loadPosters
 {
-	NSArray *results = [NSArray new];
+	NSArray *results = nil;
 	if([posters count])
 	{
 		/*Get each result*/
@@ -301,12 +299,13 @@
 		while((result = [resultEnum nextObject]) != nil)
 		{
 			NSString *posterPath=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
-			results=[results arrayByAddingObject:[self getPosterLayer:posterPath]];
+			if(!results)
+				results=[NSArray arrayWithObject:[self getPosterLayer:posterPath]];
+			else 
+				results=[results arrayByAddingObject:[self getPosterLayer:posterPath]];
 		}
 		posterLayers=[results retain];
 	}
-	
-	
 }
 
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath
@@ -367,7 +366,6 @@
 
 - (void) selectionChanged: (NSNotification *) note
 {
-	
     [posterMarch setSelection: [[note object] selection]];
 }
 @end

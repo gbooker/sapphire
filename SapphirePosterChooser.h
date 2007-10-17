@@ -38,25 +38,25 @@
 - (NSString *)fileName;
 - (int)selectedPoster;
 
-//@end
+@end
 
-//@interface SapphirePosterChooser (IconDataSource) <BRIconSourceProtocol>
+@interface SapphirePosterChooser (IconDataSource) <BRIconSourceProtocol>
 
 - (long) iconCount;
 - (BRRenderLayer *) iconAtIndex: (long) index;
 
-//@end
+@end
 
-//@interface SapphirePosterChooser (ListDataSource) <BRMenuListItemProvider>
+@interface SapphirePosterChooser (ListDataSource) <BRMenuListItemProvider>
 
 - (long) itemCount;
 - (id<BRMenuItemLayer>) itemForRow: (long) row;
 - (NSString *) titleForRow: (long) row;
 - (long) rowForTitle: (NSString *) title;
 
-//@end
+@end
 
-//@interface SapphirePosterChooser (IconListManagement)
+@interface SapphirePosterChooser (IconListManagement)
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath;
 - (void) loadPosters;
 - (void) hideIconMarch;
