@@ -16,6 +16,7 @@
 #define IMDB_LINK_KEY				@"IMDB Link"
 #define IMP_LINK_KEY				@"IMP Link"
 #define IMP_POSTERS_KEY				@"IMP Posters"
+#define SELECTED_POSTER_KEY			@"Selected Poster"
  /* IMDB XPATHS */
 #define	IMDB_SEARCH_XPATH				@"//td[starts-with(a/@href,'/title')]"
 #define IMDB_UNIQUE_SEARCH_XPATH		@"//a[@class='tn15more inline']/@href"
@@ -37,7 +38,7 @@
 	
 }
 - (id)initWithRequest:(NSArray*)reqList withDestination:(NSString *)dest;
--(void)getCoverArt ;
+-(void)downloadMoviePosters ;
 @end
 
 @implementation SapphireMovieDataMenuDownloadDelegate
@@ -53,26 +54,28 @@
 	if(!self)
 		return nil;
 	
+//	destination = [[NSString stringWithFormat:@"%@/",dest] retain];
 	destination = [dest retain];
 	requestList = [reqList retain];
-	
-	return self;
-	
+	return self;	
 }
 
 /*!
-* @brief Fire the delegate to start downloading
+* @brief Fire the delegate to start downloading the posters
  *
  */
--(void)getCoverArt
+-(void)downloadMoviePosters
 {
 	NSEnumerator *reqEnum= [requestList objectEnumerator] ;
-	NSURLRequest *req=nil ;
+	NSString *req=nil ;
 	while((req=[reqEnum nextObject]) !=nil)
 	{
-		NSURLDownload *currentDownload=[[NSURLDownload alloc] initWithRequest:req delegate:self] ;
+		NSURL *posterURL=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",req]];
+		NSString *fullDestination=[NSString stringWithFormat:@"%@/%@",destination,[req lastPathComponent]];
+		NSURLRequest * request=[NSURLRequest requestWithURL:posterURL];
+		NSURLDownload *currentDownload=[[NSURLDownload alloc] initWithRequest:request delegate:self] ;
+		[currentDownload setDestination:fullDestination allowOverwrite:YES];
 		[currentDownload release] ;
-	//	if(currentDownload)break;/*The download is going, no need to try another URL */
 	}
 	
 }
@@ -92,12 +95,12 @@
  * @param download The downloader
  * @param filename The suggested filename
  */
-- (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
-{
-
-	[download setDestination:destination allowOverwrite:NO];
+//- (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
+//{
+//	NSString *fullDestination=[NSString stringWithFormat:@"@%/@%",destination,[[[self request] lastPathComponent]pathExtension]];
+//	[download setDestination:download allowOverwrite:YES];
 	
-}
+//}
 
 - (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
 {
@@ -242,14 +245,26 @@ return candidatePosterLinks;
 {
 //	NSError *error = nil ;
 	NSString *fileName=[[moviePath lastPathComponent]lowercaseString] ;
+	NSString *selectedPoster=nil ;
+	selectedPoster=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:SELECTED_POSTER_KEY];
+	/* Should we check to see if a poster has already been selected? */
+	if(selectedPoster)
+		return selectedPoster ;	
 	NSArray *posters=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:IMP_POSTERS_KEY];
 	if([posters count])
 	{
 		[dataMenu pause];
+		/* download all posters to the scratch folder */
+		NSString * posterBuffer=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
+		[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
+//		NSString *posterDest=[NSString stringWithFormat:@"%@/%@",posterBuffer,[
+		SapphireMovieDataMenuDownloadDelegate *myDelegate=[[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posters withDestination:posterBuffer];
+		[myDelegate downloadMoviePosters] ;
+		/* Now have the user pick a poster */
 		SapphirePosterChooser * chooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setPosters:posters] ;
-		[chooser setMovieTitle:movieTitle];
 		[chooser setFileName:fileName];
+		[chooser setMovieTitle:movieTitle];
 		[chooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
@@ -278,8 +293,10 @@ return candidatePosterLinks;
 	NSString *movieTitle= [[document objectsForXQuery:IMDB_RESULT_TITLE_YEAR_XPATH error:&error] objectAtIndex:0];
 	
 	/*Prompt User to Select an IMP Poster */
-	NSString *selectedPoster=nil ;
-	selectedPoster=[self getPostersForMovie:movieTitle withPath:moviePath];
+	/* We want to save the selected poster to the Cover Art folder & delete the rest */
+//	NSString *selectedPoster=nil ;
+
+//	selectedPoster=[self getPostersForMovie:movieTitle withPath:moviePath];
 	
 	/* populate metadata to return */
 	[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
@@ -436,6 +453,7 @@ return candidatePosterLinks;
 		//Data will be ready for access on the next call
 	}
 	
+
 	/*Import the info*/
 	/*IMDB Data */
 	NSMutableDictionary *infoIMDB = nil;
@@ -443,6 +461,28 @@ return candidatePosterLinks;
 	infoIMDB = [self getMetaForMovie:movieDataLink withPath:path];
 	if(!infoIMDB)
 		return NO;
+	
+	NSString * selectedPoster=nil ;
+	selectedPoster=[dict objectForKey:SELECTED_POSTER_KEY] ;
+	if(!selectedPoster && [dict objectForKey:IMP_POSTERS_KEY])
+	{
+		/*Prompt User to Select an IMP Poster */
+		/* We want to save the selected poster to the Cover Art folder & delete the rest */
+		//	NSString *selectedPoster=nil ;
+		
+		[self getPostersForMovie:[infoIMDB objectForKey:META_MOVIE_TITLE_KEY] withPath:path];
+			
+		return NO ;
+	}
+//	else /* if cover art isn't already there */
+//	{
+//		NSFileManager *fileAgent=[NSFileManager alloc];
+//		NSString * poster=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
+//		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
+//		[fileAgent movePath:poster toPath:coverart handler:self] ;
+//		
+//	}
+	
 	[infoIMDB removeObjectForKey:IMDB_LINK_KEY];
 	[metaData importInfo:infoIMDB fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_MOVIE];
@@ -559,15 +599,23 @@ return candidatePosterLinks;
 	else if([controller isKindOfClass:[SapphirePosterChooser class]])
 	{
 		SapphirePosterChooser *chooser = (SapphirePosterChooser *)controller;
-		int selection = [chooser selection];
-		if(selection == POSTER_CHOOSE_CANCEL)
+		int selectedPoster = [chooser selectedPoster];
+		if(selectedPoster == POSTER_CHOOSE_CANCEL)
 			/*They aborted, skip*/
-			[dataMenu skipNextItem];
+			[dataMenu skipNextItem]; //Should this be done?
 		else
 		{
-			NSString *poster = [[chooser posters] objectAtIndex:selection];
+			NSString *selected = [[chooser posters] objectAtIndex:selectedPoster];
+			NSMutableDictionary * transDict = [movieTranslations objectForKey:[chooser fileName]];
+			if(transDict == nil)
+			{
+				transDict=[NSMutableDictionary new] ;
+				[movieTranslations setObject:transDict forKey:[chooser fileName]];
+				[transDict release];
+			}
+			[transDict setObject:selected forKey:SELECTED_POSTER_KEY];
 		}
-		
+		[self writeSettings];
 	}
 	else
 		return;

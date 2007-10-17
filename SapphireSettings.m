@@ -14,6 +14,7 @@
 #import "SapphireFileDataImporter.h"
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
+#import "SapphirePosterChooser.h"
 #import "SapphireCollectionSettings.h"
 
 static SapphireSettings *sharedInstance = nil;
@@ -74,6 +75,7 @@ static SapphireSettings *sharedInstance = nil;
 	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
 												BRLocalizedString(@"   Fetch Internet Data", @"Fetch Internet Data menu item"),
 												BRLocalizedString(@"   Start Movie Import", @"Start Movie Import menu item"),
+												BRLocalizedString(@"   Choose Movie Posters", @"Start Poster Chooser menu item"),
 												BRLocalizedString(@"   Hide Collections", @"Hide Collections menu item"),
 												BRLocalizedString(@"   Don't Import Collections", @"Don't Import Collections menu item"),
 												BRLocalizedString(@"   Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"),
@@ -90,6 +92,7 @@ static SapphireSettings *sharedInstance = nil;
 													@"",
 													@"",
 													@"",
+													@"",
 													HIDE_FAVORITE_KEY, 
 													/*HIDE_TOP_SHOWS_KEY, */
 													HIDE_UNWATCHED_KEY,  
@@ -102,6 +105,7 @@ static SapphireSettings *sharedInstance = nil;
 	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
 												[theme gem:CONE_GEM_KEY],
+												[theme gem:GREEN_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
 												[theme gem:EYE_GEM_KEY],
 												[theme gem:YELLOW_GEM_KEY],
@@ -132,7 +136,7 @@ static SapphireSettings *sharedInstance = nil;
 
 	/*display*/
 	[[self list] setDatasource:self];
-	[[self list] addDividerAtIndex:5];
+	[[self list] addDividerAtIndex:6];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 
@@ -448,7 +452,14 @@ static SapphireSettings *sharedInstance = nil;
 		[menu release];
 		[importer release];
 	}
+	/*Start Movie Poster Chooser*/
 	else if(row == 3)
+	{
+	//	SapphirePosterBrowse *chooser = [[SapphirePosterChooser alloc] initWithScene:[self scene] metaDataPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"movieData.plist"]];
+	//	[[self stack] pushController:chooser];
+	//	[chooser release];
+	}
+	else if(row == 4)
 	{
 		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
 		[colSettings setGettingSelector:@selector(hideCollection:)];
@@ -457,7 +468,7 @@ static SapphireSettings *sharedInstance = nil;
 		[[self stack] pushController:colSettings];
 		[colSettings release];
 	}
-	else if(row == 4)
+	else if(row == 5)
 	{
 		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
 		[colSettings setGettingSelector:@selector(skipCollection:)];
