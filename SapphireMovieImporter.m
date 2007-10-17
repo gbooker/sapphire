@@ -474,14 +474,36 @@ return candidatePosterLinks;
 			
 		return NO ;
 	}
-//	else /* if cover art isn't already there */
-//	{
-//		NSFileManager *fileAgent=[NSFileManager alloc];
-//		NSString * poster=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
-//		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
-//		[fileAgent movePath:poster toPath:coverart handler:self] ;
-//		
-//	}
+	else if(selectedPoster)
+	{
+		/* Lets move the selected poster to the corresponding Cover Art Directory */
+		NSFileManager *fileAgent=[NSFileManager alloc];
+		NSString * poster=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
+		poster=[poster stringByAppendingPathComponent:[selectedPoster lastPathComponent]];
+		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
+		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
+		coverart=[coverart stringByAppendingPathExtension:[poster pathExtension]];
+		/* Might want to make sure files exist / DNE */
+		[fileAgent movePath:poster toPath:coverart handler:self] ;
+		/* Lets clean up the Poster_Buffer */
+		NSArray *oldPosters = [dict objectForKey:IMP_POSTERS_KEY];
+		if([oldPosters count])
+		{
+			/*Get each result*/
+			NSEnumerator *resultEnum = [oldPosters objectEnumerator];
+			NSString *result = nil;
+			while((result = [resultEnum nextObject]) != nil)
+			{
+				NSString *removeFile=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
+		//		if(!results)
+		//			results=[NSArray arrayWithObject:[self getPosterLayer:posterPath]];
+		//		else 
+		//			results=[results arrayByAddingObject:[self getPosterLayer:posterPath]];
+				[fileAgent removeFileAtPath:removeFile handler:self] ;
+			}
+		}
+		[fileAgent release];
+	}
 	
 	[infoIMDB removeObjectForKey:IMDB_LINK_KEY];
 	[metaData importInfo:infoIMDB fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
