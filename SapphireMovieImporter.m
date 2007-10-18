@@ -24,6 +24,7 @@
 #define IMDB_POSTER_LINK_XPATH			@"//ul/li/a/@href"
 #define	IMDB_RESULT_NAME_XPATH			@"normalize-space(string())"
 #define IMDB_RESULT_TITLE_YEAR_XPATH	@"//div[@id='tn15title']/h1/replace(string(), '\n', '')"
+#define IMDB_RESTULT_CAST_NAMES_XPATH	@"//div[@class='info']/table/tr/td/a"
 /* IMP XPATHS */
 #define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
 
@@ -53,8 +54,7 @@
 	self = [super init];
 	if(!self)
 		return nil;
-	
-//	destination = [[NSString stringWithFormat:@"%@/",dest] retain];
+
 	destination = [dest retain];
 	requestList = [reqList retain];
 	return self;	
@@ -88,19 +88,6 @@
 	[super dealloc];
 }
 
-/*!
-* @brief Delegate Method which prompts for location to save file.  Override and set new
- * destination
- *
- * @param download The downloader
- * @param filename The suggested filename
- */
-//- (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
-//{
-//	NSString *fullDestination=[NSString stringWithFormat:@"@%/@%",destination,[[[self request] lastPathComponent]pathExtension]];
-//	[download setDestination:download allowOverwrite:YES];
-	
-//}
 
 - (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
 {
@@ -243,7 +230,6 @@ return candidatePosterLinks;
  */
 - (NSString *)getPostersForMovie:(NSString *)movieTitle withPath:(NSString*)moviePath
 {
-//	NSError *error = nil ;
 	NSString *fileName=[[moviePath lastPathComponent]lowercaseString] ;
 	NSString *selectedPoster=nil ;
 	selectedPoster=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:SELECTED_POSTER_KEY];
@@ -257,9 +243,9 @@ return candidatePosterLinks;
 		/* download all posters to the scratch folder */
 		NSString * posterBuffer=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
 		[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
-//		NSString *posterDest=[NSString stringWithFormat:@"%@/%@",posterBuffer,[
 		SapphireMovieDataMenuDownloadDelegate *myDelegate=[[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posters withDestination:posterBuffer];
 		[myDelegate downloadMoviePosters] ;
+		/* Need some kinda wait here to ensure the delegates have completed downloading the posters */
 		/* Now have the user pick a poster */
 		SapphirePosterChooser * chooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setPosters:posters] ;
@@ -289,16 +275,48 @@ return candidatePosterLinks;
 	/*Get the movie html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMDB.com%@",movieTitleLink]];
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
+	
 	/* Get the movie title */
 	NSString *movieTitle= [[document objectsForXQuery:IMDB_RESULT_TITLE_YEAR_XPATH error:&error] objectAtIndex:0];
+	NSScanner *metaTrimmer=[NSScanner scannerWithString:movieTitle];
+	[metaTrimmer scanUpToString:@"(" intoString:&movieTitle];
+	movieTitle=[movieTitle substringToIndex:[movieTitle length]-1];
 	
-	/*Prompt User to Select an IMP Poster */
-	/* We want to save the selected poster to the Cover Art folder & delete the rest */
-//	NSString *selectedPoster=nil ;
+	/* Get the cast list */
+	NSArray *rawCast=[document objectsForXQuery:IMDB_RESTULT_CAST_NAMES_XPATH error:&error];
+	NSArray *completeCast=nil ;
+	if([rawCast count])
+	{
+		NSArray *results=nil;
+		NSEnumerator *resultEnum = [rawCast objectEnumerator];
+		NSXMLElement *result = nil;
+		while((result = [resultEnum nextObject]) != nil)
+		{
+			NSString *castName=nil;
+			castName=[result stringValue];
+			if([castName length])
+			{
+				NSString * castURL=[[[result attributeForName:@"href"]stringValue]lowercaseString];
+				if([castURL hasPrefix:@"/name/"])
+				{
 
-//	selectedPoster=[self getPostersForMovie:movieTitle withPath:moviePath];
+					if(!results)
+						results=[NSArray arrayWithObject:castName];
+					else
+						results=[results arrayByAddingObject:castName];
+				}
+				else continue ;
+			}
+			else
+			continue ;
+
+		}
+		completeCast=results ;
+	}
+	
 	
 	/* populate metadata to return */
+	[ret setObject:completeCast forKey:META_MOVIE_CAST_KEY];
 	[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
 	return ret;
 }
@@ -483,22 +501,17 @@ return candidatePosterLinks;
 		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
 		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
 		coverart=[coverart stringByAppendingPathExtension:[poster pathExtension]];
-		/* Might want to make sure files exist / DNE */
+		/* the fileAgent will do nothing if the file has already been moved or removed */		
 		[fileAgent movePath:poster toPath:coverart handler:self] ;
 		/* Lets clean up the Poster_Buffer */
 		NSArray *oldPosters = [dict objectForKey:IMP_POSTERS_KEY];
 		if([oldPosters count])
 		{
-			/*Get each result*/
 			NSEnumerator *resultEnum = [oldPosters objectEnumerator];
 			NSString *result = nil;
 			while((result = [resultEnum nextObject]) != nil)
 			{
 				NSString *removeFile=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
-		//		if(!results)
-		//			results=[NSArray arrayWithObject:[self getPosterLayer:posterPath]];
-		//		else 
-		//			results=[results arrayByAddingObject:[self getPosterLayer:posterPath]];
 				[fileAgent removeFileAtPath:removeFile handler:self] ;
 			}
 		}
@@ -613,6 +626,7 @@ return candidatePosterLinks;
 					/* Add the poster links */
 					[transDict setObject:posterLinks forKey:IMP_POSTERS_KEY];
 				}
+				/* Add another method via chooser incase IMDB doesn't have an IMP link */
 				
 			}
 			[self writeSettings];

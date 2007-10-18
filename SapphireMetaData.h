@@ -11,6 +11,7 @@
 
 #define META_TVRAGE_IMPORT_KEY			@"TVRage Source"
 #define META_IMDB_IMPORT_KEY			@"IMDB Source"
+#define META_POSTER_IMPORT_KEY			@"Poster Source"
 #define META_XML_IMPORT_KEY				@"XML Source"
 
 //TV Show Specific Keys
@@ -35,6 +36,7 @@
 
 //IMDB Type Info
 #define META_MOVIE_TITLE_KEY			@"Title"
+#define META_MOVIE_CAST_KEY				@"Cast"
 #define META_MOVIE_RELEASE_DATE			@"Released"
 
 //Special Display Only Info
