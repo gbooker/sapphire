@@ -367,6 +367,12 @@
 
 - (void) selectionChanged: (NSNotification *) note
 {
-    [posterMarch setSelection: [(BRListControl *)[note object] selection]];
+	/* ATV version 1.1 */
+	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
+		[posterMarch setSelection: [(BRListControl *)[note object] renderSelection]];
+	/* ATV version 1.0 */
+	else
+		[posterMarch setSelection: [(BRListControl *)[note object] selection]];
+
 }
 @end
