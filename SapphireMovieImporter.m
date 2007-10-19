@@ -36,7 +36,7 @@
 {
 	NSString *destination;
 	NSArray *requestList ;
-	NSArray *delegates ;
+	NSMutableArray *delegates ;
 	long downloadsLeft ;
 }
 - (id)initWithRequest:(NSArray*)reqList withDestination:(NSString *)dest;
@@ -58,7 +58,7 @@
 	self = [super init];
 	if(!self)
 		return nil;
-	delegates=[NSArray array];
+	delegates = [NSMutableArray new];
 	destination = [dest retain];
 	requestList = [reqList retain];
 	downloadsLeft=[requestList count] ;
@@ -71,16 +71,17 @@
  */
 -(void)downloadMoviePosters
 {
-	NSEnumerator *reqEnum= [requestList objectEnumerator] ;
-	NSString *req=nil ;
-	while((req=[reqEnum nextObject]) !=nil)
+	NSEnumerator *reqEnum = [requestList objectEnumerator] ;
+	NSString *req = nil ;
+	while((req = [reqEnum nextObject]) !=nil)
 	{
-		NSURL *posterURL=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",req]];
-		NSString *fullDestination=[NSString stringWithFormat:@"%@/%@",destination,[req lastPathComponent]];
-		NSURLRequest * request=[NSURLRequest requestWithURL:posterURL];
-		NSURLDownload *currentDownload=[[NSURLDownload alloc] initWithRequest:request delegate:self] ;
+		NSURL *posterURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",req]];
+		NSString *fullDestination = [NSString stringWithFormat:@"%@/%@", destination, [req lastPathComponent]];
+		NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
+		NSURLDownload *currentDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self] ;
 		[currentDownload setDestination:fullDestination allowOverwrite:YES];
-		delegates=[delegates arrayByAddingObject:currentDownload];
+		[delegates addObject:currentDownload];
+		[currentDownload release];
 	}
 }
 
@@ -252,14 +253,14 @@ return candidatePosterLinks;
  */
 - (void)getPostersForMovie:(NSString *)movieTitle withPath:(NSString*)moviePath
 {
-	NSString *fileName=[[moviePath lastPathComponent]lowercaseString] ;
-	NSArray *posters=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:IMP_POSTERS_KEY];
+	NSString *fileName = [[moviePath lastPathComponent] lowercaseString] ;
+	NSArray *posters = [[movieTranslations objectForKey:fileName] objectForKey:IMP_POSTERS_KEY];
 	if([posters count])
 	{
 		/* download all posters to the scratch folder */
-		NSString * posterBuffer=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
+		NSString *posterBuffer = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
 		[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
-		SapphireMovieDataMenuDownloadDelegate *myDelegate=[[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posters withDestination:posterBuffer];
+		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posters withDestination:posterBuffer];
 		[myDelegate downloadMoviePosters] ;
 		[myDelegate autorelease];
 
@@ -671,11 +672,12 @@ return candidatePosterLinks;
 		{
 			/*They selected a movie title, save the translation and write it*/
 			NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
-			NSMutableDictionary * transDict = [movieTranslations objectForKey:[[chooser fileName] lowercaseString]];
+			NSString *filename = [[chooser fileName] lowercaseString];
+			NSMutableDictionary * transDict = [movieTranslations objectForKey:filename];
 			if(transDict == nil)
 			{
 				transDict=[NSMutableDictionary new] ;
-				[movieTranslations setObject:transDict forKey:[[chooser fileName] lowercaseString]];
+				[movieTranslations setObject:transDict forKey:filename];
 				[transDict release];
 			}
 			/* Add IMDB Key */
@@ -708,7 +710,7 @@ return candidatePosterLinks;
 		int selectedPoster = [chooser selectedPoster];
 		if(selectedPoster == POSTER_CHOOSE_CANCEL)
 			/*They aborted, skip*/
-			[dataMenu skipNextItem]; //Should this be done?
+			[dataMenu skipNextItem];
 		else
 		{
 			NSString *selected = [[chooser posters] objectAtIndex:selectedPoster];

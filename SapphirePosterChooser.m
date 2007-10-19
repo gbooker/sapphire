@@ -304,7 +304,6 @@
 //				wait=![fileAgent fileExistsAtPath:posterPath] ;
 //			}
 			[results addObject:[self getPosterLayer:posterPath]];
-			
 		}
 	}
 	posterLayers=[results copy];

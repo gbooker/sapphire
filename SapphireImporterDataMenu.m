@@ -254,26 +254,29 @@
  */
 - (void)importNextItem:(NSTimer *)timer
 {
-	/*Update the display*/
-	SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
-	NSString * fileName=[[fileMeta path] lastPathComponent] ;
-	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
-
-	current++ ;
-	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
-	/*Update the imported count*/
-	if([self doImport])
-		updated++;
-	
-	/*Check for a suspend and reimport afterwards*/
-	if(suspended)
+	if([importItems count])
 	{
-		current--;
-		return;
+		/*Update the display*/
+		SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
+		NSString * fileName=[[fileMeta path] lastPathComponent] ;
+		[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
+		
+		current++ ;
+		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
+		/*Update the imported count*/
+		if([self doImport])
+			updated++;		
+		
+		/*Check for a suspend and reimport afterwards*/
+		if(suspended)
+		{
+			current--;
+			return;
+		}
+		
+		/*Start with the first item*/
+		[importItems removeObjectAtIndex:0];
 	}
-	
-	/*Start with the first item*/
-	[importItems removeObjectAtIndex:0];
 	[bar setPercentage:current/max * 100.0f];
 	
 	/*Check for completion*/
