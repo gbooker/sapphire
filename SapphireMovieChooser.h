@@ -13,16 +13,15 @@
 
 @interface SapphireMovieChooser : BRCenteredMenuController {
 	NSArray			*movies;
-	NSString		*searchStr;
+	NSString		*fileName;
 	int				selection;
-	BRTextControl	*fileName;
+	BRTextControl	*fileNameText;
 }
 
 - (void)setMovies:(NSArray *)movieList;
 - (void)setFileName:(NSString *)choosingForFileName;
 - (NSArray *)movies;
-- (void)setSearchStr:(NSString *)search;
-- (NSString *)searchStr;
+- (NSString *)fileName;
 - (int)selection;
 
 @end

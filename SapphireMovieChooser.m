@@ -25,17 +25,17 @@
 	selection = -1;
 	
 	/* Set a control to display the fileName */
-	fileName = [[BRTextControl alloc] initWithScene: scene];
-	[fileName setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[fileName setText:@"File:"];
+	fileNameText = [[BRTextControl alloc] initWithScene: scene];
+	[fileNameText setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+	[fileNameText setText:@"File:"];
 	NSRect 	frame = [[self masterLayer] frame];
 	//	frame.size.height = frame.size.height / 16.0f;
 	//	frame.size.width = frame.size.width * 2.0f / 3.0f;
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;
-	[fileName setFrame: frame];
+	[fileNameText setFrame: frame];
 	
-	[self addControl: fileName];	
+	[self addControl: fileNameText];	
 	[[self list] setDatasource:self];
 	
 	return self;
@@ -51,6 +51,8 @@
 	[super _doLayout];
 	NSRect listFrame = [[_listControl layer] frame];
 	listFrame.size.height -= 2.5f*listFrame.origin.y;
+	listFrame.size.width*=2.0f;
+	listFrame.origin.x *=0.25f;
 	listFrame.origin.y *= 2.0f;
 	[[_listControl layer] setFrame:listFrame];
 }
@@ -58,7 +60,7 @@
 - (void)dealloc
 {
 	[movies release];
-	[searchStr release];
+	[fileName release];
 	[super dealloc];
 }
 
@@ -92,30 +94,19 @@
  */
 - (void)setFileName:(NSString*)choosingForFileName
 {
-		[fileName setTextAttributes: [[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-		[fileName setText:choosingForFileName];	
-}
-
-
-
-/*!
- * @brief Sets the string we searched for
- *
- * @param search The string we searched for
- */
-- (void)setSearchStr:(NSString *)search
-{
-	searchStr = [search retain];
+	fileName=[choosingForFileName retain] ;
+	[fileNameText setTextAttributes: [[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+	[fileNameText setText:choosingForFileName];	
 }
 
 /*!
- * @brief The string we searched for
+ * @brief The file name we searched for
  *
- * @return The string we searched for
+ * @return The file name we searched for
  */
-- (NSString *)searchStr
+- (NSString *)fileName
 {
-	return searchStr;
+	return fileName;
 }
 
 /*!
