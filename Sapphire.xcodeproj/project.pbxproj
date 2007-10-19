@@ -55,6 +55,7 @@
 		FE423A6B0C3338030035A717 /* Gear.png in Resources */ = {isa = PBXBuildFile; fileRef = FE423A6A0C3338030035A717 /* Gear.png */; };
 		FE423A9F0C333DF40035A717 /* Cone.png in Resources */ = {isa = PBXBuildFile; fileRef = FE423A9E0C333DF40035A717 /* Cone.png */; };
 		FE423ABE0C3341D70035A717 /* Eye.png in Resources */ = {isa = PBXBuildFile; fileRef = FE423ABD0C3341D70035A717 /* Eye.png */; };
+		FE4BE49F0CBEAC7F00A7B24E /* SapphirePosterChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE4BE49E0CBEAC7F00A7B24E /* SapphirePosterChooser.m */; };
 		FE5AAF9E0C5A96EF00932075 /* SapphireMovieChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5AAF9D0C5A96EF00932075 /* SapphireMovieChooser.m */; };
 		FE5BD4670C3090CD009F2B2E /* ApplianceIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = FE5BD4660C3090CD009F2B2E /* ApplianceIcon.png */; };
 		FE88FD100C2F564700C55E3F /* SapphireFileDataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = FE88FD0F0C2F564700C55E3F /* SapphireFileDataImporter.m */; };
@@ -133,6 +134,8 @@
 		FE423A6A0C3338030035A717 /* Gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Gear.png; sourceTree = "<group>"; };
 		FE423A9E0C333DF40035A717 /* Cone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Cone.png; sourceTree = "<group>"; };
 		FE423ABD0C3341D70035A717 /* Eye.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Eye.png; sourceTree = "<group>"; };
+		FE4BE49D0CBEAC7F00A7B24E /* SapphirePosterChooser.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphirePosterChooser.h; sourceTree = "<group>"; };
+		FE4BE49E0CBEAC7F00A7B24E /* SapphirePosterChooser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphirePosterChooser.m; sourceTree = "<group>"; };
 		FE5AAF9C0C5A96EF00932075 /* SapphireMovieChooser.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireMovieChooser.h; sourceTree = "<group>"; };
 		FE5AAF9D0C5A96EF00932075 /* SapphireMovieChooser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireMovieChooser.m; sourceTree = "<group>"; };
 		FE5BD4660C3090CD009F2B2E /* ApplianceIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ApplianceIcon.png; sourceTree = "<group>"; };
@@ -246,16 +249,18 @@
 		F56B6D900C34713A00E934AA /* MetaData */ = {
 			isa = PBXGroup;
 			children = (
-				FE5AAF9C0C5A96EF00932075 /* SapphireMovieChooser.h */,
-				FE5AAF9D0C5A96EF00932075 /* SapphireMovieChooser.m */,
 				F5EA8FCC0C30459400B1EC7D /* SapphireMarkMenu.h */,
 				F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */,
 				F531A5B80C2CB43400E46F62 /* SapphireMetaData.h */,
 				F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */,
 				F5E849C50C3F008100913832 /* SapphireMetaDataScanner.h */,
 				F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */,
+				FE5AAF9C0C5A96EF00932075 /* SapphireMovieChooser.h */,
+				FE5AAF9D0C5A96EF00932075 /* SapphireMovieChooser.m */,
 				F523996D0C2DCC9100D5DA2E /* SapphirePredicates.h */,
 				F523996E0C2DCC9100D5DA2E /* SapphirePredicates.m */,
+				FE4BE49D0CBEAC7F00A7B24E /* SapphirePosterChooser.h */,
+				FE4BE49E0CBEAC7F00A7B24E /* SapphirePosterChooser.m */,
 				F56B765C0C3837CE00E934AA /* SapphireShowChooser.h */,
 				F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */,
 				F5B8DEE70C8F85BB00489829 /* SapphireTVDirectory.h */,
@@ -315,12 +320,12 @@
 		F57FFFC00C64028900450D81 /* MetaData Importing */ = {
 			isa = PBXGroup;
 			children = (
-				FEB9DE9D0C96095A00E7788A /* SapphireMovieImporter.m */,
-				FEB9DE9E0C96095A00E7788A /* SapphireMovieImporter.h */,
 				FE88FD0E0C2F564700C55E3F /* SapphireFileDataImporter.h */,
 				FE88FD0F0C2F564700C55E3F /* SapphireFileDataImporter.m */,
 				F56B72780C3716B300E934AA /* SapphireImporterDataMenu.h */,
 				F56B72790C3716B300E934AA /* SapphireImporterDataMenu.m */,
+				FEB9DE9E0C96095A00E7788A /* SapphireMovieImporter.h */,
+				FEB9DE9D0C96095A00E7788A /* SapphireMovieImporter.m */,
 				F5DF24690C8636DE005C7ECB /* SapphireMultipleImporter.h */,
 				F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */,
 				F56B72ED0C371E4B00E934AA /* SapphireTVShowImporter.h */,
@@ -437,6 +442,7 @@
 				F51BFEFF0C8CB85D00709A5E /* SapphireCollectionSettings.m in Sources */,
 				F5B8DEE90C8F85BB00489829 /* SapphireTVDirectory.m in Sources */,
 				FEB9DE9F0C96095A00E7788A /* SapphireMovieImporter.m in Sources */,
+				FE4BE49F0CBEAC7F00A7B24E /* SapphirePosterChooser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
