@@ -367,6 +367,6 @@
 
 - (void) selectionChanged: (NSNotification *) note
 {
-    [posterMarch setSelection: [[note object] selection]];
+    [posterMarch setSelection: [(BRListControl *)[note object] selection]];
 }
 @end
