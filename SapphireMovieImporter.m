@@ -570,8 +570,10 @@ return candidatePosterLinks;
 			NSString *result = nil;
 			while((result = [resultEnum nextObject]) != nil)
 			{
+				BOOL isDir=NO ;
 				NSString *removeFile=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
-				[fileAgent removeFileAtPath:removeFile handler:self] ;
+				[fileAgent fileExistsAtPath:removeFile isDirectory:&isDir];
+				if(!isDir)[fileAgent removeFileAtPath:removeFile handler:self] ;
 			}
 		}
 		[fileAgent release];
