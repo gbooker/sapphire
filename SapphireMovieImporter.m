@@ -87,35 +87,33 @@
 
 - (void) downloadDidFinish: (NSURLDownload *) download
 {
-	long tmpVar=downloadsLeft ;
-	downloadsLeft=tmpVar-1;
+	downloadsLeft--;
 }
 
 - (long) downloadsCompleted
 {
-	long tmpVar=downloadsLeft ;
-	if(tmpVar==0)
+	if(downloadsLeft == 0)
 	{
 		[delegates release];
-		return tmpVar;
+		delegates = nil;
+		return 0;
 	}
 	else
 	{
-		long tmpVar2=[requestList count];
-		return tmpVar2-tmpVar;
+		return [requestList count] - downloadsLeft;
 	}
 }
 
 - (long) downloadsQueued
 {
-		long tmpVar2=[requestList count];
-		return tmpVar2;
+		return [requestList count];
 }
 
 - (void)dealloc
 {
 	[destination release];
 	[requestList release];
+	[delegates release];
 	[super dealloc];
 }
 @end
@@ -553,7 +551,7 @@ return candidatePosterLinks;
 		[chooser release];
 		return NO;
 	}
-	if(![selectedPoster isEqualToString:@"Primed"])
+	else
 	{
 		/* Lets move the selected poster to the corresponding Cover Art Directory */
 		NSFileManager *fileAgent=[NSFileManager alloc];
