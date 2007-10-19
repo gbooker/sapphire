@@ -36,10 +36,14 @@
 {
 	NSString *destination;
 	NSArray *requestList ;
-	
+	NSArray *delegates ;
+	long downloadsLeft ;
 }
 - (id)initWithRequest:(NSArray*)reqList withDestination:(NSString *)dest;
--(void)downloadMoviePosters ;
+- (void) downloadDidFinish: (NSURLDownload *) download;
+- (long) downloadsCompleted;
+- (long) downloadsQueued;
+- (void)downloadMoviePosters ;
 @end
 
 @implementation SapphireMovieDataMenuDownloadDelegate
@@ -54,9 +58,10 @@
 	self = [super init];
 	if(!self)
 		return nil;
-
+	delegates=[NSArray array];
 	destination = [dest retain];
 	requestList = [reqList retain];
+	downloadsLeft=[requestList count] ;
 	return self;	
 }
 
@@ -75,11 +80,36 @@
 		NSURLRequest * request=[NSURLRequest requestWithURL:posterURL];
 		NSURLDownload *currentDownload=[[NSURLDownload alloc] initWithRequest:request delegate:self] ;
 		[currentDownload setDestination:fullDestination allowOverwrite:YES];
-		[currentDownload release] ;
+		delegates=[delegates arrayByAddingObject:currentDownload];
 	}
-	
 }
 
+- (void) downloadDidFinish: (NSURLDownload *) download
+{
+	long tmpVar=downloadsLeft ;
+	downloadsLeft=tmpVar-1;
+}
+
+- (long) downloadsCompleted
+{
+	long tmpVar=downloadsLeft ;
+	if(tmpVar==0)
+	{
+		[delegates release];
+		return tmpVar;
+	}
+	else
+	{
+		long tmpVar2=[requestList count];
+		return tmpVar2-tmpVar;
+	}
+}
+
+- (long) downloadsQueued
+{
+		long tmpVar2=[requestList count];
+		return tmpVar2;
+}
 
 - (void)dealloc
 {
@@ -87,14 +117,6 @@
 	[requestList release];
 	[super dealloc];
 }
-
-
-- (void)download:(NSURLDownload *)download didFailWithError:(NSError *)error
-{
-	[download release];
-//	NSString *failed=[[error userInfo] objectForKey:NSErrorFailingURLStringKey] ;
-}
-
 @end
 
 @interface SapphireMovieImporter (private)
@@ -228,34 +250,57 @@ return candidatePosterLinks;
  * @param posterLinks The Movie's IMP Poster links
  * @return selected poster link
  */
-- (NSString *)getPostersForMovie:(NSString *)movieTitle withPath:(NSString*)moviePath
+- (void)getPostersForMovie:(NSString *)movieTitle withPath:(NSString*)moviePath
 {
 	NSString *fileName=[[moviePath lastPathComponent]lowercaseString] ;
-	NSString *selectedPoster=nil ;
-	selectedPoster=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:SELECTED_POSTER_KEY];
-	/* Should we check to see if a poster has already been selected? */
-	if(selectedPoster)
-		return selectedPoster ;	
 	NSArray *posters=[[movieTranslations objectForKey:[fileName lowercaseString]]objectForKey:IMP_POSTERS_KEY];
 	if([posters count])
 	{
-		[dataMenu pause];
 		/* download all posters to the scratch folder */
 		NSString * posterBuffer=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
 		[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
 		SapphireMovieDataMenuDownloadDelegate *myDelegate=[[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posters withDestination:posterBuffer];
 		[myDelegate downloadMoviePosters] ;
+		[myDelegate autorelease];
+
+		
+//		BOOL wait=YES ;
+//		BRTextControl * posterProgress=[[BRTextControl alloc] initWithScene: [dataMenu scene]];
+//		[posterProgress setTextAttributes: [[BRThemeInfo sharedTheme] paragraphTextAttributes]];
+//		NSRect 	frame = [[dataMenu masterLayer] frame];
+//		frame.origin.y = frame.size.height / 1.10f;
+//		frame.origin.x = (frame.size.width / 4.0f) ;
+//		[posterProgress setFrame: frame];
+//		[dataMenu addControl: posterProgress];
+		
+//		while(wait)
+//		{
+//			[posterProgress setText:[NSString stringWithFormat:@"Fetching Poster(s) (%d/%d)",[myDelegate downloadsCompleted],[myDelegate downloadsQueued]]];
+//			[[dataMenu scene] renderScene];
+//			if([myDelegate downloadsCompleted]==[posters count])wait=NO;
+//		}
 		/* Need some kinda wait here to ensure the delegates have completed downloading the posters */
+//		while(![myDelegate downloadsCompleted])continue;
 		/* Now have the user pick a poster */
-		SapphirePosterChooser * chooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
-		[chooser setPosters:posters] ;
-		[chooser setFileName:fileName];
-		[chooser setMovieTitle:movieTitle];
-		[chooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
-		[[dataMenu stack] pushController:chooser];
-		[chooser release];
+//		[dataMenu pause];
+//		SapphirePosterChooser * chooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
+//		[[dataMenu scene] renderScene];
+//		[chooser setPosters:posters] ;
+//		[chooser setFileName:fileName];
+//		[chooser setMovieTitle:movieTitle];
+//		[chooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
+//		[[dataMenu stack] pushController:chooser];
+//		[chooser release];
+		NSMutableDictionary * transDict = [movieTranslations objectForKey:[fileName lowercaseString]];
+		if(transDict == nil)
+		{
+			transDict=[NSMutableDictionary new] ;
+			[movieTranslations setObject:transDict forKey:[fileName lowercaseString]];
+			[transDict release];
+		}
+		[transDict setObject:@"Primed" forKey:SELECTED_POSTER_KEY];
+		[self writeSettings];
 	}
-	return nil;
 }
 
 
@@ -299,7 +344,6 @@ return candidatePosterLinks;
 				NSString * castURL=[[[result attributeForName:@"href"]stringValue]lowercaseString];
 				if([castURL hasPrefix:@"/name/"])
 				{
-
 					if(!results)
 						results=[NSArray arrayWithObject:castName];
 					else
@@ -309,7 +353,6 @@ return candidatePosterLinks;
 			}
 			else
 			continue ;
-
 		}
 		completeCast=results ;
 	}
@@ -436,6 +479,14 @@ return candidatePosterLinks;
  */
 - (BOOL) importMetaData:(SapphireFileMetaData *)metaData
 {
+//	if(previousChooser)
+//	{
+//		[dataMenu pause];
+//		[[dataMenu stack] pushController:previousChooser];
+//		[previousChooser release];
+//		return NO;
+//	}
+	
 	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importedTimeFromSource:META_IMDB_IMPORT_KEY])
@@ -470,29 +521,38 @@ return candidatePosterLinks;
 		return NO ;
 		//Data will be ready for access on the next call
 	}
-	
 
-	/*Import the info*/
-	/*IMDB Data */
-	NSMutableDictionary *infoIMDB = nil;
-	movieDataLink=[dict objectForKey:IMDB_LINK_KEY];
-	infoIMDB = [self getMetaForMovie:movieDataLink withPath:path];
-	if(!infoIMDB)
-		return NO;
-	
 	NSString * selectedPoster=nil ;
 	selectedPoster=[dict objectForKey:SELECTED_POSTER_KEY] ;
 	if(!selectedPoster && [dict objectForKey:IMP_POSTERS_KEY])
 	{
-		/*Prompt User to Select an IMP Poster */
-		/* We want to save the selected poster to the Cover Art folder & delete the rest */
-		//	NSString *selectedPoster=nil ;
-		
-		[self getPostersForMovie:[infoIMDB objectForKey:META_MOVIE_TITLE_KEY] withPath:path];
-			
+		/* We still need to download the posters */
+		[self getPostersForMovie:@"Movie Title" withPath:path];
+//		[dataMenu resume];
 		return NO ;
 	}
-	else if(selectedPoster)
+	if([selectedPoster isEqualToString:@"Primed"])
+	{
+		/* Posters were downloaded, let the user choose one */
+		[dataMenu pause];
+		SapphirePosterChooser * chooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
+		[[dataMenu scene] renderScene];
+		NSArray *posters=[dict objectForKey:IMP_POSTERS_KEY];
+		[chooser setPosters:posters] ;
+		[chooser setFileName:fileName];
+		[chooser setMovieTitle:@"Movie Title"];
+		[chooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
+	//	if(!previousChooser)
+	//	{
+	//		previousChooser=[chooser retain];
+	//	}
+	//	else
+	//	[[dataMenu stack] pushController:previousChooser];
+		[[dataMenu stack] pushController:chooser];
+		[chooser release];
+		return NO;
+	}
+	if(![selectedPoster isEqualToString:@"Primed"])
 	{
 		/* Lets move the selected poster to the corresponding Cover Art Directory */
 		NSFileManager *fileAgent=[NSFileManager alloc];
@@ -516,8 +576,16 @@ return candidatePosterLinks;
 			}
 		}
 		[fileAgent release];
+		return NO;
 	}
 	
+	/*Import the info*/
+	/*IMDB Data */
+	NSMutableDictionary *infoIMDB = nil;
+	movieDataLink=[dict objectForKey:IMDB_LINK_KEY];
+	infoIMDB = [self getMetaForMovie:movieDataLink withPath:path];
+	if(!infoIMDB)
+		return NO;
 	[infoIMDB removeObjectForKey:IMDB_LINK_KEY];
 	[metaData importInfo:infoIMDB fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_MOVIE];
@@ -620,17 +688,19 @@ return candidatePosterLinks;
 				[transDict setObject:posterPath forKey:IMP_LINK_KEY];
 				/*We got a posterPath, get the posterLinks */
 				NSArray *posterLinks=nil ;
-				posterLinks=[self getPosterLinks:posterPath];
+				/* User already selected a poster, skip */
+				if(![transDict objectForKey:SELECTED_POSTER_KEY]) posterLinks=[self getPosterLinks:posterPath];
 				if(posterLinks!=nil)
 				{
 					/* Add the poster links */
 					[transDict setObject:posterLinks forKey:IMP_POSTERS_KEY];
 				}
 				/* Add another method via chooser incase IMDB doesn't have an IMP link */
-				
 			}
-			[self writeSettings];
 		}
+		[self writeSettings];
+		/*We can resume now*/
+		[dataMenu resume];
 	}
 	else if([controller isKindOfClass:[SapphirePosterChooser class]])
 	{
@@ -642,21 +712,22 @@ return candidatePosterLinks;
 		else
 		{
 			NSString *selected = [[chooser posters] objectAtIndex:selectedPoster];
-			NSMutableDictionary * transDict = [movieTranslations objectForKey:[chooser fileName]];
+			NSMutableDictionary * transDict = [movieTranslations objectForKey:[[chooser fileName]lowercaseString]];
 			if(transDict == nil)
 			{
 				transDict=[NSMutableDictionary new] ;
-				[movieTranslations setObject:transDict forKey:[chooser fileName]];
+				[movieTranslations setObject:transDict forKey:[[chooser fileName]lowercaseString]];
 				[transDict release];
 			}
 			[transDict setObject:selected forKey:SELECTED_POSTER_KEY];
+		//	[transDict removeObjectForKey:IMP_POSTERS_KEY];
 		}
 		[self writeSettings];
+		/*We can resume now*/
+		[dataMenu resume];
 	}
 	else
 		return;
-	/*We can resume now*/
-	[dataMenu resume];
 }
 
 @end

@@ -55,13 +55,15 @@
 
 - (void)dealloc
 {
-	[posterMarch release];
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
 	[posters release];
 	[posterLayers release];
 	[fileName release];
 	[movieTitle release];
 	[fileInfoText release];
+    [posterMarch setIconSource: nil];
+    [posterMarch removeFromSuperlayer];
+	[posterMarch release];
 	[super dealloc];
 }
 
@@ -73,8 +75,8 @@
     NSRect marchFrame = [[self masterLayer] frame];
     marchFrame.size.width *= 0.56f;
     [posterMarch setFrame: marchFrame];
-	[self loadPosters];
-	[posterMarch _updateIcons];
+//	[self loadPosters];
+//	[posterMarch _updateIcons];
     [[self scene] renderScene];
 }
 
@@ -190,8 +192,7 @@
 		[fileInfoText setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName]];
 	}
 	else
-		[fileInfoText setText:movieTitle];	
-	
+		[fileInfoText setText:movieTitle];		
 }
 
 /*!
@@ -209,9 +210,8 @@
  *
  * @return The user's selection
  */
-- (int)selectedPoster
+- (long)selectedPoster
 {
-	//	[posterMarch setSelection:[selection floatValue];
 	return selectedPoster;
 }
 @end
@@ -221,10 +221,6 @@
 
 - (long) iconCount
 {
-	int testVar=[posters count];
-	if(testVar>[posterLayers count])
-		return [posterLayers count];
-	else
 		return [posterLayers count];
 }
 
@@ -271,10 +267,10 @@
     for ( i = 0; i < count; i++ )
     {
         if ( [title isEqualToString: [self titleForRow: i]] )
-        {
+       {
             result = i;
             break;
-        }
+       }
     }
     
     return ( result );
@@ -290,7 +286,8 @@
  */
 - (void) loadPosters
 {
-	NSArray *results = nil;
+	NSMutableArray * results = [NSMutableArray array];
+//	NSFileManager *fileAgent=[NSFileManager defaultManager];
 	if([posters count])
 	{
 		/*Get each result*/
@@ -298,14 +295,19 @@
 		NSString *result = nil;
 		while((result = [resultEnum nextObject]) != nil)
 		{
-			NSString *posterPath=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
-			if(!results)
-				results=[NSArray arrayWithObject:[self getPosterLayer:posterPath]];
-			else 
-				results=[results arrayByAddingObject:[self getPosterLayer:posterPath]];
+			NSString *posterPath=[NSString stringWithFormat:@"%@/%@",
+				[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],
+				[result lastPathComponent]];
+//			BOOL wait=YES ;
+//			while(wait)
+//			{
+//				wait=![fileAgent fileExistsAtPath:posterPath] ;
+//			}
+			[results addObject:[self getPosterLayer:posterPath]];
+			
 		}
-		posterLayers=[results retain];
 	}
+	posterLayers=[results copy];
 }
 
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath

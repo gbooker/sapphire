@@ -21,7 +21,7 @@
 	NSArray			*posterLayers;
 	NSString		*fileName ;
 	NSString		*movieTitle;
-	int				selectedPoster;
+	long			selectedPoster;
 	BRTextControl	*fileInfoText;
 	BRMarchingIconLayer *   posterMarch;
 }
@@ -36,7 +36,7 @@
 - (void)setMovieTitle:(NSString *)theMovieTitle;
 - (NSString *)movieTitle;
 - (NSString *)fileName;
-- (int)selectedPoster;
+- (long)selectedPoster;
 
 @end
 
