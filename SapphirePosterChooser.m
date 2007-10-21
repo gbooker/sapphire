@@ -72,11 +72,9 @@
     [super resetLayout];
 	
     // reset the frame for the icon march layer
-    NSRect marchFrame = [[self masterLayer] frame];
-    marchFrame.size.width *= 0.56f;
-    [posterMarch setFrame: marchFrame];
-//	[self loadPosters];
-//	[posterMarch _updateIcons];
+//    NSRect marchFrame = [[self masterLayer] frame];
+//    marchFrame.size.width *= 0.80f;
+//    [posterMarch setFrame: marchFrame];
     [[self scene] renderScene];
 }
 
@@ -109,7 +107,9 @@
 	[super _doLayout];
 	NSRect listFrame = [[_listControl layer] frame];
 	listFrame.size.height -= 2.5f*listFrame.origin.y;
+	listFrame.size.width*= 0.45f;
 	listFrame.origin.y *= 2.0f;
+	listFrame.origin.x *= 1.4f;
 	[[_listControl layer] setFrame:listFrame];
 }
 
@@ -287,7 +287,6 @@
 - (void) loadPosters
 {
 	NSMutableArray * results = [NSMutableArray array];
-//	NSFileManager *fileAgent=[NSFileManager defaultManager];
 	if([posters count])
 	{
 		/*Get each result*/
@@ -295,14 +294,13 @@
 		NSString *result = nil;
 		while((result = [resultEnum nextObject]) != nil)
 		{
-			NSString *posterPath=[NSString stringWithFormat:@"%@/%@",
-				[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],
-				[result lastPathComponent]];
-//			BOOL wait=YES ;
-//			while(wait)
-//			{
-//				wait=![fileAgent fileExistsAtPath:posterPath] ;
-//			}
+			/* Download agent work around - Have the chooser load the poster images from the web */
+//			NSString *posterDest=[NSString stringWithFormat:@"%@/%@",
+//				[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],
+//				[result lastPathComponent]];
+			NSString *posterPath=[NSString stringWithFormat:@"http://www.IMPAwards.com%@",result];
+			/* use the tumbnail image for the poster chooser -faster but ugly */
+//			posterPath=[posterPath stringByReplacingAllOccurancesOf:@"/posters/" withString:@"/thumbs/imp_"];
 			[results addObject:[self getPosterLayer:posterPath]];
 		}
 	}
@@ -310,8 +308,10 @@
 }
 
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath
-{	
-    NSURL * posterURL = [NSURL fileURLWithPath: thePosterPath];
+{
+	/* Download agent work around - Have the chooser load the poster images from the web */
+//    NSURL * posterURL = [NSURL fileURLWithPath: thePosterPath];
+	NSURL * posterURL=[NSURL URLWithString:thePosterPath];
     if (posterURL==nil)
         return nil;
 	
@@ -327,11 +327,12 @@
     info.height = 755;
 	
     BRRenderContext * context = [[self scene] resourceContext];
-	
-	
+		
     NSData * data = CreateBitmapDataFromImage( posterImage, info.width, info.height );
     BRBitmapTexture * lucid = [[BRBitmapTexture alloc] initWithBitmapData: data
-															   bitmapInfo: &info context: context mipmap: YES];
+															   bitmapInfo: &info 
+																  context: context 
+																   mipmap: YES];
     [data release];
 	
     BRBitmapTexture * blur = [BRBlurryImageLayer blurredImageForImage: posterImage
@@ -358,10 +359,10 @@
 - (void) showIconMarch
 {
     NSRect frame = [[self masterLayer] frame];
-    frame.size.width *= 0.56f;
-//	frame.size.height *= 0.80f;
-    [posterMarch setFrame: frame];
-	
+    frame.size.width *= 0.50f;
+	frame.size.height *= 1.7f;
+	frame.origin.y=-200.0f;
+    [posterMarch setFrame: frame];	
     [[[self scene] root] insertSublayer: posterMarch below: [self masterLayer]];
 }
 
@@ -373,6 +374,5 @@
 	/* ATV version 1.0 */
 	else
 		[posterMarch setSelection: [(BRListControl *)[note object] selection]];
-
 }
 @end

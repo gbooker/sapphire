@@ -11,7 +11,6 @@
 
 @interface SapphireMovieImporter : NSObject <SapphireImporter>{
 	SapphireImporterDataMenu	*dataMenu;
-//	SapphirePosterChooser		*previousChooser;
 	//Note: currentData is not retained
 	SapphireFileMetaData		*currentData;
 	NSMutableDictionary			*movieTranslations;
