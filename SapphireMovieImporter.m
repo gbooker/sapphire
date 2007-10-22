@@ -509,8 +509,12 @@
 			{
 				/*Add the result to the list*/
 				NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_RESULT_LINK_XPATH error:&error] objectAtIndex:0] stringValue]] ;
+				NSString * resultTitleValue=[result stringValue];
 				if(resultURL == nil)
 					continue;
+				/*Skip Video Game titles (VG) */
+				else if([resultTitleValue hasSuffix:@" (VG) "])
+					continue ;
 				[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					[[result objectsForXQuery:IMDB_RESULT_NAME_XPATH error:&error] objectAtIndex:0], @"name",
 					[resultURL path], IMDB_LINK_KEY,
