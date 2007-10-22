@@ -1467,10 +1467,16 @@ static NSArray *displayedMetaDataOrder = nil;
 		//These are not shown in the list
 		META_RATING_KEY,
 		META_DESCRIPTION_KEY,
+		META_MOVIE_PLOT_KEY,
 		META_COPYRIGHT_KEY,
 		META_TITLE_KEY,
 		META_MOVIE_TITLE_KEY,
 		META_SHOW_AIR_DATE,
+		META_MOVIE_RELEASE_DATE_KEY,
+		META_MOVIE_DIRECTOR_KEY,
+		META_MOVIE_GENRES_KEY,
+		META_MOVIE_CAST_KEY,
+		META_MOVIE_WIRTERS_KEY,
 		//These are displayed as line items
 		META_EPISODE_AND_SEASON_KEY,
 		META_SEASON_NUMBER_KEY,
@@ -1750,6 +1756,9 @@ static NSArray *displayedMetaDataOrder = nil;
  */
 - (FileClass)fileClass
 {
+	if([[metaData objectForKey:FILE_CLASS_KEY] intValue]==nil)
+		return FILE_CLASS_UNKNOWN;
+	else
 	return [[metaData objectForKey:FILE_CLASS_KEY] intValue];
 }
 

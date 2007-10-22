@@ -459,19 +459,7 @@ static BOOL is10Version = NO;
 			}
 			if(fileCls==FILE_CLASS_MOVIE)
 			{
-				int duration = [meta duration];
-				int secs = duration % 60;
-				int mins = (duration /60) % 60;
-				int hours = duration / 3600;
-				NSString *durationStr = nil;
-				if(hours != 0)
-					durationStr = [NSString stringWithFormat:@"%d:%02d:%02d", hours, mins, secs];
-				else if (mins != 0)
-					durationStr = [NSString stringWithFormat:@"%d:%02d", mins, secs];
-				else
-					durationStr = [NSString stringWithFormat:@"%ds", secs];
 				displayName=[meta movieTitle] ;
-				[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %@",durationStr]];
 			}
 			watched = [meta watched];
 			favorite = [meta favorite] ;

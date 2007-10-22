@@ -6,6 +6,7 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
+
 #import "SapphireAppliance.h"
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
@@ -14,6 +15,15 @@
 #import "BackRowUtils.h"
 
 @implementation SapphireAppliance
+
++ (void) initialize
+{
+    Class cls = NSClassFromString( @"BRFeatureManager" );
+    if ( cls == Nil )
+        return;
+	
+    [[cls sharedInstance] enableFeatureNamed: [[NSBundle bundleForClass: self] bundleIdentifier]];
+}
 
 + (NSString *) className
 {

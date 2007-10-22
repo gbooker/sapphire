@@ -54,6 +54,7 @@
 
 #define FILE_CLASS_KEY				@"File Class"
 typedef enum {
+	FILE_CLASS_NOT_FILE= -1,
 	FILE_CLASS_UNKNOWN = 0,
 	FILE_CLASS_TV_SHOW = 1,
 	FILE_CLASS_MOVIE = 2,

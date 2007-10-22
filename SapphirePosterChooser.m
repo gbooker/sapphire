@@ -341,12 +341,14 @@
     [result setBlurryImage: blur withReflection: nil];
 	
     [lucid release];
+	[blur release];
 	
     return ( result );
 }
 
 - (void) hideIconMarch
 {
+	/* Might want to free memory here since posters won't be chosen again */
     [posterMarch removeFromSuperlayer];
 }
 

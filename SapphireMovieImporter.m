@@ -468,8 +468,6 @@
 	{
 		results = [root objectsForXQuery:IMDB_SEARCH_XPATH error:&error];
 		ret = [NSMutableArray arrayWithCapacity:[results count]];
-		//Need to clean out (VG) entries <Video Game>
-		//Need to clean out (TV) entries <Television> ?
 	}
 	else /* IMDB directly linked to a unique movie title */
 	{
