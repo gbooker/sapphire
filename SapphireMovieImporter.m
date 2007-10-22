@@ -304,12 +304,18 @@
 				else if([dataType hasPrefix:@"Writers"])
 				{
 					NSString *writersStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
-					writers = [writersStr componentsSeparatedByString:@"\n"];
+					NSMutableArray *mutWrit = [[writersStr componentsSeparatedByString:@"\n"] mutableCopy];
+					[mutWrit removeObject:@""];
+					writers = [[mutWrit copy] autorelease];
+					[mutWrit release];
 				}
 				else if([dataType hasPrefix:@"Director"])
 				{
 					NSString *directorsStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
-					directors = [directorsStr componentsSeparatedByString:@"\n"];
+					NSMutableArray *mutDirs = [[directorsStr componentsSeparatedByString:@"\n"] mutableCopy];
+					[mutDirs removeObject:@""];
+					directors = [[mutDirs copy] autorelease];
+					[mutDirs release];
 				}
 				else if([dataType hasPrefix:@"Genre"])
 				{
@@ -338,16 +344,7 @@
 				}
 				else if([dataType hasPrefix:@"Plot Outline"])
 				{
-					while(![trimmer isAtEnd])
-					{
-						NSString * aPlot=nil;
-						[trimmer scanUpToString:@"more\n" intoString:&aPlot];
-						if(aPlot)
-							plot=aPlot;
-						else
-							break;
-						
-					}
+					[trimmer scanUpToString:@"more\n" intoString:&plot];
 				}
 				else 
 					continue ;
