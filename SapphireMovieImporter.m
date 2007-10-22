@@ -24,6 +24,7 @@
 #define IMDB_POSTER_LINK_XPATH			@"//ul/li/a/@href"
 #define	IMDB_RESULT_NAME_XPATH			@"normalize-space(string())"
 #define IMDB_RESULT_TITLE_YEAR_XPATH	@"//div[@id='tn15title']/h1/replace(string(), '\n', '')"
+#define IMDB_RESULT_RELEASE_DATE_XPATH	@"//div[@class='info']"
 #define IMDB_RESTULT_CAST_NAMES_XPATH	@"//div[@class='info']/table/tr/td/a"
 /* IMP XPATHS */
 #define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
@@ -297,6 +298,101 @@
 	[metaTrimmer scanUpToString:@"(" intoString:&movieTitle];
 	movieTitle=[movieTitle substringToIndex:[movieTitle length]-1];
 	
+	/* Get the release date */
+	NSArray *rawData=[document objectsForXQuery:IMDB_RESULT_RELEASE_DATE_XPATH error:&error];
+	NSDate * releaseDate=nil ;
+	NSString * plot=nil;
+	NSArray * directors=nil;
+	NSArray * writers=nil;
+	NSArray * genres=nil;
+	if([rawData count])
+	{
+		NSEnumerator *resultEnum = [rawData objectEnumerator];
+		NSXMLElement *result = nil;
+		while((result = [resultEnum nextObject]) != nil)
+		{
+			NSString *dataCandidate=[result stringValue];
+
+			if([dataCandidate length])
+			{
+				NSString * dataType=nil;
+				NSScanner * trimmer=[NSScanner scannerWithString:dataCandidate];
+				[trimmer scanUpToString:@"\n" intoString:&dataType];
+				if([dataType hasPrefix:@"Release"])
+				{
+					[trimmer scanUpToString:@"(" intoString:&dataCandidate];
+					releaseDate=[NSDate dateWithNaturalLanguageString:dataCandidate];
+
+				}
+				else if([dataType hasPrefix:@"Writers"])
+				{
+					writers=[NSArray array];
+					while(![trimmer isAtEnd])
+					{
+						NSString * aWriter=nil;
+						[trimmer scanUpToString:@"\n" intoString:&aWriter];
+						writers=[writers arrayByAddingObject:aWriter];
+					}
+					
+				}
+				else if([dataType hasPrefix:@"Director"])
+				{
+					directors=[NSArray array];
+					while(![trimmer isAtEnd])
+					{
+						NSString * aDirector=nil;
+						[trimmer scanUpToString:@"\n" intoString:&aDirector];
+						directors=[directors arrayByAddingObject:aDirector];
+					}
+					
+				}
+				else if([dataType hasPrefix:@"Genre"])
+				{
+
+					genres=[NSArray array];
+					while(![trimmer isAtEnd])
+					{
+						NSString *aGenre=nil;
+						[trimmer scanUpToString:@"/" intoString:&aGenre];
+						if(aGenre)
+						{
+							if([aGenre isEqualToString:@"/"])
+								continue ;
+							else if([aGenre hasSuffix:@"more\n"])
+								aGenre=[aGenre substringToIndex:[aGenre length]-6];
+							else if([aGenre hasSuffix:@" "])
+								aGenre=[aGenre substringToIndex:[aGenre length]-1];
+							genres=[genres arrayByAddingObject:aGenre];
+						}
+						else
+						{
+							[trimmer scanUpToString:@" " intoString:&aGenre];
+						}
+					}
+				}
+				else if([dataType hasPrefix:@"Plot Outline"])
+				{
+					while(![trimmer isAtEnd])
+					{
+						NSString * aPlot=nil;
+						[trimmer scanUpToString:@"more\n" intoString:&aPlot];
+						if(aPlot)
+							plot=aPlot;
+						else
+							break;
+						
+					}
+				}
+				else 
+					continue ;
+			}
+			else
+				continue ;
+		}
+
+		
+	}
+	
 	/* Get the cast list */
 	NSArray *rawCast=[document objectsForXQuery:IMDB_RESTULT_CAST_NAMES_XPATH error:&error];
 	NSArray *completeCast=nil ;
@@ -329,8 +425,18 @@
 	
 	
 	/* populate metadata to return */
-	[ret setObject:completeCast forKey:META_MOVIE_CAST_KEY];
-	[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
+	if(directors)
+		[ret setObject:directors forKey:META_MOVIE_DIRECTOR_KEY];
+	if(plot)
+		[ret setObject:plot forKey:META_MOVIE_PLOT_KEY];
+	if(releaseDate)
+		[ret setObject:releaseDate forKey:META_MOVIE_RELEASE_DATE_KEY];
+	if(genres)
+		[ret setObject:genres forKey:META_MOVIE_GENRES_KEY];
+	if(completeCast)
+		[ret setObject:completeCast forKey:META_MOVIE_CAST_KEY];
+	if(movieTitle)
+		[ret setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
 	return ret;
 }
 
@@ -527,7 +633,7 @@
 			}
 		}
 		[fileAgent release];
-		return NO;
+//		return NO;
 	}
 	
 	/*Import the info*/
@@ -672,7 +778,6 @@
 				[transDict release];
 			}
 			[transDict setObject:selected forKey:SELECTED_POSTER_KEY];
-		//	[transDict removeObjectForKey:IMP_POSTERS_KEY];
 		}
 		[self writeSettings];
 		/*We can resume now*/

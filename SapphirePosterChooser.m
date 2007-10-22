@@ -70,11 +70,6 @@
 - (void) resetLayout
 {
     [super resetLayout];
-	
-    // reset the frame for the icon march layer
-//    NSRect marchFrame = [[self masterLayer] frame];
-//    marchFrame.size.width *= 0.80f;
-//    [posterMarch setFrame: marchFrame];
     [[self scene] renderScene];
 }
 
@@ -272,7 +267,6 @@
             break;
        }
     }
-    
     return ( result );
 }
 

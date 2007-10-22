@@ -35,9 +35,13 @@
 #define META_COPYRIGHT_KEY				@"Copyright"
 
 //IMDB Type Info
-#define META_MOVIE_TITLE_KEY			@"Title"
-#define META_MOVIE_CAST_KEY				@"Cast"
-#define META_MOVIE_RELEASE_DATE			@"Released"
+#define META_MOVIE_TITLE_KEY				@"Title"
+#define META_MOVIE_CAST_KEY					@"Cast"
+#define META_MOVIE_RELEASE_DATE_KEY			@"Release Date"
+#define	META_MOVIE_DIRECTOR_KEY				@"Director"
+#define	META_MOVIE_WIRTERS_KEY				@"Writers"
+#define	META_MOVIE_GENRES_KEY				@"Genres"
+#define META_MOVIE_PLOT_KEY					@"Plot"
 
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
