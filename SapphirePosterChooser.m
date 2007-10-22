@@ -10,6 +10,9 @@
 #import "BackRowUtils.h"
 #import <BackRow/BackRow.h>
 
+@interface BRListControl (definedin1_1)
+- (double)renderSelection;
+@end
 
 @implementation SapphirePosterChooser
 

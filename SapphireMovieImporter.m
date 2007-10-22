@@ -211,7 +211,7 @@
 	NSURL * url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",posterPageLink]] ;
 	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
 	NSXMLElement *root = [document rootElement];
-	NSArray * candidatePosterLinks=[NSArray arrayWithObjects:nil] ;
+	NSMutableArray * candidatePosterLinks=[NSMutableArray arrayWithObjects:nil] ;
 	NSString * yearPathComponent=[posterPageLink stringByDeletingLastPathComponent];
 	
 	/*Get the results list*/
@@ -231,13 +231,13 @@
 			{
 				NSString * subPath=[resultURL substringFromIndex:7];
 				subPath=[NSString stringWithFormat:[NSString stringWithFormat:@"%@/posters%@",yearPathComponent,subPath]];
-				candidatePosterLinks=[candidatePosterLinks arrayByAddingObject:subPath];
+				[candidatePosterLinks addObject:subPath];
 			}
 			else if([resultURL hasPrefix:@"thumbs/"]) /* get the displayed poster link */
 			{
 				NSString * subPath=[resultURL substringFromIndex:11];
 				subPath=[NSString stringWithFormat:[NSString stringWithFormat:@"%@/posters/%@",yearPathComponent,subPath]];
-				candidatePosterLinks=[candidatePosterLinks arrayByAddingObject:subPath];
+				[candidatePosterLinks addObject:subPath];
 			}
 		}
 	}
@@ -250,7 +250,7 @@
 		[myDelegate downloadMoviePosters] ;
 		[myDelegate autorelease];
 	}
-	return candidatePosterLinks;
+	return [[candidatePosterLinks copy] autorelease];
 }
 
 /*!
@@ -302,9 +302,9 @@
 	NSArray *rawData=[document objectsForXQuery:IMDB_RESULT_RELEASE_DATE_XPATH error:&error];
 	NSDate * releaseDate=nil ;
 	NSString * plot=nil;
-	NSArray * directors=nil;
-	NSArray * writers=nil;
-	NSArray * genres=nil;
+	NSMutableArray * directors=nil;
+	NSMutableArray * writers=nil;
+	NSMutableArray * genres=nil;
 	if([rawData count])
 	{
 		NSEnumerator *resultEnum = [rawData objectEnumerator];
@@ -326,30 +326,30 @@
 				}
 				else if([dataType hasPrefix:@"Writers"])
 				{
-					writers=[NSArray array];
+					writers=[NSMutableArray array];
 					while(![trimmer isAtEnd])
 					{
 						NSString * aWriter=nil;
 						[trimmer scanUpToString:@"\n" intoString:&aWriter];
-						writers=[writers arrayByAddingObject:aWriter];
+						[writers addObject:aWriter];
 					}
 					
 				}
 				else if([dataType hasPrefix:@"Director"])
 				{
-					directors=[NSArray array];
+					directors=[NSMutableArray array];
 					while(![trimmer isAtEnd])
 					{
 						NSString * aDirector=nil;
 						[trimmer scanUpToString:@"\n" intoString:&aDirector];
-						directors=[directors arrayByAddingObject:aDirector];
+						[directors addObject:aDirector];
 					}
 					
 				}
 				else if([dataType hasPrefix:@"Genre"])
 				{
 
-					genres=[NSArray array];
+					genres=[NSMutableArray array];
 					while(![trimmer isAtEnd])
 					{
 						NSString *aGenre=nil;
@@ -362,7 +362,7 @@
 								aGenre=[aGenre substringToIndex:[aGenre length]-6];
 							else if([aGenre hasSuffix:@" "])
 								aGenre=[aGenre substringToIndex:[aGenre length]-1];
-							genres=[genres arrayByAddingObject:aGenre];
+							[genres addObject:aGenre];
 						}
 						else
 						{
@@ -398,7 +398,7 @@
 	NSArray *completeCast=nil ;
 	if([rawCast count])
 	{
-		NSArray *results=nil;
+		NSMutableArray *results=nil;
 		NSEnumerator *resultEnum = [rawCast objectEnumerator];
 		NSXMLElement *result = nil;
 		while((result = [resultEnum nextObject]) != nil)
@@ -411,28 +411,28 @@
 				if([castURL hasPrefix:@"/name/"])
 				{
 					if(!results)
-						results=[NSArray arrayWithObject:castName];
+						results=[NSMutableArray arrayWithObject:castName];
 					else
-						results=[results arrayByAddingObject:castName];
+						[results addObject:castName];
 				}
 				else continue ;
 			}
 			else
 			continue ;
 		}
-		completeCast=results ;
+		completeCast=[[results copy] autorelease] ;
 	}
 	
 	
 	/* populate metadata to return */
 	if(directors)
-		[ret setObject:directors forKey:META_MOVIE_DIRECTOR_KEY];
+		[ret setObject:[[directors copy] autorelease] forKey:META_MOVIE_DIRECTOR_KEY];
 	if(plot)
 		[ret setObject:plot forKey:META_MOVIE_PLOT_KEY];
 	if(releaseDate)
 		[ret setObject:releaseDate forKey:META_MOVIE_RELEASE_DATE_KEY];
 	if(genres)
-		[ret setObject:genres forKey:META_MOVIE_GENRES_KEY];
+		[ret setObject:[[genres copy] autorelease] forKey:META_MOVIE_GENRES_KEY];
 	if(completeCast)
 		[ret setObject:completeCast forKey:META_MOVIE_CAST_KEY];
 	if(movieTitle)
