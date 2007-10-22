@@ -5,9 +5,9 @@
 //  Created by Patrick Merrill on 9/10/07.
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
-#import "SapphirePosterChooser.h"
 #import "SapphireImporterDataMenu.h"
-#include <regex.h>
+
+@class SapphirePosterChooser;
 
 @interface SapphireMovieImporter : NSObject <SapphireImporter>{
 	SapphireImporterDataMenu	*dataMenu;
@@ -16,6 +16,8 @@
 	NSMutableDictionary			*movieTranslations;
 	NSMutableDictionary			*movieInfo;
 	NSString					*settingsPath;
+	//Note: posterChooser is not retained
+	SapphirePosterChooser		*posterChooser;
 }
 
 - (id) initWithSavedSetting:(NSString *)path;

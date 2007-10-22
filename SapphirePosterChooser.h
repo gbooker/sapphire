@@ -18,12 +18,13 @@
 
 @interface SapphirePosterChooser : BRMenuController {
 	NSArray			*posters;
-	NSArray			*posterLayers;
+	NSMutableArray	*posterLayers;
 	NSString		*fileName ;
 	NSString		*movieTitle;
 	long			selectedPoster;
 	BRTextControl	*fileInfoText;
 	BRMarchingIconLayer *   posterMarch;
+	BRBlurryImageLayer	*defaultImage;
 }
 - (id) initWithScene: (BRRenderScene *) scene;
 - (void) dealloc;
@@ -31,6 +32,8 @@
 - (void) willBePushed;
 - (void) wasPopped;
 - (void)setPosters:(NSArray *)posterList;
+- (void)loadPosters;
+- (void)reloadPoster:(int)index;
 - (void)setFileName:(NSString *)choosingForFileName;
 - (NSArray *)posters;
 - (void)setMovieTitle:(NSString *)theMovieTitle;
@@ -58,7 +61,7 @@
 
 @interface SapphirePosterChooser (IconListManagement)
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath;
-- (void) loadPosters;
+- (void) loadPoster:(int)index;
 - (void) hideIconMarch;
 - (void) showIconMarch;
 - (void) selectionChanged: (NSNotification *) note;

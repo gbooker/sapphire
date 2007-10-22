@@ -43,6 +43,8 @@
 	NSRect 	frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;
+	defaultImage = [[self getPosterLayer:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"]] retain];
+
 	
 	[fileInfoText setFrame: frame];
 	[self addControl: fileInfoText];
@@ -59,14 +61,15 @@
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver: self];
+    [posterMarch removeFromSuperlayer];
+//    [posterMarch setIconSource: nil];  //This throws an exception
 	[posters release];
 	[posterLayers release];
 	[fileName release];
 	[movieTitle release];
 	[fileInfoText release];
-    [posterMarch setIconSource: nil];
-    [posterMarch removeFromSuperlayer];
 	[posterMarch release];
+	[defaultImage release];
 	[super dealloc];
 }
 
@@ -145,6 +148,29 @@
 {
 	posters = [posterList retain];
 	[self loadPosters];
+}
+
+/*!
+ * @brief Loads the posters from disk
+ */
+- (void)loadPosters
+{
+	int i, count = [posters count];
+	posterLayers = [posters mutableCopy];
+	for(i=0; i<count; i++)
+		[self loadPoster:i];
+	[posterMarch _updateIcons] ;
+	[[self scene] renderScene];
+}
+
+/*!
+ * @brief Reloads a poster from disk
+ *
+ * @param index The index of the poster to reload
+ */
+- (void)reloadPoster:(int)index
+{
+	[self loadPoster:index];
 	[posterMarch _updateIcons] ;
 	[[self scene] renderScene];
 }
@@ -278,43 +304,28 @@
 @implementation SapphirePosterChooser (IconListManagement)
 
 /*!
-* @brief load poster image layers
+ * @brief load poster image layers
  *
+ * @param The index of the poster to load
  */
-- (void) loadPosters
+- (void) loadPoster:(int)index;
 {
-	NSMutableArray * results = [NSMutableArray array];
-	if([posters count])
-	{
-		/*Get each result*/
-		NSEnumerator *resultEnum = [posters objectEnumerator];
-		NSString *result = nil;
-		while((result = [resultEnum nextObject]) != nil)
-		{
-			/* Download agent work around - Have the chooser load the poster images from the web */
-//			NSString *posterDest=[NSString stringWithFormat:@"%@/%@",
-//				[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],
-//				[result lastPathComponent]];
-			NSString *posterPath=[NSString stringWithFormat:@"http://www.IMPAwards.com%@",result];
-			/* use the tumbnail image for the poster chooser -faster but ugly */
-//			posterPath=[posterPath stringByReplacingAllOccurancesOf:@"/posters/" withString:@"/thumbs/imp_"];
-			[results addObject:[self getPosterLayer:posterPath]];
-		}
-	}
-	posterLayers=[results copy];
+	NSString *poster = [posters objectAtIndex:index];
+	NSString *posterDest=[NSString stringWithFormat:@"%@/%@",
+		[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],
+		[poster lastPathComponent]];
+	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayer:posterDest]];
 }
 
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath
 {
-	/* Download agent work around - Have the chooser load the poster images from the web */
-//    NSURL * posterURL = [NSURL fileURLWithPath: thePosterPath];
-	NSURL * posterURL=[NSURL URLWithString:thePosterPath];
-    if (posterURL==nil)
-        return nil;
+    NSURL * posterURL = [NSURL fileURLWithPath: thePosterPath];
 	
-    CGImageRef posterImage = CreateImageForURL( posterURL );
+    if (posterURL==nil)
+		return nil;
+	CGImageRef posterImage = CreateImageForURL( posterURL );
     if(posterImage==nil)
-        return nil;
+		return defaultImage;
 	
     struct BRBitmapDataInfo info;
     info.internalFormat = GL_RGBA;
@@ -344,7 +355,6 @@
     [result setBlurryImage: blur withReflection: nil];
 	
     [lucid release];
-	[blur release];
 	
     return ( result );
 }

@@ -341,6 +341,7 @@
 	/*Remove the next item from the queue*/
 	if([importItems count])
 		[importItems removeObjectAtIndex:0];
+	current++;
 }
 
 /*!
