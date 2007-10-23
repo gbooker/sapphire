@@ -1910,6 +1910,17 @@ static NSArray *displayedMetaDataOrder = nil;
 	return [combinedInfo objectForKey:META_SHOW_NAME_KEY];
 }
 
+/*!
+* @brief Returns the genre of the movie file
+ *
+ * @return The genre type of the movie file
+ */
+- (NSArray *)movieGenres
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_MOVIE_GENRES_KEY];
+}
+
 /*Makes a pretty size string for the file*/
 - (NSString *)sizeString
 {

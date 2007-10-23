@@ -192,6 +192,7 @@ typedef enum {
 - (NSString *)movieTitle;
 - (NSString *)showID;
 - (NSString *)showName ;
+- (NSArray *)movieGenres;
 - (NSString *)sizeString;
 
 @end

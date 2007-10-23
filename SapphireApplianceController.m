@@ -14,6 +14,7 @@
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"
 #import "SapphireTVDirectory.h"
+#import "SapphireMovieDirectory.h"
 
 #import "SapphireImporterDataMenu.h"
 #import "SapphireFileDataImporter.h"
@@ -101,8 +102,8 @@ static NSArray *predicates = nil;
 {
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
 	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
-//	SapphireMovieImporter *movImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
-	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:fileImp, tvImp, nil]];
+	SapphireMovieImporter *movImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
+	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:fileImp, tvImp,movImp, nil]];
 	[fileImp release];
 	[tvImp release];
 	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
@@ -155,6 +156,14 @@ static NSArray *predicates = nil;
 	[mutableMasterNames addObject:BRLocalizedString(@"   TV Shows", nil)];
 	[mutableMasterControllers addObject:tvBrowser];
 	[tvBrowser release];
+	
+	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
+	SapphireBrowser *movieBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:movieDir];
+	[movieBrowser setListTitle:BRLocalizedString(@"Movies", nil)];
+	[movieBrowser setListIcon:predicateGem];
+	[mutableMasterNames addObject:BRLocalizedString(@"   Movies", nil)];
+	[mutableMasterControllers addObject:movieBrowser];
+	[movieBrowser release];
 	
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
 	NSString *browserPoint = nil;
