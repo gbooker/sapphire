@@ -179,8 +179,6 @@
 		{
 			if([genreInfo isEmpty])
 				[directory removeObjectForKey:genre];
-	//		else
-	//			[self setReloadTimer];
 		}
 	}
 	[self setReloadTimer];
@@ -198,10 +196,7 @@
 		{
 			[genreInfo removeFile:file];
 			if([genreInfo isEmpty])
-			{
 				[directory removeObjectForKey:genre];
-			//	[self setReloadTimer];
-			}
 		}
 	}
 	[self setReloadTimer];
