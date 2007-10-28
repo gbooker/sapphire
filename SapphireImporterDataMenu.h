@@ -6,8 +6,8 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
-@class SapphireMetaDataCollection, SapphireFileMetaData, SapphireImporterDataMenu;
-@protocol SapphireMetaDataScannerDelegate;
+#import "SapphireMetaData.h"
+@class SapphireImporterDataMenu;
 
 @protocol SapphireImporter <NSObject>
 - (BOOL)importMetaData:(SapphireFileMetaData *)metaData;

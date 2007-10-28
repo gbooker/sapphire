@@ -8,8 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SapphireDirectoryMetaData;
-@protocol SapphireMetaDataScannerDelegate;
+#import "SapphireMetaData.h"
 
 @interface SapphireMetaDataScanner : NSObject <SapphireMetaDataScannerDelegate> {
 	SapphireDirectoryMetaData				*metaDir;

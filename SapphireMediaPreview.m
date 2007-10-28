@@ -333,7 +333,7 @@ static NSSet *coverArtExtentions = nil;
 	if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
 		fileClass=FILE_CLASS_NOT_FILE;
 	else
-		fileClass=(FileClass)[meta fileClass];
+		fileClass=(FileClass)[(SapphireFileMetaData *) meta fileClass];
 		
 	
 	

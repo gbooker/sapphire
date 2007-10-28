@@ -6,8 +6,8 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
-@class SapphireFileMetaData, SapphireMetaDataCollection, SapphireDirectoryMetaData, BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
-@protocol SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate;
+#import "SapphireMetaData.h"
+@class BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
 
 @interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate>
 {
