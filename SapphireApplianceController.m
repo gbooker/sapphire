@@ -111,15 +111,12 @@ static NSArray *predicates = nil;
 	return [ret autorelease];
 }
 
-
-- (id) initWithScene: (BRRenderScene *) scene
+- (void)commonInit
 {
-	self = [super initWithScene:scene];
-	
 	//Setup the theme's scene
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	[theme setScene:[self scene]];
-
+	
 	metaCollection = [[SapphireMetaDataCollection alloc] initWithFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/metaData.plist"]];
 	
 	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaDataCollection:metaCollection] ;
@@ -127,7 +124,28 @@ static NSArray *predicates = nil;
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
+}
 
+- (id) initWithScene: (BRRenderScene *) scene
+{
+	self = [super initWithScene:scene];
+	
+	[self commonInit];
+	
+	return self;
+}
+
+- (id)scene
+{
+	return [BRRenderScene sharedInstance];
+}
+
+- (id)init
+{
+	self = [super init];
+
+	[self commonInit];
+	
 	return self;
 }
 

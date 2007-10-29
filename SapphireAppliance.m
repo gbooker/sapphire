@@ -27,6 +27,7 @@
 
 + (NSString *) className
 {
+	static BOOL checked = NO;
     // get around the whitelist
     
     // this function will get the real class name from the runtime, and
@@ -40,7 +41,13 @@
     // lie about our name, purely to escape that check.
     // Also, the backtracer method is a class routine, meaning that we
     // don't have to even generate an exception - woohoo!
-    NSRange range = [[BRBacktracingException backtrace] rangeOfString: @"_loadApplianceInfoAtPath:"];
+	NSString *backtrace = [BRBacktracingException backtrace];
+    NSRange range = [backtrace rangeOfString: @"_loadApplianceInfoAtPath:"];
+	if (range.location == NSNotFound && !checked)
+	{
+		range = [backtrace rangeOfString: @"(in BackRow)"];
+		checked = YES;
+	}
     if ( range.location != NSNotFound )
     {
         // this is the whitelist check -- tell a Great Big Fib
@@ -75,8 +82,14 @@
     return ( [SapphireAppliance moduleKey] );
 }
 
+- (BRLayerController *)applianceController
+{
+    return ( [[[SapphireApplianceController alloc] init] autorelease] );
+}
+
 - (BRLayerController *) applianceControllerWithScene: (BRRenderScene *) scene
 {
+	NSLog(@"Got here");
     // this function is called when your item is selected on the main menu
     return ( [[[SapphireApplianceController alloc] initWithScene: scene] autorelease] );
 }
