@@ -7,6 +7,8 @@
 //
 
 #import "SapphireMetaData.h"
+#import "SapphireLayerController.h"
+
 @class SapphireImporterDataMenu;
 
 @protocol SapphireImporter <NSObject>
@@ -19,7 +21,7 @@
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller;
 @end
 
-@interface SapphireImporterDataMenu : BRLayerController <SapphireMetaDataScannerDelegate>
+@interface SapphireImporterDataMenu : SapphireLayerController <SapphireMetaDataScannerDelegate>
 {
 	BRHeaderControl					*title;
 	BRButtonControl					*button;

@@ -8,6 +8,10 @@
 
 #import "SapphireTheme.h"
 
+/*Yes, this is the wrong class, but otherwise gcc gripes about BRImage class not existing; this removes warnings so no harm*/
+@interface SapphireTheme (compat)
++ (id)imageWithPath:(NSString *)path;
+@end
 
 @implementation SapphireTheme
 
@@ -93,13 +97,21 @@
  * @param type The gem type
  * @return The gem's texture
  */
-- (BRTexture *)gem:(NSString *)type
+- (id)gem:(NSString *)type
 {
 	/*Check cache*/
 	BRTexture *ret = [gemDict objectForKey:type];
 	if(ret != nil)
 		return ret;
 	
+	if(NSClassFromString(@"BRImage") != nil)
+	{
+		Class cls = NSClassFromString(@"BRImage");
+		id ret = [cls imageWithPath:[gemFiles objectForKey:type]];
+		if(ret != nil)
+			[gemDict setObject:ret forKey:type];
+		return ret;
+	}
 	/*Load it*/
 	CGImageRef image = [self loadImage:[gemFiles objectForKey:type]];
 	if(image != NULL)

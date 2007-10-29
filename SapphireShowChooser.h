@@ -6,10 +6,12 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
+#import "SapphireCenteredMenuController.h"
+
 #define SHOW_CHOOSE_CANCEL -2
 #define SHOW_CHOOSE_NOT_SHOW -1
 
-@interface SapphireShowChooser : BRCenteredMenuController {
+@interface SapphireShowChooser : SapphireCenteredMenuController {
 	NSArray			*shows;
 	NSString		*searchStr;
 	int				selection;

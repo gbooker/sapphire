@@ -6,12 +6,14 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
+#import "SapphireCenteredMenuController.h"
+
 #define MOVIE_CHOOSE_CANCEL		-4
 #define MOVIE_CHOOSE_TV_SHOW	-3
 #define MOVIE_CHOOSE_OTHER		-2
 #define MOVIE_CHOOSE_NOT_MOVIE	-1
 
-@interface SapphireMovieChooser : BRCenteredMenuController {
+@interface SapphireMovieChooser : SapphireCenteredMenuController {
 	NSArray			*movies;
 	NSString		*fileName;
 	int				selection;
