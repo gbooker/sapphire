@@ -7,10 +7,7 @@
 //
 
 #import "SapphireLayerController.h"
-
-@interface BRRenderScene (compat)
-+ (BRRenderScene *)sharedInstance;
-@end
+#import "SapphireFrontRowCompat.h"
 
 @implementation SapphireLayerController
 

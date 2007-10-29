@@ -7,10 +7,7 @@
 //
 
 #import "SapphireMediaMenuController.h"
-
-@interface BRRenderScene (compat)
-+ (BRRenderScene *)sharedInstance;
-@end
+#import "SapphireFrontRowCompat.h"
 
 @implementation SapphireMediaMenuController
 

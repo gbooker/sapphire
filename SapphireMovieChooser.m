@@ -83,7 +83,7 @@
 {
 	movies = [movieList retain];
 	[[self list] reload];
-	[[self list] addDividerAtIndex:3];
+	[[self list] addDividerAtIndex:3 withLabel:nil];
 	[[self scene] renderScene];
 }
 

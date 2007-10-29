@@ -21,6 +21,7 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
 #import "SapphireAllImporter.h"
+#import "SapphireFrontRowCompat.h"
 
 #define BROWSER_MENU_ITEM		BRLocalizedString(@"   Browse", @"Browser Menu Item")
 #define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"   Import All Data", @"All Importer Menu Item")
@@ -107,8 +108,10 @@ static NSArray *predicates = nil;
 	[fileImp release];
 	[tvImp release];
 //	[movImp release];
-	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
-	return [ret autorelease];
+//	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
+	[allImp release];
+//	return [ret autorelease];
+	return nil;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene
@@ -157,20 +160,20 @@ static NSArray *predicates = nil;
 	[mutableMasterControllers addObject:tvBrowser];
 	[tvBrowser release];
 	
-	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
+/*	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *movieBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:movieDir];
 	[movieBrowser setListTitle:BRLocalizedString(@"Movies", nil)];
 	[movieBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"   Movies", nil)];
 	[mutableMasterControllers addObject:movieBrowser];
-	[movieBrowser release];
+	[movieBrowser release];*/
 	
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
 	{
-		if(![metaCollection skipCollection:browserPoint])
-			[[metaCollection directoryForPath:browserPoint] loadMetaData];
+/*		if(![metaCollection skipCollection:browserPoint])
+			[[metaCollection directoryForPath:browserPoint] loadMetaData];*/
 		if([metaCollection hideCollection:browserPoint])
 			continue;
 		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
@@ -181,13 +184,13 @@ static NSArray *predicates = nil;
 		[browser release];
 	}
 	[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
-		ALL_IMPORT_MENU_ITEM,
-		SETTINGS_MENU_ITEM,
+//		ALL_IMPORT_MENU_ITEM,
+//		SETTINGS_MENU_ITEM,
 		RESET_MENU_ITEM,
 		nil]];
 	[mutableMasterControllers addObjectsFromArray:[NSArray arrayWithObjects:
-		allImporter,
-		settings,
+//		allImporter,
+//		settings,
 		nil]];
 	masterNames = [[NSArray alloc] initWithArray:mutableMasterNames];
 	masterControllers = [[NSArray alloc] initWithArray:mutableMasterControllers];
@@ -283,6 +286,11 @@ static NSArray *predicates = nil;
 	return ( [ names count]);
 }
 
+- (float)heightForRow:(long)row
+{
+	return 50.0f;
+}
+
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
 /*
@@ -293,17 +301,17 @@ static NSArray *predicates = nil;
 	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
-	result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: [self scene]] ;
+	result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:YES];
 	
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
-//	else if([name isEqual: AGENT_IMPORT_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
-	else if([name isEqual: SETTINGS_MENU_ITEM]) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
-	else if([name isEqual: RESET_MENU_ITEM]) [result setLeftIcon:[theme gem:CONE_GEM_KEY]];
-	else [result setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]]];
+	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
+	//	else if([name isEqual: AGENT_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
+	else if([name isEqual: SETTINGS_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
+	else if([name isEqual: RESET_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:CONE_GEM_KEY] forMenu:result];
+	else [SapphireFrontRowCompat setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]] forMenu:result];
 	
 	// add text
-	[[result textItem] setTitle: name] ;
+	[SapphireFrontRowCompat setTitle:name forMenu:result];
 				
 	return ( result ) ;
 }

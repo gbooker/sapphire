@@ -245,7 +245,10 @@ static BOOL is10Version = NO;
 
 	/*Remove the dividers*/
 	BRListControl *list = [self list];
-	[list setDividerIndex:0];
+	if([list respondsToSelector:@selector(removeDividers)])
+		[list removeDividers];
+	else
+		[list setDividerIndex:0];
 	[list removeDividerAtIndex:0];
 	/*Do a reload*/
 	[list reload];
@@ -253,12 +256,12 @@ static BOOL is10Version = NO;
 	int indexOffset = 0;
 	if(dirCount && fileCount)
 	{
-		[list addDividerAtIndex:dirCount];
+		[list addDividerAtIndex:dirCount withLabel:@""];
 		if(!is10Version)
 			indexOffset++;
 	}
 	if(predicate != NULL && [[SapphireSettings sharedSettings] fastSwitching])
-		[list addDividerAtIndex:dirCount + fileCount + indexOffset];
+		[list addDividerAtIndex:dirCount + fileCount + indexOffset withLabel:@""];
 	/*Draw*/
 	[[self scene] renderScene];
 }

@@ -35,6 +35,7 @@
 		F5657C410CD66E3E0053869E /* SapphireLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5657C400CD66E3E0053869E /* SapphireLayerController.m */; };
 		F5657C450CD66ECC0053869E /* SapphireCenteredMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5657C440CD66ECB0053869E /* SapphireCenteredMenuController.m */; };
 		F5657C540CD66F770053869E /* SapphireMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5657C530CD66F750053869E /* SapphireMenuController.m */; };
+		F5657D110CD685910053869E /* SapphireFrontRowCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = F5657D100CD6858F0053869E /* SapphireFrontRowCompat.m */; };
 		F565A1FD0C5BE81F00AE7110 /* SapphireAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F565A1FC0C5BE81F00AE7110 /* SapphireAudioPlayer.m */; };
 		F565A34A0C5BF69D00AE7110 /* SapphireAudioMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F565A3490C5BF69D00AE7110 /* SapphireAudioMedia.m */; };
 		F56A19490C3170870022918E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A19480C3170870022918E /* AppKit.framework */; };
@@ -108,6 +109,8 @@
 		F5657C440CD66ECB0053869E /* SapphireCenteredMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireCenteredMenuController.m; sourceTree = "<group>"; };
 		F5657C520CD66F740053869E /* SapphireMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMenuController.h; sourceTree = "<group>"; };
 		F5657C530CD66F750053869E /* SapphireMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMenuController.m; sourceTree = "<group>"; };
+		F5657D0F0CD6858C0053869E /* SapphireFrontRowCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireFrontRowCompat.h; sourceTree = "<group>"; };
+		F5657D100CD6858F0053869E /* SapphireFrontRowCompat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireFrontRowCompat.m; sourceTree = "<group>"; };
 		F565A1FB0C5BE81F00AE7110 /* SapphireAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireAudioPlayer.h; sourceTree = "<group>"; };
 		F565A1FC0C5BE81F00AE7110 /* SapphireAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireAudioPlayer.m; sourceTree = "<group>"; };
 		F565A3480C5BF69D00AE7110 /* SapphireAudioMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireAudioMedia.h; sourceTree = "<group>"; };
@@ -262,6 +265,8 @@
 				F5657C440CD66ECB0053869E /* SapphireCenteredMenuController.m */,
 				F5657C520CD66F740053869E /* SapphireMenuController.h */,
 				F5657C530CD66F750053869E /* SapphireMenuController.m */,
+				F5657D0F0CD6858C0053869E /* SapphireFrontRowCompat.h */,
+				F5657D100CD6858F0053869E /* SapphireFrontRowCompat.m */,
 			);
 			name = "Compatibility Classes";
 			sourceTree = "<group>";
@@ -483,6 +488,7 @@
 				F5657C410CD66E3E0053869E /* SapphireLayerController.m in Sources */,
 				F5657C450CD66ECC0053869E /* SapphireCenteredMenuController.m in Sources */,
 				F5657C540CD66F770053869E /* SapphireMenuController.m in Sources */,
+				F5657D110CD685910053869E /* SapphireFrontRowCompat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

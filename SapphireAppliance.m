@@ -90,7 +90,7 @@
 - (BRLayerController *) applianceControllerWithScene: (BRRenderScene *) scene
 {
     // this function is called when your item is selected on the main menu
-    return ( [[[SapphireApplianceController alloc] initWithScene: nil] autorelease] );
+    return ( [[[SapphireApplianceController alloc] initWithScene: scene] autorelease] );
 }
 
 @end

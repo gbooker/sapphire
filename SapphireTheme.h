@@ -24,5 +24,5 @@
 + (id)sharedTheme;
 
 - (void)setScene:(BRRenderScene *)scene;
-- (id)gem:(NSString *)type;
+- (BRTexture *)gem:(NSString *)type;
 @end

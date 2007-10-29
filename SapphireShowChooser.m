@@ -59,7 +59,7 @@
 {
 	shows = [showList retain];
 	[[self list] reload];
-	[[self list] addDividerAtIndex:1];
+	[[self list] addDividerAtIndex:1 withLabel:@""];
 	[[self scene] renderScene];
 }
 

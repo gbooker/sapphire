@@ -438,7 +438,6 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	[dictionaryPath release];
 	[skipCollection release];
 	[hideCollection release];
-	[dictionaryPath release];
 	if(writeTimer != nil)
 	{
 		[writeTimer invalidate];

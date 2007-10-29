@@ -135,8 +135,9 @@ static SapphireSettings *sharedInstance = nil;
 		options = [[NSMutableDictionary alloc] init];
 
 	/*display*/
-	[[self list] setDatasource:self];
-	[[self list] addDividerAtIndex:6];
+	BRListControl *list = [self list];
+	[list setDatasource:self];
+	[list addDividerAtIndex:6 withLabel:@""];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 
