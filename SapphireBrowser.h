@@ -7,9 +7,10 @@
 //
 
 #import "SapphireMetaData.h"
+#import "SapphireMediaMenuController.h"
 @class BRTVShowsSortControl, SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
 
-@interface SapphireBrowser : BRMediaMenuController <SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate>
+@interface SapphireBrowser : SapphireMediaMenuController <SapphireMetaDataDelegate, SapphireMetaDataScannerDelegate>
 {
 	NSMutableArray					*_names ;
 	NSMutableArray					*items ;

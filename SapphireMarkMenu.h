@@ -6,9 +6,10 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
+#import "SapphireMediaMenuController.h"
 @class SapphireMetaData, SapphirePredicate;
 
-@interface SapphireMarkMenu : BRMediaMenuController {
+@interface SapphireMarkMenu : SapphireMediaMenuController {
 	BOOL				isDir;
 	NSMutableArray		*names;
 	NSMutableArray		*commands;

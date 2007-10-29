@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "SapphireMediaMenuController.h"
 
 @class SapphireMetaDataCollection;
 
-@interface SapphireCollectionSettings : BRMediaMenuController {
+@interface SapphireCollectionSettings : SapphireMediaMenuController {
 	NSArray							*names;
 	SapphireMetaDataCollection		*metaCollection;
 	NSInvocation					*setInv;

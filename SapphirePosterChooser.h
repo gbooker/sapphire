@@ -6,9 +6,6 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 #import <Cocoa/Cocoa.h>
-#import <BackRow/BRMediaMenuController.h>
-#import <BackRow/BRIconSourceProtocolProtocol.h>
-#import <BackRow/BRMenuListItemProviderProtocol.h>
 
 #define POSTER_CHOOSE_CANCEL		-1
 #define POSTER_CHOOSE_REFRESH		0
