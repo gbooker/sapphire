@@ -84,14 +84,13 @@
 
 - (BRLayerController *)applianceController
 {
-    return ( [[[SapphireApplianceController alloc] init] autorelease] );
+    return ( [[[SapphireApplianceController alloc] initWithScene: nil] autorelease] );
 }
 
 - (BRLayerController *) applianceControllerWithScene: (BRRenderScene *) scene
 {
-	NSLog(@"Got here");
     // this function is called when your item is selected on the main menu
-    return ( [[[SapphireApplianceController alloc] initWithScene: scene] autorelease] );
+    return ( [[[SapphireApplianceController alloc] initWithScene: nil] autorelease] );
 }
 
 @end

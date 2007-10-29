@@ -6,10 +6,12 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
+#import "SapphireMediaMenuController.h"
+
 @class SapphireMetaDataCollection, SapphireSettings, SapphireTheme, SapphirePredicate;
 @protocol SapphireMetaDataDelegate;
 
-@interface SapphireApplianceController : BRMediaMenuController
+@interface SapphireApplianceController : SapphireMediaMenuController
 {
 	SapphireMetaDataCollection	*metaCollection;
 	NSMutableArray				*names;

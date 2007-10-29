@@ -111,8 +111,10 @@ static NSArray *predicates = nil;
 	return [ret autorelease];
 }
 
-- (void)commonInit
+- (id) initWithScene: (BRRenderScene *) scene
 {
+	self = [super initWithScene:scene];
+	
 	//Setup the theme's scene
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	[theme setScene:[self scene]];
@@ -124,27 +126,6 @@ static NSArray *predicates = nil;
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
-}
-
-- (id) initWithScene: (BRRenderScene *) scene
-{
-	self = [super initWithScene:scene];
-	
-	[self commonInit];
-	
-	return self;
-}
-
-- (id)scene
-{
-	return [BRRenderScene sharedInstance];
-}
-
-- (id)init
-{
-	self = [super init];
-
-	[self commonInit];
 	
 	return self;
 }

@@ -6,9 +6,11 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
+#import "SapphireMediaMenuController.h"
+
 @class SapphireDirectoryMetaData;
 
-@interface SapphireSettings : BRMediaMenuController 
+@interface SapphireSettings : SapphireMediaMenuController 
 {
 	NSArray						*names;
 	NSArray						*keys;
