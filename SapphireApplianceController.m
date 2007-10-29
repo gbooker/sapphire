@@ -108,10 +108,9 @@ static NSArray *predicates = nil;
 	[fileImp release];
 	[tvImp release];
 //	[movImp release];
-//	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
+	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
 	[allImp release];
-//	return [ret autorelease];
-	return nil;
+	return [ret autorelease];
 }
 
 - (id) initWithScene: (BRRenderScene *) scene
@@ -184,12 +183,12 @@ static NSArray *predicates = nil;
 		[browser release];
 	}
 	[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
-//		ALL_IMPORT_MENU_ITEM,
+		ALL_IMPORT_MENU_ITEM,
 //		SETTINGS_MENU_ITEM,
 		RESET_MENU_ITEM,
 		nil]];
 	[mutableMasterControllers addObjectsFromArray:[NSArray arrayWithObjects:
-//		allImporter,
+		allImporter,
 //		settings,
 		nil]];
 	masterNames = [[NSArray alloc] initWithArray:mutableMasterNames];
@@ -269,7 +268,7 @@ static NSArray *predicates = nil;
     [super willBeExhumed];
 	[self setMenuFromSettings];
 	[[self list] reload];
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
@@ -284,11 +283,6 @@ static NSArray *predicates = nil;
 {
     // return the number of items in your menu list here
 	return ( [ names count]);
-}
-
-- (float)heightForRow:(long)row
-{
-	return 50.0f;
 }
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row

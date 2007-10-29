@@ -7,8 +7,7 @@
 //
 
 #import "SapphirePosterChooser.h"
-#import "BackRowUtils.h"
-#import <BackRow/BackRow.h>
+#import "SapphireFrontRowCompat.h"
 
 @interface BRListControl (definedin1_1)
 - (double)renderSelection;
@@ -76,7 +75,7 @@
 - (void) resetLayout
 {
     [super resetLayout];
-    [[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 - (void) willBePushed
@@ -160,7 +159,7 @@
 	for(i=0; i<count; i++)
 		[self loadPoster:i];
 	[posterMarch _updateIcons] ;
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 /*!
@@ -172,7 +171,7 @@
 {
 	[self loadPoster:index];
 	[posterMarch _updateIcons] ;
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 /*!

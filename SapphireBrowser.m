@@ -19,6 +19,7 @@
 #import "SapphireAudioPlayer.h"
 #import "SapphireAudioMedia.h"
 #import "SapphireApplianceController.h"
+#import "SapphireFrontRowCompat.h"
 
 #import <AudioUnit/AudioUnit.h>
 #import <objc/objc-class.h>
@@ -263,7 +264,7 @@ static BOOL is10Version = NO;
 	if(predicate != NULL && [[SapphireSettings sharedSettings] fastSwitching])
 		[list addDividerAtIndex:dirCount + fileCount + indexOffset withLabel:@""];
 	/*Draw*/
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 - (void) dealloc
@@ -917,7 +918,7 @@ BOOL setupAudioOutput(int sampleRate)
 	/*Relead the list and render*/
 	BRListControl *list = [self list];
 	[list reload];
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 @end

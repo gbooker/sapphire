@@ -13,7 +13,7 @@
 
 - (id)initWithScene:(BRRenderScene *)scene
 {
-	if([[BRLayerController class] respondsToSelector:@selector(initWithScene:)])
+	if([[BRPostedAlertController class] respondsToSelector:@selector(initWithScene:)])
 		return [super initWithScene:scene];
 	
 	return [super init];
@@ -21,7 +21,7 @@
 
 - (BRRenderScene *)scene
 {
-	if([[BRLayerController class] respondsToSelector:@selector(scene)])
+	if([[BRPostedAlertController class] respondsToSelector:@selector(scene)])
 		return [super scene];
 	
 	return [BRRenderScene sharedInstance];

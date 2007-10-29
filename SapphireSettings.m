@@ -16,6 +16,7 @@
 #import "SapphireMovieImporter.h"
 #import "SapphirePosterChooser.h"
 #import "SapphireCollectionSettings.h"
+#import "SapphireFrontRowCompat.h"
 
 static SapphireSettings *sharedInstance = nil;
 
@@ -491,7 +492,7 @@ static SapphireSettings *sharedInstance = nil;
 
 	/*Redraw*/
 	[[self list] reload] ;
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 
 }
 

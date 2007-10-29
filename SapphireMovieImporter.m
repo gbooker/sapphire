@@ -11,6 +11,8 @@
 #import "NSString-Extensions.h"
 #import "SapphireMovieChooser.h"
 #import "SapphirePosterChooser.h"
+#import "SapphireFrontRowCompat.h"
+
 /* Translation Keys */
 #define TRANSLATIONS_KEY			@"Translations"
 #define IMDB_LINK_KEY				@"IMDB Link"
@@ -562,7 +564,7 @@
 		/* Posters will be downloaded, let the user choose one */
 		[dataMenu pause];
 		posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
-		[[dataMenu scene] renderScene];
+		[SapphireFrontRowCompat renderScene:[dataMenu scene]];
 		NSArray *posters=[dict objectForKey:IMP_POSTERS_KEY];
 		if(![posters count])
 		{

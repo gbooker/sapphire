@@ -17,4 +17,15 @@
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder;
 + (void)setTitle:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu;
+
++ (NSRect)frameOfController:(id)controller;
++ (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control;
++ (void)addSublayer:(id)sub toControl:(id)controller;
+
++ (BRHeaderControl *)newHeaderControlWithScene:(BRRenderScene *)scene;
++ (BRButtonControl *)newButtonControlWithScene:(BRRenderScene *)scene masterLayerSize:(NSSize)size;
++ (BRTextControl *)newTextControlWithScene:(BRRenderScene *)scene;
++ (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene;
+
++ (void)renderScene:(BRRenderScene *)scene;
 @end

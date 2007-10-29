@@ -7,6 +7,7 @@
 //
 
 #import "SapphireMovieChooser.h"
+#import "SapphireFrontRowCompat.h"
 
 
 @implementation SapphireMovieChooser
@@ -84,7 +85,7 @@
 	movies = [movieList retain];
 	[[self list] reload];
 	[[self list] addDividerAtIndex:3 withLabel:nil];
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 /*!

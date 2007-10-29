@@ -9,6 +9,7 @@
 #import "SapphireImporterDataMenu.h"
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
+#import "SapphireFrontRowCompat.h"
 
 @interface SapphireImporterDataMenu (private)
 - (void)setText:(NSString *)theText;
@@ -34,27 +35,27 @@
 	[importer setImporterDataMenu:self];
 	importItems = [[NSMutableArray alloc] init];
 	/*Setup the Header Control with default contents*/
-	title = [[BRHeaderControl alloc] initWithScene: scene];
+	title = [SapphireFrontRowCompat newHeaderControlWithScene:scene];
 	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
 	/*Set the size*/
-	NSRect frame = [[self masterLayer] frame];
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y += frame.size.height * 0.80f;
 	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
 	[title setFrame: frame];
 	
 	/*Setup the button control*/
-	frame = [[self masterLayer] frame];
-	button = [[BRButtonControl alloc] initWithScene: scene masterLayerSize: frame.size];
+	frame = [SapphireFrontRowCompat frameOfController:self];
+	button = [SapphireFrontRowCompat newButtonControlWithScene:scene masterLayerSize:frame.size];
 	[button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
 
 	/*Setup the text entry control*/
-	text = [[BRTextControl alloc] initWithScene: scene];
-	fileProgress = [[BRTextControl alloc] initWithScene: scene];
-	currentFile = [[BRTextControl alloc] initWithScene: scene];
+	text = [SapphireFrontRowCompat newTextControlWithScene:scene];
+	fileProgress = [SapphireFrontRowCompat newTextControlWithScene:scene];
+	currentFile = [SapphireFrontRowCompat newTextControlWithScene:scene];
 	
 	/*Setup the progress bar*/
-	bar = [[BRProgressBarWidget alloc] initWithScene: scene];
-	frame = [[self masterLayer] frame];
+	bar = [SapphireFrontRowCompat newProgressBarWidgetWithScene:scene];
+	frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y += frame.size.height * 5.0f / 16.0f;
 	frame.origin.x = frame.size.width / 6.0f;
 	frame.size.height = frame.size.height / 16.0f;
@@ -69,7 +70,7 @@
 	[self addControl: text];
 	[self addControl: fileProgress] ;
 	[self addControl: currentFile] ;
-	[[self masterLayer] addSublayer:bar];
+	[SapphireFrontRowCompat addSublayer:bar toControl:self];
 	[self addControl: button];
 
     return ( self );
@@ -98,10 +99,9 @@
  */
 - (void)setText:(NSString *)theText
 {
-	[text setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[text setText:theText];
+	[SapphireFrontRowCompat setText:theText withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:text];
 	
-	NSRect master = [[self masterLayer] frame];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	[text setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
 	NSSize txtSize = [text renderedSize];
 	
@@ -119,10 +119,9 @@
  */
 - (void)setFileProgress:(NSString *)theFileProgress
 {
-	[fileProgress setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[fileProgress setText:theFileProgress];
+	[SapphireFrontRowCompat setText:theFileProgress withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileProgress];
 	
-	NSRect master = [[self masterLayer] frame];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	[fileProgress setMaximumSize:NSMakeSize(master.size.width * 1.0f/2.0f, master.size.height * 0.3f)];
 	NSSize progressSize = [fileProgress renderedSize];
 	
@@ -140,10 +139,9 @@
  */
 - (void)setCurrentFile:(NSString *)theCurrentFile
 {
-	[currentFile setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[currentFile setText:theCurrentFile];
+	[SapphireFrontRowCompat setText:theCurrentFile withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:currentFile];
 	
-	NSRect master = [[self masterLayer] frame];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	[currentFile setMaximumSize:NSMakeSize(master.size.width * 9.0f/10.0f, master.size.height * 0.3f)];
 	NSSize currentFileSize = [currentFile renderedSize];
 	
@@ -180,7 +178,7 @@
 	[button setTitle:BRLocalizedString(@"Cancel Import", @"Cancel the import process")];
 	[button setAction:@selector(cancel)];
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 	/*Initialize the import process*/
 	canceled = NO;
 	suspended = NO;
@@ -216,7 +214,7 @@
 - (void)scanningDir:(NSString *)dir
 {
 	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Scanning Directory: %@", "Current scann import process format, directory"),dir]];
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 /*!
@@ -292,7 +290,7 @@
 		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Updated %0.0f Entries.", @"Import complete format with number updated"), updated]];
 		[self setCurrentFile:@""];
 		[self setCompletionText];
-		[[self scene] renderScene];
+		[SapphireFrontRowCompat renderScene:[self scene]];
 	}
 }
 

@@ -21,6 +21,14 @@
 - (void)setLeftIconInfo:(BRTexture *)icon;
 @end
 
+@interface BRButtonControl (compat)
+- (id)initWithMasterLayerSize:(NSSize)fp8;
+@end
+
+@interface BRTextControl (compat)
+- (void)setText:(id)fp8 withAttributes:(id)fp12;
+@end
+
 @implementation SapphireFrontRowCompat
 
 static BOOL usingFrontRow = NO;
@@ -79,5 +87,70 @@ static BOOL usingFrontRow = NO;
 		;//[menu setLeftIconInfo:icon];
 	else
 		[menu setLeftIcon:icon];
+}
+
++ (NSRect)frameOfController:(id)controller
+{
+	if(usingFrontRow)
+		return [controller frame];
+	else
+		return [[controller masterLayer] frame];
+}
+
++ (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control
+{
+	if(usingFrontRow)
+		[control setText:text withAttributes:attributes];
+	else
+	{
+		[control setTextAttributes:attributes];
+		[control setText:text];
+	}
+}
+
++ (void)addSublayer:(id)sub toControl:(id)controller
+{
+	if(usingFrontRow)
+		[[controller layer] addSublayer:sub];
+	else
+		[[controller masterLayer] addSublayer:sub];
+}
+
++ (BRHeaderControl *)newHeaderControlWithScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRHeaderControl alloc] init];
+	else
+		return [[BRHeaderControl alloc] initWithScene:scene];
+}
+
++ (BRButtonControl *)newButtonControlWithScene:(BRRenderScene *)scene  masterLayerSize:(NSSize)size;
+{
+	if(usingFrontRow)
+		return [[BRButtonControl alloc] initWithMasterLayerSize:size];
+	else
+		return [[BRButtonControl alloc] initWithScene:scene masterLayerSize:size];
+}
+
++ (BRTextControl *)newTextControlWithScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRTextControl alloc] init];
+	else
+		return [[BRTextControl alloc] initWithScene:scene];
+}
+
++ (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRProgressBarWidget alloc] init];
+	else
+		return [[BRProgressBarWidget alloc] initWithScene:scene];
+}
+
++ (void)renderScene:(BRRenderScene *)scene
+{
+	if(!usingFrontRow)
+		[scene renderScene];
 }
 @end

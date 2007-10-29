@@ -7,6 +7,7 @@
 //
 
 #import "SapphireShowChooser.h"
+#import "SapphireFrontRowCompat.h"
 
 
 @implementation SapphireShowChooser
@@ -60,7 +61,7 @@
 	shows = [showList retain];
 	[[self list] reload];
 	[[self list] addDividerAtIndex:1 withLabel:@""];
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 /*!

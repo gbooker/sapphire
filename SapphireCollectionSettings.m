@@ -8,6 +8,7 @@
 
 #import "SapphireCollectionSettings.h"
 #import "SapphireMetaData.h"
+#import "SapphireFrontRowCompat.h"
 
 @implementation SapphireCollectionSettings
 
@@ -126,7 +127,7 @@
 	
 	/*Redraw*/
 	[[self list] reload] ;
-	[[self scene] renderScene];
+	[SapphireFrontRowCompat renderScene:[self scene]];
 	
 }
 

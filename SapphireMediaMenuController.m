@@ -27,4 +27,16 @@
 	return [BRRenderScene sharedInstance];
 }
 
+
+/*Just because so many classes use self as the list data source*/
+- (float)heightForRow:(long)row
+{
+	return 50.0f;
+}
+
+- (BOOL)rowSelectable:(long)row
+{
+	return YES;
+}
+
 @end
