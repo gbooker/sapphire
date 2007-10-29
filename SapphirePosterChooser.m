@@ -323,7 +323,13 @@
 	
     if (posterURL==nil)
 		return nil;
-	CGImageRef posterImage = CreateImageForURL( posterURL );
+	CGImageRef posterImage=NULL;
+	CGImageSourceRef  sourceRef;	
+    sourceRef = CGImageSourceCreateWithURL((CFURLRef)posterURL, NULL);
+    if(sourceRef) {
+        posterImage = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+        CFRelease(sourceRef);
+    }
     if(posterImage==nil)
 		return defaultImage;
 	
@@ -336,7 +342,7 @@
 	
     BRRenderContext * context = [[self scene] resourceContext];
 		
-    NSData * data = CreateBitmapDataFromImage( posterImage, info.width, info.height );
+    NSData * data = CreateBitmapDataFromImage(posterImage,info.width,info.height );
     BRBitmapTexture * lucid = [[BRBitmapTexture alloc] initWithBitmapData: data
 															   bitmapInfo: &info 
 																  context: context 
@@ -378,10 +384,10 @@
 - (void) selectionChanged: (NSNotification *) note
 {
 	/* ATV version 1.1 */
-	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
-		[posterMarch setSelection: [(BRListControl *)[note object] renderSelection]];
+//	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
+//		[posterMarch setSelection: [(BRListControl *)[note object] renderSelection]];
 	/* ATV version 1.0 */
-	else
+//	else
 		[posterMarch setSelection: [(BRListControl *)[note object] selection]];
 }
 @end

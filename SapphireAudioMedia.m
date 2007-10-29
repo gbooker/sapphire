@@ -82,7 +82,14 @@
 	{
 		NSString *path = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
 		NSURL *url = [NSURL fileURLWithPath:path];
-		coverArt = CreateImageForURL(url);		
+		CGImageSourceRef  sourceRef;
+		
+		sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+		if(sourceRef) {
+			coverArt = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+			CFRelease(sourceRef);
+		}
+//		coverArt = CreateImageForURL(url);		
 	}
 }
 

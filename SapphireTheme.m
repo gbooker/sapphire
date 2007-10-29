@@ -75,7 +75,16 @@
 {
 	NSString *bundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
 	NSURL *url = [NSURL fileURLWithPath:[bundlePath stringByAppendingPathComponent:path]];
-	return CreateImageForURL(url);
+	CGImageRef        imageRef = NULL;
+    CGImageSourceRef  sourceRef;
+	sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+	if(sourceRef) {
+        imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+        CFRelease(sourceRef);
+    }
+	
+    return imageRef;
+//	return CreateImageForURL(url);
 }
 
 /*!

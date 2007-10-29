@@ -173,8 +173,14 @@ static NSSet *coverArtExtentions = nil;
 	/*Get our cover art*/
 	NSString *path = [self coverArtForPath];
 	NSURL *url = [NSURL fileURLWithPath:path];
-	/*Create an image source*/
-	CGImageRef imageRef = CreateImageForURL(url);
+	/*Create an image source*/;
+    CGImageSourceRef  sourceRef;
+	CGImageRef        imageRef = NULL;
+	sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+	if(sourceRef) {
+        imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+        CFRelease(sourceRef);
+    }
 	if(imageRef)
 	{
 		[_coverArtLayer setImage:imageRef];
