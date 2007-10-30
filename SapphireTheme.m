@@ -84,7 +84,6 @@
     }
 	
     return imageRef;
-//	return CreateImageForURL(url);
 }
 
 /*!

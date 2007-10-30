@@ -580,9 +580,11 @@
 				{
 					/* Add the poster links */
 					[dict setObject:posters forKey:IMP_POSTERS_KEY];
+					[self writeSettings];
 				}
 				/* Add another method via chooser incase IMDB doesn't have an IMP link */
-			}			
+			}
+			else posters=nil ;
 		}
 		[posterChooser setPosters:posters] ;
 		[posterChooser setFileName:fileName];

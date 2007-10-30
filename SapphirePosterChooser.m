@@ -42,7 +42,7 @@
 	NSRect 	frame = [[self masterLayer] frame];
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;
-	defaultImage = [[self getPosterLayer:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"]] retain];
+	defaultImage = [[self getPosterLayer:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/PH.png"]] retain];
 
 	
 	[fileInfoText setFrame: frame];
@@ -383,10 +383,10 @@
 - (void) selectionChanged: (NSNotification *) note
 {
 	/* ATV version 1.1 */
-//	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
-//		[posterMarch setSelection: [(BRListControl *)[note object] renderSelection]];
+	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
+		[posterMarch setSelection: [(BRListControl *)[note object] renderSelection]];
 	/* ATV version 1.0 */
-//	else
+	else
 		[posterMarch setSelection: [(BRListControl *)[note object] selection]];
 }
 @end

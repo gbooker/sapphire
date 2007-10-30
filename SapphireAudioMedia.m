@@ -88,8 +88,7 @@
 		if(sourceRef) {
 			coverArt = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
 			CFRelease(sourceRef);
-		}
-//		coverArt = CreateImageForURL(url);		
+		}	
 	}
 }
 

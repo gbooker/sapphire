@@ -67,6 +67,7 @@
 		FE8D57D40C2DE4AF00BC1768 /* SapphireSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = FE8D57D30C2DE4AF00BC1768 /* SapphireSettings.m */; };
 		FE93394A0CCD5AFA005432A5 /* SapphireMovieDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = FE9339480CCD5AFA005432A5 /* SapphireMovieDirectory.m */; };
 		FEB9DE9F0C96095A00E7788A /* SapphireMovieImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = FEB9DE9D0C96095A00E7788A /* SapphireMovieImporter.m */; };
+		FED5D2D60CD6A205000E9588 /* PH.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5D2D50CD6A205000E9588 /* PH.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,6 +164,7 @@
 		FE9339490CCD5AFA005432A5 /* SapphireMovieDirectory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireMovieDirectory.h; sourceTree = "<group>"; };
 		FEB9DE9D0C96095A00E7788A /* SapphireMovieImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireMovieImporter.m; sourceTree = "<group>"; };
 		FEB9DE9E0C96095A00E7788A /* SapphireMovieImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireMovieImporter.h; sourceTree = "<group>"; };
+		FED5D2D50CD6A205000E9588 /* PH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PH.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +208,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FED5D2D50CD6A205000E9588 /* PH.png */,
 				F56B77D60C3858B400E934AA /* DefaultPreview.png */,
 				FE423ABD0C3341D70035A717 /* Eye.png */,
 				FE423A6A0C3338030035A717 /* Gear.png */,
@@ -429,6 +432,7 @@
 				FE423A9F0C333DF40035A717 /* Cone.png in Resources */,
 				FE423ABE0C3341D70035A717 /* Eye.png in Resources */,
 				F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */,
+				FED5D2D60CD6A205000E9588 /* PH.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
