@@ -171,7 +171,6 @@ static NSArray *predicates = nil;
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
 	{
-		NSLog(@"Processing %@", browserPoint);
 		if(![metaCollection skipCollection:browserPoint])
 			[[metaCollection directoryForPath:browserPoint] loadMetaData];
 		if([metaCollection hideCollection:browserPoint])

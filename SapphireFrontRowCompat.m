@@ -33,6 +33,7 @@
 
 @interface BRTextControl (compat)
 - (void)setText:(id)fp8 withAttributes:(id)fp12;
+- (NSRect)controllerFrame;  //technically wrong.
 @end
 
 @implementation SapphireFrontRowCompat
@@ -121,7 +122,9 @@ static BOOL usingFrontRow = NO;
 + (NSRect)frameOfController:(id)controller
 {
 	if(usingFrontRow)
-		return [controller frame];
+	{
+		return [controller controllerFrame];
+	}
 	else
 		return [[controller masterLayer] frame];
 }
