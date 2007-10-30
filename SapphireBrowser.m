@@ -417,8 +417,8 @@ static BOOL is10Version = NO;
 	int nameCount = [_names count];
 	if( nameCount == 0)
 	{
-		BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
-		[[result textItem] setTitle:BRLocalizedString(@"< EMPTY >", @"Empty directory")];
+		BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"< EMPTY >", @"Empty directory") forMenu:result];
 		return result;
 	}
 	if( row >= nameCount ) return ( nil ) ;
@@ -437,7 +437,7 @@ static BOOL is10Version = NO;
 	/*Is this a dir*/
 	if(row < dirCount)
 	{
-		result = [BRAdornedMenuItemLayer adornedFolderMenuItemWithScene: scene] ;
+		result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:YES];
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watchedForPredicate:predicate];
 		favorite = [meta favoriteForPredicate:predicate];
@@ -445,7 +445,7 @@ static BOOL is10Version = NO;
 	/*Check for a file next*/
 	else if(row < dirCount + fileCount)
 	{
-		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: scene] ;
+		result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
@@ -456,10 +456,10 @@ static BOOL is10Version = NO;
 				int eps= [meta episodeNumber] ;
 				displayName=[meta episodeTitle] ;
 				if(eps>0)
-					[[result textItem] setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps]];
+					[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps] forMenu:result];
 				else
 					/*Fallback to size*/
-					[[result textItem] setRightJustifiedText:[meta sizeString]];
+					[SapphireFrontRowCompat setRightJustifiedText:[meta sizeString] forMenu:result];
 			}
 			if(fileCls==FILE_CLASS_MOVIE)
 			{
@@ -472,21 +472,21 @@ static BOOL is10Version = NO;
 	/*Utility*/
 	else
 	{
-		result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:scene];
+		result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 		gear = YES;
 	}
 	/*Add icons*/
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	if(gear) [result setLeftIcon:[theme gem:GEAR_GEM_KEY]];
-	else if(!watched) [result setLeftIcon:[theme gem:BLUE_GEM_KEY]];
-	else if(favorite)[result setLeftIcon:[theme gem:YELLOW_GEM_KEY]];
-	else if(fileCls==FILE_CLASS_AUDIO)[result setLeftIcon:[theme gem:GREEN_GEM_KEY]];
-	else [result setLeftIcon:[theme gem:RED_GEM_KEY]];
+	if(gear) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
+	else if(!watched) [SapphireFrontRowCompat setLeftIcon:[theme gem:BLUE_GEM_KEY] forMenu:result];
+	else if(favorite) [SapphireFrontRowCompat setLeftIcon:[theme gem:YELLOW_GEM_KEY] forMenu:result];
+	else if(fileCls==FILE_CLASS_AUDIO)[SapphireFrontRowCompat setLeftIcon:[theme gem:GREEN_GEM_KEY] forMenu:result];
+	else [SapphireFrontRowCompat setLeftIcon:[theme gem:RED_GEM_KEY] forMenu:result];
 			
 	// add text
 	if(displayName)name= displayName ;
 	name=[@"   " stringByAppendingString: name] ;
-	[[result textItem] setTitle: name] ;
+	[SapphireFrontRowCompat setTitle:name forMenu:result];
 	[items replaceObjectAtIndex:row withObject:result];
 				
 	return ( result ) ;

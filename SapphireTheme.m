@@ -102,7 +102,8 @@
 	
 	if([SapphireFrontRowCompat usingFrontRow])
 	{
-		id ret = [SapphireFrontRowCompat imageAtPath:[gemFiles objectForKey:type]];
+		NSString *bundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
+		id ret = [SapphireFrontRowCompat imageAtPath:[bundlePath stringByAppendingPathComponent:[gemFiles objectForKey:type]]];
 		if(ret != nil)
 			[gemDict setObject:ret forKey:type];
 		return ret;

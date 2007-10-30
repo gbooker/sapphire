@@ -126,7 +126,7 @@ static NSArray *predicates = nil;
 	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaDataCollection:metaCollection] ;
 	[self setListTitle:						BRLocalizedString(@"Main Menu", @"")];
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
-	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
+//	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
 	
 	return self;
@@ -154,7 +154,7 @@ static NSArray *predicates = nil;
 	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
 	[tvBrowser setListTitle:BRLocalizedString(@"TV Shows", nil)];
-	[tvBrowser setListIcon:predicateGem];
+//	[tvBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"   TV Shows", nil)];
 	[mutableMasterControllers addObject:tvBrowser];
 	[tvBrowser release];
@@ -184,12 +184,12 @@ static NSArray *predicates = nil;
 	}
 	[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
 		ALL_IMPORT_MENU_ITEM,
-//		SETTINGS_MENU_ITEM,
+		SETTINGS_MENU_ITEM,
 		RESET_MENU_ITEM,
 		nil]];
 	[mutableMasterControllers addObjectsFromArray:[NSArray arrayWithObjects:
 		allImporter,
-//		settings,
+		settings,
 		nil]];
 	masterNames = [[NSArray alloc] initWithArray:mutableMasterNames];
 	masterControllers = [[NSArray alloc] initWithArray:mutableMasterControllers];

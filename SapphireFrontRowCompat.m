@@ -18,7 +18,9 @@
 + (id)folderMenuItem;
 + (id)menuItem;
 - (void)setTitle:(NSString *)title;
+- (void)setRightJustifiedText:(NSString *)text;
 - (void)setLeftIconInfo:(BRTexture *)icon;
+- (void)setRightIconInfo:(BRTexture *)icon;
 @end
 
 @interface BRButtonControl (compat)
@@ -46,13 +48,8 @@ static BOOL usingFrontRow = NO;
 
 + (id)imageAtPath:(NSString *)path
 {
-/*	Class cls = NSClassFromString(@"BRImage");
-	id img = [cls imageWithPath:path];
-	Class layercls = NSClassFromString(@"BRImageLayer");
-	id layer = [[layercls alloc] init];
-	[layer setImage:img];
-	return [layer autorelease];*/
-	return nil;
+	Class cls = NSClassFromString(@"BRImage");
+	return [cls imageWithPath:path];
 }
 
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder
@@ -81,12 +78,32 @@ static BOOL usingFrontRow = NO;
 		[[menu textItem] setTitle:title];
 }
 
++ (void)setRightJustifiedText:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu
+{
+	if(usingFrontRow)
+		[menu setRightJustifiedText:title];
+	else
+		[[menu textItem] setRightJustifiedText:title];
+}
+
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu
 {
 	if(usingFrontRow)
-		;//[menu setLeftIconInfo:icon];
+		[menu setLeftIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+							   icon, @"BRMenuIconImageKey",
+							   nil]];
 	else
 		[menu setLeftIcon:icon];
+}
+
++ (void)setRightIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu
+{
+	if(usingFrontRow)
+		 [menu setRightIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+								 icon, @"BRMenuIconImageKey",
+								 nil]];
+	else
+		[menu setRightIcon:icon];
 }
 
 + (NSRect)frameOfController:(id)controller
@@ -103,7 +120,8 @@ static BOOL usingFrontRow = NO;
 		[control setText:text withAttributes:attributes];
 	else
 	{
-		[control setTextAttributes:attributes];
+		if(attributes != nil)
+			[control setTextAttributes:attributes];
 		[control setText:text];
 	}
 }

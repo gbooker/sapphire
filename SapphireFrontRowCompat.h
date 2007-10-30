@@ -16,7 +16,9 @@
 + (id)imageAtPath:(NSString *)path;
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder;
 + (void)setTitle:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;
++ (void)setRightJustifiedText:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu;
++ (void)setRightIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu;
 
 + (NSRect)frameOfController:(id)controller;
 + (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control;
