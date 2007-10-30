@@ -14,9 +14,13 @@
 - (id)initWithScene:(BRRenderScene *)scene
 {
 	if([[BRPostedAlertController class] respondsToSelector:@selector(initWithScene:)])
-		return [super initWithScene:scene];
+		self = [super initWithScene:scene];
+	else
+		self = [super init];
 	
-	return [super init];
+	[self setControls:[NSArray array]];
+	
+	return self;
 }
 
 - (BRRenderScene *)scene

@@ -66,18 +66,19 @@
 	[self resetUIElements];
 	
 	/*add controls*/
+	[self addControl: button];
 	[self addControl: title];
 	[self addControl: text];
 	[self addControl: fileProgress] ;
 	[self addControl: currentFile] ;
 	[SapphireFrontRowCompat addSublayer:bar toControl:self];
-	[self addControl: button];
 
     return ( self );
 }
 
 - (void) dealloc
 {
+	NSLog(@"dealloc");
 	[title release];
 	[button release];
 	[text release];

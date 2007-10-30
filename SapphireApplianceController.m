@@ -126,7 +126,7 @@ static NSArray *predicates = nil;
 	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaDataCollection:metaCollection] ;
 	[self setListTitle:						BRLocalizedString(@"Main Menu", @"")];
 	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
-//	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
+	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
 	
 	return self;

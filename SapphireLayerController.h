@@ -7,7 +7,7 @@
 //
 
 
-@interface SapphireLayerController : BRPostedAlertController {
+@interface SapphireLayerController : BRMenuController {
 
 }
 
