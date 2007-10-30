@@ -27,6 +27,28 @@
 }
 @end
 
+@interface SapphireMediaPreview (private)
+- (void)doPopulation;
+@end
+
+@interface BRMetadataPreviewController (compat)
+- (void)_updateMetadataLayer;
+@end
+
+@interface BRMetadataPreviewController (protectedAccess)
+- (BRMetadataLayer *)gimmieMetadataLayer;
+@end
+
+@implementation BRMetadataPreviewController (protectedAccess)
+- (BRMetadataLayer *)gimmieMetadataLayer
+{
+	Class myClass = [self class];
+	Ivar ret = class_getInstanceVariable(myClass,"_metadataLayer");
+	
+	return *(BRMetadataLayer * *)(((char *)self)+ret->ivar_offset);
+}
+@end
+
 @implementation SapphireMediaPreview
 
 /*List of extensions to look for cover art*/
@@ -43,6 +65,14 @@ static NSSet *coverArtExtentions = nil;
 		@"png",
 		@"gif",
 		nil];
+}
+
+- (id)initWithScene:(BRRenderScene *)scene
+{
+	if([[BRMetadataPreviewController class] respondsToSelector:@selector(initWithScene:)])
+		return [super initWithScene:scene];
+	else
+		return [super init];
 }
 
 - (void)dealloc
@@ -194,6 +224,7 @@ static NSSet *coverArtExtentions = nil;
 - (void) populateTVShowMetadataWith:(NSMutableDictionary*)allMeta
 {
 	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
+	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
 	if(value != nil)
 	{
 		/*If there is an air date, put it in the title*/
@@ -205,24 +236,24 @@ static NSSet *coverArtExtentions = nil;
 			[format setTimeZone:NSDateFormatterNoStyle];
 			value = [[format stringFromDate:airDate]stringByAppendingFormat:@" - %@", value];
 		}
-		[_metadataLayer setTitle:value];
+		[metaLayer setTitle:value];
 	}
 	
 	/*Get the rating*/
 	value = [allMeta objectForKey:META_RATING_KEY];
 	if(value != nil)
-		[_metadataLayer setRating:value];
+		[metaLayer setRating:value];
 	
 	/*Get the description*/
 	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
 	if(value != nil)
 		if([[SapphireSettings sharedSettings] displaySpoilers])
-			[_metadataLayer setSummary:value];
+			[metaLayer setSummary:value];
 	
 	/*Get the copyright*/
 	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
 	if(value != nil)
-		[_metadataLayer setCopyright:value];
+		[metaLayer setCopyright:value];
 	
 	/*Get the season and epsiodes*/
 	value = [allMeta objectForKey:META_EPISODE_AND_SEASON_KEY];
@@ -243,6 +274,7 @@ static NSSet *coverArtExtentions = nil;
 	/* Get the movie title */
 	NSString *value=nil;
 	value = [allMeta objectForKey:META_MOVIE_TITLE_KEY];
+	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
 	if(value != nil)
 	{
 		/*If there is a release date, put it in the title*/
@@ -256,14 +288,14 @@ static NSSet *coverArtExtentions = nil;
 			[allMeta removeObjectForKey:META_MOVIE_RELEASE_DATE_KEY];
 			[allMeta removeObjectForKey:META_MOVIE_TITLE_KEY];
 		}
-		[_metadataLayer setTitle:value];
+		[metaLayer setTitle:value];
 	}
 	/*Get the movie plot*/
 	value=nil;
 	value = [allMeta objectForKey:META_MOVIE_PLOT_KEY];
 	if(value != nil)
 		if([[SapphireSettings sharedSettings] displaySpoilers])
-			[_metadataLayer setSummary:value];
+			[metaLayer setSummary:value];
 	
 	NSArray *values=nil;
 	/* Get genres */
@@ -326,11 +358,32 @@ static NSSet *coverArtExtentions = nil;
  */
 - (void)_populateMetadata
 {
+	NSLog(@"Populate called");
 	[super _populateMetadata];
 	/*See if it loaded anything*/
-	if([[_metadataLayer gimmieMetadataObjs] count])
+	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count])
 		return;
 	
+	[self doPopulation];
+}
+
+/*!
+ * @brief populate metadata for media files
+ */
+- (void)_updateMetadataLayer
+{
+	NSLog(@"Populate called");
+	[super _updateMetadataLayer];
+	/*See if it loaded anything*/
+	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count])
+		return;
+	
+	[self doPopulation];
+}
+
+- (void)doPopulation
+{
+	NSLog(@"Populated");
 	/*Get our data then*/
 	NSArray *order = nil;
 	NSMutableDictionary *allMeta = [meta getDisplayedMetaDataInOrder:&order];
@@ -342,7 +395,7 @@ static NSSet *coverArtExtentions = nil;
 		fileClass=(FileClass)[(SapphireFileMetaData *) meta fileClass];
 		
 	
-	
+	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
 	/* TV Show Preview Handeling */
 	if(fileClass==FILE_CLASS_TV_SHOW)
 	{
@@ -358,7 +411,7 @@ static NSSet *coverArtExtentions = nil;
 	{
 		NSString *value = [allMeta objectForKey:META_TITLE_KEY];
 		if(value != nil)
-			[_metadataLayer setTitle:value];
+			[metaLayer setTitle:value];
 	}
 	
 	NSMutableArray *values = [NSMutableArray array];
@@ -378,7 +431,7 @@ static NSSet *coverArtExtentions = nil;
 	}
 	
 	/*And set it*/
-	[_metadataLayer setMetadata:values withLabels:keys];
+	[metaLayer setMetadata:values withLabels:keys];
 
 }
 

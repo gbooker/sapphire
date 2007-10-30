@@ -8,6 +8,7 @@
 
 #import "SapphireMarkMenu.h"
 #import "SapphireMetaData.h"
+#import "SapphireFrontRowCompat.h"
 
 @implementation SapphireMarkMenu
 
@@ -178,10 +179,10 @@ typedef enum {
 	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
-	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
+	result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	
 	// add text
-	[[result textItem] setTitle: name] ;
+	[SapphireFrontRowCompat setTitle:name forMenu:result];
 				
 	return ( result ) ;
 }

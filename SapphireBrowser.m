@@ -749,7 +749,11 @@ BOOL setupAudioOutput(int sampleRate)
 			[player setMedia:asset error:&error];
 			
 			/*and go*/
-			BRVideoPlayerController *controller = [[BRVideoPlayerController alloc] initWithScene:[self scene]];
+			BRVideoPlayerController *controller = [BRVideoPlayerController alloc];
+			if([controller respondsToSelector:@selector(initWithScene:)])
+				controller = [controller initWithScene:[self scene]];
+			else
+				controller = [controller init];
 			[controller setAllowsResume:YES];
 			[controller setVideoPlayer:player];
 			[[self stack] pushController:controller];
@@ -771,7 +775,11 @@ BOOL setupAudioOutput(int sampleRate)
 			[player setMedia:asset inTracklist:[NSArray arrayWithObject:asset] error:&error];
 			
 			/*and go*/
-			BRMusicNowPlayingController *controller = [[BRMusicNowPlayingController alloc] initWithScene:[self scene]];
+			BRMusicNowPlayingController *controller = [BRMusicNowPlayingController alloc];
+			if([controller respondsToSelector:@selector(initWithScene:)])
+				controller = [controller initWithScene:[self scene]];
+			else
+				controller = [controller init];
 			[controller setPlayer:player];
 			[player setElapsedPlaybackTime:[currentPlayFile resumeTime]];
 			[player play];
@@ -817,6 +825,11 @@ BOOL setupAudioOutput(int sampleRate)
 - (BOOL)getSubFilesCanceled
 {
 	return cancelScan;
+}
+
+- (id<BRMediaPreviewController>) previewControlForItem: (long) row
+{
+	return [self previewControllerForItem:row];
 }
 
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) row
