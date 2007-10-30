@@ -154,7 +154,7 @@ static NSArray *predicates = nil;
 	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
 	[tvBrowser setListTitle:BRLocalizedString(@"TV Shows", nil)];
-//	[tvBrowser setListIcon:predicateGem];
+	[tvBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"   TV Shows", nil)];
 	[mutableMasterControllers addObject:tvBrowser];
 	[tvBrowser release];
@@ -171,8 +171,9 @@ static NSArray *predicates = nil;
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
 	{
-/*		if(![metaCollection skipCollection:browserPoint])
-			[[metaCollection directoryForPath:browserPoint] loadMetaData];*/
+		NSLog(@"Processing %@", browserPoint);
+		if(![metaCollection skipCollection:browserPoint])
+			[[metaCollection directoryForPath:browserPoint] loadMetaData];
 		if([metaCollection hideCollection:browserPoint])
 			continue;
 		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];

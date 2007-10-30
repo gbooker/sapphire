@@ -437,7 +437,7 @@ static BOOL is10Version = NO;
 	/*Is this a dir*/
 	if(row < dirCount)
 	{
-		result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:YES];
+		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:YES];
 		SapphireDirectoryMetaData *meta = [metaData metaDataForDirectory:name];
 		watched = [meta watchedForPredicate:predicate];
 		favorite = [meta favoriteForPredicate:predicate];
@@ -445,7 +445,7 @@ static BOOL is10Version = NO;
 	/*Check for a file next*/
 	else if(row < dirCount + fileCount)
 	{
-		result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
 		SapphireFileMetaData *meta = [metaData metaDataForFile:name];
 		if(meta != nil)
 		{
@@ -472,7 +472,7 @@ static BOOL is10Version = NO;
 	/*Utility*/
 	else
 	{
-		result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
 		gear = YES;
 	}
 	/*Add icons*/

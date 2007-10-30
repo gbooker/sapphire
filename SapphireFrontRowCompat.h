@@ -19,6 +19,7 @@
 + (void)setRightJustifiedText:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu;
 + (void)setRightIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu;
++ (id)selectedSettingImageForScene:(BRRenderScene *)scene;
 
 + (NSRect)frameOfController:(id)controller;
 + (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control;

@@ -74,13 +74,13 @@
 	
 	BRAdornedMenuItemLayer * result = nil ;
 	NSString *name = [names objectAtIndex:row];
-	result = [BRAdornedMenuItemLayer adornedMenuItemWithScene: [self scene]] ;
+	result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	
 	if([self checkedForName:name])
-		[result setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]]];
+		[SapphireFrontRowCompat setLeftIcon:[SapphireFrontRowCompat selectedSettingImageForScene:[self scene]] forMenu:result];
 	
 	// add text
-	[[result textItem] setTitle: name] ;
+	[SapphireFrontRowCompat setTitle:name forMenu:result];
 				
 	return ( result ) ;
 }

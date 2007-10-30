@@ -23,6 +23,10 @@
 - (void)setRightIconInfo:(BRTexture *)icon;
 @end
 
+@interface BRThemeInfo (compat)
+- (id)selectedSettingImage;
+@end
+
 @interface BRButtonControl (compat)
 - (id)initWithMasterLayerSize:(NSSize)fp8;
 @end
@@ -104,6 +108,14 @@ static BOOL usingFrontRow = NO;
 								 nil]];
 	else
 		[menu setRightIcon:icon];
+}
+
++ (id)selectedSettingImageForScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRThemeInfo sharedTheme] selectedSettingImage];
+	else
+		return [[BRThemeInfo sharedTheme] selectedSettingImageForScene:scene];
 }
 
 + (NSRect)frameOfController:(id)controller

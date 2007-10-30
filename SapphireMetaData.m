@@ -1240,13 +1240,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)loadMetaData
 {
-	NSEnumerator *dirEnum = [metaDirs keyEnumerator];
+	NSArray *keys = [NSArray arrayWithArray:[metaDirs allKeys]];
+	NSEnumerator *dirEnum = [keys objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
 	{
 		[[self metaDataForDirectory:dir] loadMetaData];
 	}
-	NSEnumerator *fileEnum = [metaFiles keyEnumerator];
+	keys = [NSArray arrayWithArray:[metaFiles allKeys]];
+	NSEnumerator *fileEnum = [keys objectEnumerator];
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 	{

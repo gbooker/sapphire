@@ -376,7 +376,6 @@ static SapphireSettings *sharedInstance = nil;
     // return that object, it will be used to display the list item.
     return ( nil );
 */
-	NSLog(@"displaying row %d", row);
 	if( row >= [names count] ) return ( nil ) ;
 	
 	BRAdornedMenuItemLayer * result = nil ;
@@ -385,7 +384,7 @@ static SapphireSettings *sharedInstance = nil;
 
 	if( row > 4 && [self boolForKey:[keys objectAtIndex:row]])
 	{
-		[SapphireFrontRowCompat setLeftIcon:[[BRThemeInfo sharedTheme] selectedSettingImageForScene:[self scene]] forMenu:result];
+		[SapphireFrontRowCompat setLeftIcon:[SapphireFrontRowCompat selectedSettingImageForScene:[self scene]] forMenu:result];
 	}
 	[SapphireFrontRowCompat setRightIcon:[gems objectAtIndex:row] forMenu:result];
 
