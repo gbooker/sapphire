@@ -51,9 +51,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	
 	/* Setup posterMarch controls */
 	posterMarch = [SapphireFrontRowCompat newMarchingIconLayerWithScene:scene];
-    [posterMarch setIconSource: self];
-	
-	[[self list] setDatasource:self];
 	
 	return self;
 }
@@ -148,6 +145,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	posters = [posterList retain];
 	[self loadPosters];
+    [posterMarch setIconSource: self];
+	[[self list] setDatasource:self];
 }
 
 /*!
@@ -159,7 +158,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	posterLayers = [posters mutableCopy];
 	for(i=0; i<count; i++)
 		[self loadPoster:i];
-	[posterMarch _updateIcons] ;
+	[posterMarch reload] ;
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
@@ -239,7 +238,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 - (long) iconCount
 {
-		return [posterLayers count];
+	return [posterLayers count];
+}
+
+- (NSDictionary *) iconInfoAtIndex: (long) index
+{
+	return [NSDictionary dictionaryWithObject:[posterLayers objectAtIndex:index] forKey:@"icon"];
 }
 
 - (BRRenderLayer *) iconAtIndex: (long) index
@@ -313,6 +317,15 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 - (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath
 {
+	if([SapphireFrontRowCompat usingFrontRow])
+	{
+		/*The marching icons has changed, dramatically, so we do the changes here*/
+		id ret = [SapphireFrontRowCompat imageAtPath:thePosterPath];
+		if(ret != nil)
+			return ret;
+		else
+			return defaultImage;
+	}
     NSURL * posterURL = [NSURL fileURLWithPath: thePosterPath];
 	
     if (posterURL==nil)
@@ -367,21 +380,24 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 - (void) showIconMarch
 {
-    NSRect frame = [[self masterLayer] frame];
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
     frame.size.width *= 0.50f;
-	frame.size.height *= 1.7f;
-	frame.origin.y=-200.0f;
-    [posterMarch setFrame: frame];	
-    [[[self scene] root] insertSublayer: posterMarch below: [self masterLayer]];
+	if(![SapphireFrontRowCompat usingFrontRow])
+	{
+		frame.size.height *= 1.7f;
+		frame.origin.y=-200.0f;
+	}
+    [posterMarch setFrame: frame];
+	[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
 }
 
 - (void) selectionChanged: (NSNotification *) note
 {
 	/* ATV version 1.1 */
 	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
-		[posterMarch setSelection: [(BRListControl *)[note object] renderSelection]];
+		[posterMarch setSelection:[(BRListControl *)[note object] renderSelection]];
 	/* ATV version 1.0 */
 	else
-		[posterMarch setSelection: [(BRListControl *)[note object] selection]];
+		[posterMarch setSelection:[(BRListControl *)[note object] selection]];
 }
 @end
