@@ -181,6 +181,14 @@ static BOOL usingFrontRow = NO;
 		return [[BRProgressBarWidget alloc] initWithScene:scene];
 }
 
++ (BRMarchingIconLayer *)newMarchingIconLayerWithScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRMarchingIconLayer alloc] init];
+	else
+		return [[BRMarchingIconLayer alloc] initWithScene:scene];
+}
+
 + (void)renderScene:(BRRenderScene *)scene
 {
 	if(!usingFrontRow)

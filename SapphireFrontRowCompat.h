@@ -29,6 +29,7 @@
 + (BRButtonControl *)newButtonControlWithScene:(BRRenderScene *)scene masterLayerSize:(NSSize)size;
 + (BRTextControl *)newTextControlWithScene:(BRRenderScene *)scene;
 + (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene;
++ (BRMarchingIconLayer *)newMarchingIconLayerWithScene:(BRRenderScene *)scene;
 
 + (void)renderScene:(BRRenderScene *)scene;
 @end

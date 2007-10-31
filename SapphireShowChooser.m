@@ -27,10 +27,9 @@
 	selection = -1;
 	
 	/* Set a control to display the fileName */
-	fileName = [[BRTextControl alloc] initWithScene: scene];
-	[fileName setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[fileName setText:@"File:"];
-	NSRect 	frame = [[self masterLayer] frame];
+	fileName = [SapphireFrontRowCompat newTextControlWithScene:scene];
+	[SapphireFrontRowCompat setText:@"File:" withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileName];
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 //	frame.size.height = frame.size.height / 16.0f;
 //	frame.size.width = frame.size.width * 2.0f / 3.0f;
 	frame.origin.y = frame.size.height / 4.0f;
@@ -91,7 +90,7 @@
  */
 - (void)setFileName:(NSString*)choosingForFileName
 {
-	[fileName setText:choosingForFileName];	
+	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileName];
 }
 
 /*!
@@ -121,19 +120,14 @@
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
-	BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
-
+	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	
 	if(row == 0)
-	{
 		/*Put in the special "this is not a show"*/
-		[[result textItem] setTitle:BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser")];
-	}
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser") forMenu:result];
 	else
-	{
 		/*Put in the show*/
-		[[result textItem] setTitle:[[shows objectAtIndex:row-1] objectForKey:@"name"]];
-	}
+		[SapphireFrontRowCompat setTitle:[[shows objectAtIndex:row-1] objectForKey:@"name"] forMenu:result];
 	
 	return result;
 }

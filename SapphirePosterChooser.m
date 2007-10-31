@@ -9,6 +9,8 @@
 #import "SapphirePosterChooser.h"
 #import "SapphireFrontRowCompat.h"
 
+NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned int height);
+
 @interface BRListControl (definedin1_1)
 - (double)renderSelection;
 @end
@@ -36,10 +38,9 @@
                                                object: [self list]];
 	
 	/* Set a control to display the fileName */
-	fileInfoText = [[BRTextControl alloc] initWithScene: scene];
-	[fileInfoText setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[fileInfoText setText:@"No File"];
-	NSRect 	frame = [[self masterLayer] frame];
+	fileInfoText = [SapphireFrontRowCompat newTextControlWithScene:scene];
+	[SapphireFrontRowCompat setText:@"No File" withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;
 	defaultImage = [[self getPosterLayer:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/PH.png"]] retain];
@@ -49,7 +50,7 @@
 	[self addControl: fileInfoText];
 	
 	/* Setup posterMarch controls */
-	posterMarch = [[BRMarchingIconLayer alloc] initWithScene: scene];
+	posterMarch = [SapphireFrontRowCompat newMarchingIconLayerWithScene:scene];
     [posterMarch setIconSource: self];
 	
 	[[self list] setDatasource:self];
@@ -182,13 +183,10 @@
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	fileName=[choosingForFileName retain];
-	[fileInfoText setTextAttributes: [[BRThemeInfo sharedTheme] paragraphTextAttributes]];
 	if(movieTitle)
-	{
-		[fileInfoText setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName]];
-	}
+		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 	else
-		[fileInfoText setText:fileName];	
+		[SapphireFrontRowCompat setText:fileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 }
 
 /*!
@@ -209,13 +207,10 @@
 - (void)setMovieTitle:(NSString *)theMovieTitle
 {
 	movieTitle = [theMovieTitle retain];
-	[fileInfoText setTextAttributes: [[BRThemeInfo sharedTheme] paragraphTextAttributes]];
 	if(fileName)
-	{
-		[fileInfoText setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName]];
-	}
+		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 	else
-		[fileInfoText setText:movieTitle];		
+		[SapphireFrontRowCompat setText:movieTitle withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 }
 
 /*!
@@ -267,11 +262,11 @@
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
-	BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
+	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	//	if(row==0)
-	//		[[result textItem] setTitle:BRLocalizedString(@"< Refresh Posters >", @"Reload poster images")];
+	//		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"< Refresh Posters >", @"Reload poster images") forMenu:result];
 	//	else
-	[[result textItem] setTitle:[NSString stringWithFormat:@"Version %2d",row+1]];
+	[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"Version %2d",row+1] forMenu:result];
 	return result;
 }
 

@@ -26,10 +26,9 @@
 	selection = -1;
 	
 	/* Set a control to display the fileName */
-	fileNameText = [[BRTextControl alloc] initWithScene: scene];
-	[fileNameText setTextAttributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[fileNameText setText:@"File:"];
-	NSRect 	frame = [[self masterLayer] frame];
+	fileNameText = [SapphireFrontRowCompat newTextControlWithScene:scene];
+	[SapphireFrontRowCompat setText:@"File:" withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileNameText];
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	//	frame.size.height = frame.size.height / 16.0f;
 	//	frame.size.width = frame.size.width * 2.0f / 3.0f;
 	frame.origin.y = frame.size.height / 1.25f;
@@ -96,8 +95,7 @@
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	fileName=[choosingForFileName retain] ;
-	[fileNameText setTextAttributes: [[BRThemeInfo sharedTheme] paragraphTextAttributes]];
-	[fileNameText setText:choosingForFileName];	
+	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileNameText];
 }
 
 /*!
@@ -127,17 +125,17 @@
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
-	BRAdornedMenuItemLayer *result = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
+	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	
 	if(row == 0)/*Put in the special "this is not a movie"*/
-		[[result textItem] setTitle:BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser")];
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser") forMenu:result];
 	else if(row==1)/*Put in the special "this is something else"*/
-			[[result textItem] setTitle:BRLocalizedString(@"<This is something else>", @"Mark a file that something else in the movie chooser")];
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is something else>", @"Mark a file that something else in the movie chooser") forMenu:result];
 	else if(row==2)/*Put in the special "this is a tv show"*/
-		[[result textItem] setTitle:BRLocalizedString(@"<This is a TV Show>", @"Mark a file that is tv show in the movie chooser")];
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is a TV Show>", @"Mark a file that is tv show in the movie chooser") forMenu:result];
 	else
 		/*Put in the movie results*/
-		[[result textItem] setTitle:[[movies objectAtIndex:row-3] objectForKey:@"name"]];
+		[SapphireFrontRowCompat setTitle:[[movies objectAtIndex:row-3] objectForKey:@"name"] forMenu:result];
 	
 	return result;
 }
