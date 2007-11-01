@@ -69,7 +69,7 @@ static NSSet *coverArtExtentions = nil;
 
 - (id)initWithScene:(BRRenderScene *)scene
 {
-	if([[BRMetadataPreviewController class] respondsToSelector:@selector(initWithScene:)])
+	if([[BRMetadataPreviewController class] instancesRespondToSelector:@selector(initWithScene:)])
 		return [super initWithScene:scene];
 	else
 		return [super init];
@@ -358,7 +358,6 @@ static NSSet *coverArtExtentions = nil;
  */
 - (void)_populateMetadata
 {
-	NSLog(@"Populate called");
 	[super _populateMetadata];
 	/*See if it loaded anything*/
 	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count])
@@ -372,7 +371,6 @@ static NSSet *coverArtExtentions = nil;
  */
 - (void)_updateMetadataLayer
 {
-	NSLog(@"Populate called");
 	[super _updateMetadataLayer];
 	/*See if it loaded anything*/
 	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count])
@@ -383,7 +381,6 @@ static NSSet *coverArtExtentions = nil;
 
 - (void)doPopulation
 {
-	NSLog(@"Populated");
 	/*Get our data then*/
 	NSArray *order = nil;
 	NSMutableDictionary *allMeta = [meta getDisplayedMetaDataInOrder:&order];

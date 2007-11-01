@@ -32,8 +32,8 @@
 @end
 
 @interface BRTextControl (compat)
-- (void)setText:(id)fp8 withAttributes:(id)fp12;
-- (NSRect)controllerFrame;  //technically wrong.
+- (void)setText:(NSString *)text withAttributes:(NSDictionary *)attr;
+- (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
 @end
 
 @implementation SapphireFrontRowCompat

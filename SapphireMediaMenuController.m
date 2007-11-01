@@ -13,7 +13,7 @@
 
 - (id)initWithScene:(BRRenderScene *)scene
 {
-	if([[BRMediaMenuController class] respondsToSelector:@selector(initWithScene:)])
+	if([[BRMediaMenuController class] instancesRespondToSelector:@selector(initWithScene:)])
 		return [super initWithScene:scene];
 	
 	return [super init];
@@ -21,7 +21,7 @@
 
 - (BRRenderScene *)scene
 {
-	if([[BRMediaMenuController class] respondsToSelector:@selector(scene)])
+	if([[BRMediaMenuController class] instancesRespondToSelector:@selector(scene)])
 		return [super scene];
 	
 	return [BRRenderScene sharedInstance];
