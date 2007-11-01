@@ -391,13 +391,31 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
 }
 
+- (void)setSelectionForPoster:(int)sel
+{
+	NSMethodSignature *signature = [posterMarch methodSignatureForSelector:@selector(setSelection:)];
+	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
+	[selInv setSelector:@selector(setSelection:)];
+	if(strcmp([signature getArgumentTypeAtIndex:2], "l"))
+	{
+		double dvalue = sel;
+		[selInv setArgument:&dvalue atIndex:2];
+	}
+	else
+	{
+		long lvalue = sel;
+		[selInv setArgument:&lvalue atIndex:2];
+	}
+	[selInv invokeWithTarget:posterMarch];
+}
+
 - (void) selectionChanged: (NSNotification *) note
 {
 	/* ATV version 1.1 */
 	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
-		[posterMarch setSelection:[(BRListControl *)[note object] renderSelection]];
+		[self setSelectionForPoster:[(BRListControl *)[note object] renderSelection]];
 	/* ATV version 1.0 */
 	else
-		[posterMarch setSelection:[(BRListControl *)[note object] selection]];
+		[self setSelectionForPoster:[(BRListControl *)[note object] selection]];
 }
 @end
