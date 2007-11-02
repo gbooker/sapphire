@@ -62,7 +62,9 @@
 
 - (void)childDisplayChanged
 {
-	[self setReloadTimer];
+	/*The way the timings work out, if the timer exists already, it is more efficient to leave it set rather than set a new one*/
+	if(reloadTimer == nil)
+		[self setReloadTimer];
 }
 
 - (BOOL)isDisplayEmpty
