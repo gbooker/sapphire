@@ -257,12 +257,12 @@ static BOOL is10Version = NO;
 	int indexOffset = 0;
 	if(dirCount && fileCount)
 	{
-		[list addDividerAtIndex:dirCount withLabel:@""];
+		[SapphireFrontRowCompat addDividerAtIndex:dirCount toList:list];
 		if(!is10Version)
 			indexOffset++;
 	}
 	if(predicate != NULL && [[SapphireSettings sharedSettings] fastSwitching])
-		[list addDividerAtIndex:dirCount + fileCount + indexOffset withLabel:@""];
+		[SapphireFrontRowCompat addDividerAtIndex:dirCount + fileCount + indexOffset toList:list];
 	/*Draw*/
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }

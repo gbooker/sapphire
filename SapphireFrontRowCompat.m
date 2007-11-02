@@ -141,6 +141,14 @@ static BOOL usingFrontRow = NO;
 	}
 }
 
++ (void)addDividerAtIndex:(int)index toList:(BRListControl *)list
+{
+	if(usingFrontRow)
+		[list addDividerAtIndex:index withLabel:@""];
+	else
+		[list addDividerAtIndex:index];
+}
+
 + (void)addSublayer:(id)sub toControl:(id)controller
 {
 	if(usingFrontRow)

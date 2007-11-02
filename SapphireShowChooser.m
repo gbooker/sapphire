@@ -59,7 +59,7 @@
 {
 	shows = [showList retain];
 	[[self list] reload];
-	[[self list] addDividerAtIndex:1 withLabel:@""];
+	[SapphireFrontRowCompat addDividerAtIndex:1 toList:[self list]];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 

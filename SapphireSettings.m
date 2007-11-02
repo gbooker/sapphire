@@ -138,7 +138,7 @@ static SapphireSettings *sharedInstance = nil;
 	/*display*/
 	BRListControl *list = [self list];
 	[list setDatasource:self];
-	[list addDividerAtIndex:6 withLabel:@""];
+	[SapphireFrontRowCompat addDividerAtIndex:6 toList:list];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 

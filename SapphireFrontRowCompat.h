@@ -23,6 +23,8 @@
 
 + (NSRect)frameOfController:(id)controller;
 + (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control;
++ (void)addDividerAtIndex:(int)index toList:(BRListControl *)list;
+
 + (void)addSublayer:(id)sub toControl:(id)controller;
 
 + (BRHeaderControl *)newHeaderControlWithScene:(BRRenderScene *)scene;

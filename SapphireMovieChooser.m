@@ -83,7 +83,7 @@
 {
 	movies = [movieList retain];
 	[[self list] reload];
-	[[self list] addDividerAtIndex:3 withLabel:nil];
+	[SapphireFrontRowCompat addDividerAtIndex:3 toList:[self list]];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
