@@ -7,9 +7,15 @@
 //
 
 #import "SapphireMedia.h"
-
+#import "SapphireFrontRowCompat.h"
 
 @implementation SapphireMedia
+
+- (void)dealloc
+{
+	[imagePath release];
+	[super dealloc];
+}
 
 /*!
  * @brief Set the resume time for the media
@@ -33,6 +39,27 @@
 		return [super bookmarkTimeInSeconds];
 	/*return resume time*/
 	return resumeTime;
+}
+
+- (void)setImagePath:(NSString *)path
+{
+	[imagePath release];
+	imagePath = [path retain];
+}
+
+- (id)mediaType
+{
+	return [BRMediaType TVShow];
+}
+
+- (BOOL)hasCoverArt
+{
+	return YES;
+}
+
+- (id)coverArt
+{
+	return [SapphireFrontRowCompat imageAtPath:imagePath];
 }
 
 @end

@@ -11,6 +11,7 @@
 #import "SapphireMedia.h"
 #import "SapphireSettings.h"
 #import <objc/objc-class.h>
+#import "SapphireFrontRowCompat.h"
 
 /*These interfaces are to access variables not available*/
 @interface BRMetadataLayer (protectedAccess)
@@ -29,6 +30,7 @@
 
 @interface SapphireMediaPreview (private)
 - (void)doPopulation;
+- (NSString *)coverArtForPath;
 @end
 
 @interface BRMetadataPreviewController (compat)
@@ -99,6 +101,7 @@ static NSSet *coverArtExtentions = nil;
 	/*Now that we know the file, set the asset*/
 	NSURL *url = [NSURL fileURLWithPath:[meta path]];
 	SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
+	[asset setImagePath:[self coverArtForPath]];
 	[self setAsset:asset];
 }
 
@@ -373,7 +376,7 @@ static NSSet *coverArtExtentions = nil;
 {
 	[super _updateMetadataLayer];
 	/*See if it loaded anything*/
-	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count])
+	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count] && ![SapphireFrontRowCompat usingFrontRow])
 		return;
 	
 	[self doPopulation];

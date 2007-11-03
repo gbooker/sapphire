@@ -8,9 +8,11 @@
 
 @interface SapphireMedia : BRSimpleMediaAsset {
 	unsigned int		resumeTime;
+	NSString			*imagePath;
 }
 
 - (void)setResumeTime:(unsigned int)time;
 - (unsigned int)bookmarkTimeInSeconds;
+- (void)setImagePath:(NSString *)path;
 
 @end

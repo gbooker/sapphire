@@ -78,7 +78,6 @@
 
 - (void) dealloc
 {
-	NSLog(@"dealloc");
 	[title release];
 	[button release];
 	[text release];
