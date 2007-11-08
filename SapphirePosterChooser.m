@@ -391,7 +391,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
 }
 
-- (void)setSelectionForPoster:(int)sel
+- (void)setSelectionForPoster:(double)sel
 {
 	NSMethodSignature *signature = [posterMarch methodSignatureForSelector:@selector(setSelection:)];
 	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
