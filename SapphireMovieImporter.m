@@ -562,8 +562,6 @@
 	if(!selectedPoster)
 	{
 		/* Posters will be downloaded, let the user choose one */
-		[dataMenu pause];
-		posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 		[SapphireFrontRowCompat renderScene:[dataMenu scene]];
 		NSArray *posters=[dict objectForKey:IMP_POSTERS_KEY];
 		if(![posters count])
@@ -586,13 +584,18 @@
 			}
 			else posters=nil ;
 		}
-		[posterChooser setPosters:posters] ;
-		[posterChooser setFileName:fileName];
-		[posterChooser setMovieTitle:@"Movie Title"];
-		[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
-		[[dataMenu stack] pushController:posterChooser];
-		[posterChooser release];
-		return NO;
+		if(posters != nil)
+		{
+			[dataMenu pause];
+			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
+			[posterChooser setPosters:posters] ;
+			[posterChooser setFileName:fileName];
+			[posterChooser setMovieTitle:@"Movie Title"];
+			[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
+			[[dataMenu stack] pushController:posterChooser];
+			[posterChooser release];
+			return NO;
+		}
 	}
 	if(selectedPoster && [dict objectForKey:IMP_POSTERS_KEY])
 	{
