@@ -49,7 +49,10 @@
 
 - (id)mediaType
 {
-	return [BRMediaType TVShow];
+	if([SapphireFrontRowCompat usingFrontRow])
+		return [BRMediaType TVShow];
+	else
+		return [super mediaType];
 }
 
 - (BOOL)hasCoverArt
