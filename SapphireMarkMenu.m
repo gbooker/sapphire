@@ -16,6 +16,7 @@ typedef enum {
 	COMMAND_TOGGLE_WATCHED,
 	COMMAND_TOGGLE_FAVORITE,
 	COMMAND_MARK_TO_REFETCH_TV,
+	COMMAND_MARK_TO_REFETCH_MOVIE,
 	COMMAND_MARK_AS_MOVIE,
 } MarkCommand;
 
@@ -44,6 +45,7 @@ typedef enum {
 			BRLocalizedString(@"Mark All as Favorite", @"Mark whole directory as favorite"),
 			BRLocalizedString(@"Mark All as Not Favorite", @"Mark whole directory as not favorite"),
 			BRLocalizedString(@"Mark All to Refetch TV Data", @"Mark whole directory to re-fetch its tv data"),
+			BRLocalizedString(@"Mark All to Refetch Movie Data", @"Mark whole directory to re-fetch its movie data"),
 			BRLocalizedString(@"Mark All as a Movie", @"Mark whole directory as a Movie file"),
 			nil];
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
@@ -67,6 +69,11 @@ typedef enum {
 		{
 			[names addObject:BRLocalizedString(@"Mark to Refetch TV Data", @"Mark file to re-fetch its tv data")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_TV]];
+		}
+		if([fileMeta importedTimeFromSource:META_IMDB_IMPORT_KEY])
+		{
+			[names addObject:BRLocalizedString(@"Mark to Refetch Movie Data", @"Mark file to re-fetch its movie data")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_MOVIE]];
 		}
 		if([fileMeta fileClass] != FILE_CLASS_MOVIE)
 		{
@@ -238,6 +245,8 @@ typedef enum {
 				break;
 			case 4:
 				[dirMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:predicate];
+			case 5:
+				[dirMeta setToImportFromSource:META_IMDB_IMPORT_KEY forPredicate:predicate];
 				break;
 		}
 	}
@@ -254,6 +263,9 @@ typedef enum {
 				break;
 			case COMMAND_MARK_TO_REFETCH_TV:
 				[fileMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY];
+				break;
+			case COMMAND_MARK_TO_REFETCH_MOVIE:
+				[fileMeta setToImportFromSource:META_IMDB_IMPORT_KEY];
 				break;
 			case COMMAND_MARK_AS_MOVIE:
 				[fileMeta setFileClass:FILE_CLASS_MOVIE];

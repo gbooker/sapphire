@@ -213,7 +213,7 @@
  */
 - (void)scanningDir:(NSString *)dir
 {
-	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Scanning Directory: %@", "Current scann import process format, directory"),dir]];
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Scanning Directory: %@", "Current scan import process format, directory"),dir]];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 

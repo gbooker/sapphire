@@ -46,6 +46,7 @@
 - (id)initWithRequest:(NSArray*)reqList withDestination:(NSString *)dest delegate:(id)aDelegate;
 - (void) downloadDidFinish: (NSURLDownload *) download;
 - (void)downloadMoviePosters ;
+-(void)downloadSingleMoviePoster;
 @end
 
 @interface NSObject (MovieDataDownloadDelegateDelegate)
@@ -98,6 +99,21 @@
 		[delegates addObject:currentDownload];
 		[currentDownload release];
 	}
+}
+
+/*!
+ * @brief Fire the delegate to start downloading a single poster
+ *
+ */
+-(void)downloadSingleMoviePoster
+{
+	NSURL *posterURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",[requestList objectAtIndex:0]]];
+	NSString *fullDestination = destination;
+	NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
+	NSURLDownload *currentDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self] ;
+	[currentDownload setDestination:fullDestination allowOverwrite:YES];
+	[delegates addObject:currentDownload];
+	[currentDownload release];
 }
 
 - (void) downloadDidFinish: (NSURLDownload *) download
@@ -590,7 +606,7 @@
 			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 			[posterChooser setPosters:posters] ;
 			[posterChooser setFileName:fileName];
-			[posterChooser setMovieTitle:@"Movie Title"];
+//			[posterChooser setMovieTitle:@"Movie Title"];
 			[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 			[[dataMenu stack] pushController:posterChooser];
 			[posterChooser release];
@@ -607,21 +623,33 @@
 		[fileAgent createDirectoryAtPath:coverart attributes:nil];
 		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
 		coverart=[coverart stringByAppendingPathExtension:[poster pathExtension]];
-		/* the fileAgent will do nothing if the file has already been moved or removed */		
-		[fileAgent movePath:poster toPath:coverart handler:self] ;
-		/* Lets clean up the Poster_Buffer */
-		NSArray *oldPosters = [dict objectForKey:IMP_POSTERS_KEY];
-		if([oldPosters count])
+		if([fileAgent fileExistsAtPath:poster])/* See if we need to clean up */
 		{
-			NSEnumerator *resultEnum = [oldPosters objectEnumerator];
-			NSString *result = nil;
-			while((result = [resultEnum nextObject]) != nil)
+			if([fileAgent fileExistsAtPath:coverart])/* Remove old poster */
+				[fileAgent removeFileAtPath:coverart handler:self];
+			[fileAgent movePath:poster toPath:coverart handler:self] ;
+			/* Lets clean up the Poster_Buffer */
+			NSArray *oldPosters = [dict objectForKey:IMP_POSTERS_KEY];
+			if([oldPosters count])
 			{
-				BOOL isDir=NO ;
-				NSString *removeFile=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
-				[fileAgent fileExistsAtPath:removeFile isDirectory:&isDir];
-				if(!isDir)[fileAgent removeFileAtPath:removeFile handler:self] ;
+				NSEnumerator *resultEnum = [oldPosters objectEnumerator];
+				NSString *result = nil;
+				while((result = [resultEnum nextObject]) != nil)
+				{
+					BOOL isDir=NO ;
+					NSString *removeFile=[NSString stringWithFormat:@"%@/%@",[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],[result lastPathComponent]];
+					[fileAgent fileExistsAtPath:removeFile isDirectory:&isDir];
+					if(!isDir)[fileAgent removeFileAtPath:removeFile handler:self] ;
+				}
 			}
+		}
+		else if(![fileAgent fileExistsAtPath:coverart])/* We have seen this file before, but in a different location */
+		{
+			NSArray * posterList=[NSArray arrayWithObject:selectedPoster];
+			SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
+			[myDelegate downloadSingleMoviePoster] ;
+			[myDelegate autorelease];
+			
 		}
 //		return NO;
 	}
