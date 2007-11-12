@@ -30,6 +30,7 @@
 #define IMDB_RESTULT_CAST_NAMES_XPATH	@"//div[@class='info']/table/tr/td/a"
 /* IMP XPATHS */
 #define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
+#define IMP_LINK_REDIRECT_XPATH				@"//head/meta/@content/string()"
 
 
 
@@ -222,6 +223,21 @@
 	
 	/*Get the results list*/
 	NSArray *results = [root objectsForXQuery:IMP_POSTER_CANDIDATES_XPATH error:&error];
+
+	if([results count]<1)
+	{
+		/* IMDB had the wrong release year link, see if IMP Tried to redirect*/
+		NSString * newPosterPageLink=[[root objectsForXQuery:IMP_LINK_REDIRECT_XPATH error:&error]objectAtIndex:0] ;
+		NSScanner *trimmer=[NSScanner scannerWithString:newPosterPageLink];
+		[trimmer scanUpToString:@"URL=.." intoString:&yearPathComponent];
+		newPosterPageLink=[newPosterPageLink substringFromIndex:[yearPathComponent length]+6];
+		yearPathComponent=[newPosterPageLink stringByDeletingLastPathComponent];
+		url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",newPosterPageLink]] ;
+		document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
+		root = [document rootElement];
+		results = [root objectsForXQuery:IMP_POSTER_CANDIDATES_XPATH error:&error];
+	}
+
 	if([results count])
 	{
 		/*Get each result*/
@@ -643,13 +659,14 @@
 				}
 			}
 		}
-		else if(![fileAgent fileExistsAtPath:coverart])/* We have seen this file before, but in a different location */
+		else if(![fileAgent fileExistsAtPath:coverart])
 		{
+			/* We have seen this file before, but in a different location */
+			/* - OR - the coverart has been deleted*/
 			NSArray * posterList=[NSArray arrayWithObject:selectedPoster];
 			SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
 			[myDelegate downloadSingleMoviePoster] ;
 			[myDelegate autorelease];
-			
 		}
 //		return NO;
 	}
