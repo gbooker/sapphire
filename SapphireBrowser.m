@@ -679,6 +679,7 @@ BOOL setupAudioOutput(int sampleRate)
 			NSMutableArray *reqComp = [NSMutableArray array];
 			NSMutableURLRequest *request=nil;
 			
+			
 			if([currentPlayFile fileClass]==FILE_CLASS_TV_SHOW)
 			{
 				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
@@ -696,7 +697,7 @@ BOOL setupAudioOutput(int sampleRate)
 				if(showID != 0)
 					[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
 				if(path != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [path lastPathComponent]]];
+					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [[path lastPathComponent]lowercaseString]]];
 			}
 			else if([currentPlayFile fileClass]==FILE_CLASS_MOVIE)
 			{
@@ -709,7 +710,7 @@ BOOL setupAudioOutput(int sampleRate)
 				if(releaseDate != 0)
 					[reqComp addObject:[NSString stringWithFormat:@"year=%@", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
 				if(path != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [path lastPathComponent]]];
+					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [[path lastPathComponent]lowercaseString]]];
 			}
 			
 			int count = [reqComp count];
