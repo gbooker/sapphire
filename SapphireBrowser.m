@@ -675,25 +675,42 @@ BOOL setupAudioOutput(int sampleRate)
 		SapphireSettings *settings = [SapphireSettings sharedSettings];
 		if(![settings disableAnonymousReporting])
 		{
-			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
-			int ep = [currentPlayFile episodeNumber];
-			int season = [currentPlayFile seasonNumber];
-			NSString *showID = [currentPlayFile showID];
-			NSString *showName= [currentPlayFile showName];
 			NSMutableString *reqData = [NSMutableString string];
-			
 			NSMutableArray *reqComp = [NSMutableArray array];
+			NSMutableURLRequest *request=nil;
 			
-			if(season != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
-			if(ep != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
-			if(showName != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
-			if(showID != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
-			if(path != 0)
-				[reqComp addObject:[NSString stringWithFormat:@"path=%@", path]];
+			if([currentPlayFile fileClass]==FILE_CLASS_TV_SHOW)
+			{
+				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
+				int ep = [currentPlayFile episodeNumber];
+				int season = [currentPlayFile seasonNumber];
+				NSString *showID = [currentPlayFile showID];
+				NSString *showName= [currentPlayFile showName];
+				
+				if(season != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
+				if(ep != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
+				if(showName != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
+				if(showID != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
+				if(path != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [path lastPathComponent]]];
+			}
+			else if([currentPlayFile fileClass]==FILE_CLASS_MOVIE)
+			{
+				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/movie.php"]];
+				NSString *movieTitle=[currentPlayFile movieTitle];
+				NSDate * releaseDate=[currentPlayFile movieReleaseDate];
+			
+ 				if(movieTitle != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"title=%d", movieTitle]];
+				if(releaseDate != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"year=%d", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
+				if(path != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [path lastPathComponent]]];
+			}
 			
 			int count = [reqComp count];
 			int i;

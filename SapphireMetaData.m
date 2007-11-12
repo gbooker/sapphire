@@ -1890,6 +1890,17 @@ static NSArray *displayedMetaDataOrder = nil;
 }
 
 /*!
+ * @brief Returns the title of the file
+ *
+ * @return The title of the file
+ */
+- (NSDate *)movieReleaseDate
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_MOVIE_RELEASE_DATE_KEY] ;
+}
+
+/*!
  * @brief Returns the show ID of the file
  *
  * @return The show ID of the file
