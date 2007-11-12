@@ -103,11 +103,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	//Shrink the list frame to make room for displaying the filename
 	[super _doLayout];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	NSRect listFrame = [[_listControl layer] frame];
 	listFrame.size.height -= 2.5f*listFrame.origin.y;
 	listFrame.size.width*= 0.45f;
-	listFrame.origin.y *= 2.0f;
-	listFrame.origin.x *= 1.4f;
+	listFrame.origin.x = (master.size.width - listFrame.size.width) * 0.85f;
+	listFrame.origin.y = (master.size.height * 0.3f - listFrame.size.height) + master.size.height * 0.3f/0.8f + master.origin.y;
 	[[_listControl layer] setFrame:listFrame];
 }
 
@@ -186,6 +187,15 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 	else
 		[SapphireFrontRowCompat setText:fileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+	
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	[fileInfoText setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
+	NSSize txtSize = [fileInfoText renderedSize];
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	frame.size = txtSize;
+	[fileInfoText setFrame:frame];
 }
 
 /*!
@@ -210,6 +220,15 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 	else
 		[SapphireFrontRowCompat setText:movieTitle withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+	
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	[fileInfoText setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
+	NSSize txtSize = [fileInfoText renderedSize];
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	frame.size = txtSize;
+	[fileInfoText setFrame:frame];
 }
 
 /*!
