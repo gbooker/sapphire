@@ -113,7 +113,7 @@
 	NSSize txtSize = [fileName renderedSize];
 	NSRect frame;
 	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
-	frame.origin.y = (master.size.height * 0.4f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
 	frame.size = txtSize;
 	[fileName setFrame:frame];
 }
