@@ -49,10 +49,11 @@
 {
 	//Shrink the list frame to make room for displaying the filename
 	[super _doLayout];
-	NSRect listFrame = [[_listControl layer] frame];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	NSRect listFrame = [[_listControl layer] frame];	
 	listFrame.size.height -= 2.5f*listFrame.origin.y;
 	listFrame.size.width*=2.0f;
-	listFrame.origin.x *=0.25f;
+	listFrame.origin.x = (master.size.width - listFrame.size.width) * 0.5f;
 	listFrame.origin.y *= 2.0f;
 	[[_listControl layer] setFrame:listFrame];
 }
@@ -96,6 +97,14 @@
 {
 	fileName=[choosingForFileName retain] ;
 	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileNameText];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	[fileNameText setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
+	NSSize txtSize = [fileNameText renderedSize];
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 0.4f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	frame.size = txtSize;
+	[fileNameText setFrame:frame];
 }
 
 /*!
