@@ -705,9 +705,9 @@ BOOL setupAudioOutput(int sampleRate)
 				NSDate * releaseDate=[currentPlayFile movieReleaseDate];
 			
  				if(movieTitle != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"title=%d", movieTitle]];
+					[reqComp addObject:[NSString stringWithFormat:@"title=%@", movieTitle]];
 				if(releaseDate != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"year=%d", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
+					[reqComp addObject:[NSString stringWithFormat:@"year=%@", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
 				if(path != 0)
 					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [path lastPathComponent]]];
 			}
