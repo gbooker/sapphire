@@ -159,13 +159,13 @@ static NSArray *predicates = nil;
 	[mutableMasterControllers addObject:tvBrowser];
 	[tvBrowser release];
 	
-/*	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
+	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *movieBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:movieDir];
 	[movieBrowser setListTitle:BRLocalizedString(@"Movies", nil)];
 	[movieBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"   Movies", nil)];
 	[mutableMasterControllers addObject:movieBrowser];
-	[movieBrowser release];*/
+	[movieBrowser release];
 	
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
 	NSString *browserPoint = nil;

@@ -146,7 +146,7 @@
 	NSString *key = nil;
 	while((key = [keyEnum nextObject]) != nil)
 	{
-		SapphireMovieGenreDirectory *dir = [directory objectForKey:key];
+		SapphireMovieCategoryDirectory *dir = [directory objectForKey:key];
 		if(![dir isDisplayEmpty])
 			[mutDict setObject:dir forKey:key];
 	}
@@ -166,10 +166,10 @@
 	while((genre = [genresEnum nextObject]) != nil)
 	{
 		BOOL added=NO ;
-		SapphireMovieGenreDirectory *genreInfo=[directory objectForKey:genre];
+		SapphireMovieCategoryDirectory *genreInfo=[directory objectForKey:genre];
 		if(genreInfo==nil)
 		{
-			genreInfo=[[SapphireMovieGenreDirectory alloc] initWithParent:self path:[[self path] stringByAppendingString:genre]];
+			genreInfo=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingString:genre]];
 			[directory setObject:genreInfo forKey:genre];
 			[genreInfo release];
 			added=YES;
@@ -191,7 +191,7 @@
 	NSString *genre = nil;
 	while((genre = [genresEnum nextObject]) != nil)
 	{
-		SapphireMovieGenreDirectory *genreInfo = [directory objectForKey:genre];
+		SapphireMovieCategoryDirectory *genreInfo = [directory objectForKey:genre];
 		if(genreInfo != nil)
 		{
 			[genreInfo removeFile:file];
@@ -202,74 +202,10 @@
 	[self setReloadTimer];
 }
 @end
-/*
-@implementation SapphireMovieGenreDirectory
-- (void)reloadDirectoryContents
-{
-	[super reloadDirectoryContents];
-	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
-	NSEnumerator *keyEnum = [directory keyEnumerator];
-	NSString *key = nil;
-	while((key = [keyEnum nextObject]) != nil)
-	{
-		SapphireSeasonDirectory *dir = [directory objectForKey:key];
-		if(![dir isDisplayEmpty])
-			[mutDict setObject:dir forKey:key];
-	}
-	[directories addObjectsFromArray:[mutDict allKeys]];
-	[directories sortUsingSelector:@selector(directoryNameCompare:)];
-	[cachedMetaDirs addEntriesFromDictionary:mutDict];
-	[metaDirs addEntriesFromDictionary:mutDict];
-	[mutDict release];
-	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
-}
 
-- (void)processFile:(SapphireFileMetaData *)file
-{
-	int seasonNum = [file seasonNumber];
-	if(seasonNum == 0)
-		return;
-	BOOL added = NO;
-	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
-	SapphireSeasonDirectory *seasonInfo = [directory objectForKey:season];
-	if(seasonInfo == nil)
-	{
-		seasonInfo = [[SapphireSeasonDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:season]];
-		[directory setObject:seasonInfo forKey:season];
-		[seasonInfo release];
-		added = YES;
-	}
-	[seasonInfo processFile:file];
-	if(added == YES)
-	{
-		if([seasonInfo isEmpty])
-			[directory removeObjectForKey:season];
-		else
-			[self setReloadTimer];
-	}
-}
 
-- (void)removeFile:(SapphireFileMetaData *)file
-{
-	int seasonNum = [file seasonNumber];
-	if(seasonNum == 0)
-		return;
-	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
-	SapphireSeasonDirectory *seasonInfo = [directory objectForKey:season];
-	if(seasonInfo == nil)
-	{
-		[seasonInfo removeFile:file];
-		if([seasonInfo isEmpty])
-		{
-			[directory removeObjectForKey:season];
-			[self setReloadTimer];
-		}
-	}
-}
-@end
-*/
 
-@implementation SapphireMovieGenreDirectory
+@implementation SapphireMovieCategoryDirectory
 - (void)reloadDirectoryContents
 {
 	[super reloadDirectoryContents];

@@ -24,8 +24,7 @@
 @interface SapphireMovieGenreDirectory : SapphireMovieBaseDirectory {
 }
 @end
-/*
-@interface SapphireSeasonDirectory : SapphireTVBaseDirectory {
+
+@interface SapphireMovieCategoryDirectory : SapphireMovieBaseDirectory {
 }
 @end
-*/
