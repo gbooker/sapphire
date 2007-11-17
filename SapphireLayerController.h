@@ -7,7 +7,7 @@
 //
 
 
-@interface SapphireLayerController : BRMenuController {
+@interface SapphireLayerController : BRLayerController {
 
 }
 

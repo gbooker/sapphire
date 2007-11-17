@@ -12,7 +12,6 @@
 #import "SapphireFrontRowCompat.h"
 
 @interface SapphireImporterDataMenu (private)
-- (void)setText:(NSString *)theText;
 - (void)setFileProgress:(NSString *)updateFileProgress;
 - (void)resetUIElements;
 @end

@@ -53,6 +53,9 @@
 		F5E849C70C3F008100913832 /* SapphireMetaDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
+		F5FDA1A20CE27CE700812CE5 /* BRLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */; };
+		F5FDA1A30CE27CF000812CE5 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
+		F5FDA1A80CE27D1C00812CE5 /* CompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */; };
 		FE4239A40C331FFD0035A717 /* Green.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A00C331FFD0035A717 /* Green.png */; };
 		FE4239A50C331FFD0035A717 /* Yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A10C331FFD0035A717 /* Yellow.png */; };
 		FE4239A60C331FFD0035A717 /* Blue.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A20C331FFD0035A717 /* Blue.png */; };
@@ -71,6 +74,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F5FDA1C90CE282A800812CE5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5FDA19E0CE27CDA00812CE5;
+			remoteInfo = CompatClasses;
+		};
 		FE7810650C56F0950037779D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -79,6 +89,19 @@
 			remoteInfo = "Make SVN Rev";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F5FDA1990CE27CC000812CE5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F5FDA1A80CE27D1C00812CE5 /* CompatClasses.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -144,6 +167,11 @@
 		F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMarkMenu.m; sourceTree = "<group>"; };
 		F5EA91330C3063F500B1EC7D /* SapphireMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMedia.h; sourceTree = "<group>"; };
 		F5EA91340C3063F500B1EC7D /* SapphireMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMedia.m; sourceTree = "<group>"; };
+		F5FD9F140CE27B9C00812CE5 /* BRLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRLayerController.h; sourceTree = "<group>"; };
+		F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRLayerController.m; sourceTree = "<group>"; };
+		F5FD9F240CE27BD600812CE5 /* CompatClasses-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CompatClasses-Info.plist"; sourceTree = "<group>"; };
+		F5FDA1980CE27CBF00812CE5 /* CompatClasses-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CompatClasses-Info copy.plist"; sourceTree = "<group>"; };
+		F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4239A00C331FFD0035A717 /* Green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Green.png; sourceTree = "<group>"; };
 		FE4239A10C331FFD0035A717 /* Yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Yellow.png; sourceTree = "<group>"; };
 		FE4239A20C331FFD0035A717 /* Blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Blue.png; sourceTree = "<group>"; };
@@ -179,6 +207,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5FDA19D0CE27CDA00812CE5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5FDA1A30CE27CF000812CE5 /* BackRow.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -190,6 +226,8 @@
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
+				F5FD9F240CE27BD600812CE5 /* CompatClasses-Info.plist */,
+				F5FDA1980CE27CBF00812CE5 /* CompatClasses-Info copy.plist */,
 			);
 			name = ApplianceBase;
 			sourceTree = "<group>";
@@ -244,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				8D5B49B6048680CD000E48DA /* Sapphire.frappliance */,
+				F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -270,6 +309,8 @@
 				F5657C530CD66F750053869E /* SapphireMenuController.m */,
 				F5657D0F0CD6858C0053869E /* SapphireFrontRowCompat.h */,
 				F5657D100CD6858F0053869E /* SapphireFrontRowCompat.m */,
+				F5FD9F140CE27B9C00812CE5 /* BRLayerController.h */,
+				F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */,
 			);
 			name = "Compatibility Classes";
 			sourceTree = "<group>";
@@ -379,6 +420,16 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		F5FDA19A0CE27CDA00812CE5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		8D5B49AC048680CD000E48DA /* Sapphire */ = {
 			isa = PBXNativeTarget;
@@ -387,17 +438,37 @@
 				8D5B49AF048680CD000E48DA /* Resources */,
 				8D5B49B1048680CD000E48DA /* Sources */,
 				8D5B49B3048680CD000E48DA /* Frameworks */,
+				F5FDA1990CE27CC000812CE5 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				FE7810660C56F0950037779D /* PBXTargetDependency */,
+				F5FDA1CA0CE282A800812CE5 /* PBXTargetDependency */,
 			);
 			name = Sapphire;
 			productInstallPath = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
 			productName = Sapphire;
 			productReference = 8D5B49B6048680CD000E48DA /* Sapphire.frappliance */;
 			productType = "com.apple.product-type.bundle";
+		};
+		F5FDA19E0CE27CDA00812CE5 /* CompatClasses */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5FDA1A60CE27CF900812CE5 /* Build configuration list for PBXNativeTarget "CompatClasses" */;
+			buildPhases = (
+				F5FDA19A0CE27CDA00812CE5 /* Headers */,
+				F5FDA19B0CE27CDA00812CE5 /* Resources */,
+				F5FDA19C0CE27CDA00812CE5 /* Sources */,
+				F5FDA19D0CE27CDA00812CE5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CompatClasses;
+			productName = CompatClasses;
+			productReference = F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -413,6 +484,7 @@
 			targets = (
 				8D5B49AC048680CD000E48DA /* Sapphire */,
 				FE7810640C56F08A0037779D /* Make SVN Rev */,
+				F5FDA19E0CE27CDA00812CE5 /* CompatClasses */,
 			);
 		};
 /* End PBXProject section */
@@ -433,6 +505,13 @@
 				FE423ABE0C3341D70035A717 /* Eye.png in Resources */,
 				F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */,
 				FED5D2D60CD6A205000E9588 /* PH.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5FDA19B0CE27CDA00812CE5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,9 +575,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5FDA19C0CE27CDA00812CE5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5FDA1A20CE27CE700812CE5 /* BRLayerController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F5FDA1CA0CE282A800812CE5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5FDA19E0CE27CDA00812CE5 /* CompatClasses */;
+			targetProxy = F5FDA1C90CE282A800812CE5 /* PBXContainerItemProxy */;
+		};
 		FE7810660C56F0950037779D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FE7810640C56F08A0037779D /* Make SVN Rev */;
@@ -596,6 +688,69 @@
 			};
 			name = Release;
 		};
+		F5FDA1A00CE27CDA00812CE5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = CompatClasses;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5FDA1A10CE27CDA00812CE5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "CompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = CompatClasses;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		FE7810680C56F0B30037779D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -635,6 +790,15 @@
 			buildConfigurations = (
 				1DEB913F08733D840010E9CD /* Debug */,
 				1DEB914008733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5FDA1A60CE27CF900812CE5 /* Build configuration list for PBXNativeTarget "CompatClasses" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5FDA1A00CE27CDA00812CE5 /* Debug */,
+				F5FDA1A10CE27CDA00812CE5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
