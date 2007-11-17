@@ -41,6 +41,12 @@ static NSArray *predicates = nil;
 {
 	predicates = [[NSArray alloc] initWithObjects:[[SapphireUnwatchedPredicate alloc] init], [[SapphireFavoritePredicate alloc] init], [[SapphireTopShowPredicate alloc] init], nil];
 	[predicates makeObjectsPerformSelector:@selector(release)];
+	if([SapphireFrontRowCompat usingFrontRow])
+	{
+		NSString *compatPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Frameworks/CompatClasses.framework"];
+		NSBundle *compat = [NSBundle bundleWithPath:compatPath];
+		[compat load];
+	}
 }
 
 + (SapphirePredicate *)predicate

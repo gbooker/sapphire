@@ -35,6 +35,7 @@
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
 #define AUDIO_FORMAT_KEY			@"Audio Format"
+#define JOINED_FILE_KEY				@"Joined File"
 //#define FILE_CLASS_KEY				@"File Class"
 
 @implementation NSString (episodeSorting)
@@ -739,13 +740,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		NSString *filePath = [path stringByAppendingPathComponent:name];
 		SapphireMetaData *resolvedObject = nil;
 		NSDictionary *attributes = [fm fileAttributesAtPath:filePath traverseLink:NO];
-		if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+		if([[attributes fileType] isEqualToString:NSFileTypeSymbolicLink])
 		{
 			/* Symbolic link, handle with care */
 			NSMutableDictionary *refDict = nil;
-			NSString *resolvedPath = [fm pathContentOfSymbolicLinkAtPath:filePath];
-			if(![resolvedPath hasPrefix:@"/"])
-				resolvedPath = [[filePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:resolvedPath];
+			NSString *resolvedPath = [filePath stringByResolvingSymlinksInPath];
+
 			if([self isDirectory:resolvedPath])
 				refDict = metaDirs;
 			else
@@ -785,7 +785,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	nameEnum = [fileMetas objectEnumerator];
 	SapphireFileMetaData *fileMeta = nil;
 	while((fileMeta = [nameEnum nextObject]) != nil)
-		[files addObject:[[fileMeta path] lastPathComponent]];
+	{
+		NSString *joinedPath = [fileMeta joinedFile];
+		if([fm fileExistsAtPath:joinedPath])
+			continue;
+		[files addObject:[[fileMeta path] lastPathComponent]];		
+	}
 	/*Check to see if any data is out of date*/
 	[self updateMetaData];
 	if([importArray count] || [self pruneMetaData])
@@ -1018,21 +1023,25 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	{
 		NSEnumerator *pruneEnum = [pruneSet objectEnumerator];
 		NSString *pruneKey = nil;
+		NSFileManager *fm = [NSFileManager defaultManager];
 		while((pruneKey = [pruneEnum nextObject]) != nil)
 		{
 			NSString *filePath = [path stringByAppendingPathComponent:pruneKey];
 			NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
 			/*If it is a broken link, skip*/
-			if(![[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
-			{
-				/*Remove and mark as we did an update*/
-				SapphireMetaData *meta = [cachedMetaFiles objectForKey:pruneKey];
-				if(meta != nil)
-					[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_REMOVED_NOTIFICATION object:meta];
-				[metaFiles removeObjectForKey:pruneKey];
-				[cachedMetaFiles removeObjectForKey:pruneKey];
-				ret = YES;
-			}
+			if([[attributes objectForKey:NSFileType] isEqualToString:NSFileTypeSymbolicLink])
+				continue;
+			SapphireFileMetaData *meta = [cachedMetaFiles objectForKey:pruneKey];
+			/*If it is a joined File, skip*/
+			NSString *joinedPath = [meta joinedFile];
+			if([fm fileExistsAtPath:joinedPath])
+				continue;
+			/*Remove and mark as we did an update*/
+			if(meta != nil)
+				[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_REMOVED_NOTIFICATION object:meta];
+			[metaFiles removeObjectForKey:pruneKey];
+			[cachedMetaFiles removeObjectForKey:pruneKey];
+			ret = YES;
 		}
 	}
 	
@@ -1771,6 +1780,29 @@ static NSArray *displayedMetaDataOrder = nil;
 - (void)setFileClass:(FileClass)fileClass
 {
 	[metaData setObject:[NSNumber numberWithInt:fileClass] forKey:FILE_CLASS_KEY];
+}
+
+/*!
+ * @brief The file this has been joined to
+ *
+ * @return The file this has been joined to
+ */
+- (NSString *)joinedFile;
+{
+	return [metaData objectForKey:JOINED_FILE_KEY];
+}
+
+/*!
+ * @brief Sets the file this has been joined to
+ *
+ * @param fileClass The file this has been joined to
+ */
+- (void)setJoinedFile:(NSString *)join
+{
+	if(join == nil)
+		[metaData removeObjectForKey:JOINED_FILE_KEY];
+	else
+		[metaData setObject:join forKey:JOINED_FILE_KEY];
 }
 
 /*!

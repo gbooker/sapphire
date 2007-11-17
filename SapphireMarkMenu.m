@@ -9,6 +9,7 @@
 #import "SapphireMarkMenu.h"
 #import "SapphireMetaData.h"
 #import "SapphireFrontRowCompat.h"
+#import <QTKit/QTKit.h>
 
 @implementation SapphireMarkMenu
 
@@ -18,7 +19,17 @@ typedef enum {
 	COMMAND_MARK_TO_REFETCH_TV,
 	COMMAND_MARK_TO_REFETCH_MOVIE,
 	COMMAND_MARK_AS_MOVIE,
+	COMMAND_MARK_TO_JOIN,
+	COMMAND_CLEAR_JOIN_MARK,
+	COMMAND_JOIN,
 } MarkCommand;
+
+static NSMutableArray *joinList;
+
++ (void)initialize
+{
+	joinList = [[NSMutableArray alloc] init];
+}
 
 /*!
  * @brief Create a mark menu for a directory or file
@@ -80,6 +91,18 @@ typedef enum {
 			[names addObject:BRLocalizedString(@"Mark as a Movie", @"Mark a file as a movie")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_AS_MOVIE]];
 		}
+		if(![joinList containsObject:fileMeta])
+		{
+			[names addObject:BRLocalizedString(@"Join This with Other Files", @"Join This with Other Files")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_JOIN]];
+		}
+		if([joinList count])
+		{
+			[names addObject:BRLocalizedString(@"Clear the Join List", @"Clear the Join List")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_CLEAR_JOIN_MARK]];
+			[names addObject:BRLocalizedString(@"Join Marked Files", @"Join Marked Files")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_JOIN]];
+		}
 	}
 	else
 	{
@@ -103,6 +126,52 @@ typedef enum {
 - (void)setPredicate:(SapphirePredicate *)newPredicate
 {
 	predicate = [newPredicate retain];
+}
+
+- (void)doJoin
+{
+	if(![joinList count])
+		return;
+	
+	QTMovie *resultingMovie = [[QTMovie alloc] init];
+	[resultingMovie setAttribute:[NSNumber numberWithBool:YES] forKey:QTMovieEditableAttribute];
+	
+	NSString *savePath = [[joinList objectAtIndex:0] path];
+	BOOL hasmovExt = [[savePath pathExtension] isEqualToString:@"mov"];
+	NSString *base = [savePath stringByDeletingPathExtension];
+	if([[base lowercaseString] hasSuffix:@" part 1"])
+		base = [base substringToIndex:[base length] - 7];
+	if(hasmovExt)
+		savePath = [[base stringByAppendingString:@" Joined"] stringByAppendingPathExtension:@"mov"];
+	else
+		savePath = [base stringByAppendingPathExtension:@"mov"];
+
+	int i, count=[joinList count];
+	for(i=0;i<count;i++)
+	{
+		SapphireFileMetaData *meta = [joinList objectAtIndex:i];
+		NSError *error = nil;
+		NSDictionary *openAttr = [NSDictionary dictionaryWithObjectsAndKeys:
+								  [meta path], QTMovieFileNameAttribute,
+								  [NSNumber numberWithBool:NO], QTMovieOpenAsyncOKAttribute,
+								  nil];
+		QTMovie *current = [[QTMovie alloc] initWithAttributes:openAttr error:&error];
+		if(error == nil)
+		{
+			QTTimeRange range;
+			range.time = [current selectionStart];
+			range.duration = [current duration];
+			[current setSelection:range];
+			[resultingMovie appendSelectionFromMovie:current];
+			[meta setJoinedFile:savePath];
+		}
+		[current release];
+	}
+
+	[resultingMovie writeToFile:savePath withAttributes:[NSDictionary dictionary]];
+	[resultingMovie release];
+	[joinList removeAllObjects];
+	[metaData writeMetaData];
 }
 
 - (void) willBePushed
@@ -269,6 +338,16 @@ typedef enum {
 				break;
 			case COMMAND_MARK_AS_MOVIE:
 				[fileMeta setFileClass:FILE_CLASS_MOVIE];
+				break;
+			case COMMAND_MARK_TO_JOIN:
+				[joinList addObject:fileMeta];
+				break;
+			case COMMAND_CLEAR_JOIN_MARK:
+				[joinList removeAllObjects];
+				break;
+			case COMMAND_JOIN:
+				[self doJoin];
+				break;
 		}
 	}
 	/*Save and exit*/

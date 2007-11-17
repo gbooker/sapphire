@@ -180,6 +180,8 @@ typedef enum {
 - (void)setResumeTime:(unsigned int)resumeTime;
 - (FileClass)fileClass;
 - (void)setFileClass:(FileClass)fileClass;
+- (NSString *)joinedFile;
+- (void)setJoinedFile:(NSString *)join;
 
 - (long long)size;
 - (float)duration;
