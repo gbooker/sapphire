@@ -9,78 +9,8 @@
 #import "SapphireTVDirectory.h"
 #import "SapphireMetaData.h"
 
-@interface SapphireDirectoryMetaData (privateFunctions)
-- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
-@end
-
-@implementation SapphireTVBaseDirectory
-- (id)initWithParent:(SapphireTVBaseDirectory *)myParent path:(NSString *)myPath
-{
-	self = [super initWithDictionary:nil parent:myParent path:myPath];
-	if(self == nil)
-		return nil;
-	
-	directory = [[NSMutableDictionary alloc] init];
-	reloadTimer = nil;
-	scannedDirectory = YES;
-	
-	return self;
-}
-
-- (void) dealloc
-{
-	[directory release];
-	[reloadTimer invalidate];
-	[super dealloc];
-}
-
-- (void)reloadDirectoryContents
-{
-	[files removeAllObjects];
-	[directories removeAllObjects];
-	[metaFiles removeAllObjects];
-	[metaDirs removeAllObjects];
-	[cachedMetaFiles removeAllObjects];
-	[cachedMetaDirs removeAllObjects];
-	[reloadTimer invalidate];
-	reloadTimer = nil;
-}
-
-- (void)setReloadTimer
-{
-	[reloadTimer invalidate];
-	reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(reloadDirectoryContents) userInfo:nil repeats:NO];
-}
-
-- (void)processFile:(SapphireFileMetaData *)file
-{
-}
-
-- (void)removeFile:(SapphireFileMetaData *)file
-{
-}
-
-- (void)childDisplayChanged
-{
-	/*The way the timings work out, if the timer exists already, it is more efficient to leave it set rather than set a new one*/
-	if(reloadTimer == nil)
-		[self setReloadTimer];
-}
-
-- (BOOL)isDisplayEmpty
-{
-	return [files count] == [directories count];
-}
-
-- (BOOL)isEmpty
-{
-	return [directory count] == 0;
-}
-
-@end
-
 @implementation SapphireTVDirectory
-- (id)initWithParent:(SapphireTVBaseDirectory *)myParent path:(NSString *)myPath
+- (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath
 {
 	self = [super initWithParent:myParent path:myPath];
 	if(self == nil)
@@ -157,7 +87,7 @@
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
+	[(SapphireVirtualDirectory *)parent childDisplayChanged];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -220,7 +150,7 @@
 	[cachedMetaDirs addEntriesFromDictionary:mutDict];
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
+	[(SapphireVirtualDirectory *)parent childDisplayChanged];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -289,7 +219,7 @@
 	[cachedMetaFiles addEntriesFromDictionary:mutDict];
 	[metaFiles addEntriesFromDictionary:mutDict];
 	[mutDict release];
-	[(SapphireTVBaseDirectory *)parent childDisplayChanged];
+	[(SapphireVirtualDirectory *)parent childDisplayChanged];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file

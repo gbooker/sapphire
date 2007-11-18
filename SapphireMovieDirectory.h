@@ -6,25 +6,17 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
-#import "SapphireMetaData.h"
+#import "SapphireVirtualDirectory.h"
 
-@interface SapphireMovieBaseDirectory : SapphireDirectoryMetaData {
-	NSMutableDictionary		*directory;
-	NSTimer					*reloadTimer;
-}
-- (void)processFile:(SapphireFileMetaData *)file;
-- (void)removeFile:(SapphireFileMetaData *)file;
-@end
-
-@interface SapphireMovieDirectory : SapphireMovieBaseDirectory {
+@interface SapphireMovieDirectory : SapphireVirtualDirectory {
 }
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection;
 @end
 
-@interface SapphireMovieGenreDirectory : SapphireMovieBaseDirectory {
+@interface SapphireMovieGenreDirectory : SapphireVirtualDirectory {
 }
 @end
 
-@interface SapphireMovieCategoryDirectory : SapphireMovieBaseDirectory {
+@interface SapphireMovieCategoryDirectory : SapphireVirtualDirectory {
 }
 @end
