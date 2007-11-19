@@ -101,7 +101,7 @@
 		SapphireMovieCategoryDirectory *genreInfo=[directory objectForKey:genre];
 		if(genreInfo==nil)
 		{
-			genreInfo=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingString:genre]];
+			genreInfo=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingString:[NSString stringWithFormat:@"/MOVIES/By Genre/%@",genre]]];
 			[directory setObject:genreInfo forKey:genre];
 			[genreInfo release];
 			added=YES;

@@ -223,7 +223,6 @@
 	
 	/*Get the results list*/
 	NSArray *results = [root objectsForXQuery:IMP_POSTER_CANDIDATES_XPATH error:&error];
-
 	if([results count]<1)
 	{
 		/* IMDB had the wrong release year link, see if IMP Tried to redirect*/
