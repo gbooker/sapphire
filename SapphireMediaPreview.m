@@ -106,54 +106,6 @@ static NSSet *coverArtExtentions = nil;
 }
 
 /*!
- * @brief Search for cover art in the current path
- *
- * @param path Path to search for cover art, minus the extension
- * @return The path to the found cover art
- */
-- (NSString *)searchExtForPath:(NSString *)path
-{
-	NSFileManager *fm = [NSFileManager defaultManager];
-	BOOL isDir = NO;
-	/*Search all extensions*/
-	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
-	NSString *ext = nil;
-	while((ext = [extEnum nextObject]) != nil)
-	{
-		NSString *candidate = [path stringByAppendingPathExtension:ext];
-		/*Check the candidate*/
-		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
-			return candidate;
-	}
-	/*Didn't find one*/
-	return nil;
-}
-
-/*!
- * @brief Searches for the directory's cover art
- *
- * @param dir the directory to search
- * @param parents the number of parent directories to search after this one
- * @return The path to the found cover art
- */
-- (NSString *)coverArtForDir:(NSString *)dir parents:(int)parents
-{
-	/*Check for cover.ext in the "Cover Art" dir*/
-	NSString *ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"Cover Art/cover"]];
-	if(ret != nil)
-		return ret;
-	/*Next check for cover.ext in the current dir*/
-	ret = [self searchExtForPath:[dir stringByAppendingPathComponent:@"cover"]];
-	if(ret != nil)
-		return ret;
-	/*Finally, try going up a dir*/
-	if(parents != 0)
-		return [self coverArtForDir:[dir stringByDeletingLastPathComponent] parents:parents -1];
-	/*Didn't find one*/
-	return nil;
-}
-
-/*!
  * @brief Search for cover art for the current metadata
  *
  * @return The path to the found cover art
@@ -163,31 +115,14 @@ static NSSet *coverArtExtentions = nil;
 	/*See if this is a directory*/
 	if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
 	{
-		/*Search for cover art for the current directory or a single parent dir*/
-		NSString *ret = [self coverArtForDir:[meta path] parents:1];
+		NSString *ret = [(SapphireDirectoryMetaData *)meta coverArtPath];
 		if(ret != nil)
 			return ret;
-		/*Fallback to default*/
-		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
+	} else {
+		NSString *ret = [(SapphireFileMetaData *)meta coverArtPath];
+		if(ret != nil)
+			return ret;
 	}
-
-	/*Find cover art for the current file in the "Cover Art" dir*/
-	NSString *subPath = [[meta path] stringByDeletingPathExtension];
-	NSString *fileName = [subPath lastPathComponent];
-	NSString *ret = [self searchExtForPath:[[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:fileName]];
-	if(ret != nil)
-		return ret;
-	
-	/*Find cover art for the current file in the current dir*/
-	ret = [self searchExtForPath:subPath];
-	if(ret != nil)
-		return ret;
-	
-	/*Find cover art for the parent or its parent dir*/
-	ret = [self coverArtForDir:[subPath stringByDeletingLastPathComponent] parents:2];
-	if(ret != nil)
-		return ret;
-	
 	/*Fallback to default*/
 	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
 }

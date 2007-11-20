@@ -133,6 +133,7 @@ typedef enum {
 }
 
 - (void)reloadDirectoryContents;
+- (NSString *)coverArtPath;
 - (NSArray *)files;
 - (NSArray *)directories;
 - (NSArray *)predicatedFiles:(SapphirePredicate *)predicate;
@@ -165,6 +166,8 @@ typedef enum {
 @interface SapphireFileMetaData : SapphireMetaData {
 	NSDictionary		*combinedInfo;
 }
+
+- (NSString *)coverArtPath;
 
 - (BOOL) updateMetaData;
 
