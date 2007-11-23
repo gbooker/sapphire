@@ -74,9 +74,9 @@ static SapphireSettings *sharedInstance = nil;
 	/*Setup display*/
 	metaCollection = [collection retain];
 	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
-												BRLocalizedString(@"   Fetch Internet Data", @"Fetch Internet Data menu item"),
-												BRLocalizedString(@"   Start Movie Import", @"Start Movie Import menu item"),
-												BRLocalizedString(@"   Choose Movie Posters", @"Start Poster Chooser menu item"),
+												BRLocalizedString(@"   Fetch TV Show Data", @"Fetch TV Show Data menu item"),
+												BRLocalizedString(@"   Fetch Movie Data", @"Fetch Movie Data menu item"),
+/*												BRLocalizedString(@"   Choose Movie Posters", @"Start Poster Chooser menu item"),*/
 												BRLocalizedString(@"   Hide Collections", @"Hide Collections menu item"),
 												BRLocalizedString(@"   Don't Import Collections", @"Don't Import Collections menu item"),
 												BRLocalizedString(@"   Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"),
@@ -91,7 +91,7 @@ static SapphireSettings *sharedInstance = nil;
 	keys = [[NSArray alloc] initWithObjects:		@"",
 													@"",
 													@"",
-													@"",
+												/*	@"",*/
 													@"",
 													@"",
 													HIDE_FAVORITE_KEY, 
@@ -104,19 +104,19 @@ static SapphireSettings *sharedInstance = nil;
 													DISABLE_ANON_KEY, nil];
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
-												[theme gem:EYE_GEM_KEY],
-												[theme gem:CONE_GEM_KEY],
-												[theme gem:GREEN_GEM_KEY],
-												[theme gem:EYE_GEM_KEY],
-												[theme gem:EYE_GEM_KEY],
+												[theme gem:TVR_GEM_KEY],
+												[theme gem:IMDB_GEM_KEY],
+												/*[theme gem:GREEN_GEM_KEY],*/
+												[theme gem:FILE_GEM_KEY],
+												[theme gem:FILE_GEM_KEY],
 												[theme gem:YELLOW_GEM_KEY],
 												/*[theme gem:GREEN_GEM_KEY],*/
 												[theme gem:BLUE_GEM_KEY],
-												[theme gem:RED_GEM_KEY],
+												[theme gem:NOTE_GEM_KEY],
 												[theme gem:CONE_GEM_KEY],
 												[theme gem:CONE_GEM_KEY],
-												[theme gem:CONE_GEM_KEY],
-												[theme gem:CONE_GEM_KEY], nil];		
+												[theme gem:AUDIO_GEM_KEY],
+												[theme gem:REPORT_GEM_KEY], nil];		
 	
 	path = [dictionaryPath retain];
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
@@ -138,7 +138,7 @@ static SapphireSettings *sharedInstance = nil;
 	/*display*/
 	BRListControl *list = [self list];
 	[list setDatasource:self];
-	[SapphireFrontRowCompat addDividerAtIndex:6 toList:list];
+	[SapphireFrontRowCompat addDividerAtIndex:5 toList:list];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 
@@ -454,14 +454,16 @@ static SapphireSettings *sharedInstance = nil;
 		[menu release];
 		[importer release];
 	}
-	/*Start Movie Poster Chooser*/
+	/*
+	 Start Movie Poster Chooser
 	else if(row == 3)
 	{
 	//	SapphirePosterBrowse *chooser = [[SapphirePosterChooser alloc] initWithScene:[self scene] metaDataPath:[[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"movieData.plist"]];
 	//	[[self stack] pushController:chooser];
 	//	[chooser release];
 	}
-	else if(row == 4)
+	*/
+	else if(row == 3)
 	{
 		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
 		[colSettings setGettingSelector:@selector(hideCollection:)];
@@ -470,7 +472,7 @@ static SapphireSettings *sharedInstance = nil;
 		[[self stack] pushController:colSettings];
 		[colSettings release];
 	}
-	else if(row == 5)
+	else if(row == 4)
 	{
 		SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] collection:metaCollection];
 		[colSettings setGettingSelector:@selector(skipCollection:)];

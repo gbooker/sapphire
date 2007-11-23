@@ -40,6 +40,14 @@
 		@"Contents/Resources/Gear.png", GEAR_GEM_KEY,
 		@"Contents/Resources/Cone.png", CONE_GEM_KEY,
 		@"Contents/Resources/Eye.png", EYE_GEM_KEY,
+		@"Contents/Resources/Audio.png", AUDIO_GEM_KEY,
+		@"Contents/Resources/TV.png", TV_GEM_KEY,
+		@"Contents/Resources/Movie.png", MOV_GEM_KEY,
+		@"Contents/Resources/IMDB.png", IMDB_GEM_KEY,
+		@"Contents/Resources/TVRage.png", TVR_GEM_KEY,
+		@"Contents/Resources/File.png", FILE_GEM_KEY,
+		@"Contents/Resources/Report.png", REPORT_GEM_KEY,
+		@"Contents/Resources/Note.png", NOTE_GEM_KEY,
 		nil];
 	
 	return self;
