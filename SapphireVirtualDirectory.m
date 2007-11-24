@@ -100,3 +100,64 @@
 }
 
 @end
+
+@implementation SapphireVirtualDirectoryOfDirectories
+- (void)reloadDirectoryContents
+{
+	[super reloadDirectoryContents];
+	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
+	NSEnumerator *keyEnum = [directory keyEnumerator];
+	NSString *key = nil;
+	while((key = [keyEnum nextObject]) != nil)
+	{
+		SapphireVirtualDirectory *dir = [directory objectForKey:key];
+		if(![dir isDisplayEmpty])
+			[mutDict setObject:dir forKey:key];
+	}
+	[directories addObjectsFromArray:[mutDict allKeys]];
+	[directories sortUsingSelector:@selector(directoryNameCompare:)];
+	[cachedMetaDirs addEntriesFromDictionary:mutDict];
+	[metaDirs addEntriesFromDictionary:mutDict];
+	[mutDict release];
+	[(SapphireVirtualDirectory *)parent childDisplayChanged];
+}
+
+- (BOOL)addFile:(SapphireFileMetaData *)file toKey:(NSString *)key withChildClass:(Class)childClass
+{
+	BOOL added = NO;
+	SapphireVirtualDirectory *child = [directory objectForKey:key];
+	if(child == nil)
+	{
+		child = [[childClass alloc] initWithParent:self path:[[self path] stringByAppendingString:key]];
+		[directory setObject:child forKey:key];
+		[child release];
+		added = YES;
+	}
+	[child processFile:file];
+	if(added == YES)
+	{
+		if([child isEmpty])
+			[directory removeObjectForKey:key];
+		else
+			[self setReloadTimer];
+	}
+	return added;
+}
+
+- (BOOL)removeFile:(SapphireFileMetaData *)file fromKey:(NSString *)key
+{
+	SapphireVirtualDirectory *child = [directory objectForKey:key];
+	BOOL ret = NO;
+	if(child != nil)
+	{
+		[child removeFile:file];
+		if([child isEmpty])
+		{
+			[directory removeObjectForKey:key];
+			[self setReloadTimer];
+			ret = YES;
+		}
+	}
+	return ret;
+}
+@end

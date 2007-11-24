@@ -21,3 +21,9 @@
 - (BOOL)isDisplayEmpty;
 - (BOOL)isEmpty;
 @end
+
+@interface SapphireVirtualDirectoryOfDirectories : SapphireVirtualDirectory {
+}
+- (BOOL)addFile:(SapphireFileMetaData *)file toKey:(NSString *)key withChildClass:(Class)childClass;
+- (BOOL)removeFile:(SapphireFileMetaData *)file fromKey:(NSString *)key;
+@end
