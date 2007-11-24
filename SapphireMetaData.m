@@ -2023,7 +2023,7 @@ static NSArray *displayedMetaDataOrder = nil;
 }
 
 /*!
-* @brief Returns the genre of the movie file
+ * @brief Returns the genre of the movie file
  *
  * @return The genre type of the movie file
  */
@@ -2031,6 +2031,28 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	[self constructCombinedData];
 	return [combinedInfo objectForKey:META_MOVIE_GENRES_KEY];
+}
+
+/*!
+ * @brief Returns the cast of the movie file
+ *
+ * @return The cast of the movie file
+ */
+- (NSArray *)movieCast
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_MOVIE_CAST_KEY];
+}
+
+/*!
+ * @brief Returns the directors of the movie file
+ *
+ * @return The directors of the movie file
+ */
+- (NSArray *)movieDirectors
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_MOVIE_DIRECTOR_KEY];
 }
 
 /*Makes a pretty size string for the file*/

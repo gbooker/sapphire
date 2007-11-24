@@ -199,6 +199,8 @@ typedef enum {
 - (NSString *)showID;
 - (NSString *)showName ;
 - (NSArray *)movieGenres;
+- (NSArray *)movieCast;
+- (NSArray *)movieDirectors;
 - (NSString *)sizeString;
 
 @end
