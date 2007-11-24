@@ -23,10 +23,10 @@
 #import "SapphireAllImporter.h"
 #import "SapphireFrontRowCompat.h"
 
-#define BROWSER_MENU_ITEM		BRLocalizedString(@"   Browse", @"Browser Menu Item")
-#define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"   Import All Data", @"All Importer Menu Item")
-#define SETTINGS_MENU_ITEM		BRLocalizedString(@"   Settings", @"Settings Menu Item")
-#define RESET_MENU_ITEM			BRLocalizedString(@"   Reset the thing already", @"UI Quit")
+#define BROWSER_MENU_ITEM		BRLocalizedString(@"  Browse", @"Browser Menu Item")
+#define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"  Import All Data", @"All Importer Menu Item")
+#define SETTINGS_MENU_ITEM		BRLocalizedString(@"  Settings", @"Settings Menu Item")
+#define RESET_MENU_ITEM			BRLocalizedString(@"  Reset the thing already", @"UI Quit")
 
 @interface SapphireApplianceController (private)
 - (void)setMenuFromSettings;
@@ -131,7 +131,7 @@ static NSArray *predicates = nil;
 	
 	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/settings.plist"] metaDataCollection:metaCollection] ;
 	[self setListTitle:						BRLocalizedString(@"Main Menu", @"")];
-	[settings setListTitle:					BRLocalizedString(@"Settings", @"Settings Menu Item")] ;
+	[settings setListTitle:					BRLocalizedString(@" Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
 	
@@ -159,18 +159,20 @@ static NSArray *predicates = nil;
 	
 	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
-	[tvBrowser setListTitle:BRLocalizedString(@"TV Shows", nil)];
+	[tvBrowser setListTitle:BRLocalizedString(@" TV Shows", nil)];
 	[tvBrowser setListIcon:predicateGem];
-	[mutableMasterNames addObject:BRLocalizedString(@"   TV Shows", nil)];
+	[mutableMasterNames addObject:BRLocalizedString(@"  TV Shows", nil)];
 	[mutableMasterControllers addObject:tvBrowser];
+	[tvDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualTVDir.plist"]];
 	[tvBrowser release];
 	
 	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *movieBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:movieDir];
-	[movieBrowser setListTitle:BRLocalizedString(@"Movies", nil)];
+	[movieBrowser setListTitle:BRLocalizedString(@" Movies", nil)];
 	[movieBrowser setListIcon:predicateGem];
-	[mutableMasterNames addObject:BRLocalizedString(@"   Movies", nil)];
+	[mutableMasterNames addObject:BRLocalizedString(@"  Movies", nil)];
 	[mutableMasterControllers addObject:movieBrowser];
+	[movieDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
 	[movieBrowser release];
 	
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
@@ -182,9 +184,9 @@ static NSArray *predicates = nil;
 		if([metaCollection hideCollection:browserPoint])
 			continue;
 		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
-		[browser setListTitle:[browserPoint lastPathComponent]];
+		[browser setListTitle:[NSString stringWithFormat:@" %@",[browserPoint lastPathComponent]]];
 		[browser setListIcon:predicateGem];
-		[mutableMasterNames addObject:[NSString stringWithFormat:@"   %@", browserPoint]];
+		[mutableMasterNames addObject:[NSString stringWithFormat:@"  %@", browserPoint]];
 		[mutableMasterControllers addObject:browser];
 		[browser release];
 	}
@@ -307,7 +309,7 @@ static NSArray *predicates = nil;
 	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
 	//	else if([name isEqual: AGENT_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
 	else if([name isEqual: SETTINGS_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
-	else if([name isEqual: RESET_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:CONE_GEM_KEY] forMenu:result];
+	else if([name isEqual: RESET_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:FRONTROW_GEM_KEY] forMenu:result];
 	else [SapphireFrontRowCompat setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]] forMenu:result];
 	
 	// add text

@@ -95,13 +95,25 @@
 	NSArray * genres=[file movieGenres];
 	NSEnumerator *genresEnum = [genres objectEnumerator];
 	NSString *genre = nil;
+	SapphireMovieCategoryDirectory *allCategory=[directory objectForKey:@"All Movies"];
+	if(allCategory==nil)
+	{
+		allCategory=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingString:@"/All Movies/"]];
+		[directory setObject:allCategory forKey:@"All Movies"];
+		[allCategory release];
+	}
+	[allCategory processFile:file];
+					 
 	while((genre = [genresEnum nextObject]) != nil)
 	{
 		BOOL added=NO ;
 		SapphireMovieCategoryDirectory *genreInfo=[directory objectForKey:genre];
 		if(genreInfo==nil)
 		{
-			genreInfo=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingString:[NSString stringWithFormat:@"/MOVIES/By Genre/%@",genre]]];
+			/* Testing path structure */
+//			NSString * aPath=@"/Test/1/2/3/";
+//			genreInfo=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:aPath];
+			genreInfo=[[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:[NSString stringWithFormat:@"/MOVIES/By Genre/%@",genre]]];
 			[directory setObject:genreInfo forKey:genre];
 			[genreInfo release];
 			added=YES;
@@ -111,6 +123,7 @@
 		{
 			if([genreInfo isEmpty])
 				[directory removeObjectForKey:genre];
+			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
 		}
 	}
 	[self setReloadTimer];

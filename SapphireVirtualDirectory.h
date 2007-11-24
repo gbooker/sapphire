@@ -17,6 +17,7 @@
 - (void)processFile:(SapphireFileMetaData *)file;
 - (void)removeFile:(SapphireFileMetaData *)file;
 - (void)childDisplayChanged;
+- (void)writeToFile:(NSString *)filePath;
 - (BOOL)isDisplayEmpty;
 - (BOOL)isEmpty;
 @end

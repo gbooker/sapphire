@@ -48,6 +48,9 @@
 		@"Contents/Resources/File.png", FILE_GEM_KEY,
 		@"Contents/Resources/Report.png", REPORT_GEM_KEY,
 		@"Contents/Resources/Note.png", NOTE_GEM_KEY,
+		@"Contents/Resources/Import.png", IMPORT_GEM_KEY,
+		@"Contents/Resources/FrontRow.png", FRONTROW_GEM_KEY,
+		@"Contents/Resources/FastSwitch.png", FAST_GEM_KEY,
 		nil];
 	
 	return self;

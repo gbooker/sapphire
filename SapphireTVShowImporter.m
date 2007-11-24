@@ -495,7 +495,6 @@
 		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setShows:shows];
 		[chooser setFileName:fileName];
-		//[chooser setListTitle:[BRLocalizedString(@"Show? ", @"Prompt the user for showname with a file") stringByAppendingString:fileName]];
 		[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
 		[chooser setSearchStr:searchStr];
 		/*And display prompt*/
@@ -587,7 +586,7 @@
  */
 - (NSString *)initialText
 {
-	return BRLocalizedString(@"Fetch Internet Data", @"Title");
+	return BRLocalizedString(@"Fetch TV Show Data", @"Title");
 }
 
 /*!

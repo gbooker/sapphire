@@ -67,6 +67,18 @@
 		[self setReloadTimer];
 }
 
+- (void)writeToFile:(NSString *)filePath
+{
+	NSMutableDictionary *fileData = [NSMutableDictionary dictionaryWithDictionary:directory];
+/*
+	NSMutableDictionary *fileData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+							 directory, @"VirtualDirectory",
+							 nil];
+*/
+	if([fileData count])
+		[fileData writeToFile:filePath	atomically:YES];
+}
+
 - (BOOL)isDisplayEmpty
 {
 	return [files count] == 0 && [directories count] == 0;

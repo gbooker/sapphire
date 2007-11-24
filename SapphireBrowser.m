@@ -485,7 +485,7 @@ static BOOL is10Version = NO;
 			
 	// add text
 	if(displayName)name= displayName ;
-	name=[@"   " stringByAppendingString: name] ;
+	name=[@"  " stringByAppendingString: name] ;
 	[SapphireFrontRowCompat setTitle:name forMenu:result];
 	[items replaceObjectAtIndex:row withObject:result];
 				
@@ -659,7 +659,7 @@ BOOL setupAudioOutput(int sampleRate)
 	{
 		/*Browse the subdir*/
 		id controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaData metaDataForDirectory:name]];
-		[controller setListTitle:name];
+		[controller setListTitle:[NSString stringWithFormat:@" %@",name]];
 		[controller setListIcon:[self listIcon]];
 		[[self stack] pushController:controller];
 		[controller release];

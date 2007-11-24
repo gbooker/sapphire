@@ -621,7 +621,6 @@
 			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 			[posterChooser setPosters:posters] ;
 			[posterChooser setFileName:fileName];
-//			[posterChooser setMovieTitle:@"Movie Title"];
 			[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 			[[dataMenu stack] pushController:posterChooser];
 			[posterChooser release];
@@ -702,7 +701,7 @@
  */
 - (NSString *)initialText
 {
-	return BRLocalizedString(@"Movie Meta Data", @"Title");
+	return BRLocalizedString(@"Fetch Movie Data", @"Title");
 }
 
 /*!

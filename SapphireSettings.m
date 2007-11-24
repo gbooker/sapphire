@@ -73,20 +73,20 @@ static SapphireSettings *sharedInstance = nil;
 	
 	/*Setup display*/
 	metaCollection = [collection retain];
-	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"   Populate File Data", @"Populate File Data menu item"),
-												BRLocalizedString(@"   Fetch TV Show Data", @"Fetch TV Show Data menu item"),
-												BRLocalizedString(@"   Fetch Movie Data", @"Fetch Movie Data menu item"),
-/*												BRLocalizedString(@"   Choose Movie Posters", @"Start Poster Chooser menu item"),*/
-												BRLocalizedString(@"   Hide Collections", @"Hide Collections menu item"),
-												BRLocalizedString(@"   Don't Import Collections", @"Don't Import Collections menu item"),
-												BRLocalizedString(@"   Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"),
-/*												BRLocalizedString(@"   Skip \"Top Shows\" filter", @"Skip Top shows menu item"),*/
-												BRLocalizedString(@"   Skip \"Unwatched Shows\" filter", @"Skip Unwatched shows menu item"), 
-												BRLocalizedString(@"   Hide Show Spoilers", @"Hide show summarys menu item"),
-												BRLocalizedString(@"   Hide UI Quit", @"Hide the ui quitter menu item"),
-												BRLocalizedString(@"   Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
-												BRLocalizedString(@"   Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"),
-												BRLocalizedString(@"   Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
+	names = [[NSArray alloc] initWithObjects:	BRLocalizedString(@"  Populate File Data", @"Populate File Data menu item"),
+												BRLocalizedString(@"  Fetch TV Show Data", @"Fetch TV Show Data menu item"),
+												BRLocalizedString(@"  Fetch Movie Data", @"Fetch Movie Data menu item"),
+/*												BRLocalizedString(@"  Choose Movie Posters", @"Start Poster Chooser menu item"),*/
+												BRLocalizedString(@"  Hide Collections", @"Hide Collections menu item"),
+												BRLocalizedString(@"  Don't Import Collections", @"Don't Import Collections menu item"),
+												BRLocalizedString(@"  Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"),
+/*												BRLocalizedString(@"  Skip \"Top Shows\" filter", @"Skip Top shows menu item"),*/
+												BRLocalizedString(@"  Skip \"Unwatched Shows\" filter", @"Skip Unwatched shows menu item"), 
+												BRLocalizedString(@"  Hide Show Spoilers", @"Hide show summarys menu item"),
+												BRLocalizedString(@"  Hide UI Quit", @"Hide the ui quitter menu item"),
+												BRLocalizedString(@"  Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
+												BRLocalizedString(@"  Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"),
+												BRLocalizedString(@"  Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
 	
 	keys = [[NSArray alloc] initWithObjects:		@"",
 													@"",
@@ -103,7 +103,7 @@ static SapphireSettings *sharedInstance = nil;
 													USE_AC3_PASSTHROUGH,
 													DISABLE_ANON_KEY, nil];
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	gems = [[NSArray alloc] initWithObjects:	[theme gem:EYE_GEM_KEY],
+	gems = [[NSArray alloc] initWithObjects:	[theme gem:IMPORT_GEM_KEY],
 												[theme gem:TVR_GEM_KEY],
 												[theme gem:IMDB_GEM_KEY],
 												/*[theme gem:GREEN_GEM_KEY],*/
@@ -113,8 +113,8 @@ static SapphireSettings *sharedInstance = nil;
 												/*[theme gem:GREEN_GEM_KEY],*/
 												[theme gem:BLUE_GEM_KEY],
 												[theme gem:NOTE_GEM_KEY],
-												[theme gem:CONE_GEM_KEY],
-												[theme gem:CONE_GEM_KEY],
+												[theme gem:FRONTROW_GEM_KEY],
+												[theme gem:FAST_GEM_KEY],
 												[theme gem:AUDIO_GEM_KEY],
 												[theme gem:REPORT_GEM_KEY], nil];		
 	
