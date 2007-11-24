@@ -70,48 +70,12 @@
 	[self removeFile:file];
 }
 
-- (void)reloadDirectoryContents
-{
-	[super reloadDirectoryContents];
-	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
-	NSEnumerator *keyEnum = [directory keyEnumerator];
-	NSString *key = nil;
-	while((key = [keyEnum nextObject]) != nil)
-	{
-		SapphireShowDirectory *dir = [directory objectForKey:key];
-		if(![dir isDisplayEmpty])
-			[mutDict setObject:dir forKey:key];
-	}
-	[directories addObjectsFromArray:[mutDict allKeys]];
-	[directories sortUsingSelector:@selector(directoryNameCompare:)];
-	[cachedMetaDirs addEntriesFromDictionary:mutDict];
-	[metaDirs addEntriesFromDictionary:mutDict];
-	[mutDict release];
-	[(SapphireVirtualDirectory *)parent childDisplayChanged];
-}
-
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	NSString *show = [file showName];
 	if(show == nil)
 		return;
-	BOOL added = NO;
-	SapphireShowDirectory *showInfo = [directory objectForKey:show];
-	if(showInfo == nil)
-	{
-		showInfo = [[SapphireShowDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:show]];
-		[directory setObject:showInfo forKey:show];
-		[showInfo release];
-		added = YES;
-	}
-	[showInfo processFile:file];
-	if(added == YES)
-	{
-		if([showInfo isEmpty])
-			[directory removeObjectForKey:show];
-		else
-			[self setReloadTimer];
-	}
+	[self addFile:file toKey:show withChildClass:[SapphireShowDirectory class]];
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
@@ -119,63 +83,18 @@
 	NSString *show = [file showName];
 	if(show == nil)
 		return;
-	SapphireShowDirectory *showInfo = [directory objectForKey:show];
-	if(showInfo != nil)
-	{
-		[showInfo removeFile:file];
-		if([showInfo isEmpty])
-		{
-			[directory removeObjectForKey:show];
-			[self setReloadTimer];
-		}
-	}
+	[self removeFile:file fromKey:show];
 }
 @end
 
 @implementation SapphireShowDirectory
-- (void)reloadDirectoryContents
-{
-	[super reloadDirectoryContents];
-	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
-	NSEnumerator *keyEnum = [directory keyEnumerator];
-	NSString *key = nil;
-	while((key = [keyEnum nextObject]) != nil)
-	{
-		SapphireSeasonDirectory *dir = [directory objectForKey:key];
-		if(![dir isDisplayEmpty])
-			[mutDict setObject:dir forKey:key];
-	}
-	[directories addObjectsFromArray:[mutDict allKeys]];
-	[directories sortUsingSelector:@selector(directoryNameCompare:)];
-	[cachedMetaDirs addEntriesFromDictionary:mutDict];
-	[metaDirs addEntriesFromDictionary:mutDict];
-	[mutDict release];
-	[(SapphireVirtualDirectory *)parent childDisplayChanged];
-}
-
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	int seasonNum = [file seasonNumber];
 	if(seasonNum == 0)
 		return;
-	BOOL added = NO;
 	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
-	SapphireSeasonDirectory *seasonInfo = [directory objectForKey:season];
-	if(seasonInfo == nil)
-	{
-		seasonInfo = [[SapphireSeasonDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:season]];
-		[directory setObject:seasonInfo forKey:season];
-		[seasonInfo release];
-		added = YES;
-	}
-	[seasonInfo processFile:file];
-	if(added == YES)
-	{
-		if([seasonInfo isEmpty])
-			[directory removeObjectForKey:season];
-		else
-			[self setReloadTimer];
-	}
+	[self addFile:file toKey:season withChildClass:[SapphireSeasonDirectory class]];
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
@@ -184,16 +103,7 @@
 	if(seasonNum == 0)
 		return;
 	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
-	SapphireSeasonDirectory *seasonInfo = [directory objectForKey:season];
-	if(seasonInfo == nil)
-	{
-		[seasonInfo removeFile:file];
-		if([seasonInfo isEmpty])
-		{
-			[directory removeObjectForKey:season];
-			[self setReloadTimer];
-		}
-	}
+	[self removeFile:file fromKey:season];
 }
 @end
 

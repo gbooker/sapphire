@@ -8,12 +8,12 @@
 
 #import "SapphireVirtualDirectory.h"
 
-@interface SapphireTVDirectory : SapphireVirtualDirectory {
+@interface SapphireTVDirectory : SapphireVirtualDirectoryOfDirectories {
 }
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection;
 @end
 
-@interface SapphireShowDirectory : SapphireVirtualDirectory {
+@interface SapphireShowDirectory : SapphireVirtualDirectoryOfDirectories {
 }
 @end
 

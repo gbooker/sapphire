@@ -8,12 +8,26 @@
 
 #import "SapphireVirtualDirectory.h"
 
-@interface SapphireMovieDirectory : SapphireVirtualDirectory {
+@class SapphireMovieCategoryDirectory, SapphireMovieActorDirectory, SapphireMovieDirectorDirectory, SapphireMovieGenreDirectory;
+
+@interface SapphireMovieDirectory : SapphireVirtualDirectoryOfDirectories {
+	SapphireMovieCategoryDirectory	*allMovies;
+	SapphireMovieActorDirectory		*actors;
+	SapphireMovieDirectorDirectory	*directors;
+	SapphireMovieGenreDirectory		*genres;
 }
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection;
 @end
 
-@interface SapphireMovieGenreDirectory : SapphireVirtualDirectory {
+@interface SapphireMovieActorDirectory : SapphireVirtualDirectoryOfDirectories {
+}
+@end
+
+@interface SapphireMovieDirectorDirectory : SapphireVirtualDirectoryOfDirectories {
+}
+@end
+
+@interface SapphireMovieGenreDirectory : SapphireVirtualDirectoryOfDirectories {
 }
 @end
 
