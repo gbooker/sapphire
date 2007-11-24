@@ -33,12 +33,12 @@
 	collection = myCollection;
 	
 	allMovies = [[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All"]];
-	actors = [[SapphireMovieActorDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Actor"]];
+	cast = [[SapphireMovieCastDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Cast"]];
 	directors = [[SapphireMovieDirectorDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Director"]];
 	genres = [[SapphireMovieGenreDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Genre"]];
 	
 	[directory setObject:allMovies forKey:@"All"];
-	[directory setObject:actors forKey:@"Actor"];
+	[directory setObject:cast forKey:@"Cast"];
 	[directory setObject:directors forKey:@"Director"];
 	[directory setObject:genres forKey:@"Genre"];
 	
@@ -48,7 +48,7 @@
 - (void) dealloc
 {
 	[allMovies release];
-	[actors release];
+	[cast release];
 	[directors release];
 	[genres release];
 	[super dealloc];
@@ -92,7 +92,7 @@
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	[allMovies processFile:file];
-	[actors processFile:file];
+	[cast processFile:file];
 	[directors processFile:file];
 	[genres processFile:file];
 }
@@ -100,21 +100,21 @@
 - (void)removeFile:(SapphireFileMetaData *)file
 {
 	[allMovies removeFile:file];
-	[actors removeFile:file];
+	[cast removeFile:file];
 	[directors removeFile:file];
 	[genres removeFile:file];
 }
 
 @end
 
-@implementation SapphireMovieActorDirectory
+@implementation SapphireMovieCastDirectory
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	NSArray * actors=[file movieCast];
-	NSEnumerator *actorsEnum = [actors objectEnumerator];
+	NSArray * cast=[file movieCast];
+	NSEnumerator *castEnum = [cast objectEnumerator];
 	NSString *actor = nil;
 	
-	while((actor = [actorsEnum nextObject]) != nil)
+	while((actor = [castEnum nextObject]) != nil)
 	{
 		BOOL added=[self addFile:file toKey:actor withChildClass:[SapphireMovieCategoryDirectory class]];
 		if(added==YES)
@@ -124,10 +124,10 @@
 
 - (void)removeFile:(SapphireFileMetaData *)file
 {
-	NSArray * actors=[file movieCast];
-	NSEnumerator *actorsEnum = [actors objectEnumerator];
+	NSArray * cast=[file movieCast];
+	NSEnumerator *castEnum = [cast objectEnumerator];
 	NSString *actor = nil;
-	while((actor = [actorsEnum nextObject]) != nil)
+	while((actor = [castEnum nextObject]) != nil)
 		[self removeFile:file fromKey:actor];
 	
 }
