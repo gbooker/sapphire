@@ -341,7 +341,7 @@ static SapphireSettings *sharedInstance = nil;
 
 - (void) wasBuriedByPushingController: (BRLayerController *) controller
 {
-    // The user chose an option and this controller os no longer on screen
+    // The user chose an option and this controller is no longer on screen
     
     // always call super
     [super wasBuriedByPushingController: controller];

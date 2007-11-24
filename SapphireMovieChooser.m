@@ -172,4 +172,5 @@
 	selection = row;
 	[[self stack] popController];
 }
+
 @end

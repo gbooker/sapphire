@@ -12,6 +12,7 @@
 #import "SapphireMovieChooser.h"
 #import "SapphirePosterChooser.h"
 #import "SapphireFrontRowCompat.h"
+#import "SapphireShowChooser.h"
 
 /* Translation Keys */
 #define TRANSLATIONS_KEY			@"Translations"
@@ -557,6 +558,13 @@
 	/*Check to see if it is already imported*/
 	if([metaData importedTimeFromSource:META_IMDB_IMPORT_KEY])
 		return NO;
+	id controller = [[dataMenu stack] peekController];
+	/* Check to see if we are waiting on the user to select a show title */
+	if([controller isKindOfClass:[SapphireShowChooser class]])
+	{
+		/* Another chooser is on the screen - delay further processing */
+		return NO;
+	}
 	/*Get path*/
 	NSString *path = [metaData path];
 	if(![self isMovieCandidate:[path pathExtension]])

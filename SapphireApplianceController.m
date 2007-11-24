@@ -109,11 +109,11 @@ static NSArray *predicates = nil;
 {
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
 	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
-//	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
-	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:fileImp, tvImp,nil]];
+	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
+	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:tvImp,movImp,fileImp,nil]];
 	[fileImp release];
 	[tvImp release];
-//	[movImp release];
+	[movImp release];
 	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:collection importer:allImp];
 	[allImp release];
 	return [ret autorelease];
@@ -306,8 +306,7 @@ static NSArray *predicates = nil;
 	result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:YES];
 	
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
-	//	else if([name isEqual: AGENT_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
+	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:IMPORT_GEM_KEY] forMenu:result];
 	else if([name isEqual: SETTINGS_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
 	else if([name isEqual: RESET_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:FRONTROW_GEM_KEY] forMenu:result];
 	else [SapphireFrontRowCompat setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]] forMenu:result];

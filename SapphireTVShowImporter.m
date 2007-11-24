@@ -10,6 +10,7 @@
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
 #import "SapphireShowChooser.h"
+#import "SapphireMovieChooser.h"
 
 /* TVRage XPATHS  */
 #define TVRAGE_SHOWNAME_XPATH @".//h3/text()"
@@ -446,6 +447,13 @@
 	/*Check to see if it is already imported*/
 	if([metaData importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
 		return NO;
+	id controller = [[dataMenu stack] peekController];
+	/* Check to see if we are waiting on the user to select a movie title */
+	if([controller isKindOfClass:[SapphireMovieChooser class]])
+	{
+		/* Another chooser is on the screen - delay further processing */
+		return NO;
+	}
 	/*Get path*/
 	NSString *path = [metaData path];
 //	NSArray *pathComponents = [path pathComponents];
