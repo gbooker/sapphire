@@ -67,16 +67,26 @@
 		[self setReloadTimer];
 }
 
+- (NSMutableDictionary *)directoryEntries
+{
+	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
+	NSEnumerator *pathEnum = [directory keyEnumerator];
+	NSString *subPath = nil;
+	while((subPath = [pathEnum nextObject]) != nil)
+	{
+		SapphireMetaData *data = [directory objectForKey:subPath];
+		if([data isKindOfClass:[SapphireVirtualDirectory class]])
+			[ret setObject:[(SapphireVirtualDirectory *)data directoryEntries] forKey:subPath];
+		else
+			[ret setObject:[data path] forKey:subPath];
+	}
+	return ret;
+}
+
 - (void)writeToFile:(NSString *)filePath
 {
-	NSMutableDictionary *fileData = [NSMutableDictionary dictionaryWithDictionary:directory];
-/*
-	NSMutableDictionary *fileData = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-							 directory, @"VirtualDirectory",
-							 nil];
-*/
-	if([fileData count])
-		[fileData writeToFile:filePath	atomically:YES];
+	NSMutableDictionary *fileData = [self directoryEntries];
+	[fileData writeToFile:filePath	atomically:YES];
 }
 
 - (BOOL)isDisplayEmpty
