@@ -703,12 +703,15 @@ BOOL setupAudioOutput(int sampleRate)
 			{
 				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/movie.php"]];
 				NSString *movieTitle=[currentPlayFile movieTitle];
+				NSString *movieID=[currentPlayFile movieID];
 				NSDate * releaseDate=[currentPlayFile movieReleaseDate];
 			
  				if(movieTitle != 0)
 					[reqComp addObject:[NSString stringWithFormat:@"title=%@", movieTitle]];
 				if(releaseDate != 0)
 					[reqComp addObject:[NSString stringWithFormat:@"year=%@", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
+				if(movieID != 0)
+					[reqComp addObject:[NSString stringWithFormat:@"movieid=%@", movieID]];
 				if(path != 0)
 					[reqComp addObject:[NSString stringWithFormat:@"path=%@", [[path lastPathComponent]lowercaseString]]];
 			}

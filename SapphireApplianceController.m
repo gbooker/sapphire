@@ -163,7 +163,7 @@ static NSArray *predicates = nil;
 	[tvBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"  TV Shows", nil)];
 	[mutableMasterControllers addObject:tvBrowser];
-	[tvDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualTVDir.plist"]];
+//	[tvDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualTVDir.plist"]];
 	[tvBrowser release];
 	
 	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
@@ -172,7 +172,7 @@ static NSArray *predicates = nil;
 	[movieBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"  Movies", nil)];
 	[mutableMasterControllers addObject:movieBrowser];
-	[movieDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
+//	[movieDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
 	[movieBrowser release];
 	
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];

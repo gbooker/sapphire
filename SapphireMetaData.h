@@ -42,6 +42,7 @@
 #define	META_MOVIE_WIRTERS_KEY				@"Writers"
 #define	META_MOVIE_GENRES_KEY				@"Genres"
 #define META_MOVIE_PLOT_KEY					@"Plot"
+#define META_MOVIE_IDENTIFIER_KEY			@"Movie ID"
 
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
@@ -196,6 +197,7 @@ typedef enum {
 - (NSString *)episodeTitle;
 - (NSString *)movieTitle;
 - (NSDate *)movieReleaseDate;
+- (NSString *)movieID;
 - (NSString *)showID;
 - (NSString *)showName ;
 - (NSArray *)movieGenres;

@@ -32,15 +32,15 @@
 	
 	collection = myCollection;
 	
-	allMovies = [[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All"]];
-	cast = [[SapphireMovieCastDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Cast"]];
-	directors = [[SapphireMovieDirectorDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Director"]];
-	genres = [[SapphireMovieGenreDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Genre"]];
+	allMovies = [[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All Movies"]];
+	cast = [[SapphireMovieCastDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Cast"]];
+	directors = [[SapphireMovieDirectorDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Director"]];
+	genres = [[SapphireMovieGenreDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Genre"]];
 	
-	[directory setObject:allMovies forKey:@"All"];
-	[directory setObject:cast forKey:@"Cast"];
-	[directory setObject:directors forKey:@"Director"];
-	[directory setObject:genres forKey:@"Genre"];
+	[directory setObject:allMovies forKey:@"All Movies"];
+	[directory setObject:cast forKey:@"By Cast"];
+	[directory setObject:directors forKey:@"By Director"];
+	[directory setObject:genres forKey:@"By Genre"];
 	
 	return self;
 }
@@ -113,12 +113,15 @@
 	NSArray * cast=[file movieCast];
 	NSEnumerator *castEnum = [cast objectEnumerator];
 	NSString *actor = nil;
-	
+	int i=0 ;
 	while((actor = [castEnum nextObject]) != nil)
 	{
+		/* Limit the cast depth to 10 actors */
+		if(i>10)break ;
 		BOOL added=[self addFile:file toKey:actor withChildClass:[SapphireMovieCategoryDirectory class]];
 		if(added==YES)
-			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
+//			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
+		i++;
 	}
 }
 
@@ -142,9 +145,12 @@
 	
 	while((director = [directorsEnum nextObject]) != nil)
 	{
+		[self addFile:file toKey:director withChildClass:[SapphireMovieCategoryDirectory class]];
+/*
 		BOOL added=[self addFile:file toKey:director withChildClass:[SapphireMovieCategoryDirectory class]];
 		if(added==YES)
 			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
+*/
 	}
 }
 
@@ -169,9 +175,12 @@
 
 	while((genre = [genresEnum nextObject]) != nil)
 	{
+		[self addFile:file toKey:genre withChildClass:[SapphireMovieCategoryDirectory class]];
+/*
 		BOOL added=[self addFile:file toKey:genre withChildClass:[SapphireMovieCategoryDirectory class]];
 		if(added==YES)
 			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
+*/
 	}
 }
 

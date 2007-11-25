@@ -422,6 +422,8 @@
 	
 	
 	/* populate metadata to return */
+	[ret setObject:movieTitleLink forKey:META_MOVIE_IDENTIFIER_KEY];
+	
 	if(directors)
 		[ret setObject:directors forKey:META_MOVIE_DIRECTOR_KEY];
 	if(plot)
