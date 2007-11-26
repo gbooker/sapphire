@@ -434,6 +434,7 @@ static BOOL is10Version = NO;
 	BOOL favorite = NO;
 	BOOL gear = NO;
 	BRRenderScene *scene = [self scene];
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	/*Is this a dir*/
 	if(row < dirCount)
 	{
@@ -464,6 +465,12 @@ static BOOL is10Version = NO;
 			if(fileCls==FILE_CLASS_MOVIE)
 			{
 				displayName=[meta movieTitle] ;
+				[SapphireFrontRowCompat setRightJustifiedText:[meta movieStats] forMenu:result];
+				/*Add icons (RIGHT)*/
+				if([meta oscarsWon]>0)
+				{
+					[SapphireFrontRowCompat setRightIcon:[theme gem:MOV_GEM_KEY] forMenu:result];
+				}
 			}
 			watched = [meta watched];
 			favorite = [meta favorite] ;
@@ -475,13 +482,13 @@ static BOOL is10Version = NO;
 		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
 		gear = YES;
 	}
-	/*Add icons*/
-	SapphireTheme *theme = [SapphireTheme sharedTheme];
+	/*Add icons (LEFT)*/
 	if(gear) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
 	else if(!watched) [SapphireFrontRowCompat setLeftIcon:[theme gem:BLUE_GEM_KEY] forMenu:result];
 	else if(favorite) [SapphireFrontRowCompat setLeftIcon:[theme gem:YELLOW_GEM_KEY] forMenu:result];
 	else if(fileCls==FILE_CLASS_AUDIO)[SapphireFrontRowCompat setLeftIcon:[theme gem:GREEN_GEM_KEY] forMenu:result];
 	else [SapphireFrontRowCompat setLeftIcon:[theme gem:RED_GEM_KEY] forMenu:result];
+	
 			
 	// add text
 	if(displayName)name= displayName ;

@@ -42,6 +42,10 @@
 #define	META_MOVIE_WIRTERS_KEY				@"Writers"
 #define	META_MOVIE_GENRES_KEY				@"Genres"
 #define META_MOVIE_PLOT_KEY					@"Plot"
+#define META_MOVIE_IMDB_RATING_KEY			@"IMDB Rating"
+#define META_MOVIE_IMDB_250_KEY				@"IMDB Top 250"
+#define META_MOVIE_MPAA_RATING_KEY			@"MPAA Rating"
+#define META_MOVIE_OSCAR_KEY				@"Oscars"
 #define META_MOVIE_IDENTIFIER_KEY			@"Movie ID"
 
 //Special Display Only Info
@@ -194,9 +198,11 @@ typedef enum {
 - (BOOL)hasVideo;
 - (int)episodeNumber;
 - (int)seasonNumber;
+- (int)oscarsWon;
 - (NSString *)episodeTitle;
 - (NSString *)movieTitle;
 - (NSDate *)movieReleaseDate;
+- (NSString *)movieStats;
 - (NSString *)movieID;
 - (NSString *)showID;
 - (NSString *)showName ;

@@ -183,8 +183,8 @@
 		F5EA91340C3063F500B1EC7D /* SapphireMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMedia.m; sourceTree = "<group>"; };
 		F5FD9F140CE27B9C00812CE5 /* BRLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRLayerController.h; sourceTree = "<group>"; };
 		F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRLayerController.m; sourceTree = "<group>"; };
-		F5FD9F240CE27BD600812CE5 /* CompatClasses-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CompatClasses-Info.plist"; sourceTree = "<group>"; };
-		F5FDA1980CE27CBF00812CE5 /* CompatClasses-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CompatClasses-Info copy.plist"; sourceTree = "<group>"; };
+		F5FD9F240CE27BD600812CE5 /* CompatClasses-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "CompatClasses-Info.plist"; sourceTree = "<group>"; };
+		F5FDA1980CE27CBF00812CE5 /* CompatClasses-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = file; path = "CompatClasses-Info copy.plist"; sourceTree = "<group>"; };
 		F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE4239A00C331FFD0035A717 /* Green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Green.png; sourceTree = "<group>"; };
 		FE4239A10C331FFD0035A717 /* Yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Yellow.png; sourceTree = "<group>"; };
@@ -514,7 +514,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "Sapphire" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* ApplianceBase */;
 			projectDirPath = "";

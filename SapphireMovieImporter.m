@@ -27,7 +27,7 @@
 #define IMDB_POSTER_LINK_XPATH			@"//ul/li/a/@href"
 #define	IMDB_RESULT_NAME_XPATH			@"normalize-space(string())"
 #define IMDB_RESULT_TITLE_YEAR_XPATH	@"//div[@id='tn15title']/h1/replace(string(), '\n', '')"
-#define IMDB_RESULT_RELEASE_DATE_XPATH	@"//div[@class='info']"
+#define IMDB_RESULT_INFO_XPATH	@"//div[@class='info']"
 #define IMDB_RESTULT_CAST_NAMES_XPATH	@"//div[@class='info']/table/tr/td/a"
 /* IMP XPATHS */
 #define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
@@ -309,10 +309,29 @@
 	[metaTrimmer scanUpToString:@"(" intoString:&movieTitle];
 	movieTitle=[movieTitle substringToIndex:[movieTitle length]-1];
 	
+	/* Get the User Rating (IMDB) */
+	NSArray *ratingCandidates=[document objectsForXQuery:@"//b/string()" error:&error];
+	NSString *usrRating=[[document objectsForXQuery:@"//b/string()" error:&error] objectAtIndex:[ratingCandidates indexOfObject:@"User Rating:"]+1];
+	metaTrimmer=[NSScanner scannerWithString:usrRating];
+	[metaTrimmer scanUpToString:@"/" intoString:&usrRating];
+	
+	/* Check for IMDB top 250 */
+	NSNumber * top250=nil ;
+	NSArray *top250Candidate=[document objectsForXQuery:@"//div[@class='left']/a/string()" error:&error];
+
+	if([top250Candidate count])
+	{
+		NSString *top250Str=[top250Candidate objectAtIndex:0];
+		if([top250Str hasPrefix:@"Top 250:"])
+			top250=[NSNumber numberWithInt:[[top250Str substringFromIndex:10] intValue]];
+	}
+		
 	/* Get the release date */
-	NSArray *rawData=[document objectsForXQuery:IMDB_RESULT_RELEASE_DATE_XPATH error:&error];
+	NSArray *rawData=[document objectsForXQuery:IMDB_RESULT_INFO_XPATH error:&error];
 	NSDate * releaseDate=nil ;
 	NSString * plot=nil;
+	NSString * mpaaRating=nil;
+	NSNumber * oscarsWon=nil ;
 	NSArray * directors=nil;
 	NSArray * writers=nil;
 	NSArray * genres=nil;
@@ -350,6 +369,26 @@
 					[mutDirs removeObject:@""];
 					directors = [[mutDirs copy] autorelease];
 					[mutDirs release];
+				}
+				else if([dataType hasPrefix:@"Awards"])
+				{
+					NSString *awardsStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
+					trimmer=[NSScanner scannerWithString:awardsStr];
+					[trimmer scanUpToString:@" Oscars." intoString:&awardsStr];
+					if([awardsStr length]<[[trimmer string] length])
+					{
+						awardsStr=[awardsStr substringFromIndex:3];
+						oscarsWon=[NSNumber numberWithInt:[awardsStr intValue]];
+					}
+				}
+				else if([dataType hasPrefix:@"MPAA"])
+				{
+					NSString *mpaaStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
+					if([mpaaStr hasPrefix:@"Rated"])
+					{
+						trimmer=[NSScanner scannerWithString:[mpaaStr substringFromIndex:6]] ;
+						[trimmer scanUpToString:@" " intoString:&mpaaRating];
+					}
 				}
 				else if([dataType hasPrefix:@"Genre"])
 				{
@@ -423,7 +462,18 @@
 	
 	/* populate metadata to return */
 	[ret setObject:movieTitleLink forKey:META_MOVIE_IDENTIFIER_KEY];
-	
+	if(oscarsWon)
+		[ret setObject:oscarsWon forKey:META_MOVIE_OSCAR_KEY];
+	else
+		[ret setObject:[NSNumber numberWithInt:0] forKey:META_MOVIE_OSCAR_KEY];
+	if(top250)
+		[ret setObject:top250 forKey:META_MOVIE_IMDB_250_KEY];
+	if([usrRating length]>0)
+		[ret setObject:[NSNumber numberWithFloat:[usrRating floatValue]] forKey:META_MOVIE_IMDB_RATING_KEY];
+	if(mpaaRating)
+		[ret setObject:mpaaRating forKey:META_MOVIE_MPAA_RATING_KEY];
+	else
+		[ret setObject:@"NA" forKey:META_MOVIE_MPAA_RATING_KEY];
 	if(directors)
 		[ret setObject:directors forKey:META_MOVIE_DIRECTOR_KEY];
 	if(plot)

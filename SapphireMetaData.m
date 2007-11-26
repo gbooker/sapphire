@@ -1971,6 +1971,17 @@ static NSArray *displayedMetaDataOrder = nil;
 }
 
 /*!
+ * @brief Returns the number of oscars for a movie
+ *
+ * @return The number of oscars won
+ */
+- (int)oscarsWon
+{
+	[self constructCombinedData];
+	return [[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue];
+}
+
+/*!
  * @brief Returns the title of the file
  *
  * @return The title of the file
@@ -2001,6 +2012,22 @@ static NSArray *displayedMetaDataOrder = nil;
 {
 	[self constructCombinedData];
 	return [combinedInfo objectForKey:META_MOVIE_RELEASE_DATE_KEY] ;
+}
+
+/*!
+ * @brief Returns movie stats to be used for RightJustifiedText 
+ *
+ * @return The desired stat based on availible info
+ */
+- (NSString *)movieStats;
+{
+	[self constructCombinedData];
+	if([[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]>0)
+		return [NSString stringWithFormat:@"%dx",[[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]];
+	else if([[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]>0)
+		return [NSString stringWithFormat:@"%d/250",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
+	else
+		return [NSString stringWithFormat:@"%1.1f/10",[[combinedInfo objectForKey:META_MOVIE_IMDB_RATING_KEY] floatValue]];
 }
 
 /*!
