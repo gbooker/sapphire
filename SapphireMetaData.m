@@ -1305,7 +1305,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
 	{
-		[[self metaDataForDirectory:dir] loadMetaData];
+		SapphireDirectoryMetaData *nextMeta = [self metaDataForDirectory:dir];
+		if(nextMeta == nil)
+			continue;
+		[NSTimer scheduledTimerWithTimeInterval:0.01 target:nextMeta selector:@selector(loadMetaData) userInfo:nil repeats:NO];
 	}
 	keys = [NSArray arrayWithArray:[metaFiles allKeys]];
 	NSEnumerator *fileEnum = [keys objectEnumerator];
