@@ -247,7 +247,7 @@
 		/*Parse the episode's info*/
 		NSString *epTitle = nil;
 		NSString *link = nil;
-		int season = 0;
+		int seasonNum = 0;
 		int ep = 0;
 		int epNumber = 0;
 		NSMutableString *summary = nil;
@@ -275,11 +275,13 @@
 					{
 						[scanner scanInt:&epNumber];
 						[scanner scanUpToCharactersFromSet:decimalSet intoString:nil];
-						[scanner scanInt:&season];
+						[scanner scanInt:&seasonNum];
 						[scanner scanUpToCharactersFromSet:decimalSet intoString:nil];
 						[scanner scanInt:&ep];
 						[scanner scanCharactersFromSet:skipSet intoString:nil];							
 					}
+					else
+						seasonNum = season;
 					epTitle = [epInfoStr substringFromIndex:[scanner scanLocation]];
 				}
 			}
@@ -319,7 +321,7 @@
 			}
 		}
 		/*Add to cache*/
-		[self addEp:showName title:epTitle season:season epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName toDict:ret];
+		[self addEp:showName title:epTitle season:seasonNum epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName toDict:ret];
 	}
 	return ret;
 }

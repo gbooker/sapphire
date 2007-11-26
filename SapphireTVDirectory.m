@@ -120,7 +120,12 @@
 		SapphireFileMetaData *file = [directory objectForKey:key];
 		if([fm fileExistsAtPath:[file path]])
 		{
-			NSString *ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), [file episodeNumber]];
+			int epNum = [file episodeNumber];
+			NSString *ep = nil;
+			if(epNum != 0)
+				ep = [NSString stringWithFormat:BRLocalizedString(@"Episode %d", @"Episode name"), epNum];
+			else
+				ep = [NSString stringWithFormat:BRLocalizedString(@"Episode: %@", @"Episode name"), [file episodeTitle]];
 			[mutDict setObject:file forKey:ep];
 		}
 	}
@@ -134,18 +139,12 @@
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	int epNum = [file episodeNumber];
-	if(epNum == 0)
-		return;
 	[directory setObject:file forKey:[file path]];
 	[self setReloadTimer];
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
 {
-	int epNum = [file episodeNumber];
-	if(epNum == 0)
-		return;
 	[directory removeObjectForKey:[file path]];
 	[self setReloadTimer];
 }
