@@ -199,6 +199,7 @@ typedef enum {
 - (int)episodeNumber;
 - (int)seasonNumber;
 - (int)oscarsWon;
+- (int)imdbTop250;
 - (NSString *)episodeTitle;
 - (NSString *)movieTitle;
 - (NSDate *)movieReleaseDate;

@@ -32,15 +32,20 @@
 	
 	collection = myCollection;
 	
-	allMovies = [[SapphireMovieCategoryDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All Movies"]];
-	cast = [[SapphireMovieCastDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Cast"]];
-	directors = [[SapphireMovieDirectorDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Director"]];
-	genres = [[SapphireMovieGenreDirectory alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Genre"]];
+	allMovies	= [[SapphireMovieCategoryDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All Movies"]];
+	cast		= [[SapphireMovieCastDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Cast"]];
+	directors	= [[SapphireMovieDirectorDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Director"]];
+	genres		= [[SapphireMovieGenreDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Genre"]];
+	imdbtop250	= [[SapphireMovieTop250Directory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"IMDB Top 250"]];
+	oscars		= [[SapphireMovieOscarDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Academy Award Winning"]];
+
 	
 	[directory setObject:allMovies forKey:@"All Movies"];
 	[directory setObject:cast forKey:@"By Cast"];
 	[directory setObject:directors forKey:@"By Director"];
 	[directory setObject:genres forKey:@"By Genre"];
+	[directory setObject:imdbtop250	forKey:@"IMDB Top 250"];
+	[directory setObject:oscars forKey:@"Academy Award Winning"];
 	
 	return self;
 }
@@ -120,7 +125,6 @@
 		if(i>10)break ;
 		BOOL added=[self addFile:file toKey:actor withChildClass:[SapphireMovieCategoryDirectory class]];
 		if(added==YES)
-//			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
 		i++;
 	}
 }
@@ -144,14 +148,7 @@
 	NSString *director = nil;
 	
 	while((director = [directorsEnum nextObject]) != nil)
-	{
 		[self addFile:file toKey:director withChildClass:[SapphireMovieCategoryDirectory class]];
-/*
-		BOOL added=[self addFile:file toKey:director withChildClass:[SapphireMovieCategoryDirectory class]];
-		if(added==YES)
-			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
-*/
-	}
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
@@ -174,14 +171,7 @@
 	NSString *genre = nil;
 
 	while((genre = [genresEnum nextObject]) != nil)
-	{
 		[self addFile:file toKey:genre withChildClass:[SapphireMovieCategoryDirectory class]];
-/*
-		BOOL added=[self addFile:file toKey:genre withChildClass:[SapphireMovieCategoryDirectory class]];
-		if(added==YES)
-			[self writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
-*/
-	}
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
@@ -194,8 +184,6 @@
 
 }
 @end
-
-
 
 @implementation SapphireMovieCategoryDirectory
 - (void)reloadDirectoryContents
@@ -239,3 +227,26 @@
 	[self setReloadTimer];
 }
 @end
+
+@implementation SapphireMovieTop250Directory
+
+- (void)processFile:(SapphireFileMetaData *)file
+{
+	if([file imdbTop250]>0)
+		[directory setObject:file forKey:[file path]];
+	[self setReloadTimer];
+	
+}
+@end
+
+@implementation SapphireMovieOscarDirectory
+
+- (void)processFile:(SapphireFileMetaData *)file
+{
+//	if([file oscarsWon]>0)
+		[directory setObject:file forKey:[file path]];
+	[self setReloadTimer];
+	
+}
+@end
+

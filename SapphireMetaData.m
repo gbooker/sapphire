@@ -1982,6 +1982,17 @@ static NSArray *displayedMetaDataOrder = nil;
 }
 
 /*!
+ * @brief Returns the rank for a movie in the imdb 250
+ *
+ * @return The number of oscars won
+ */
+- (int)imdbTop250
+{
+	[self constructCombinedData];
+	return [[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue];
+}
+
+/*!
  * @brief Returns the title of the file
  *
  * @return The title of the file
@@ -2025,9 +2036,13 @@ static NSArray *displayedMetaDataOrder = nil;
 	if([[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]>0)
 		return [NSString stringWithFormat:@"%dx",[[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]];
 	else if([[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]>0)
-		return [NSString stringWithFormat:@"%d/250",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
+		return [NSString stringWithFormat:@"#%d",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
+	else
+		return @"";
+/*
 	else
 		return [NSString stringWithFormat:@"%1.1f/10",[[combinedInfo objectForKey:META_MOVIE_IMDB_RATING_KEY] floatValue]];
+*/
 }
 
 /*!
