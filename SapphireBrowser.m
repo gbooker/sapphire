@@ -470,13 +470,25 @@ static BOOL is10Version = NO;
 			if(fileCls==FILE_CLASS_MOVIE)
 			{
 				displayName=[meta movieTitle] ;
-				[SapphireFrontRowCompat setRightJustifiedText:[meta movieStats] forMenu:result];
-				
-				/*Add icons (RIGHT)*/
-				if([meta oscarsWon]>0)
-					[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
-				else if([meta imdbTop250]>0)
+				/* Find out if we are displaying a virtual directoy we need to filter for */
+				NSString *dirFilter=[[[[metaData metaDataForDirectory:VIRTUAL_DIR_ROOT_KEY] path]pathComponents]objectAtIndex:1];
+				/*Add icons & stats (RIGHT)*/
+				if([dirFilter isEqualToString:VIRTUAL_DIR_TOP250_KEY])
+				{
+					/* This list is already filtered so all displayed movies will have a top250 stat */
+					[SapphireFrontRowCompat setRightJustifiedText:[meta movieStatsTop250] forMenu:result];
 					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
+				}
+				else if([meta oscarsWon]>0)
+				{
+					[SapphireFrontRowCompat setRightJustifiedText:[meta movieStatsOscar] forMenu:result];
+					[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
+				}
+				else if([meta imdbTop250]>0)
+				{
+					[SapphireFrontRowCompat setRightJustifiedText:[meta movieStatsTop250] forMenu:result];
+					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
+				}
 			}
 			watched = [meta watched];
 			favorite = [meta favorite] ;

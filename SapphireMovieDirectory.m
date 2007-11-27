@@ -26,7 +26,7 @@
 
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection
 {
-	self = [self initWithParent:nil path:@"@MOVIES"];
+	self = [self initWithParent:nil path:VIRTUAL_DIR_ROOT_KEY];
 	if(self == nil)
 		return nil;
 	
@@ -39,15 +39,15 @@
 	SapphireMovieOscarDirectory		*oscars;
 	SapphireMovieTop250Directory	*imdbtop250;
 
-	allMovies	= [[SapphireMovieCategoryDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All Movies"]];
-	cast		= [[SapphireMovieCastDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Cast"]];
-	directors	= [[SapphireMovieDirectorDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Director"]];
-	genres		= [[SapphireMovieGenreDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Genre"]];
-	imdbtop250	= [[SapphireMovieTop250Directory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"IMDB Top 250"]];
-	oscars		= [[SapphireMovieOscarDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"Academy Award Winning"]];
+	allMovies	= [[SapphireMovieCategoryDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_ALL_KEY]];
+	cast		= [[SapphireMovieCastDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_CAST_KEY]];
+	directors	= [[SapphireMovieDirectorDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_DIRECTOR_KEY]];
+	genres		= [[SapphireMovieGenreDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_GENRE_KEY]];
+	imdbtop250	= [[SapphireMovieTop250Directory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_TOP250_KEY]];
+	oscars		= [[SapphireMovieOscarDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_OSCAR_KEY]];
 
 	
-	[directory setObject:allMovies forKey:@"All Movies"];
+	[directory setObject:allMovies forKey:VIRTUAL_DIR_ALL_KEY];
 	[directory setObject:cast forKey:@"By Cast"];
 	[directory setObject:directors forKey:@"By Director"];
 	[directory setObject:genres forKey:@"By Genre"];
@@ -55,12 +55,12 @@
 	[directory setObject:oscars forKey:@"Academy Award Winning"];
 	
 	keyOrder = [[NSArray alloc] initWithObjects:
-				@"All Movies",
-				@"By Cast",
-				@"By Director",
-				@"By Genre",
-				@"IMDB Top 250",
-				@"Academy Award Winning",
+				VIRTUAL_DIR_ALL_KEY,
+				VIRTUAL_DIR_GENRE_KEY,
+				VIRTUAL_DIR_CAST_KEY,
+				VIRTUAL_DIR_DIRECTOR_KEY,
+				VIRTUAL_DIR_TOP250_KEY,
+				VIRTUAL_DIR_OSCAR_KEY,
 				nil];
 	
 	return self;

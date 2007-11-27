@@ -2029,23 +2029,25 @@ static NSArray *displayedMetaDataOrder = nil;
 }
 
 /*!
- * @brief Returns movie stats to be used for RightJustifiedText 
+ * @brief Returns movie oscar stats to be used for RightJustifiedText
  *
  * @return The desired stat based on availible info
  */
-- (NSString *)movieStats;
+- (NSString *)movieStatsOscar
 {
 	[self constructCombinedData];
-	if([[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]>0)
-		return [NSString stringWithFormat:@"%dx",[[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]];
-	else if([[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]>0)
-		return [NSString stringWithFormat:@"#%d",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
-	else
-		return @"";
-/*
-	else
-		return [NSString stringWithFormat:@"%1.1f/10",[[combinedInfo objectForKey:META_MOVIE_IMDB_RATING_KEY] floatValue]];
-*/
+	return [NSString stringWithFormat:@"%dx",[[combinedInfo objectForKey:META_MOVIE_OSCAR_KEY] intValue]];
+}
+
+/*!
+ * @brief Returns movie top250 stats to be used for RightJustifiedText
+ *
+ * @return The desired stat based on availible info
+ */
+- (NSString *)movieStatsTop250
+{
+	[self constructCombinedData];
+	return [NSString stringWithFormat:@"#%d",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
 }
 
 /*!

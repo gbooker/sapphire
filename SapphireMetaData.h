@@ -48,11 +48,20 @@
 #define META_MOVIE_OSCAR_KEY				@"Oscars"
 #define META_MOVIE_IDENTIFIER_KEY			@"Movie ID"
 
-//Special Display Only Info
+//Special Display Only Info (MediaPreview)
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
 #define	META_MOVIE_IMDB_STATS_KEY		@"IMDB"
 #define AUDIO_DESC_LABEL_KEY			@"Audio"
 #define VIDEO_DESC_LABEL_KEY			@"Video"
+
+//Sapphire Virtual Directory Movie Folders
+#define VIRTUAL_DIR_ROOT_KEY			@"@MOVIES"
+#define VIRTUAL_DIR_ALL_KEY				@"All Movies"
+#define VIRTUAL_DIR_CAST_KEY			@"By Cast"
+#define VIRTUAL_DIR_DIRECTOR_KEY		@"By Director"
+#define VIRTUAL_DIR_GENRE_KEY			@"By Genre"
+#define VIRTUAL_DIR_TOP250_KEY			@"IMDB Top 250"
+#define VIRTUAL_DIR_OSCAR_KEY			@"Academy Award Winning"
 
 #define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
 #define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"
@@ -206,7 +215,8 @@ typedef enum {
 - (NSString *)episodeTitle;
 - (NSString *)movieTitle;
 - (NSDate *)movieReleaseDate;
-- (NSString *)movieStats;
+- (NSString *)movieStatsOscar;
+- (NSString *)movieStatsTop250;
 - (NSString *)movieID;
 - (NSString *)showID;
 - (NSString *)showName ;
