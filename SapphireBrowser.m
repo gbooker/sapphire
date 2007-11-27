@@ -466,11 +466,10 @@ static BOOL is10Version = NO;
 			{
 				displayName=[meta movieTitle] ;
 				[SapphireFrontRowCompat setRightJustifiedText:[meta movieStats] forMenu:result];
+				
 				/*Add icons (RIGHT)*/
 				if([meta oscarsWon]>0)
-				{
 					[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
-				}
 				else if([meta imdbTop250]>0)
 					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
 			}

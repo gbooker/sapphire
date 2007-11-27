@@ -1529,6 +1529,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	//These keys are before the above translation
 	displayedMetaDataOrder = [NSArray arrayWithObjects:
 		//These are not shown in the list
+		META_MOVIE_MPAA_RATING_KEY,
 		META_RATING_KEY,
 		META_DESCRIPTION_KEY,
 		META_MOVIE_PLOT_KEY,
@@ -1536,12 +1537,12 @@ static NSArray *displayedMetaDataOrder = nil;
 		META_TITLE_KEY,
 		META_MOVIE_TITLE_KEY,
 		META_SHOW_AIR_DATE,
-		META_MOVIE_RELEASE_DATE_KEY,
-		META_MOVIE_DIRECTOR_KEY,
-		META_MOVIE_GENRES_KEY,
-		META_MOVIE_CAST_KEY,
 		META_MOVIE_WIRTERS_KEY,
+		META_MOVIE_RELEASE_DATE_KEY,					  
 		//These are displayed as line items
+		META_MOVIE_DIRECTOR_KEY,
+		META_MOVIE_CAST_KEY,
+		META_MOVIE_GENRES_KEY,
 		META_EPISODE_AND_SEASON_KEY,
 		META_SEASON_NUMBER_KEY,
 		META_EPISODE_NUMBER_KEY,
@@ -1553,7 +1554,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	displayedMetaData = [[NSSet alloc] initWithArray:displayedMetaDataOrder];
 	
 	/*Remove non-displayed data from the displayed order, and use the display keys*/
-	int excludedKeys = 5;
+	int excludedKeys = 10;
 	NSMutableArray *modified = [[displayedMetaDataOrder subarrayWithRange:NSMakeRange(excludedKeys, [displayedMetaDataOrder count] - excludedKeys)] mutableCopy];
 	
 	int i;

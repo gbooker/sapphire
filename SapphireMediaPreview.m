@@ -213,21 +213,26 @@ static NSSet *coverArtExtentions = nil;
 	NSString *value=nil;
 	value = [allMeta objectForKey:META_MOVIE_TITLE_KEY];
 	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
-	if(value != nil)
+
+	/*Get the release date*/
+	NSDate *releaseDate = [allMeta objectForKey:META_MOVIE_RELEASE_DATE_KEY];
+	if(releaseDate != nil)
 	{
-		/*If there is a release date, put it in the title*/
-		NSDate *releaseDate = [allMeta objectForKey:META_MOVIE_RELEASE_DATE_KEY];
-		if(releaseDate != nil)
-		{
-			NSDateFormatter *format = [[NSDateFormatter alloc] init];
-			[format setDateStyle:NSDateFormatterShortStyle];
-			[format setTimeZone:NSDateFormatterNoStyle];
-			value = [[format stringFromDate:releaseDate]stringByAppendingFormat:@" - %@", value];
-			[allMeta removeObjectForKey:META_MOVIE_RELEASE_DATE_KEY];
-			[allMeta removeObjectForKey:META_MOVIE_TITLE_KEY];
-		}
-		[metaLayer setTitle:value];
+		NSDateFormatter *format = [[NSDateFormatter alloc] init];
+		[format setDateStyle:NSDateFormatterLongStyle];
+		[format setTimeZone:NSDateFormatterNoStyle];
+		value = [NSString stringWithFormat:@"Released: %@",[format stringFromDate:releaseDate]];
+		[allMeta removeObjectForKey:META_MOVIE_RELEASE_DATE_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_TITLE_KEY];
 	}
+	/* No release date, sub in the movie title */
+	[metaLayer setTitle:value];
+
+	/*Get the rating*/
+	value=nil;
+	value = [allMeta objectForKey:META_MOVIE_MPAA_RATING_KEY];
+	if(value != nil)
+		[metaLayer setRating:value];
 	/*Get the movie plot*/
 	value=nil;
 	value = [allMeta objectForKey:META_MOVIE_PLOT_KEY];
