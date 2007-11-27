@@ -25,6 +25,8 @@
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
 - (void) dealloc;
 
+- (SapphireDirectoryMetaData *)metaData;
+
 - (void) willBePushed;
 - (void) wasPushed;
 - (void) willBePopped;

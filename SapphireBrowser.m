@@ -278,6 +278,11 @@ static BOOL is10Version = NO;
     [super dealloc];
 }
 
+- (SapphireDirectoryMetaData *)metaData
+{
+	return metaData;
+}
+
 - (void) willBePushed
 {
     // We're about to be placed on screen, but we're not yet there

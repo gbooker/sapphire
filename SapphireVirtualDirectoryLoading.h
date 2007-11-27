@@ -6,9 +6,17 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
+#import "SapphireTextWithSpinnerController.h"
 
-@interface SapphireVirtualDirectoryLoading : BRTextWithSpinnerController {
-	NSTimer		*checkTimer;
+@class SapphireVirtualDirectory, SapphireBrowser;
+
+@interface SapphireVirtualDirectoryLoading : SapphireTextWithSpinnerController {
+	NSTimer						*checkTimer;
+	SapphireBrowser				*browser;
+	SapphireVirtualDirectory	*directory;
 }
+
+- (void)setDirectory:(SapphireVirtualDirectory *)dir;
+- (void)setBrowser:(SapphireBrowser *)browse;
 
 @end

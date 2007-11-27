@@ -125,6 +125,7 @@
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
 	[(SapphireVirtualDirectory *)parent childDisplayChanged];
+	reloadTimer = nil;
 }
 
 - (BOOL)addFile:(SapphireFileMetaData *)file toKey:(NSString *)key withChildClass:(Class)childClass

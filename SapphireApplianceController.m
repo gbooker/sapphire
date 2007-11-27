@@ -22,6 +22,7 @@
 #import "SapphireMovieImporter.h"
 #import "SapphireAllImporter.h"
 #import "SapphireFrontRowCompat.h"
+#import "SapphireVirtualDirectoryLoading.h"
 
 #define BROWSER_MENU_ITEM		BRLocalizedString(@"  Browse", @"Browser Menu Item")
 #define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"  Import All Data", @"All Importer Menu Item")
@@ -352,6 +353,26 @@ static NSArray *predicates = nil;
 	if(row == [controllers count])
 		[[NSApplication sharedApplication] terminate:self];
 	id controller = [controllers objectAtIndex:row];
+	
+	// This if statement needs to be done in a much more elegant way
+	if([controller isKindOfClass:[SapphireBrowser class]])
+	{
+		SapphireDirectoryMetaData *meta = [(SapphireBrowser *)controller metaData];
+		if([meta isKindOfClass:[SapphireVirtualDirectory class]])
+		{
+			if(![(SapphireVirtualDirectory *)meta isLoaded])
+			{
+				SapphireVirtualDirectoryLoading *loader = [[SapphireVirtualDirectoryLoading alloc]
+														   initWithScene:[self scene]
+														   title:BRLocalizedString(@"Loading", @"Loading")
+														   text:BRLocalizedString(@"Virtual directory is still loading.  You may go back or wait for it to finish", nil)
+														   showBack:YES];
+				[loader setDirectory:(SapphireVirtualDirectory *)meta];
+				[loader setBrowser:(SapphireBrowser *)controller];
+				controller = loader;
+			}
+		}
+	}
 	[[self stack] pushController:controller];
 }
 
