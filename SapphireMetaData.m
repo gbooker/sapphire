@@ -36,7 +36,6 @@
 #define VIDEO_DESC_KEY				@"Video Description"
 #define AUDIO_FORMAT_KEY			@"Audio Format"
 #define JOINED_FILE_KEY				@"Joined File"
-//#define FILE_CLASS_KEY				@"File Class"
 
 @implementation NSString (episodeSorting)
 
@@ -1538,7 +1537,9 @@ static NSArray *displayedMetaDataOrder = nil;
 		META_MOVIE_TITLE_KEY,
 		META_SHOW_AIR_DATE,
 		META_MOVIE_WIRTERS_KEY,
-		META_MOVIE_RELEASE_DATE_KEY,					  
+		META_MOVIE_RELEASE_DATE_KEY,
+		META_MOVIE_IMDB_250_KEY,
+		META_MOVIE_IMDB_RATING_KEY,					  
 		//These are displayed as line items
 		META_MOVIE_DIRECTOR_KEY,
 		META_MOVIE_CAST_KEY,
@@ -1546,6 +1547,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		META_EPISODE_AND_SEASON_KEY,
 		META_SEASON_NUMBER_KEY,
 		META_EPISODE_NUMBER_KEY,
+		META_MOVIE_IMDB_STATS_KEY,
 		SIZE_KEY,
 		DURATION_KEY,
 		VIDEO_DESC_KEY,
@@ -1554,7 +1556,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	displayedMetaData = [[NSSet alloc] initWithArray:displayedMetaDataOrder];
 	
 	/*Remove non-displayed data from the displayed order, and use the display keys*/
-	int excludedKeys = 10;
+	int excludedKeys = 12;
 	NSMutableArray *modified = [[displayedMetaDataOrder subarrayWithRange:NSMakeRange(excludedKeys, [displayedMetaDataOrder count] - excludedKeys)] mutableCopy];
 	
 	int i;

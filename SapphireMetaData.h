@@ -50,6 +50,7 @@
 
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
+#define	META_MOVIE_IMDB_STATS_KEY		@"IMDB"
 
 #define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
 #define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"

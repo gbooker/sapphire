@@ -257,6 +257,7 @@ static NSSet *coverArtExtentions = nil;
 		/* sub the array for a formatted string */
 		[allMeta setObject:value forKey:META_MOVIE_GENRES_KEY];
 	}
+	/* Get directors */
 	values=nil;
 	values=[allMeta objectForKey:META_MOVIE_DIRECTOR_KEY];
 	value=[NSString string];
@@ -273,6 +274,7 @@ static NSSet *coverArtExtentions = nil;
 		/* sub the array for a formatted string */
 		[allMeta setObject:value forKey:META_MOVIE_DIRECTOR_KEY];
 	}
+	/* Get cast */
 	values=nil;
 	values=[allMeta objectForKey:META_MOVIE_CAST_KEY];
 	value=[NSString string];
@@ -292,6 +294,22 @@ static NSSet *coverArtExtentions = nil;
 		value=[value substringToIndex:[value length]-2];
 		/* sub the array for a formatted string */
 		[allMeta setObject:value forKey:META_MOVIE_CAST_KEY];
+	}
+	/* Get IMDB Stats */
+	value=nil ;
+	value=[allMeta objectForKey:META_MOVIE_IMDB_RATING_KEY];
+	if(value!=nil)
+	{
+		value=[NSString stringWithFormat:@"%1.1f/10",[value floatValue]];
+		NSString *top250=nil;
+		top250=[allMeta objectForKey:META_MOVIE_IMDB_250_KEY];
+		if(top250!=nil)
+			value=[NSString stringWithFormat:@"#%@ on Top 250 (%@)",top250,value];
+		else
+			value=[NSString stringWithFormat:@"User Rated %@",value];
+		[allMeta removeObjectForKey:META_MOVIE_IMDB_RATING_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_IMDB_250_KEY];
+		[allMeta setObject:value forKey:META_MOVIE_IMDB_STATS_KEY];
 	}
 }
 
