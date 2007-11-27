@@ -179,8 +179,6 @@ static NSArray *predicates = nil;
 	NSString *browserPoint = nil;
 	while((browserPoint = [browserPointsEnum nextObject]) != nil)
 	{
-		if(![metaCollection skipCollection:browserPoint])
-			[[metaCollection directoryForPath:browserPoint] loadMetaData];
 		if([metaCollection hideCollection:browserPoint])
 			continue;
 		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
@@ -190,6 +188,7 @@ static NSArray *predicates = nil;
 		[mutableMasterControllers addObject:browser];
 		[browser release];
 	}
+	[[metaCollection directoryForPath:@"/"] loadMetaData];
 	[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
 		ALL_IMPORT_MENU_ITEM,
 		SETTINGS_MENU_ITEM,
