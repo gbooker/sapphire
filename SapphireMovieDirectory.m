@@ -54,27 +54,33 @@
 	[directory setObject:imdbtop250	forKey:@"IMDB Top 250"];
 	[directory setObject:oscars forKey:@"Academy Award Winning"];
 	
-	subDirs = [[NSArray alloc] initWithObjects:
-			   allMovies,
-			   cast,
-			   directors,
-			   genres,
-			   imdbtop250,
-			   oscars,
-			   nil];
+	keyOrder = [[NSArray alloc] initWithObjects:
+				@"All Movies",
+				@"By Cast",
+				@"By Director",
+				@"By Genre",
+				@"IMDB Top 250",
+				@"Academy Award Winning",
+				nil];
 	
 	return self;
 }
 
 - (void) dealloc
 {
-	[subDirs release];
+	[keyOrder release];
 	[super dealloc];
 }
 
 - (void)writeMetaData
 {
 	[collection writeMetaData];
+}
+
+- (void)reloadDirectoryContents
+{
+	[super reloadDirectoryContents];
+	[directories setArray:keyOrder];
 }
 
 - (void)fileAdded:(NSNotification *)notification
@@ -109,12 +115,12 @@
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	[subDirs makeObjectsPerformSelector:@selector(processFile:) withObject:file];
+	[[directory allValues] makeObjectsPerformSelector:@selector(processFile:) withObject:file];
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
 {
-	[subDirs makeObjectsPerformSelector:@selector(removeFile:) withObject:file];
+	[[directory allValues] makeObjectsPerformSelector:@selector(removeFile:) withObject:file];
 }
 
 @end

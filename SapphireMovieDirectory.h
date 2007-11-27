@@ -9,7 +9,7 @@
 #import "SapphireVirtualDirectory.h"
 
 @interface SapphireMovieDirectory : SapphireVirtualDirectoryOfDirectories {
-	NSArray *subDirs;
+	NSArray *keyOrder;
 }
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection;
 @end
