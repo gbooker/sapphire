@@ -31,6 +31,8 @@
 - (BOOL)displayFavorites;
 - (BOOL)displayTopShows;
 - (BOOL)displaySpoilers;
+- (BOOL)displayAudio;
+- (BOOL)displayVideo;
 - (BOOL)disableUIQuit;
 - (BOOL)disableAnonymousReporting;
 - (BOOL)useAC3Passthrough;

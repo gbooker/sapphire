@@ -51,6 +51,8 @@
 //Special Display Only Info
 #define META_EPISODE_AND_SEASON_KEY		@"S/E"
 #define	META_MOVIE_IMDB_STATS_KEY		@"IMDB"
+#define AUDIO_DESC_LABEL_KEY			@"Audio"
+#define VIDEO_DESC_LABEL_KEY			@"Video"
 
 #define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
 #define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"

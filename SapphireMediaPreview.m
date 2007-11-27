@@ -372,6 +372,12 @@ static NSSet *coverArtExtentions = nil;
 			[metaLayer setTitle:value];
 	}
 	
+	/* Show / Hide perian info */
+	if(![[SapphireSettings sharedSettings] displayAudio])
+		[allMeta removeObjectForKey:AUDIO_DESC_LABEL_KEY];
+	if(![[SapphireSettings sharedSettings] displayVideo])
+		[allMeta removeObjectForKey:VIDEO_DESC_LABEL_KEY];
+	
 	NSMutableArray *values = [NSMutableArray array];
 	NSMutableArray *keys = [NSMutableArray array];
 	
