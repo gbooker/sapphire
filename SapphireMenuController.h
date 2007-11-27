@@ -8,7 +8,7 @@
 
 
 @interface SapphireMenuController : BRMenuController {
-
+	int		padding[16];
 }
 
 @end

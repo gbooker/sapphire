@@ -7,7 +7,7 @@
 //
 
 @interface SapphireCenteredMenuController : BRCenteredMenuController {
-
+	int		padding[16];
 }
 
 @end

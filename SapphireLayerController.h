@@ -8,7 +8,7 @@
 
 
 @interface SapphireLayerController : BRLayerController {
-
+	int		padding[16];
 }
 
 @end

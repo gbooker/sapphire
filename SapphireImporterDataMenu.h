@@ -23,7 +23,6 @@
 
 @interface SapphireImporterDataMenu : SapphireLayerController <SapphireMetaDataScannerDelegate>
 {
-	int								padding[8]; //The classes are difference sizes; pad so data isn't overwritten
 	BRHeaderControl					*title;
 	BRButtonControl					*button;
 	BRTextControl					*text;

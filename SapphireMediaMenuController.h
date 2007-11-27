@@ -7,7 +7,7 @@
 //
 
 @interface SapphireMediaMenuController : BRMediaMenuController {
-
+	int		padding[16];
 }
 
 @end

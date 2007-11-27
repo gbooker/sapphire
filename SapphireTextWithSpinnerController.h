@@ -8,7 +8,7 @@
 
 
 @interface SapphireTextWithSpinnerController : BRTextWithSpinnerController {
-	int		padding[4];
+	int		padding[16];
 }
 
 @end
