@@ -11,7 +11,11 @@
 /*Yes, this is the wrong class, but otherwise gcc gripes about BRImage class not existing; this removes warnings so no harm*/
 @interface SapphireFrontRowCompat (compat)
 + (id)imageWithPath:(NSString *)path;
++ (id)imageWithCGImageRef:(CGImageRef)ref;
+- (CGImageRef)image;
 @end
+
+NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned int height);
 
 /*Yes, wrong class and other wrong things, just to shut up warnings*/
 @interface BRAdornedMenuItemLayer (compat)
@@ -55,6 +59,16 @@ static BOOL usingFrontRow = NO;
 {
 	Class cls = NSClassFromString(@"BRImage");
 	return [cls imageWithPath:path];
+}
+
++ (id)image:(id)image scaledToSize:(NSSize)size
+{
+	CGImageRef cgImage = [(SapphireFrontRowCompat *)image image];
+	CGImageRef result = CGImageCreate(size.width, size.height, CGImageGetBitsPerComponent(cgImage), CGImageGetBitsPerPixel(cgImage), CGImageGetBytesPerRow(cgImage), CGImageGetColorSpace(cgImage), CGImageGetBitmapInfo(cgImage), CGImageGetDataProvider(cgImage), NULL, YES, kCGRenderingIntentDefault);
+	
+	id ret = [NSClassFromString(@"BRImage") imageWithCGImageRef:result];
+	CGImageRelease(result);
+	return ret;
 }
 
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder

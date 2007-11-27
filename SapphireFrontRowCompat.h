@@ -14,6 +14,7 @@
 }
 + (BOOL)usingFrontRow;
 + (id)imageAtPath:(NSString *)path;
++ (id)image:(id)image scaledToSize:(NSSize)size;
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder;
 + (void)setTitle:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;
 + (void)setRightJustifiedText:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;

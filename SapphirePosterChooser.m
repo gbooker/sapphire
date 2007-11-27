@@ -268,7 +268,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (BRRenderLayer *) iconAtIndex: (long) index
 {
     if ( index >= [posterLayers count] )
-        return ( nil );
+        return defaultImage;
 	
     return [posterLayers objectAtIndex:index];
 }
@@ -341,7 +341,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		/*The marching icons has changed, dramatically, so we do the changes here*/
 		id ret = [SapphireFrontRowCompat imageAtPath:thePosterPath];
 		if(ret != nil)
-			return ret;
+			return [SapphireFrontRowCompat image:ret scaledToSize:NSMakeSize(510, 755)];
 		else
 			return defaultImage;
 	}
@@ -406,6 +406,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		frame.size.height *= 1.7f;
 		frame.origin.y=-200.0f;
 	}
+	else
+		frame.size.height = ([fileInfoText frame].origin.y - frame.origin.y) * 1.2f;
     [posterMarch setFrame: frame];
 	[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
 }
