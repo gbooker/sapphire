@@ -43,6 +43,7 @@
 		@"Contents/Resources/Audio.png", AUDIO_GEM_KEY,
 		@"Contents/Resources/TV.png", TV_GEM_KEY,
 		@"Contents/Resources/Movie.png", MOV_GEM_KEY,
+		@"Contents/Resources/AMPAS_Oscar.png", OSCAR_GEM_KEY,
 		@"Contents/Resources/IMDB.png", IMDB_GEM_KEY,
 		@"Contents/Resources/TVRage.png", TVR_GEM_KEY,
 		@"Contents/Resources/File.png", FILE_GEM_KEY,

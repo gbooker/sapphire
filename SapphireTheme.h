@@ -14,6 +14,7 @@
 #define CONE_GEM_KEY @"ConeGem"
 #define EYE_GEM_KEY @"EyeGem"
 #define IMDB_GEM_KEY @"IMDBGem"
+#define OSCAR_GEM_KEY @"OscarGem"
 #define TVR_GEM_KEY @"TVRageGem"
 #define AUDIO_GEM_KEY @"AudioGem"
 #define FILE_GEM_KEY @"FileGem"

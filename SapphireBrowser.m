@@ -469,7 +469,7 @@ static BOOL is10Version = NO;
 				/*Add icons (RIGHT)*/
 				if([meta oscarsWon]>0)
 				{
-					[SapphireFrontRowCompat setRightIcon:[theme gem:MOV_GEM_KEY] forMenu:result];
+					[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
 				}
 			}
 			watched = [meta watched];
@@ -488,7 +488,6 @@ static BOOL is10Version = NO;
 	else if(favorite) [SapphireFrontRowCompat setLeftIcon:[theme gem:YELLOW_GEM_KEY] forMenu:result];
 	else if(fileCls==FILE_CLASS_AUDIO)[SapphireFrontRowCompat setLeftIcon:[theme gem:GREEN_GEM_KEY] forMenu:result];
 	else [SapphireFrontRowCompat setLeftIcon:[theme gem:RED_GEM_KEY] forMenu:result];
-	
 			
 	// add text
 	if(displayName)name= displayName ;
