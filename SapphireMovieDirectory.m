@@ -32,6 +32,13 @@
 	
 	collection = myCollection;
 	
+	SapphireMovieCategoryDirectory	*allMovies;
+	SapphireMovieCastDirectory		*cast;
+	SapphireMovieDirectorDirectory	*directors;
+	SapphireMovieGenreDirectory		*genres;
+	SapphireMovieOscarDirectory		*oscars;
+	SapphireMovieTop250Directory	*imdbtop250;
+
 	allMovies	= [[SapphireMovieCategoryDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:@"All Movies"]];
 	cast		= [[SapphireMovieCastDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Cast"]];
 	directors	= [[SapphireMovieDirectorDirectory alloc]	initWithParent:self path:[[self path] stringByAppendingPathComponent:@"By Director"]];
@@ -47,15 +54,21 @@
 	[directory setObject:imdbtop250	forKey:@"IMDB Top 250"];
 	[directory setObject:oscars forKey:@"Academy Award Winning"];
 	
+	subDirs = [[NSArray alloc] initWithObjects:
+			   allMovies,
+			   cast,
+			   directors,
+			   genres,
+			   imdbtop250,
+			   oscars,
+			   nil];
+	
 	return self;
 }
 
 - (void) dealloc
 {
-	[allMovies release];
-	[cast release];
-	[directors release];
-	[genres release];
+	[subDirs release];
 	[super dealloc];
 }
 
@@ -96,18 +109,12 @@
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	[allMovies processFile:file];
-	[cast processFile:file];
-	[directors processFile:file];
-	[genres processFile:file];
+	[subDirs makeObjectsPerformSelector:@selector(processFile:) withObject:file];
 }
 
 - (void)removeFile:(SapphireFileMetaData *)file
 {
-	[allMovies removeFile:file];
-	[cast removeFile:file];
-	[directors removeFile:file];
-	[genres removeFile:file];
+	[subDirs makeObjectsPerformSelector:@selector(removeFile:) withObject:file];
 }
 
 @end
@@ -125,7 +132,7 @@
 		if(i>10)break ;
 		BOOL added=[self addFile:file toKey:actor withChildClass:[SapphireMovieCategoryDirectory class]];
 		if(added==YES)
-		i++;
+			i++;
 	}
 }
 
