@@ -250,7 +250,7 @@
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-//	if([file oscarsWon]>0)
+	if([file oscarsWon]>0)
 		[directory setObject:file forKey:[file path]];
 	[self setReloadTimer];
 	
