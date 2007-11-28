@@ -559,8 +559,6 @@
 				{
 					resultTitleValue=[resultTitleValue substringFromIndex:3];
 					resultTitle=[resultTitle stringByReplacingAllOccurancesOf:@"\n" withString:@" "];
-				//	NSString *enumeratedResultTitle=[resultTitleValue substringFromIndex:3];
-				//	resultTitleValue=enumeratedResultTitle ;
 				}
 				/* Skip image links */
 				else if(resultURL == nil || [resultTitleValue compare:@" "])
