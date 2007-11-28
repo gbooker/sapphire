@@ -86,13 +86,15 @@
 - (void)fileAdded:(NSNotification *)notification
 {
 	SapphireFileMetaData *file = [notification object];
-	[self processFile:file];
+	if([file fileClass] == FILE_CLASS_MOVIE)
+		[self processFile:file];
 }
 
 - (void)fileRemoved:(NSNotification *)notification
 {
 	SapphireFileMetaData *file = [notification object];
-	[self removeFile:file];
+	if([file fileClass] == FILE_CLASS_MOVIE)
+		[self removeFile:file];
 }
 
 - (void)fileInfoHasChanged:(NSNotification *)notification
@@ -199,6 +201,7 @@
 @end
 
 @implementation SapphireMovieCategoryDirectory
+
 - (void)reloadDirectoryContents
 {
 	[super reloadDirectoryContents];
@@ -211,13 +214,8 @@
 		SapphireFileMetaData *file = [directory objectForKey:key];
 		if([fm fileExistsAtPath:[file path]])
 		{
-			if([file fileClass]==FILE_CLASS_MOVIE)
-			{
-				NSString * title=[file movieTitle];
-				[mutDict setObject:file forKey:title];
-			}
-			else
-				continue;
+			NSString * title=[file movieTitle];
+			[mutDict setObject:file forKey:title];
 		}
 	}
 	[files addObjectsFromArray:[mutDict allKeys]];
