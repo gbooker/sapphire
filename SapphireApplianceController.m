@@ -199,11 +199,15 @@ static NSArray *predicates = nil;
 		allImporter,
 		settings,
 		nil]];
+	[masterNames release];
+	[masterControllers release];
 	masterNames = [[NSArray alloc] initWithArray:mutableMasterNames];
 	masterControllers = [[NSArray alloc] initWithArray:mutableMasterControllers];
 	[mutableMasterNames release];
 	[mutableMasterControllers release];
 	
+	[names release];
+	[controllers release];
 	names = [[NSMutableArray alloc] init];
 	controllers = [[NSMutableArray alloc] init];
 	[self setMenuFromSettings];
@@ -274,7 +278,7 @@ static NSArray *predicates = nil;
     
     // always call super
     [super willBeExhumed];
-	[self setMenuFromSettings];
+    [self recreateMenu];
 	[[self list] reload];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
