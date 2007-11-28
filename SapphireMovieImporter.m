@@ -540,8 +540,7 @@
 				NSString *URLSubPath =[resultURL path] ;
 				if([URLSubPath hasSuffix:@"/releaseinfo"])
 				{
-					URLSubPath=[URLSubPath stringByReplacingAllOccurancesOf:@"/releaseinfo" withString:@"/"];
-					URLSubPath=[URLSubPath substringFromIndex:1];
+					URLSubPath=[URLSubPath stringByReplacingAllOccurancesOf:@"/releaseinfo" withString:@""];
 					[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 						resultTitle, @"name",
 						URLSubPath, IMDB_LINK_KEY,
