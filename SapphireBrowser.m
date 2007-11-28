@@ -233,7 +233,7 @@ static BOOL is10Version = NO;
 		[_names addObjectsFromArray:files];
 		/*Put in the menu for rescan if fast switching enabled*/
 		if([[SapphireSettings sharedSettings] fastSwitching])
-			[_names addObject:BRLocalizedString(@"< Scan for new files >", @"Conduct a scan of the directory for new files")];
+			[_names addObject:BRLocalizedString(@"     < Scan for new files >", @"Conduct a scan of the directory for new files")];
 		dirCount = [dirs count];
 		fileCount = [files count];
 	}
@@ -437,7 +437,7 @@ static BOOL is10Version = NO;
 	BRAdornedMenuItemLayer * result = nil;
 	BOOL watched = NO;
 	BOOL favorite = NO;
-	BOOL gear = NO;
+	BOOL utility = NO;
 	BRRenderScene *scene = [self scene];
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	/*Is this a dir*/
@@ -498,10 +498,10 @@ static BOOL is10Version = NO;
 	else
 	{
 		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
-		gear = YES;
+		utility = YES;
 	}
 	/*Add icons (LEFT)*/
-	if(gear) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
+	if(utility) [SapphireFrontRowCompat setLeftIcon:[theme gem:FAST_GEM_KEY] forMenu:result];
 	else if(!watched) [SapphireFrontRowCompat setLeftIcon:[theme gem:BLUE_GEM_KEY] forMenu:result];
 	else if(favorite) [SapphireFrontRowCompat setLeftIcon:[theme gem:YELLOW_GEM_KEY] forMenu:result];
 	else if(fileCls==FILE_CLASS_AUDIO)[SapphireFrontRowCompat setLeftIcon:[theme gem:GREEN_GEM_KEY] forMenu:result];
