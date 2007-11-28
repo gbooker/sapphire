@@ -426,9 +426,11 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	
 	directories = [[NSMutableDictionary alloc] init];
 	
-	/* Hide and skip the / collection */
-	[self setHide:YES forCollection:@"/"];
-	[self setSkip:YES forCollection:@"/"];
+	/* Hide and skip the / collection by default */
+	if([hideCollection objectForKey:@"/"] == nil)
+		[self setHide:YES forCollection:@"/"];
+	if([skipCollection objectForKey:@"/"] == nil)
+		[self setSkip:YES forCollection:@"/"];
 	SapphireDirectoryMetaData *slash = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaData objectForKey:@"/"] parent:self path:@"/"];
 	[metaData setObject:[slash dict] forKey:@"/"];
 	[directories setObject:slash forKey:@"/"];
@@ -551,6 +553,7 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	[ret removeObject:@"/CIFS"];
 	[ret removeObject:NSHomeDirectory()];
 	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	[ret sortUsingSelector:@selector(compare:)];
 	return [ret autorelease];
 }
 
