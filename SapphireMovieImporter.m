@@ -564,8 +564,7 @@
 				else if(resultURL == nil || [resultTitleValue compare:@" "])
 					continue;
 				/*Skip Video Game titles (VG) */
-				NSString *resultTitleVGReduced=[resultTitleValue stringByReplacingAllOccurancesOf:@"(VG)" withString:@""];
-				if([resultTitleVGReduced length] < [resultTitleValue length])
+				if([resultTitleValue rangeOfString:@"(VG)"].location != NSNotFound)
 					continue ;
 				[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					[[result objectsForXQuery:IMDB_RESULT_NAME_XPATH error:&error] objectAtIndex:0], @"name",
