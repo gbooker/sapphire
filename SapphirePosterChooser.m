@@ -340,8 +340,9 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	{
 		/*The marching icons has changed, dramatically, so we do the changes here*/
 		id ret = [SapphireFrontRowCompat imageAtPath:thePosterPath];
+		NSLog(@"Found %@", ret);
 		if(ret != nil)
-			return [SapphireFrontRowCompat image:ret scaledToSize:NSMakeSize(510, 755)];
+			return ret;
 		else
 			return defaultImage;
 	}
