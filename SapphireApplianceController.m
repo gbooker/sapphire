@@ -176,19 +176,6 @@ static NSArray *predicates = nil;
 //	[movieDir writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/virtualMovieDir.plist"]];
 	[movieBrowser release];
 	
-	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
-	NSString *browserPoint = nil;
-	while((browserPoint = [browserPointsEnum nextObject]) != nil)
-	{
-		if([metaCollection hideCollection:browserPoint])
-			continue;
-		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
-		[browser setListTitle:[NSString stringWithFormat:@" %@",[browserPoint lastPathComponent]]];
-		[browser setListIcon:predicateGem];
-		[mutableMasterNames addObject:[NSString stringWithFormat:@"  %@", browserPoint]];
-		[mutableMasterControllers addObject:browser];
-		[browser release];
-	}
 	[[metaCollection directoryForPath:@"/"] loadMetaData];
 	[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
 		ALL_IMPORT_MENU_ITEM,
@@ -199,15 +186,11 @@ static NSArray *predicates = nil;
 		allImporter,
 		settings,
 		nil]];
-	[masterNames release];
-	[masterControllers release];
 	masterNames = [[NSArray alloc] initWithArray:mutableMasterNames];
 	masterControllers = [[NSArray alloc] initWithArray:mutableMasterControllers];
 	[mutableMasterNames release];
 	[mutableMasterControllers release];
 	
-	[names release];
-	[controllers release];
 	names = [[NSMutableArray alloc] init];
 	controllers = [[NSMutableArray alloc] init];
 	[self setMenuFromSettings];
@@ -219,6 +202,24 @@ static NSArray *predicates = nil;
 	[controllers removeAllObjects];
 	[names addObjectsFromArray:masterNames];
 	[controllers addObjectsFromArray:masterControllers];
+	
+	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
+	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
+	NSString *browserPoint = nil;
+	int index = 2;
+	while((browserPoint = [browserPointsEnum nextObject]) != nil)
+	{
+		if([metaCollection hideCollection:browserPoint])
+			continue;
+		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
+		[browser setListTitle:[NSString stringWithFormat:@" %@",[browserPoint lastPathComponent]]];
+		[browser setListIcon:predicateGem];
+		[names insertObject:[NSString stringWithFormat:@"  %@", browserPoint] atIndex:index];
+		[controllers insertObject:browser atIndex:index];
+		[browser release];
+		index++;
+	}	
+	
 	if([settings disableUIQuit])
 		[names removeLastObject];
 }
@@ -278,7 +279,7 @@ static NSArray *predicates = nil;
     
     // always call super
     [super willBeExhumed];
-    [self recreateMenu];
+	[self setMenuFromSettings];
 	[[self list] reload];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
