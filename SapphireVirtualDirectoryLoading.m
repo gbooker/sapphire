@@ -34,7 +34,6 @@
 	if(![directory isLoaded])
 		return;
 	
-	NSLog(@"Swapping with %@", [self stack]);
 	[checkTimer invalidate];
 	checkTimer = nil;
 /*	[[self stack] pushController:directory];
