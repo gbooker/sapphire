@@ -538,13 +538,10 @@
 				if(resultURL == nil)
 					continue;
 				NSString *URLSubPath =[resultURL path] ;
-				if([URLSubPath hasPrefix:@"/rg/title-tease/"])
+				if([URLSubPath hasSuffix:@"/releaseinfo"])
 				{
-					URLSubPath=[[URLSubPath stringByReplacingAllOccurancesOf:@"/rg/title-tease/" withString:@""]stringByDeletingLastPathComponent];
-					NSScanner * snipPrefix=[NSScanner scannerWithString:URLSubPath];
-					NSString *snip=nil ;
-					[snipPrefix scanUpToString:@"/" intoString:&snip] ;
-					URLSubPath=[URLSubPath stringByReplacingAllOccurancesOf:snip withString:@""];
+					URLSubPath=[URLSubPath stringByReplacingAllOccurancesOf:@"/releaseinfo" withString:@"/"];
+					URLSubPath=[URLSubPath substringFromIndex:1];
 					[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 						resultTitle, @"name",
 						URLSubPath, IMDB_LINK_KEY,
@@ -557,7 +554,16 @@
 				/*Add the result to the list*/
 				NSURL *resultURL = [NSURL URLWithString:[[[result objectsForXQuery:IMDB_RESULT_LINK_XPATH error:&error] objectAtIndex:0] stringValue]] ;
 				NSString * resultTitleValue=[result stringValue];
-				if(resultURL == nil)
+				/* Deal with AKA titles */
+				if([resultTitleValue hasPrefix:@"\n"])
+				{
+					resultTitleValue=[resultTitleValue substringFromIndex:3];
+					resultTitle=[resultTitle stringByReplacingAllOccurancesOf:@"\n" withString:@" "];
+				//	NSString *enumeratedResultTitle=[resultTitleValue substringFromIndex:3];
+				//	resultTitleValue=enumeratedResultTitle ;
+				}
+				/* Skip image links */
+				else if(resultURL == nil || [resultTitleValue compare:@" "])
 					continue;
 				/*Skip Video Game titles (VG) */
 				else if([resultTitleValue hasSuffix:@" (VG) "])
