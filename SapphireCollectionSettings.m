@@ -126,6 +126,7 @@
 	[setInv invoke];
 	
 	/*Redraw*/
+	[metaCollection writeMetaData];
 	[[self list] reload] ;
 	[SapphireFrontRowCompat renderScene:[self scene]];
 	
