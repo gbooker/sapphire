@@ -134,7 +134,7 @@
 	SapphireVirtualDirectory *child = [directory objectForKey:key];
 	if(child == nil)
 	{
-		child = [[childClass alloc] initWithParent:self path:[[self path] stringByAppendingString:[NSString stringWithFormat:@"/%@",key]]];
+		child = [[childClass alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:key]];
 		[directory setObject:child forKey:key];
 		[child release];
 		added = YES;
