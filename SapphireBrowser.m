@@ -124,34 +124,6 @@ static BOOL is10Version = NO;
 }
 
 /*!
- * @brief Creates the mode control in a compatible way
- *
- * @param scene The scene
- * @param names The names in the menu
- *
-- (void)createModeControlWithScene:(BRRenderScene *)scene names:(NSArray *)names
-{
-	/*Check for the new way to do this*
-	Class modeClass = NSClassFromString(@"BRSegmentedSortControl");
-	if(modeClass != nil)
-		/*Use the new method*
-		//Ignore this warning if compiling with backrow 1.0
-		modeControl = [[modeClass alloc] initWithScene:scene segmentNames:names selectedSegment:0];
-	else
-	{
-		/*Hack in the old way*
-		modeControl = [[BRTVShowsSortControl alloc] initWithScene:scene state:1];
-		NSString *name1 = [names objectAtIndex:0];
-		NSString *name2 = [names objectAtIndex:1];
-		[self replaceControlText:[[modeControl gimmieDate] gimmieDate] withString:name1];
-		[self replaceControlText:[[modeControl gimmieDate] gimmieShow] withString:name2];
-		[self replaceControlText:[[modeControl gimmieShow] gimmieDate] withString:name1];
-		[self replaceControlText:[[modeControl gimmieShow] gimmieShow] withString:name2];
-		is10Version = YES;
-	}
-}
-
-/*!
  * @brief Creates a new predicated browser
  *
  * @param scene The scene
@@ -169,38 +141,10 @@ static BOOL is10Version = NO;
 	[metaData setDelegate:self];
 	predicate = [[SapphireApplianceController predicate] retain];
 
-	/*Create the mode menu*/
-/*	NSArray *names = [NSArray arrayWithObjects:
-		BRLocalizedString(@"Select", @"Select Menu Item"),
-		BRLocalizedString(@"Mark File", @"Mark File Menu Item"),
-		BRLocalizedString(@"Filter", @"Filter Menu Item"),
-		nil];
-	[self createModeControlWithScene:scene names:names];
-	[self addControl:modeControl];*/
-	
 	// set the datasource *after* you've setup your array
 	[[self list] setDatasource: self] ;
 		
 	return ( self );
-}
-
-/*!
- * @brief Override the layout
- *
-- (void)_doLayout
-{
-	[super _doLayout];
-	NSRect listFrame = [[_listControl layer] frame];
-	/*Position the mode menu below the list*
-	NSRect modeRect;
-	modeRect.size = [modeControl preferredSizeForScreenHeight:[self masterLayerFrame].size.height];
-	modeRect.origin.y = listFrame.origin.y * 1.5f;
-	modeRect.origin.x = (listFrame.size.width - modeRect.size.width)/2 + listFrame.origin.x;
-	/*Shrink the list to make room for the mode*
-	listFrame.size.height -= listFrame.origin.y;
-	listFrame.origin.y *= 2;
-	[[_listControl layer] setFrame:listFrame];
-	[modeControl setFrame:modeRect];
 }
 
 /*!
