@@ -15,6 +15,53 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (double)renderSelection;
 @end
 
+@interface SapphireCenteredToSideLayout : NSObject
+{
+	id		realLayout;
+}
+@end
+
+@interface SapphireCenteredMenuController (compat)
+- (id)firstSublayerNamed:(NSString *)name;
+- (void)setLayoutManager:(id)newLayout;
+- (id)layoutManager;
+@end
+
+@implementation SapphireCenteredToSideLayout
+- (id)initWithReal:(id)real
+{
+	self = [super init];
+	if(self == nil)
+		return self;
+	realLayout = [real retain];
+	return self;
+}
+
+- (void) dealloc
+{
+	[realLayout release];
+	[super dealloc];
+}
+
+- (void)layoutSublayersOfLayer:(id)layer
+{
+	[realLayout layoutSublayersOfLayer:layer];
+	NSRect master = [layer frame];
+	id listLayer = [layer firstSublayerNamed:@"list"];
+	NSRect listFrame = [listLayer frame];
+	listFrame.size.height -= 2.5f*listFrame.origin.y;
+	listFrame.size.width*= 0.45f;
+	listFrame.origin.x = (master.size.width - listFrame.size.width) * 0.85f;
+	listFrame.origin.y = (master.size.height * 0.3f - listFrame.size.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	[listLayer setFrame:listFrame];
+}
+- (NSSize)preferredSizeOfLayer:(id)layer
+{
+	return [realLayout preferredSizeOfLayer:layer];
+}
+
+@end
+
 @implementation SapphirePosterChooser
 
 /*!
@@ -29,6 +76,13 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	if(!self)
 		return nil;
 	selectedPoster = -1;
+	
+	if([SapphireFrontRowCompat usingFrontRow])
+	{
+		SapphireCenteredToSideLayout *newLayout = [[SapphireCenteredToSideLayout alloc] initWithReal:[self layoutManager]];
+		[self setLayoutManager:newLayout];
+		[newLayout release];
+	}
 	
 	// we want to know when the list selection changes, so we can pass
     // that information on to the icon march layer

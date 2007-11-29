@@ -6,7 +6,7 @@
 //  Copyright 2007 __www.nanopi.net__. All rights reserved.
 //
 
-#import "SapphireMenuController.h"
+#import "SapphireCenteredMenuController.h"
 
 #define POSTER_CHOOSE_CANCEL		-1
 #define POSTER_CHOOSE_REFRESH		0
@@ -14,7 +14,7 @@
 
 @class BRRenderScene, BRRenderLayer, BRMarchingIconLayer;
 
-@interface SapphirePosterChooser : SapphireMenuController {
+@interface SapphirePosterChooser : SapphireCenteredMenuController {
 	NSArray			*posters;
 	NSMutableArray	*posterLayers;
 	NSString		*fileName ;
