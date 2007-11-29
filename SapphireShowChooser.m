@@ -43,23 +43,6 @@
 	return self;
 }
 
-/*!
-* @brief Override the layout
- *
- */
-- (void)_doLayout
-{
-	//Shrink the list frame to make room for displaying the filename
-	[super _doLayout];
-	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	NSRect listFrame = [[_listControl layer] frame];	
-	listFrame.size.height -= 2.5f*listFrame.origin.y;
-	listFrame.size.width*=2.0f;
-	listFrame.origin.x = (master.size.width - listFrame.size.width) * 0.5f;
-	listFrame.origin.y *= 2.0f;
-	[[_listControl layer] setFrame:listFrame];
-}
-
 - (void)dealloc
 {
 	[shows release];

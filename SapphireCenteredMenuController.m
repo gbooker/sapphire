@@ -11,7 +11,8 @@
 
 @interface SapphireWideCenteredLayout : NSObject
 {
-	id		realLayout;
+	id							realLayout;
+	id <SapphireLayoutDelegate>	delegate;
 }
 @end
 
@@ -31,9 +32,15 @@
 	return self;
 }
 
+- (void)setDelegate:(id <SapphireLayoutDelegate>)del
+{
+	delegate = [del retain];
+}
+
 - (void) dealloc
 {
 	[realLayout release];
+	[delegate release];
 	[super dealloc];
 }
 
@@ -43,10 +50,7 @@
 	NSRect master = [layer frame];
 	id listLayer = [layer firstSublayerNamed:@"list"];
 	NSRect listFrame = [listLayer frame];
-	listFrame.size.height -= 2.5f*listFrame.origin.y;
-	listFrame.size.width*=2.0f;
-	listFrame.origin.x = (master.size.width - listFrame.size.width) * 0.5f;
-	listFrame.origin.y *= 2.0f;
+	listFrame = [delegate listRectWithSize:listFrame inMaster:master];
 	[listLayer setFrame:listFrame];
 }
 - (NSSize)preferredSizeOfLayer:(id)layer
@@ -65,6 +69,7 @@
 	
 	self = [super init];
 	SapphireWideCenteredLayout *newLayout = [[SapphireWideCenteredLayout alloc] initWithReal:[self layoutManager]];
+	[newLayout setDelegate:self];
 	[self setLayoutManager:newLayout];
 	[newLayout release];
 	return self;
@@ -76,6 +81,25 @@
 		return [super scene];
 	
 	return [BRRenderScene sharedInstance];
+}
+
+- (NSRect)listRectWithSize:(NSRect)listFrame inMaster:(NSRect)master
+{
+	listFrame.size.height -= 2.5f*listFrame.origin.y;
+	listFrame.size.width*=2.0f;
+	listFrame.origin.x = (master.size.width - listFrame.size.width) * 0.5f;
+	listFrame.origin.y *= 2.0f;
+	return listFrame;
+}
+
+- (void)_doLayout
+{
+	//Shrink the list frame to make room for displaying the filename
+	[super _doLayout];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	NSRect listFrame = [[_listControl layer] frame];
+	listFrame = [self listRectWithSize:listFrame inMaster:master];
+	[[_listControl layer] setFrame:listFrame];
 }
 
 /*Just because so many classes use self as the list data source*/
