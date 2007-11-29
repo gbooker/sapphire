@@ -342,6 +342,8 @@ static BOOL is10Version = NO;
 	//Turn off the AC3 Passthrough hack
 	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
 	CFPreferencesAppSynchronize(A52_DOMIAN);
+	if(soundsWereEnabled)
+		[(RUIPreferences *)[RUIPreferences sharedFrontRowPreferences] setBool:YES forKey:@"PlayFrontRowSounds"];
 }
 
 - (long) itemCount
@@ -719,7 +721,13 @@ BOOL setupAudioOutput(int sampleRate)
 		}
 		
 		if(useAC3Passthrough)
-			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:1], A52_DOMIAN);			
+		{
+			RUIPreferences *prefs = [RUIPreferences sharedFrontRowPreferences];
+			soundsWereEnabled = [prefs boolForKey:@"PlayFrontRowSounds"];
+			if(soundsWereEnabled)
+				[prefs setBool:NO forKey:@"PlayFrontRowSounds"];
+			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:1], A52_DOMIAN);
+		}
 		else
 			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
 		CFPreferencesAppSynchronize(A52_DOMIAN);

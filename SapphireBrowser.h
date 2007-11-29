@@ -20,6 +20,7 @@
 	int								dirCount;
 	int								fileCount;
 	BOOL							cancelScan;
+	BOOL							soundsWereEnabled;
 }
 
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta;
