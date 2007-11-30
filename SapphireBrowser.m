@@ -417,8 +417,7 @@ static BOOL is10Version = NO;
 			{
 				displayName=[meta movieTitle] ;
 				/* Find out if we are displaying a virtual directoy we need to filter for */
-				NSString *dirFilter=[[[metaData path]pathComponents]objectAtIndex:1];
-				NSLog(@"dirFilter is %@", dirFilter);
+				NSString *dirFilter=[[[metaData path] pathComponents] objectAtIndex:1];
 				/*Add icons & stats (RIGHT)*/
 				if([dirFilter isEqualToString:VIRTUAL_DIR_TOP250_KEY])
 				{
