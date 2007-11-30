@@ -30,6 +30,7 @@
 - (void) willBePushed;
 - (void) wasPopped;
 - (void)setPosters:(NSArray *)posterList;
+- (BOOL)okayToDisplay;
 - (void)loadPosters;
 - (void)reloadPoster:(int)index;
 - (void)setFileName:(NSString *)choosingForFileName;

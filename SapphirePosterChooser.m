@@ -124,6 +124,19 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 }
 
 /*!
+* @brief check ATV version
+ *
+ * @return The YES if we can display 
+ */
+- (BOOL)okayToDisplay
+{
+	if([[self list]respondsToSelector:@selector(renderSelection)])
+		return YES;
+	else
+		return NO;
+}
+
+/*!
 * @brief The list of movies to choose from
  *
  * @return The list of movies to choose from
@@ -264,7 +277,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (BRRenderLayer *) iconAtIndex: (long) index
 {
     if ( index >= [posterLayers count] )
-        return defaultImage;
+        return nil;
 	
     return [posterLayers objectAtIndex:index];
 }
@@ -435,4 +448,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	else
 		[self setSelectionForPoster:[(BRListControl *)[note object] selection]];
 }
+
+
 @end

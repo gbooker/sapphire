@@ -20,6 +20,7 @@
 #define IMP_LINK_KEY				@"IMP Link"
 #define IMP_POSTERS_KEY				@"IMP Posters"
 #define SELECTED_POSTER_KEY			@"Selected Poster"
+#define AUTO_SELECT_POSTER_KEY		@"Default Poster"
  /* IMDB XPATHS */
 #define	IMDB_SEARCH_XPATH				@"//td[starts-with(a/@href,'/title')]"
 #define IMDB_UNIQUE_SEARCH_XPATH		@"//a[@class='tn15more inline']/@href"
@@ -263,16 +264,17 @@
 			}
 		}
 	}
-	if([candidatePosterLinks count])
-	{
-		/* download all posters to the scratch folder */
-		NSString *posterBuffer = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
-		[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
-		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:candidatePosterLinks withDestination:posterBuffer delegate:self];
-		[myDelegate downloadMoviePosters] ;
-		[myDelegate autorelease];
-	}
 	return [[candidatePosterLinks copy] autorelease];
+}
+
+- (void)downloadPosterCandidates:(NSArray *)posterCandidates
+{
+	/* download all posters to the scratch folder */
+	NSString *posterBuffer = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
+	[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
+	SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterCandidates withDestination:posterBuffer delegate:self];
+	[myDelegate downloadMoviePosters] ;
+	[myDelegate autorelease];
 }
 
 /*!
@@ -283,7 +285,9 @@
  */
 - (void)downloadCompleted:(NSURLDownload *)download atIndex:(int)index;
 {
-	[posterChooser reloadPoster:index];
+	id controller = [[dataMenu stack] peekController];
+	if([controller isKindOfClass:[SapphirePosterChooser class]])
+		[posterChooser reloadPoster:index];
 }
 
 /*!
@@ -652,7 +656,9 @@
 	}
 
 	NSString * selectedPoster=nil ;
-	selectedPoster=[dict objectForKey:SELECTED_POSTER_KEY] ;
+	NSString * autoSelectPoster=nil ;
+	selectedPoster =	[dict objectForKey:SELECTED_POSTER_KEY] ;
+	autoSelectPoster=	[dict objectForKey:AUTO_SELECT_POSTER_KEY] ;
 	if(!selectedPoster)
 	{
 		/* Posters will be downloaded, let the user choose one */
@@ -682,14 +688,30 @@
 		{
 			[dataMenu pause];
 			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
-			[posterChooser setPosters:posters] ;
-			[posterChooser setFileName:fileName];
-			[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
-			[[dataMenu stack] pushController:posterChooser];
-			[posterChooser release];
-			return NO;
+			if(![posterChooser okayToDisplay])
+			{
+				if(autoSelectPoster==nil)
+				{
+					/* Auto Select the first poster */
+					autoSelectPoster=[posters objectAtIndex:0];
+					[dict setObject:autoSelectPoster forKey:AUTO_SELECT_POSTER_KEY];
+					[self writeSettings];
+				}
+				[posterChooser release];
+			}
+			else
+			{
+				[self downloadPosterCandidates:posters];
+				[posterChooser setPosters:posters] ;
+				[posterChooser setFileName:fileName];
+				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
+				[[dataMenu stack] pushController:posterChooser];
+				[posterChooser release];
+				return NO;
+			}
+			[dataMenu resume];
 		}
-	}
+	}	
 	if(selectedPoster && [dict objectForKey:IMP_POSTERS_KEY])
 	{
 		/* Lets move the selected poster to the corresponding Cover Art Directory */
@@ -723,13 +745,26 @@
 		else if(![fileAgent fileExistsAtPath:coverart])
 		{
 			/* We have seen this file before, but in a different location */
-			/* - OR - the coverart has been deleted*/
+			/* - OR - the coverart has been deleted */
 			NSArray * posterList=[NSArray arrayWithObject:selectedPoster];
 			SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
 			[myDelegate downloadSingleMoviePoster] ;
 			[myDelegate autorelease];
 		}
 //		return NO;
+	}
+	else if(autoSelectPoster)
+	{
+		/* The poster chooser wasn't loaded - ATV 1.0 */
+		NSFileManager *fileAgent=[NSFileManager defaultManager];
+		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
+		[fileAgent createDirectoryAtPath:coverart attributes:nil];
+		NSArray * posterList=[NSArray arrayWithObject:autoSelectPoster];
+		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
+		coverart=[coverart stringByAppendingPathExtension:[autoSelectPoster pathExtension]];
+		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
+		[myDelegate downloadSingleMoviePoster] ;
+		[myDelegate autorelease];	
 	}
 	
 	/*Import the info*/
