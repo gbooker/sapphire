@@ -786,12 +786,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			if(resolvedObject == nil)
 				continue;
 			
-			BOOL rewrite = NO;
 			if([refDict objectForKey:name] != nil)
-				rewrite = YES;
-			[refDict removeObjectForKey:name];
-			if(rewrite)
+			{
+				[refDict removeObjectForKey:name];
 				[self writeMetaData];
+			}
 		}
 		/*Only accept if it is a directory or right extension*/
 		NSString *extension = [name pathExtension];
@@ -1021,6 +1020,12 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 	/*Return it*/
 	return ret;
+}
+
+- (void)metaDataForFileTimer:(NSTimer *)timer
+{
+	NSString *file = [timer userInfo];
+	[self metaDataForFile:file];
 }
 
 - (SapphireFileMetaData *)cachedMetaDataForFile:(NSString *)file
@@ -1317,7 +1322,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	NSString *file = nil;
 	while((file = [fileEnum nextObject]) != nil)
 	{
-		[self metaDataForFile:file];
+		[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(metaDataForFileTimer:) userInfo:file repeats:NO];
 	}
 }
 
