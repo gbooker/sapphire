@@ -2095,7 +2095,7 @@ static NSArray *displayedMetaDataOrder = nil;
 - (NSString *)movieStatsTop250
 {
 	[self constructCombinedData];
-	return [NSString stringWithFormat:@"#%d",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
+	return [NSString stringWithFormat:@"#%d ",[[combinedInfo objectForKey:META_MOVIE_IMDB_250_KEY] intValue]];
 }
 
 /*!
