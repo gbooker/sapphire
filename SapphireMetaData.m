@@ -837,7 +837,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if(ret != nil)
 		return ret;
 	
-	ret = searchExtForPath([[self path] stringByAppendingPathComponent:@"Cover Art/cover"]);
+	ret = searchExtForPath([[self path] stringByAppendingPathComponent:@"cover"]);
 	if(ret != nil)
 		return ret;
 	
