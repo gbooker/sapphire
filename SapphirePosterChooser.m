@@ -130,7 +130,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
  */
 - (BOOL)okayToDisplay
 {
-	if([[self list]respondsToSelector:@selector(renderSelection)])
+	if([[self list]respondsToSelector:@selector(renderSelection)] || [SapphireFrontRowCompat usingFrontRow])
 		return YES;
 	else
 		return NO;
