@@ -1022,12 +1022,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return ret;
 }
 
-- (void)metaDataForFileTimer:(NSTimer *)timer
-{
-	NSString *file = [timer userInfo];
-	[self metaDataForFile:file];
-}
-
 - (SapphireFileMetaData *)cachedMetaDataForFile:(NSString *)file
 {
 	if([metaFiles objectForKey:file] != nil)
@@ -1307,7 +1301,19 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)loadMetaData
 {
-	NSArray *keys = [NSArray arrayWithArray:[metaDirs allKeys]];
+	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:[NSMutableArray arrayWithObject:self] repeats:NO];
+}
+
+- (void)loadMyMetaData:(NSMutableArray *)queue
+{
+	NSArray *keys = [NSArray arrayWithArray:[metaFiles allKeys]];
+	NSEnumerator *fileEnum = [keys objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		[queue insertObject:file atIndex:0];
+	}
+	keys = [NSArray arrayWithArray:[metaDirs allKeys]];
 	NSEnumerator *dirEnum = [keys objectEnumerator];
 	NSString *dir = nil;
 	while((dir = [dirEnum nextObject]) != nil)
@@ -1315,14 +1321,27 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		SapphireDirectoryMetaData *nextMeta = [self metaDataForDirectory:dir];
 		if(nextMeta == nil)
 			continue;
-		[NSTimer scheduledTimerWithTimeInterval:0.01 target:nextMeta selector:@selector(loadMetaData) userInfo:nil repeats:NO];
+		[queue addObject:nextMeta];
 	}
-	keys = [NSArray arrayWithArray:[metaFiles allKeys]];
-	NSEnumerator *fileEnum = [keys objectEnumerator];
-	NSString *file = nil;
-	while((file = [fileEnum nextObject]) != nil)
+}
+
+- (void)loadMetaDataTimer:(NSTimer *)timer
+{
+	NSMutableArray *queue = [timer userInfo];
+	id nextObj = [[queue objectAtIndex:0] retain];
+	[queue removeObjectAtIndex:0];
+	if([nextObj isKindOfClass:[SapphireDirectoryMetaData class]])
+		[self loadMyMetaData:queue];
+	else
+		[self metaDataForFile:(NSString *)nextObj];
+	[nextObj release];
+	if([queue count])
 	{
-		[NSTimer scheduledTimerWithTimeInterval:0.01 target:self selector:@selector(metaDataForFileTimer:) userInfo:file repeats:NO];
+		nextObj = [queue objectAtIndex:0];
+		id nextTarget = self;
+		if([nextObj isKindOfClass:[SapphireDirectoryMetaData class]])
+			nextTarget = nextObj;
+		[NSTimer scheduledTimerWithTimeInterval:0.0 target:nextTarget selector:@selector(loadMetaDataTimer:) userInfo:queue repeats:NO];
 	}
 }
 
