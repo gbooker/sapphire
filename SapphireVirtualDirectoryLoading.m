@@ -7,7 +7,7 @@
 //
 
 #import "SapphireVirtualDirectoryLoading.h"
-
+#import "SapphireFrontRowCompat.h"
 
 @implementation SapphireVirtualDirectoryLoading
 
@@ -45,6 +45,8 @@
 {
 	[super wasPushed];
 	checkTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(doCheck) userInfo:nil repeats:YES];
+	if(![SapphireFrontRowCompat usingFrontRow])
+		[self showProgress:YES];
 }
 
 - (void)wasPopped
