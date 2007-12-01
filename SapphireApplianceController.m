@@ -370,7 +370,7 @@ static NSArray *predicates = nil;
 				SapphireVirtualDirectoryLoading *loader = [[SapphireVirtualDirectoryLoading alloc]
 														   initWithScene:[self scene]
 														   title:BRLocalizedString(@"Loading", @"Loading")
-														   text:BRLocalizedString(@"Virtual directory is still loading.  You may go back or wait for it to finish", nil)
+														   text:BRLocalizedString(@"Virtual directory is still loading.\n  You may go back or wait for it to finish.", nil)
 														   showBack:YES];
 				[loader setDirectory:(SapphireVirtualDirectory *)meta];
 				[loader setBrowser:(SapphireBrowser *)controller];

@@ -49,6 +49,7 @@
 {
 	NSString *myShortenedName=nil ;
 	NSString *otherShortenedName=nil ;
+	/* Make sure we get titles leading with "A" & "The" where the belong */
 	if([[self lowercaseString] hasPrefix:@"a "] && [self length]>2)
 		myShortenedName=[self substringFromIndex:2];
 	else if([[self lowercaseString] hasPrefix:@"the "] && [self length]>4)
@@ -57,10 +58,12 @@
 		otherShortenedName=[other substringFromIndex:2];
 	else if([[other lowercaseString] hasPrefix:@"the "] && [other length]>4)
 		otherShortenedName=[other substringFromIndex:4];
+	
 	if(myShortenedName==nil)
 		myShortenedName=self;
 	if(otherShortenedName==nil)
 		otherShortenedName=other;
+	
 	return [myShortenedName	compare:otherShortenedName options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
 @end
