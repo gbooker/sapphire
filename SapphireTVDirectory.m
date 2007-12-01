@@ -125,13 +125,9 @@ static NSString *searchExtForPath(NSString *path)
 @end
 
 @implementation SapphireShowDirectory
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
-	if([virtualCoverArt objectForKey:[path lastPathComponent]]!=nil)
-		return [virtualCoverArt objectForKey:[path lastPathComponent]];
-	else
-		return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
-	
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -139,19 +135,6 @@ static NSString *searchExtForPath(NSString *path)
 	int seasonNum = [file seasonNumber];
 	if(seasonNum == 0)
 		return;
-	if([virtualCoverArt objectForKey:[path lastPathComponent]]==nil)
-	{
-		NSString *candidateCoverArt=nil;
-		candidateCoverArt=searchExtForPath([[[file path]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
-		if(candidateCoverArt!=nil)
-			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
-		else
-		{
-			candidateCoverArt=searchExtForPath([[[[file path]stringByDeletingLastPathComponent]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
-			if(candidateCoverArt!=nil)
-			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
-		}
-	}
 	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
 	[self addFile:file toKey:season withChildClass:[SapphireSeasonDirectory class]];
 }
@@ -196,30 +179,14 @@ static NSString *searchExtForPath(NSString *path)
 	[(SapphireVirtualDirectory *)parent childDisplayChanged];
 }
 
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
-	if([virtualCoverArt objectForKey:[path lastPathComponent]]!=nil)
-		return [virtualCoverArt objectForKey:[path lastPathComponent]];
-	else
-		return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
 	
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
-	if([virtualCoverArt objectForKey:[path lastPathComponent]]==nil)
-	{
-		NSString *candidateCoverArt=nil;
-		candidateCoverArt=searchExtForPath([[[file path]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
-		if(candidateCoverArt!=nil)
-			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
-		else
-		{
-			candidateCoverArt=searchExtForPath([[[[file path]stringByDeletingLastPathComponent]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
-			if(candidateCoverArt!=nil)
-			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
-		}
-	}
 	[directory setObject:file forKey:[file path]];
 	[self setReloadTimer];
 }

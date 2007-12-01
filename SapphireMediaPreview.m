@@ -80,6 +80,7 @@ static NSSet *coverArtExtentions = nil;
 - (void)dealloc
 {
 	[meta release];
+	[dirMeta release];
 	[super dealloc];
 }
 
@@ -88,7 +89,7 @@ static NSSet *coverArtExtentions = nil;
  *
  * @param newMeta The meta data
  */
-- (void)setMetaData:(SapphireMetaData *)newMeta
+- (void)setMetaData:(SapphireMetaData *)newMeta inMetaData:(SapphireDirectoryMetaData *)dir
 {
 	[meta release];
 	NSString *path = [newMeta path];
@@ -98,6 +99,8 @@ static NSSet *coverArtExtentions = nil;
 		return;
 	}
 	meta = [newMeta retain];
+	[dirMeta release];
+	dirMeta = [dir retain];
 	/*Now that we know the file, set the asset*/
 	NSURL *url = [NSURL fileURLWithPath:[meta path]];
 	SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
@@ -121,6 +124,8 @@ static NSSet *coverArtExtentions = nil;
 	} else {
 		NSString *ret = [(SapphireFileMetaData *)meta coverArtPath];
 		if(ret != nil)
+			return ret;
+		else if ((ret = [dirMeta coverArtPath]) != nil)
 			return ret;
 	}
 	/*Fallback to default*/

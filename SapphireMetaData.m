@@ -73,7 +73,7 @@
 
 static NSSet *coverArtExtentions = nil;
 
-static NSString *searchExtForPath(NSString *path)
+NSString *searchCoverArtExtForPath(NSString *path)
 {
 	NSFileManager *fm = [NSFileManager defaultManager];
 	BOOL isDir = NO;
@@ -846,11 +846,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (NSString *)coverArtPathUpToParents:(int)parents
 {
-	NSString *ret = searchExtForPath([[self path] stringByAppendingPathComponent:@"Cover Art/cover"]);
+	NSString *ret = searchCoverArtExtForPath([[self path] stringByAppendingPathComponent:@"Cover Art/cover"]);
 	if(ret != nil)
 		return ret;
 	
-	ret = searchExtForPath([[self path] stringByAppendingPathComponent:@"cover"]);
+	ret = searchCoverArtExtForPath([[self path] stringByAppendingPathComponent:@"cover"]);
 	if(ret != nil)
 		return ret;
 	
@@ -1650,16 +1650,16 @@ static NSArray *displayedMetaDataOrder = nil;
 	/*Find cover art for the current file in the "Cover Art" dir*/
 	NSString *subPath = [[self path] stringByDeletingPathExtension];
 	NSString *fileName = [subPath lastPathComponent];
-	NSString *ret = searchExtForPath([[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:fileName]);
+	NSString *ret = searchCoverArtExtForPath([[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:fileName]);
 	if(ret != nil)
 		return ret;
 	
 	/*Find cover art for the current file in the current dir*/
-	ret = searchExtForPath(subPath);
+	ret = searchCoverArtExtForPath(subPath);
 	if(ret != nil)
 		return ret;
 	
-	return [(SapphireDirectoryMetaData *)parent coverArtPath];
+	return nil;
 }
 
 /*See super documentation*/

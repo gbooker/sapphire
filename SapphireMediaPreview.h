@@ -6,12 +6,13 @@
 //  Copyright 2007 www.nanopi.net. All rights reserved.
 //
 
-@class SapphireMetaData;
+@class SapphireMetaData, SapphireDirectoryMetaData;
 
 @interface SapphireMediaPreview : BRMetadataPreviewController{
-	SapphireMetaData	*meta;
+	SapphireMetaData			*meta;
+	SapphireDirectoryMetaData	*dirMeta;
 }
 
-- (void)setMetaData:(SapphireMetaData *)newMeta;
+- (void)setMetaData:(SapphireMetaData *)newMeta inMetaData:(SapphireDirectoryMetaData *)dir;
 
 @end

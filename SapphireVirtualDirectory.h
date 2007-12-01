@@ -10,7 +10,6 @@
 
 @interface SapphireVirtualDirectory : SapphireDirectoryMetaData {
 	NSMutableDictionary		*directory;
-	NSMutableDictionary		*virtualCoverArt;
 	NSTimer					*reloadTimer;
 	BOOL					loading;
 }
@@ -18,6 +17,7 @@
 - (void)setReloadTimer;
 - (void)processFile:(SapphireFileMetaData *)file;
 - (void)removeFile:(SapphireFileMetaData *)file;
+- (NSString *)classDefaultCoverPath;
 - (void)childDisplayChanged;
 - (void)writeToFile:(NSString *)filePath;
 - (BOOL)isDisplayEmpty;

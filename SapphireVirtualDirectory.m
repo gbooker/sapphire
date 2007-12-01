@@ -8,6 +8,8 @@
 
 #import "SapphireVirtualDirectory.h"
 
+//Defined in MetaData.m but this is essentially private
+NSString *searchCoverArtExtForPath(NSString *path);
 
 @interface SapphireDirectoryMetaData (privateFunctions)
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
@@ -21,7 +23,6 @@
 		return nil;
 	
 	directory = [[NSMutableDictionary alloc] init];
-	virtualCoverArt=[[NSMutableDictionary alloc] init];
 	reloadTimer = nil;
 	scannedDirectory = YES;
 	
@@ -69,9 +70,27 @@
 {
 }
 
+- (NSString *)classDefaultCoverPath
+{
+	return nil;
+}
+
+- (NSString *)coverArtPathUpToParents:(int)parents
+{
+	NSString *coverPath = searchCoverArtExtForPath([[[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Virtual Cover Art"] stringByAppendingPathComponent:[self path]] stringByAppendingPathComponent:@"cover"]);
+	if([[NSFileManager defaultManager] fileExistsAtPath:coverPath])
+		return coverPath;
+	if(parents != 0 && [parent isKindOfClass:[SapphireDirectoryMetaData class]])
+		return [(SapphireVirtualDirectory *)parent coverArtPathUpToParents:parents-1];
+	return nil;
+}
+
 - (NSString *)coverArtPath
 {
-	return [[NSBundle bundleForClass:[self class]] pathForResource:@"PH" ofType:@"png"];
+	NSString *ret = [self coverArtPathUpToParents:2];
+	if(ret != nil)
+		return ret;
+	return [self classDefaultCoverPath];
 }
 
 - (void)childDisplayChanged

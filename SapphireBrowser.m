@@ -868,9 +868,9 @@ BOOL setupAudioOutput(int sampleRate)
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 		/*Check for dir*/
 		if(row < dirCount)
-			[preview setMetaData:[metaData metaDataForDirectory:name]];
+			[preview setMetaData:[metaData metaDataForDirectory:name] inMetaData:metaData];
 		else
-			[preview setMetaData:[metaData metaDataForFile:name]];
+			[preview setMetaData:[metaData metaDataForFile:name] inMetaData:metaData];
 		[preview setShowsMetadataImmediately:NO];
 		/*And go*/
 		return [preview autorelease];

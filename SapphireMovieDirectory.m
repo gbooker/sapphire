@@ -128,7 +128,7 @@
 
 @implementation SapphireMovieCastDirectory
 
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
@@ -162,7 +162,7 @@
 
 @implementation SapphireMovieDirectorDirectory
 
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
@@ -190,7 +190,7 @@
 
 @implementation SapphireMovieGenreDirectory
 
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
@@ -218,7 +218,7 @@
 
 @implementation SapphireMovieCategoryDirectory
 
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
@@ -292,7 +292,7 @@ static NSComparisonResult imdbTop250Compare(NSString *first, NSString *second, v
 @end
 
 @implementation SapphireMovieOscarDirectory
-- (NSString *)coverArtPath
+- (NSString *)classDefaultCoverPath
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"AMPAS_Oscar_H" ofType:@"png"];
 }
