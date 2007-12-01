@@ -314,6 +314,8 @@ static NSArray *predicates = nil;
 	if([name isEqual: ALL_IMPORT_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:IMPORT_GEM_KEY] forMenu:result];
 	else if([name isEqual: SETTINGS_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:GEAR_GEM_KEY] forMenu:result];
 	else if([name isEqual: RESET_MENU_ITEM]) [SapphireFrontRowCompat setLeftIcon:[theme gem:FRONTROW_GEM_KEY] forMenu:result];
+	else if([name isEqual: @"  TV Shows"]) [SapphireFrontRowCompat setLeftIcon:[theme gem:TV_GEM_KEY] forMenu:result];
+	else if([name isEqual: @"  Movies"]) [SapphireFrontRowCompat setLeftIcon:[theme gem:MOV_GEM_KEY] forMenu:result];
 	else [SapphireFrontRowCompat setLeftIcon:[SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]] forMenu:result];
 	
 	// add text
