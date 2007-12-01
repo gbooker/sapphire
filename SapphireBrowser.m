@@ -706,7 +706,10 @@ BOOL setupAudioOutput(int sampleRate)
 			{
 				[reqComp addObject:[NSString stringWithFormat:@"filetype=%d",fileClass]];
 				[reqComp addObject:[NSString stringWithFormat:@"extension=%@", ext]];
-				[reqComp addObject:[NSString stringWithFormat:@"ckey=%@-%d",ext,fileClass]];
+				if([SapphireFrontRowCompat usingFrontRow])
+					[reqComp addObject:[NSString stringWithFormat:@"ckey=FRONTROW-%@-%d",ext,fileClass]];
+				else
+					[reqComp addObject:[NSString stringWithFormat:@"ckey=ATV-%@-%d",ext,fileClass]];
 			}
 			
 			int count = [reqComp count];
