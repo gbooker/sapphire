@@ -12,6 +12,7 @@
 	NSMutableDictionary		*directory;
 	NSMutableDictionary		*virtualCoverArt;
 	NSTimer					*reloadTimer;
+	BOOL					loading;
 }
 - (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath;
 - (void)setReloadTimer;

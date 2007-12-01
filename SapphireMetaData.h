@@ -63,12 +63,7 @@
 #define VIRTUAL_DIR_TOP250_KEY			@"IMDB Top 250"
 #define VIRTUAL_DIR_OSCAR_KEY			@"Academy Award Winning"
 
-#define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
-#define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"
-#define META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION	@"MetaDataFileInfoWillChange"
-#define META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION	@"MetaDataFileInfoHasChanged"
 #define META_DATA_FILE_INFO_KIND						@"MetaDataFileInfoKind"
-
 #define FILE_CLASS_KEY				@"File Class"
 typedef enum {
 	FILE_CLASS_NOT_FILE= -1,
@@ -79,6 +74,13 @@ typedef enum {
 	FILE_CLASS_IMAGE = 4,
 	FILE_CLASS_OTHER = 5,
 } FileClass;
+
+#define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
+#define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"
+#define META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION	@"MetaDataFileInfoWillChange"
+#define META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION	@"MetaDataFileInfoHasChanged"
+#define META_DATA_FILE_INFO_STARTED_LOADING				@"MetaDataFileInfoStartedLoading"
+#define META_DATA_FILE_INFO_FINISHED_LOADING			@"MetaDataFileInfoFinishedLoading"
 
 @class SapphireMetaData, SapphireMetaDataCollection, SapphireFileMetaData, SapphireDirectoryMetaData;
 

@@ -25,11 +25,16 @@
 	reloadTimer = nil;
 	scannedDirectory = YES;
 	
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(startedLoading:) name:META_DATA_FILE_INFO_STARTED_LOADING object:nil];
+	[nc addObserver:self selector:@selector(finishedLoading:) name:META_DATA_FILE_INFO_FINISHED_LOADING object:nil];
+	
 	return self;
 }
 
 - (void) dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[directory release];
 	[reloadTimer invalidate];
 	[super dealloc];
@@ -50,7 +55,10 @@
 - (void)setReloadTimer
 {
 	[reloadTimer invalidate];
-	reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(reloadDirectoryContents) userInfo:nil repeats:NO];
+	if(!loading)
+		reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0 target:self selector:@selector(reloadDirectoryContents) userInfo:nil repeats:NO];
+	else
+		reloadTimer = nil;
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -63,7 +71,7 @@
 
 - (NSString *)coverArtPath
 {
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/PH.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"PH" ofType:@"png"];
 }
 
 - (void)childDisplayChanged
@@ -107,7 +115,21 @@
 
 - (BOOL)isLoaded
 {
-	return reloadTimer == nil;
+	return !loading && reloadTimer == nil;
+}
+
+- (void)startedLoading:(NSNotification *)note
+{
+	loading = YES;
+}
+
+- (void)finishedLoading:(NSNotification *)note
+{
+	if(loading == NO)
+		//Already handled
+		return;
+	loading = NO;
+	[self setReloadTimer];
 }
 
 @end
@@ -132,6 +154,18 @@
 	[mutDict release];
 	[(SapphireVirtualDirectory *)parent childDisplayChanged];
 	reloadTimer = nil;
+}
+
+- (void)finishedLoading:(NSNotification *)note
+{
+	NSEnumerator *keyEnum = [directory keyEnumerator];
+	NSString *key = nil;
+	while((key = [keyEnum nextObject]) != nil)
+	{
+		SapphireVirtualDirectory *dir = [directory objectForKey:key];
+		[dir finishedLoading:note];
+	}
+	[super finishedLoading:note];
 }
 
 - (BOOL)addFile:(SapphireFileMetaData *)file toKey:(NSString *)key withChildClass:(Class)childClass

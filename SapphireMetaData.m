@@ -1300,6 +1300,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
  */
 - (void)loadMetaData
 {
+	[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_INFO_STARTED_LOADING object:self];
 	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:[NSMutableArray arrayWithObject:self] repeats:NO];
 }
 
@@ -1341,6 +1342,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		if([nextObj isKindOfClass:[SapphireDirectoryMetaData class]])
 			nextTarget = nextObj;
 		[NSTimer scheduledTimerWithTimeInterval:0.0 target:nextTarget selector:@selector(loadMetaDataTimer:) userInfo:queue repeats:NO];
+	}
+	else
+	{
+		[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_INFO_FINISHED_LOADING object:self];
 	}
 }
 
