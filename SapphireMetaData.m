@@ -47,7 +47,21 @@
  */
 - (NSComparisonResult) directoryNameCompare:(NSString *)other
 {
-	return [self compare:other options:NSCaseInsensitiveSearch | NSNumericSearch];
+	NSString *myShortenedName=nil ;
+	NSString *otherShortenedName=nil ;
+	if([[self lowercaseString] hasPrefix:@"a "] && [self length]>2)
+		myShortenedName=[self substringFromIndex:2];
+	else if([[self lowercaseString] hasPrefix:@"the "] && [self length]>4)
+		myShortenedName=[self substringFromIndex:4];
+	if([[other lowercaseString] hasPrefix:@"a "]&& [other length]>2)
+		otherShortenedName=[other substringFromIndex:2];
+	else if([[other lowercaseString] hasPrefix:@"the "] && [other length]>4)
+		otherShortenedName=[other substringFromIndex:4];
+	if(myShortenedName==nil)
+		myShortenedName=self;
+	if(otherShortenedName==nil)
+		otherShortenedName=other;
+	return [myShortenedName	compare:otherShortenedName options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
 @end
 
