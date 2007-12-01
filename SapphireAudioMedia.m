@@ -80,7 +80,7 @@
 	
 	if(coverArt == NULL)
 	{
-		NSString *path = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
+		NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"DefaultPreview" ofType:@"png"];
 		NSURL *url = [NSURL fileURLWithPath:path];
 		CGImageSourceRef  sourceRef;
 		

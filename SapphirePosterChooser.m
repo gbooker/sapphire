@@ -43,7 +43,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;
-	defaultImage = [[self getPosterLayer:[[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/PH.png"]] retain];
+	defaultImage = [[self getPosterLayer:[[NSBundle bundleForClass:[self class]] pathForResource:@"PH" ofType:@"png"]] retain];
 
 	
 	[fileInfoText setFrame: frame];

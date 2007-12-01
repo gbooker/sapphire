@@ -124,7 +124,7 @@ static NSSet *coverArtExtentions = nil;
 			return ret;
 	}
 	/*Fallback to default*/
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/DefaultPreview.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"DefaultPreview" ofType:@"png"];
 }
 
 /*!
