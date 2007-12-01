@@ -236,7 +236,8 @@
 		if([fm fileExistsAtPath:[file path]])
 		{
 			NSString * title=[file movieTitle];
-			[mutDict setObject:file forKey:title];
+			if(title != nil)
+				[mutDict setObject:file forKey:title];
 		}
 	}
 	[files addObjectsFromArray:[mutDict allKeys]];
@@ -262,11 +263,23 @@
 
 @implementation SapphireMovieTop250Directory
 
+static NSComparisonResult imdbTop250Compare(NSString *first, NSString *second, void *context)
+{
+	NSDictionary *metaFiles = (NSDictionary *)context;
+	int rank1 = [[metaFiles objectForKey:first] imdbTop250];
+	int rank2 = [[metaFiles objectForKey:second] imdbTop250];
+	if(rank1 > rank2)
+		return NSOrderedDescending;
+	else if (rank1 < rank2)
+		return NSOrderedAscending;
+	return NSOrderedSame;
+}
+
 - (void)reloadDirectoryContents
 {
 	[super reloadDirectoryContents];
 	
-	//	[files sortUsingSelector:@selector(imdbCompare:)];
+	[files sortUsingFunction:imdbTop250Compare context:metaFiles];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -283,11 +296,24 @@
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"AMPAS_Oscar_H" ofType:@"png"];
 }
+
+static NSComparisonResult oscarsWonCompare(NSString *first, NSString *second, void *context)
+{
+	NSDictionary *metaFiles = (NSDictionary *)context;
+	int rank1 = [[metaFiles objectForKey:first] oscarsWon];
+	int rank2 = [[metaFiles objectForKey:second] oscarsWon];
+	if(rank1 < rank2)
+		return NSOrderedDescending;
+	else if (rank1 > rank2)
+		return NSOrderedAscending;
+	return NSOrderedSame;
+}
+
 - (void)reloadDirectoryContents
 {
 	[super reloadDirectoryContents];
 	
-//	[files sortUsingSelector:@selector(oscarCompare:)];
+	[files sortUsingFunction:oscarsWonCompare context:metaFiles];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
