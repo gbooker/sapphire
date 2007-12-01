@@ -130,7 +130,7 @@ static NSString *searchExtForPath(NSString *path)
 	if([virtualCoverArt objectForKey:[path lastPathComponent]]!=nil)
 		return [virtualCoverArt objectForKey:[path lastPathComponent]];
 	else
-		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/TV.png"];
+		return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
 	
 }
 
@@ -201,7 +201,7 @@ static NSString *searchExtForPath(NSString *path)
 	if([virtualCoverArt objectForKey:[path lastPathComponent]]!=nil)
 		return [virtualCoverArt objectForKey:[path lastPathComponent]];
 	else
-		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/TV.png"];
+		return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
 	
 }
 

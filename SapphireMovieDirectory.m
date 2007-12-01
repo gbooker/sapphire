@@ -130,7 +130,7 @@
 
 - (NSString *)coverArtPath
 {
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -164,7 +164,7 @@
 
 - (NSString *)coverArtPath
 {
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -192,7 +192,7 @@
 
 - (NSString *)coverArtPath
 {
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
 
 - (void)processFile:(SapphireFileMetaData *)file
@@ -220,7 +220,7 @@
 
 - (NSString *)coverArtPath
 {
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
 
 - (void)reloadDirectoryContents
@@ -281,7 +281,7 @@
 @implementation SapphireMovieOscarDirectory
 - (NSString *)coverArtPath
 {
-	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/AMPAS_Oscar_H.png"];
+	return [[NSBundle bundleForClass:[self class]] pathForResource:@"AMPAS_Oscar_H" ofType:@"png"];
 }
 - (void)reloadDirectoryContents
 {
