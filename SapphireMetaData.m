@@ -49,7 +49,6 @@
 {
 	return [self compare:other options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
-
 @end
 
 @interface SapphireDirectoryMetaData (private)
@@ -2293,5 +2292,4 @@ static NSArray *displayedMetaDataOrder = nil;
 	/*Finally sort by name*/
 	return [[path lastPathComponent] compare:[[other path] lastPathComponent] options:NSCaseInsensitiveSearch | NSNumericSearch];
 }
-
 @end

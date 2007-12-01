@@ -45,7 +45,6 @@
 	genres		= [[SapphireMovieGenreDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_GENRE_KEY]];
 	imdbtop250	= [[SapphireMovieTop250Directory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_TOP250_KEY]];
 	oscars		= [[SapphireMovieOscarDirectory alloc]		initWithParent:self path:[[self path] stringByAppendingPathComponent:VIRTUAL_DIR_OSCAR_KEY]];
-
 	
 	[directory setObject:allMovies forKey:VIRTUAL_DIR_ALL_KEY];
 	[directory setObject:cast forKey:@"By Cast"];
@@ -128,6 +127,12 @@
 @end
 
 @implementation SapphireMovieCastDirectory
+
+- (NSString *)coverArtPath
+{
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+}
+
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	NSArray * cast=[file movieCast];
@@ -156,6 +161,12 @@
 @end
 
 @implementation SapphireMovieDirectorDirectory
+
+- (NSString *)coverArtPath
+{
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+}
+
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	NSArray * directors=[file movieDirectors];
@@ -179,6 +190,11 @@
 
 @implementation SapphireMovieGenreDirectory
 
+- (NSString *)coverArtPath
+{
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+}
+
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	NSArray * genres=[file movieGenres];
@@ -201,6 +217,11 @@
 @end
 
 @implementation SapphireMovieCategoryDirectory
+
+- (NSString *)coverArtPath
+{
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/video_H.png"];
+}
 
 - (void)reloadDirectoryContents
 {
@@ -241,6 +262,13 @@
 
 @implementation SapphireMovieTop250Directory
 
+- (void)reloadDirectoryContents
+{
+	[super reloadDirectoryContents];
+	
+	//	[files sortUsingSelector:@selector(imdbCompare:)];
+}
+
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	if([file imdbTop250]>0)
@@ -251,6 +279,16 @@
 @end
 
 @implementation SapphireMovieOscarDirectory
+- (NSString *)coverArtPath
+{
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/AMPAS_Oscar_H.png"];
+}
+- (void)reloadDirectoryContents
+{
+	[super reloadDirectoryContents];
+	
+//	[files sortUsingSelector:@selector(oscarCompare:)];
+}
 
 - (void)processFile:(SapphireFileMetaData *)file
 {

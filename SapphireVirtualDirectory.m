@@ -21,6 +21,7 @@
 		return nil;
 	
 	directory = [[NSMutableDictionary alloc] init];
+	virtualCoverArt=[[NSMutableDictionary alloc] init];
 	reloadTimer = nil;
 	scannedDirectory = YES;
 	
@@ -58,6 +59,11 @@
 
 - (void)removeFile:(SapphireFileMetaData *)file
 {
+}
+
+- (NSString *)coverArtPath
+{
+	return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/PH.png"];
 }
 
 - (void)childDisplayChanged

@@ -10,6 +10,7 @@
 
 @interface SapphireVirtualDirectory : SapphireDirectoryMetaData {
 	NSMutableDictionary		*directory;
+	NSMutableDictionary		*virtualCoverArt;
 	NSTimer					*reloadTimer;
 }
 - (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath;

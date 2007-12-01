@@ -9,12 +9,50 @@
 #import "SapphireTVDirectory.h"
 #import "SapphireMetaData.h"
 
+static NSSet *coverArtExtentions = nil;
+
+static NSString *searchExtForPath(NSString *path)
+{
+	NSFileManager *fm = [NSFileManager defaultManager];
+	BOOL isDir = NO;
+	/*Search all extensions*/
+	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
+	NSString *ext = nil;
+	while((ext = [extEnum nextObject]) != nil)
+	{
+		NSString *candidate = [path stringByAppendingPathExtension:ext];
+		/*Check the candidate*/
+		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
+		{
+			if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
+				return candidate;
+		}
+			
+	}
+	/*Didn't find one*/
+	return nil;
+}
+
 @implementation SapphireTVDirectory
++ (void)initialize
+{
+	/*Initialize the set of cover art extensions*/
+	coverArtExtentions = [[NSSet alloc] initWithObjects:
+		@"jpg",
+		@"jpeg",
+		@"tif",
+		@"tiff",
+		@"png",
+		@"gif",
+		nil];
+}
+
 - (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath
 {
 	self = [super initWithParent:myParent path:myPath];
 	if(self == nil)
 		return nil;
+	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileAdded:) name:META_DATA_FILE_ADDED_NOTIFICATION object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileRemoved:) name:META_DATA_FILE_REMOVED_NOTIFICATION object:nil];
@@ -23,7 +61,6 @@
 	
 	return self;
 }
-
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection
 {
 	self = [self initWithParent:nil path:@"@TV"];
@@ -88,11 +125,33 @@
 @end
 
 @implementation SapphireShowDirectory
+- (NSString *)coverArtPath
+{
+	if([virtualCoverArt objectForKey:[path lastPathComponent]]!=nil)
+		return [virtualCoverArt objectForKey:[path lastPathComponent]];
+	else
+		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/TV.png"];
+	
+}
+
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	int seasonNum = [file seasonNumber];
 	if(seasonNum == 0)
 		return;
+	if([virtualCoverArt objectForKey:[path lastPathComponent]]==nil)
+	{
+		NSString *candidateCoverArt=nil;
+		candidateCoverArt=searchExtForPath([[[file path]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
+		if(candidateCoverArt!=nil)
+			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
+		else
+		{
+			candidateCoverArt=searchExtForPath([[[[file path]stringByDeletingLastPathComponent]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
+			if(candidateCoverArt!=nil)
+			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
+		}
+	}
 	NSString *season = [NSString stringWithFormat:BRLocalizedString(@"Season %d", @"Season name"), seasonNum];
 	[self addFile:file toKey:season withChildClass:[SapphireSeasonDirectory class]];
 }
@@ -137,8 +196,30 @@
 	[(SapphireVirtualDirectory *)parent childDisplayChanged];
 }
 
+- (NSString *)coverArtPath
+{
+	if([virtualCoverArt objectForKey:[path lastPathComponent]]!=nil)
+		return [virtualCoverArt objectForKey:[path lastPathComponent]];
+	else
+		return [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Resources/TV.png"];
+	
+}
+
 - (void)processFile:(SapphireFileMetaData *)file
 {
+	if([virtualCoverArt objectForKey:[path lastPathComponent]]==nil)
+	{
+		NSString *candidateCoverArt=nil;
+		candidateCoverArt=searchExtForPath([[[file path]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
+		if(candidateCoverArt!=nil)
+			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
+		else
+		{
+			candidateCoverArt=searchExtForPath([[[[file path]stringByDeletingLastPathComponent]stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover"]);
+			if(candidateCoverArt!=nil)
+			[virtualCoverArt setObject:candidateCoverArt forKey:[path lastPathComponent]];
+		}
+	}
 	[directory setObject:file forKey:[file path]];
 	[self setReloadTimer];
 }

@@ -86,6 +86,8 @@
 		FEC18C150CF7CB8E001DCAB9 /* Import.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC18C140CF7CB8E001DCAB9 /* Import.png */; };
 		FEC18C320CF7D99F001DCAB9 /* FrontRow.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC18C300CF7D99F001DCAB9 /* FrontRow.png */; };
 		FEC18C330CF7D99F001DCAB9 /* FastSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC18C310CF7D99F001DCAB9 /* FastSwitch.png */; };
+		FECB26DA0D012CA700C7C6D5 /* AMPAS_Oscar_H.png in Resources */ = {isa = PBXBuildFile; fileRef = FECB26D90D012CA700C7C6D5 /* AMPAS_Oscar_H.png */; };
+		FECB26EA0D01328900C7C6D5 /* video_H.png in Resources */ = {isa = PBXBuildFile; fileRef = FECB26E90D01328900C7C6D5 /* video_H.png */; };
 		FED50A020CFB401F006982D2 /* AMPAS_Oscar.png in Resources */ = {isa = PBXBuildFile; fileRef = FED50A010CFB401F006982D2 /* AMPAS_Oscar.png */; };
 		FED5D2D60CD6A205000E9588 /* PH.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5D2D50CD6A205000E9588 /* PH.png */; };
 /* End PBXBuildFile section */
@@ -227,6 +229,8 @@
 		FEC18C140CF7CB8E001DCAB9 /* Import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Import.png; sourceTree = "<group>"; };
 		FEC18C300CF7D99F001DCAB9 /* FrontRow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FrontRow.png; sourceTree = "<group>"; };
 		FEC18C310CF7D99F001DCAB9 /* FastSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FastSwitch.png; sourceTree = "<group>"; };
+		FECB26D90D012CA700C7C6D5 /* AMPAS_Oscar_H.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AMPAS_Oscar_H.png; sourceTree = "<group>"; };
+		FECB26E90D01328900C7C6D5 /* video_H.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_H.png; sourceTree = "<group>"; };
 		FED50A010CFB401F006982D2 /* AMPAS_Oscar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AMPAS_Oscar.png; sourceTree = "<group>"; };
 		FED5D2D50CD6A205000E9588 /* PH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PH.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -281,6 +285,8 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FECB26E90D01328900C7C6D5 /* video_H.png */,
+				FECB26D90D012CA700C7C6D5 /* AMPAS_Oscar_H.png */,
 				FE7856150CFC0B3900F56C1A /* Audio.png */,
 				FE7856160CFC0B3900F56C1A /* Video.png */,
 				FED50A010CFB401F006982D2 /* AMPAS_Oscar.png */,
@@ -531,7 +537,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "Sapphire" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* ApplianceBase */;
 			projectDirPath = "";
@@ -574,6 +579,8 @@
 				FED50A020CFB401F006982D2 /* AMPAS_Oscar.png in Resources */,
 				FE7856170CFC0B3900F56C1A /* Audio.png in Resources */,
 				FE7856180CFC0B3900F56C1A /* Video.png in Resources */,
+				FECB26DA0D012CA700C7C6D5 /* AMPAS_Oscar_H.png in Resources */,
+				FECB26EA0D01328900C7C6D5 /* video_H.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
