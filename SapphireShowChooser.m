@@ -111,6 +111,12 @@
 	return searchStr;
 }
 
+- (void)wasPushed
+{
+	[super wasPushed];
+	[(BRListControl *)[self list] setSelection:1];
+}
+
 /*!
  * @brief The item the user selected.  Special values are in the header file
  *

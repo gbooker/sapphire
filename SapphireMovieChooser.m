@@ -49,7 +49,7 @@
 }
 
 /*!
-* @brief The list of movies to choose from
+ * @brief The list of movies to choose from
  *
  * @return The list of movies to choose from
  */
@@ -67,12 +67,12 @@
 {
 	movies = [movieList retain];
 	[[self list] reload];
-	[SapphireFrontRowCompat addDividerAtIndex:3 toList:[self list]];
+	[SapphireFrontRowCompat addDividerAtIndex:1 toList:[self list]];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
 /*!
-* @brief Sets the filename to display
+ * @brief Sets the filename to display
  *
  * @param choosingForFileName The filename being choosen for
  */
@@ -100,6 +100,12 @@
 	return fileName;
 }
 
+- (void)wasPushed
+{
+	[super wasPushed];
+	[(BRListControl *)[self list] setSelection:1];
+}
+
 /*!
  * @brief The item the user selected.  Special values are in the header file
  *
@@ -107,12 +113,12 @@
  */
 - (int)selection
 {
-	return selection - 3;
+	return selection - 1;
 }
 
 - (long) itemCount
 {
-	return [movies count] + 3;
+	return [movies count] + 1;
 }
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
@@ -121,13 +127,9 @@
 	
 	if(row == 0)/*Put in the special "this is not a movie"*/
 		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser") forMenu:result];
-	else if(row==1)/*Put in the special "this is something else"*/
-		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is something else>", @"Mark a file that something else in the movie chooser") forMenu:result];
-	else if(row==2)/*Put in the special "this is a tv show"*/
-		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is a TV Show>", @"Mark a file that is tv show in the movie chooser") forMenu:result];
 	else
 		/*Put in the movie results*/
-		[SapphireFrontRowCompat setTitle:[[movies objectAtIndex:row-3] objectForKey:@"name"] forMenu:result];
+		[SapphireFrontRowCompat setTitle:[[movies objectAtIndex:row-1] objectForKey:@"name"] forMenu:result];
 	
 	return result;
 }
@@ -139,13 +141,9 @@
 	
 	if(row == 0)/*Put in the special "this is not a movie"*/
 		return BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser");
-	else if(row==1)/*Put in the special "this is something else"*/
-		return BRLocalizedString(@"<This is something else>", @"Mark a file that is something else in the movie chooser");
-	else if(row==2)/*Put in the special "this is a tv show"*/
-		return BRLocalizedString(@"<This is a TV Show>", @"Mark a file that is a tv show in the movie chooser");
 	else
 		/*Put in the movie*/
-		return [[movies objectAtIndex:row-3] objectForKey:@"name"];
+		return [[movies objectAtIndex:row-1] objectForKey:@"name"];
 }
 
 

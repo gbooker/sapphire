@@ -847,16 +847,6 @@
 			if ([currentData fileClass] != FILE_CLASS_TV_SHOW)
 				[currentData setFileClass:FILE_CLASS_UNKNOWN];
 		}
-		else if(selection==MOVIE_CHOOSE_OTHER)
-		{
-			[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
-			[currentData setFileClass:FILE_CLASS_OTHER] ;
-		}
-		else if(selection==MOVIE_CHOOSE_TV_SHOW)
-		{
-			[currentData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
-			[currentData setFileClass:FILE_CLASS_TV_SHOW] ;	
-		}
 		else
 		{
 			/*They selected a movie title, save the translation and write it*/
