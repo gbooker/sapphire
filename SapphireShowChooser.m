@@ -111,9 +111,9 @@
 	return searchStr;
 }
 
-- (void)wasPushed
+- (void)willBePushed
 {
-	[super wasPushed];
+	[super willBePushed];
 	[(BRListControl *)[self list] setSelection:1];
 }
 
