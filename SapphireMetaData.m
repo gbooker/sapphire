@@ -1529,6 +1529,15 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self writeMetaData];
 }
 
+- (void)clearMetaDataForPredicate:(SapphirePredicate *)predicate
+{
+	SEL select = @selector(clearMetaData);
+	NSInvocation *fileInv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
+	[fileInv setSelector:select];
+	[self invokeRecursivelyOnFiles:fileInv withPredicate:predicate];
+	[self writeMetaData];
+}
+
 - (SapphireMetaDataCollection *)collection
 {
 	if(collection == nil)
@@ -1859,6 +1868,12 @@ static NSArray *displayedMetaDataOrder = nil;
 	[metaData setObject:newMeta forKey:source];
 	[self combinedDataChanged];
 	[nc postNotificationName:META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION object:self userInfo:info];
+}
+
+- (void)clearMetaData
+{
+	[metaData removeAllObjects];
+	[self combinedDataChanged];
 }
 
 /*!

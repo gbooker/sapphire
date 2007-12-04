@@ -18,7 +18,7 @@ typedef enum {
 	COMMAND_TOGGLE_FAVORITE,
 	COMMAND_MARK_TO_REFETCH_TV,
 	COMMAND_MARK_TO_REFETCH_MOVIE,
-	COMMAND_MARK_AS_MOVIE,
+	COMMAND_MARK_TO_DELETE_METADATA,
 	COMMAND_MARK_TO_JOIN,
 	COMMAND_CLEAR_JOIN_MARK,
 	COMMAND_JOIN,
@@ -57,7 +57,7 @@ static NSMutableArray *joinList;
 			BRLocalizedString(@"Mark All as Not Favorite", @"Mark whole directory as not favorite"),
 			BRLocalizedString(@"Mark All to Refetch TV Data", @"Mark whole directory to re-fetch its tv data"),
 			BRLocalizedString(@"Mark All to Refetch Movie Data", @"Mark whole directory to re-fetch its movie data"),
-			BRLocalizedString(@"Mark All as a Movie", @"Mark whole directory as a Movie file"),
+			BRLocalizedString(@"Mark All to Clear Meta Data", @"Mark whole directory to delete the meta data"),
 			nil];
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
@@ -86,10 +86,10 @@ static NSMutableArray *joinList;
 			[names addObject:BRLocalizedString(@"Mark to Refetch Movie Data", @"Mark file to re-fetch its movie data")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_MOVIE]];
 		}
-		if([fileMeta fileClass] != FILE_CLASS_MOVIE)
+		if([fileMeta fileClass] != FILE_CLASS_UNKNOWN)
 		{
-			[names addObject:BRLocalizedString(@"Mark as a Movie", @"Mark a file as a movie")];
-			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_AS_MOVIE]];
+			[names addObject:BRLocalizedString(@"Mark to Clear Meta Data", @"Mark a file to delete the meta data")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_DELETE_METADATA]];
 		}
 		if(![joinList containsObject:fileMeta])
 		{
@@ -336,7 +336,7 @@ static NSMutableArray *joinList;
 			case COMMAND_MARK_TO_REFETCH_MOVIE:
 				[fileMeta setToImportFromSource:META_IMDB_IMPORT_KEY];
 				break;
-			case COMMAND_MARK_AS_MOVIE:
+			case COMMAND_MARK_TO_DELETE_METADATA:
 				[fileMeta setFileClass:FILE_CLASS_MOVIE];
 				break;
 			case COMMAND_MARK_TO_JOIN:

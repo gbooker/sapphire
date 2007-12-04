@@ -179,6 +179,7 @@ typedef enum {
 - (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate;
 - (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate;
 - (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate;
+- (void)clearMetaDataForPredicate:(SapphirePredicate *)predicate;
 
 @end
 
@@ -198,6 +199,7 @@ typedef enum {
 - (long)importedTimeFromSource:(NSString *)source;
 - (void)setToImportFromSource:(NSString *)source;
 - (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime;
+- (void)clearMetaData;
 - (unsigned int)resumeTime;
 - (void)setResumeTime:(unsigned int)resumeTime;
 - (FileClass)fileClass;
