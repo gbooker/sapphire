@@ -302,6 +302,7 @@
 	canceled = YES;
 	[importTimer invalidate];
 	importTimer = nil;
+	[importItems removeAllObjects];
 	/*Reset the display and write data*/
 	[self resetUIElements];
 	[metaCollection writeMetaData];
