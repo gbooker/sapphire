@@ -11,11 +11,6 @@
 
 @implementation SapphireTheme
 
-/*!
- * @brief Get the shared theme
- *
- * @return The shared theme
- */
 + (id)sharedTheme
 {
 	static SapphireTheme *shared = nil;
@@ -67,11 +62,6 @@
 	[super dealloc];
 }
 
-/*!
- * @brief Sets the scene
- *
- * @param theScene The new scene
- */
 - (void)setScene:(BRRenderScene *)theScene
 {
 	/*Flush cache in case the scene is different and it matters*/
@@ -100,12 +90,6 @@
     return imageRef;
 }
 
-/*!
- * @brief Load a gem for a type
- *
- * @param type The gem type
- * @return The gem's texture
- */
 - (BRTexture *)gem:(NSString *)type
 {
 	/*Check cache*/

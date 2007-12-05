@@ -88,12 +88,12 @@ static BOOL usingFrontRow = NO;
 		[[menu textItem] setTitle:title];
 }
 
-+ (void)setRightJustifiedText:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu
++ (void)setRightJustifiedText:(NSString *)text forMenu:(BRAdornedMenuItemLayer *)menu
 {
 	if(usingFrontRow)
-		[menu setRightJustifiedText:title];
+		[menu setRightJustifiedText:text];
 	else
-		[[menu textItem] setRightJustifiedText:title];
+		[[menu textItem] setRightJustifiedText:text];
 }
 
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu

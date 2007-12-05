@@ -11,40 +11,39 @@
 @class SapphireMetaDataCollection, SapphireSettings, SapphireTheme, SapphirePredicate;
 @protocol SapphireMetaDataDelegate;
 
+/*!
+ * @brief The Main Controller
+ *
+ * This class Is the main controller.  It uses SapphireMediaMenuController to create its main menu.
+ */
 @interface SapphireApplianceController : SapphireMediaMenuController
 {
-	SapphireMetaDataCollection	*metaCollection;
-	NSMutableArray				*names;
-	NSMutableArray				*controllers;
-	NSArray						*masterNames;
-	NSArray						*masterControllers;
-	SapphireSettings			*settings;
+	SapphireMetaDataCollection	*metaCollection;		/*!< @brief The collection of metadata*/
+	NSMutableArray				*names;					/*!< @brief The menu names, in order*/
+	NSMutableArray				*controllers;			/*!< @brief The controllers to launch from menu, in order*/
+	NSArray						*masterNames;			/*!< @brief The list of all names, including hidden*/
+	NSArray						*masterControllers;		/*!< @brief The list of all controllers, including hidden*/
+	SapphireSettings			*settings;				/*!< @brief The settings*/
 }
 
+/*!
+ * @brief Get the current predicate used
+ *
+ * @return The current predicate
+ */
 + (SapphirePredicate *)predicate;
+
+/*!
+ * @brief Change to the next predicate
+ *
+ * @return The next predicate
+ */
 + (SapphirePredicate *)nextPredicate;
+
+/*!
+ * @brief Get the left icon for a given predicate
+ *
+ * @return The left icon
+ */
 + (BRTexture *)gemForPredicate:(SapphirePredicate *)predicate;
-+ (NSString *) rootMenuLabel ;
-
-- (id) initWithScene: (BRRenderScene *) scene;
-- (void) dealloc;
-/*
-- (void) willBePushed;
-- (void) wasPushed;
-- (void) willBePopped;
-- (void) wasPopped;
-- (void) willBeBuried;
-- (void) wasBuriedByPushingController: (BRLayerController *) controller;
-- (void) willBeExhumed;
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller;
-*/
-- (long) itemCount;
-- (id<BRMenuItemLayer>) itemForRow: (long) row;
-- (NSString *) titleForRow: (long) row;
-- (long) rowForTitle: (NSString *) title;
-
-- (void) itemSelected: (long) row;
-
-//- (id<BRMediaPreviewController>) previewControllerForItem: (long) item;
-
 @end

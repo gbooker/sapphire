@@ -29,13 +29,37 @@
 #define MOV_GEM_KEY @"MovieGem"
 @class BRTexture, BRRenderScene;
 
+/*!
+ * @brief The Theme
+ *
+ * This class contains all the theme related materials for Sapphire.  It will dynamically create them upon demand and after the first request, return the same object to save CPU and memory.
+ */
 @interface SapphireTheme : NSObject {
-	NSMutableDictionary		*gemDict;
-	BRRenderScene			*scene;
-	NSDictionary			*gemFiles;
+	NSMutableDictionary		*gemDict;		/*!< @brief The left icons*/
+	BRRenderScene			*scene;			/*!< @brief The render scene*/
+	NSDictionary			*gemFiles;		/*!< @brief The left icon paths*/
 }
+
+/*!
+ * @brief Get the shared theme
+ *
+ * @return The shared theme
+ */
 + (id)sharedTheme;
 
+
+/*!
+ * @brief Sets the scene
+ *
+ * @param theScene The new scene
+ */
 - (void)setScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Load a gem for a type
+ *
+ * @param type The gem type
+ * @return The gem's texture
+ */
 - (BRTexture *)gem:(NSString *)type;
 @end

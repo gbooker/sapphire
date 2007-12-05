@@ -9,11 +9,6 @@
 #import "NSString-Extensions.h"
 
 @implementation NSString (PostStrings)
-/*!
- * @brief URL encode a string
- *
- * @return A url encoded version of the string
- */
 - (NSString *)URLEncode
 {
 	/*Create a new one using the CFURL function*/
