@@ -79,39 +79,62 @@
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller;
 @end
 
+/*!
+ * @brief The importer UI
+ *
+ * This class creates the importer UI.  It handles all the user interaction and passes commands on to its subordinates.
+ */
 @interface SapphireImporterDataMenu : SapphireLayerController <SapphireMetaDataScannerDelegate>
 {
-	BRHeaderControl					*title;
-	BRButtonControl					*button;
-	BRTextControl					*text;
-	BRTextControl					*fileProgress;
-	BRTextControl					*currentFile;
-	BRProgressBarWidget				*bar;
+	BRHeaderControl					*title;					/*!< @brief The title*/
+	BRButtonControl					*button;				/*!< @brief The button to press*/
+	BRTextControl					*text;					/*!< @brief The informative text*/
+	BRTextControl					*fileProgress;			/*!< @brief The progress text*/
+	BRTextControl					*currentFile;			/*!< @brief The current file text*/
+	BRProgressBarWidget				*bar;					/*!< @brief The progress bar*/
 
-	SapphireMetaDataCollection		*metaCollection;
-	NSMutableArray					*collectionDirectories;
-	int								collectionIndex;
-	NSMutableArray					*importItems;
-	NSTimer							*importTimer;
-	float							max;
-	float							current;
-	float							updated ;
-	BOOL							suspended;
-	BOOL							canceled;
+	SapphireMetaDataCollection		*metaCollection;		/*!< @brief The main collection*/
+	NSMutableArray					*collectionDirectories;	/*!< @brief The directories to import*/
+	int								collectionIndex;		/*!< @brief The current index in the directories*/
+	NSMutableArray					*importItems;			/*!< @brief The items remaining to import*/
+	NSTimer							*importTimer;			/*!< @brief The timer to do the next import (so we don't freeze the UI)*/
+	float							max;					/*!< @brief The max number to import*/
+	float							current;				/*!< @brief The current count of imported items*/
+	float							updated ;				/*!< @brief The number of items with new data*/
+	BOOL							suspended;				/*!< @brief YES if import is suspended, NO otherwise*/
+	BOOL							canceled;				/*!< @brief YES if the import was cancelled, NO otherwise*/
 	
-	id <SapphireImporter>			importer;
+	id <SapphireImporter>			importer;				/*!< @brief The importer who does the dirty work*/
 }
+/*!
+ * @brief Creates a new Importer Data Menu
+ *
+ * @param scene The scene
+ * @praam collection The metadata collection to browse
+ * @return The Menu
+ */
 - (id) initWithScene: (BRRenderScene *) scene metaDataCollection:(SapphireMetaDataCollection *)collection  importer:(id <SapphireImporter>)import;
-- (void)getItems;
 @end
 
+/*!
+ * @brief The importer UI protected API
+ *
+ * This category is for use by the SapphireImporter objects to control the overal import process.  It has the ability to pause, resume, and skip an item.
+ */
 @interface SapphireImporterDataMenu (protectedAccess)
-- (void)setText:(NSString *)theText;
-- (void)setFileProgress:(NSString *)updateFileProgress;
-- (void)resetUIElements;
-- (void)importNextItem:(NSTimer *)timer;
-- (void)setCurrentFile:(NSString *)theCurrentFile;
+
+/*!
+ * @brief Pause the import process
+ */
 - (void)pause;
+
+/*!
+ * @brief Resume the import process
+ */
 - (void)resume;
+
+/*!
+ * @brief Skip the next item in the queue
+ */
 - (void)skipNextItem;
 @end

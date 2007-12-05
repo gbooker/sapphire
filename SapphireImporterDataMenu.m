@@ -17,13 +17,6 @@
 @end
 
 @implementation SapphireImporterDataMenu
-/*!
- * @brief Creates a new Importer Data Menu
- *
- * @param scene The scene
- * @praam collection The metadata collection to browse
- * @return The Menu
- */
 - (id) initWithScene: (BRRenderScene *) scene metaDataCollection:(SapphireMetaDataCollection *)collection  importer:(id <SapphireImporter>)import
 {
 	if ( [super initWithScene: scene] == nil )
@@ -308,9 +301,6 @@
 	[metaCollection writeMetaData];
 }
 
-/*!
- * @brief Pause the import process
- */
 - (void)pause
 {
 	/*Kil lthe timer*/
@@ -319,9 +309,6 @@
 	importTimer = nil;
 }
 
-/*!
- * @brief Resume the import process
- */
 - (void)resume
 {
 	/*Sanity checks*/
@@ -331,9 +318,6 @@
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
 }
 
-/*!
- * @brief Skip the next item in the queue
- */
 - (void)skipNextItem
 {
 	/*Remove the next item from the queue*/
