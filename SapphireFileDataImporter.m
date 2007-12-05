@@ -33,6 +33,10 @@
 #define DIRECTORS_XML_QUERY			@"/media/directors/name/text()"
 #define PRODUCERS_XML_QUERY			@"/media/producers/name/text()"
 
+@interface SapphireFileDataImporter (private)
+- (void)importXMLFile:(NSString *)xmlFileName forMeta: (SapphireFileMetaData *) fileMeta ;
+@end
+
 @implementation SapphireFileDataImporter
 
 /*Information to make the XML import easier*/
@@ -73,21 +77,10 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return self;
 }
 
-/*!
-* @brief Sets the importer's data menu
- *
- * @param theDataMenu The importer's menu
- */
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
 }
 
-/*!
- * @brief Import a single File
- *
- * @param metaData The file to import
- * @return YES if imported, NO otherwise
- */
 - (BOOL) importMetaData:(SapphireFileMetaData *)metaData
 {
 	/*Initialization*/
@@ -96,7 +89,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	/*Get the file*/
 	/*Check for XML file*/
 	NSString * xmlFilePath=[metaData path] ;
-	xmlPathIsDir = NO;
+	BOOL xmlPathIsDir = NO;
 	xmlFilePath=[[xmlFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
 	if([fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] && !xmlPathIsDir)
 	{
@@ -121,22 +114,11 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return ret;
 }
 
-/*!
- * @brief The completion text to display
- *
- * @return The completion text to display
- */
 - (NSString *)completionText
 {
 	return BRLocalizedString(@"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported", @"End text after import of files is complete");
 }
 
-/*!
- * @brief Import and XML file into meta data
- *
- * @param xmlFileName The path of the xml file
- * @param fileMeta The file's meta data
- */
 - (void)importXMLFile:(NSString *)xmlFileName forMeta: (SapphireFileMetaData *) fileMeta
 {
 	/*Read the XML document*/
@@ -235,41 +217,21 @@ static NSDictionary *xmlMultiAttributes = nil;
 	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY withTime:modTime];
 }
 
-/*!
- * @brief The initial text to display
- *
- * @return The initial text to display
- */
 - (NSString *)initialText
 {
 	return BRLocalizedString(@"Populate File Data", @"Title");
 }
 
-/*!
- * @brief The informative text to display
- *
- * @return The informative text to display
- */
 - (NSString *)informativeText
 {
 	return BRLocalizedString(@"This tool will populate Sapphire's File data.  This proceedure may take a while, but you may cancel at any time.", @"Description of the import processes");
 }
 
-/*!
- * @brief The button title
- *
- * @return The button title
- */
 - (NSString *)buttonTitle
 {
 	return BRLocalizedString(@"Start Populating Data", @"Button");
 }
 
-/*!
-* @brief The data menu was exhumed
- *
- * @param controller The Controller which was on top
- */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 }

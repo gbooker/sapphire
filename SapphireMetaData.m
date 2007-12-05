@@ -736,7 +736,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	}
 	/*Check to see if any data is out of date*/
 	[self updateMetaData];
-	if([importArray count] || [self pruneMetaData])
+	if([self pruneMetaData] || [importArray count])
 		[self writeMetaData];
 	/*Mark directory as scanned*/
 	scannedDirectory = YES;

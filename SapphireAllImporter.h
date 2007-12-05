@@ -8,6 +8,11 @@
 
 #import "SapphireMultipleImporter.h"
 
+/*!
+ * @brief The importer of all things
+ *
+ * This class is a subclass of SapphireMultipleImporter for importing all data.  It only overrides the strings for display.
+ */
 @interface SapphireAllImporter : SapphireMultipleImporter <SapphireImporter>{
 }
 

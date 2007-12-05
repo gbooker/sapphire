@@ -147,8 +147,6 @@
 	movieTranslations = [[settings objectForKey:TRANSLATIONS_KEY] mutableCopy];
 	if(movieTranslations == nil)
 		movieTranslations = [NSMutableDictionary new];
-	/*Cached movie info*/
-	movieInfo = [NSMutableDictionary new];
 	
 	return self;
 }
@@ -157,16 +155,10 @@
 {
 	[dataMenu release];
 	[movieTranslations release];
-	[movieInfo release];
 	[settingsPath release];
 	[super dealloc];
 }
 
-/*!
-* @brief Sets the importer's data menu
- *
- * @param theDataMenu The importer's menu
- */
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
 	[dataMenu release];
@@ -605,12 +597,6 @@
 	else return NO ;
 }
 
-/*!
-* @brief Import a single File
- *
- * @param metaData The file to import
- * @return YES if imported, NO otherwise
- */
 - (BOOL) importMetaData:(SapphireFileMetaData *)metaData
 {
 	currentData = metaData;
@@ -782,51 +768,26 @@
 }
 
 
-/*!
-* @brief The completion text to display
- *
- * @return The completion text to display
- */
 - (NSString *)completionText
 {
 	return BRLocalizedString(@"All availble Movie data has been imported", @"The Movie import is complete");
 }
 
-/*!
-* @brief The initial text to display
- *
- * @return The initial text to display
- */
 - (NSString *)initialText
 {
 	return BRLocalizedString(@"Fetch Movie Data", @"Title");
 }
 
-/*!
-* @brief The informative text to display
- *
- * @return The informative text to display
- */
 - (NSString *)informativeText
 {
 	return BRLocalizedString(@"This tool will attempt to fetch information about your Movie files from the Internet (IMDB/IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the movie import");
 }
 
-/*!
-* @brief The button title
- *
- * @return The button title
- */
 - (NSString *)buttonTitle
 {
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-/*!
-* @brief The data menu was exhumed
- *
- * @param controller The Controller which was on top
- */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 	/*See if it was a movie chooser*/

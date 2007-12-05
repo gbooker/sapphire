@@ -74,14 +74,6 @@
 
 @implementation SapphireTVShowImporter
 
-/*!
- * @brief Create a new TV Show data importer
- *
- * @param scene The scene
- * @param metaData The meta data for the directory to import
- * @param path Location of the saved settings dictionary
- * @return The importer
- */
 - (id) initWithSavedSetting:(NSString *)path
 {
 	self = [super init];
@@ -117,11 +109,6 @@
 	[super dealloc];
 }
 
-/*!
- * @brief Sets the importer's data menu
- *
- * @param theDataMenu The importer's menu
- */
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
 	[dataMenu release];
@@ -437,12 +424,6 @@
 	[settings writeToFile:settingsPath atomically:YES];
 }
 
-/*!
- * @brief Import a single File
- *
- * @param metaData The file to import
- * @return YES if imported, NO otherwise
- */
 - (BOOL) importMetaData:(SapphireFileMetaData *)metaData
 {
 	currentData = metaData;
@@ -579,51 +560,26 @@
 	return YES;
 }
 
-/*!
- * @brief The completion text to display
- *
- * @return The completion text to display
- */
 - (NSString *)completionText
 {
 	return BRLocalizedString(@"All availble TV Show data has been imported", @"The TV Show import complete");
 }
 
-/*!
- * @brief The initial text to display
- *
- * @return The initial text to display
- */
 - (NSString *)initialText
 {
 	return BRLocalizedString(@"Fetch TV Show Data", @"Title");
 }
 
-/*!
- * @brief The informative text to display
- *
- * @return The informative text to display
- */
 - (NSString *)informativeText
 {
 	return BRLocalizedString(@"This tool will attempt to fetch information about your Movie files from the Internet (IMDB/IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the movie import");
 }
 
-/*!
- * @brief The button title
- *
- * @return The button title
- */
 - (NSString *)buttonTitle
 {
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-/*!
- * @brief The data menu was exhumed
- *
- * @param controller The Controller which was on top
- */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 	/*See if it was a show chooser*/

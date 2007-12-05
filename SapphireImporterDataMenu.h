@@ -11,13 +11,71 @@
 
 @class SapphireImporterDataMenu;
 
+/*!
+ * @brief The importer protocol
+ *
+ * This protocol is the basic functionality that all importers must implement.  Through this, a common UI can implement all the importers.
+ */
 @protocol SapphireImporter <NSObject>
+
+/*!
+ * @brief Import a single File
+ *
+ * @param metaData The file to import
+ * @return YES if imported, NO otherwise
+ */
 - (BOOL)importMetaData:(SapphireFileMetaData *)metaData;
+
+/*!
+ * @brief Sets the importer's data menu
+ *
+ * This is the text to display under the title, stating that the importer is done.
+ *
+ * @param theDataMenu The importer's menu
+ */
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu;
+
+/*!
+ * @brief The completion text to display
+ *
+ * @return The completion text to display
+ */
 - (NSString *)completionText;
+
+/*!
+ * @brief The initial text to display
+ *
+ * This is the initial text to display in the title.
+ *
+ * @return The initial text to display
+ */
 - (NSString *)initialText;
+
+/*!
+ * @brief The informative text to display
+ *
+ * This is the text to display under the title, describing what this importer will do.
+ *
+ * @return The informative text to display
+ */
 - (NSString *)informativeText;
+
+/*!
+ * @brief The button title
+ *
+ * This text is displayed in the button before the user starts.  The button is hidden after completion, so there are no other functions for this text.
+ *
+ * @return The button title
+ */
 - (NSString *)buttonTitle;
+
+/*!
+ * @brief The data menu was exhumed
+ *
+ * Some importers present the user with other choices, so this lets the importer know that the "dialog" has completed.
+ *
+ * @param controller The Controller which was on top
+ */
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller;
 @end
 

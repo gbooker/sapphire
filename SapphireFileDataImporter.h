@@ -9,10 +9,13 @@
 #import "SapphireImporterDataMenu.h"
 @class SapphireFileMetaData;
 
+/*!
+ * @brief The importer of file data
+ *
+ * This class is a subclass of SapphireMultipleImporter for importing file data.  It will read in data from the file, such as size, length, and codecs.  In addition, it will also read any data stored in XML files with the file.
+ */
 @interface SapphireFileDataImporter : NSObject <SapphireImporter>
 {
-	int  xmlFileCount ;
-	BOOL xmlPathIsDir ;
+	int  xmlFileCount;		/*!< @brief The number of xml files which were imported*/
 }
-- (void)importXMLFile:(NSString *)xmlFileName forMeta: (SapphireFileMetaData *) fileMeta ;
 @end 
