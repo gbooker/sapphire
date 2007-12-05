@@ -84,13 +84,55 @@ typedef enum {
 
 @class SapphireMetaData, SapphireMetaDataCollection, SapphireFileMetaData, SapphireDirectoryMetaData;
 
+/*!
+ * @brief A protocol for the SapphireMetaData to inform its delegate of updates to data
+ *
+ * This protocol provides a method by which metadata can send changes back to its delegate.
+ */
 @protocol SapphireMetaDataDelegate <NSObject>
+
+/*!
+ * @brief The import on a file completed
+ *
+ * If a import of metadata was progressing in the background, the delegate is informed when the process has completed for a file.
+ *
+ * @param file Filename to the file which completed
+ */
 - (void)updateCompleteForFile:(NSString *)file;
 @end
 
+/*!
+ * @brief A protocol for the SapphireMetaDataScanner to request more data of its delegate
+ *
+ * Since the SapphireMetaDataScanner runs with the event loop, it needs a method to report back its progress and results.  It also provides a means for the scanner to know it should cancel its process.
+ */
 @protocol SapphireMetaDataScannerDelegate <NSObject>
+
+/*!
+ * @brief Finished scanning the dir
+ *
+ * The SapphireMetaDataScanner has finished scanning a directory and is ready to return its results.
+ *
+ * @param subs The subfiles found by the scanner
+ */
 - (void)gotSubFiles:(NSArray *)subs;
+
+/*!
+ * @brief Started Scanning a directory
+ *
+ * The SapphireMetaDataScanner has started scanning a directory.
+ *
+ * @param dir The current directory it is scanning
+ */
 - (void)scanningDir:(NSString *)dir;
+
+/*!
+ * @brief Check to see if the scan should be canceled
+ *
+ * If a delegate wishes to cancel the scan of a directory, then simply return YES to this function, and the scan will cease.
+ *
+ * @return YES if the scan should be canceled
+ */
 - (BOOL)getSubFilesCanceled;
 @end
 

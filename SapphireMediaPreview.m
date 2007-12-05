@@ -84,11 +84,6 @@ static NSSet *coverArtExtentions = nil;
 	[super dealloc];
 }
 
-/*!
- * @brief Set the File information
- *
- * @param newMeta The meta data
- */
 - (void)setMetaData:(SapphireMetaData *)newMeta inMetaData:(SapphireDirectoryMetaData *)dir
 {
 	[meta release];

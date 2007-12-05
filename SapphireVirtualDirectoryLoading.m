@@ -36,8 +36,6 @@
 	
 	[checkTimer invalidate];
 	checkTimer = nil;
-/*	[[self stack] pushController:directory];
-	[[self stack] removeControl:self];*/
 	[[self stack] swapController:browser];
 }
 

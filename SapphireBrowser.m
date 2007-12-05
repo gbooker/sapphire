@@ -35,52 +35,9 @@
 - (void)setNewPredicate:(SapphirePredicate *)newPredicate;
 @end
 
-@interface BRTVShowsSortControl (bypassAccess)
-- (BRTVShowsSortSelectorStateLayer *)gimmieDate;
-- (BRTVShowsSortSelectorStateLayer *)gimmieShow;
-- (int)gimmieState;
-@end
-
-@interface BRTVShowsSortSelectorStateLayer (bypassAccess)
-- (BRTextLayer *)gimmieDate;
-- (BRTextLayer *)gimmieShow;
-@end
-
 @interface BRMusicNowPlayingController (bypassAccess)
 - (void)setPlayer:(BRMusicPlayer *)player;
 - (BRMusicPlayer *)player;
-@end
-
-/*Private variables access, but only on BR 1.0; not used otherwise*/
-@implementation BRTVShowsSortControl (bypassAccess)
-- (BRTVShowsSortSelectorStateLayer *)gimmieDate
-{
-	return _sortedByDateWidget;
-}
-
-- (BRTVShowsSortSelectorStateLayer *)gimmieShow
-{
-	return _sortedByShowWidget;
-}
-
-- (int)gimmieState
-{
-	return _state;
-}
-
-@end
-
-@implementation BRTVShowsSortSelectorStateLayer (bypassAccess)
-- (BRTextLayer *)gimmieDate
-{
-	return _dateLayer;
-}
-
-- (BRTextLayer *)gimmieShow
-{
-	return _showLayer;
-}
-
 @end
 
 @implementation BRMusicNowPlayingController (bypassAccess)
@@ -107,30 +64,6 @@ static BOOL is10Version = NO;
 
 @implementation SapphireBrowser
 
-/*!
- * @brief Replace the text in a control with a string
- *
- * @param control The control on which to change the text
- * @param str The text to put into tho control
- */
-- (void)replaceControlText:(BRTextLayer *)control withString:(NSString *)str
-{
-	/*Create a mutable copy of the control's attributed string*/
-	NSMutableAttributedString  *dateString = [[control attributedString] mutableCopy];
-	[dateString replaceCharactersInRange:NSMakeRange(0, [dateString length]) withString:str];
-	/*Set the new string and we are done with it*/
-	[control setAttributedString:dateString];
-	[dateString release];
-}
-
-/*!
- * @brief Creates a new predicated browser
- *
- * @param scene The scene
- * @praam meta The metadata for the directory to browse
- * @param newPredicate The predicate to use
- * @return The Browser
- */
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireDirectoryMetaData *)meta
 {
 	if ( [super initWithScene: scene] == nil ) return ( nil );
@@ -147,9 +80,16 @@ static BOOL is10Version = NO;
 	return ( self );
 }
 
-/*!
- * @brief Reload the display
- */
+- (void) dealloc
+{
+    // always remember to deallocate your resources
+	[_names release];
+	[items release];
+	[metaData release];
+	[predicate release];
+    [super dealloc];
+}
+
 - (void)reloadDirectoryContents
 {
 	/*Tell the metadata to get new data*/
@@ -209,17 +149,6 @@ static BOOL is10Version = NO;
 		[SapphireFrontRowCompat addDividerAtIndex:dirCount + fileCount + indexOffset toList:list];
 	/*Draw*/
 	[SapphireFrontRowCompat renderScene:[self scene]];
-}
-
-- (void) dealloc
-{
-    // always remember to deallocate your resources
-	[_names release];
-	[items release];
-	[metaData release];
-	[predicate release];
-//	[modeControl release];
-    [super dealloc];
 }
 
 - (SapphireDirectoryMetaData *)metaData
@@ -821,30 +750,15 @@ BOOL setupAudioOutput(int sampleRate)
 	}
 }
 
-/*!
- * @brief Finished scanning the dir
- *
- * @param subs nil in this case
- */
 - (void)gotSubFiles:(NSArray *)subs
 {
 	[self reloadDirectoryContents];	
 }
 
-/*!
-* @brief Meta data delegate method to inform on its scanning progress
- *
- * @param dir The current directory it is scanning
- */
 - (void)scanningDir:(NSString *)dir
 {
 }
 
-/*!
- * @brief Check to see if the scan should be canceled
- *
- * @return YES if the scan should be canceled
- */
 - (BOOL)getSubFilesCanceled
 {
 	return cancelScan;
@@ -940,11 +854,6 @@ BOOL setupAudioOutput(int sampleRate)
 	return NO;
 }
 
-/*!
- * @brief The import on a file completed
- *
- * @param file Filename to the file which completed
- */
 - (void)updateCompleteForFile:(NSString *)file
 {
 	/*Get the file*/
