@@ -15,14 +15,16 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (double)renderSelection;
 @end
 
+@interface SapphirePosterChooser (private)
+- (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath;
+- (void) loadPoster:(int)index;
+- (void) hideIconMarch;
+- (void) showIconMarch;
+- (void) selectionChanged: (NSNotification *) note;
+@end
+
 @implementation SapphirePosterChooser
 
-/*!
- * @brief Creates a new poster chooser
- *
- * @param scene The scene
- * @return The chooser
- */
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene: scene];
@@ -123,11 +125,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	//	}
 }
 
-/*!
-* @brief check ATV version
- *
- * @return The YES if we can display 
- */
 - (BOOL)okayToDisplay
 {
 	if([[self list]respondsToSelector:@selector(renderSelection)] || [SapphireFrontRowCompat usingFrontRow])
@@ -136,21 +133,11 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		return NO;
 }
 
-/*!
-* @brief The list of movies to choose from
- *
- * @return The list of movies to choose from
- */
 - (NSArray *)posters
 {
 	return posters;
 }
 
-/*!
-* @brief Sets the posters to choose from
- *
- * @param posterList The list of movies to choose from
- */
 - (void)setPosters:(NSArray *)posterList
 {
 	posters = [posterList retain];
@@ -159,9 +146,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[[self list] setDatasource:self];
 }
 
-/*!
- * @brief Loads the posters from disk
- */
 - (void)loadPosters
 {
 	int i, count = [posters count];
@@ -172,11 +156,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
-/*!
- * @brief Reloads a poster from disk
- *
- * @param index The index of the poster to reload
- */
 - (void)reloadPoster:(int)index
 {
 	[self loadPoster:index];
@@ -184,11 +163,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
-/*!
-* @brief Sets the filename to display
- *
- * @param choosingForFileName The filename being choosen for
- */
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	fileName=[choosingForFileName retain];
@@ -207,21 +181,11 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[fileInfoText setFrame:frame];
 }
 
-/*!
-* @brief The filename we searched for
- *
- * @return The file name we searched for
- */
 - (NSString *)fileName
 {
 	return fileName;
 }
 
-/*!
-* @brief Sets the string we searched for
- *
- * @param search The string we searched for
- */
 - (void)setMovieTitle:(NSString *)theMovieTitle
 {
 	movieTitle = [theMovieTitle retain];
@@ -240,29 +204,15 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[fileInfoText setFrame:frame];
 }
 
-/*!
-* @brief The string we searched for
- *
- * @return The string we searched for
- */
 - (NSString *)movieTitle
 {
 	return movieTitle;
 }
 
-/*!
-* @brief The item the user selected.  Special values are in the header file
- *
- * @return The user's selection
- */
 - (long)selectedPoster
 {
 	return selectedPoster;
 }
-@end
-
-
-@implementation SapphirePosterChooser (IconDataSource)
 
 - (long) iconCount
 {
@@ -274,7 +224,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return [NSDictionary dictionaryWithObject:[posterLayers objectAtIndex:index] forKey:@"icon"];
 }
 
-- (BRRenderLayer *) iconAtIndex: (long) index
+- (id) iconAtIndex: (long) index
 {
     if ( index >= [posterLayers count] )
         return nil;
@@ -282,9 +232,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
     return [posterLayers objectAtIndex:index];
 }
 
-@end
-
-@implementation SapphirePosterChooser (ListDataSource)
 
 - (long) itemCount
 {
@@ -292,7 +239,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 }
 
 
-- (id<BRMenuItemLayer>) itemForRow: (long) row
+- (id) itemForRow: (long) row
 {
 	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	//	if(row==0)
@@ -324,10 +271,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
     }
     return ( result );
 }
-
-@end
-
-@implementation SapphirePosterChooser (IconListManagement)
 
 /*!
  * @brief load poster image layers

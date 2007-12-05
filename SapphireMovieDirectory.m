@@ -10,23 +10,9 @@
 #import "SapphireMetaData.h"
 
 @implementation SapphireMovieDirectory
-- (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath
-{
-	self = [super initWithParent:myParent path:myPath];
-	if(self == nil)
-		return nil;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileAdded:) name:META_DATA_FILE_ADDED_NOTIFICATION object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileRemoved:) name:META_DATA_FILE_REMOVED_NOTIFICATION object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileInfoHasChanged:) name:META_DATA_FILE_INFO_HAS_CHANGED_NOTIFICATION object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileInfoWillChanged:) name:META_DATA_FILE_INFO_WILL_CHANGE_NOTIFICATION object:nil];
-	
-	return self;
-}
-
 - (id)initWithCollection:(SapphireMetaDataCollection *)myCollection
 {
-	self = [self initWithParent:nil path:VIRTUAL_DIR_ROOT_KEY];
+	self = [super initWithParent:nil path:VIRTUAL_DIR_ROOT_KEY];
 	if(self == nil)
 		return nil;
 	
@@ -285,8 +271,7 @@ static NSComparisonResult imdbTop250Compare(NSString *first, NSString *second, v
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	if([file imdbTop250]>0)
-		[directory setObject:file forKey:[file path]];
-	[self setReloadTimer];
+		[super processFile:file];
 	
 }
 @end
@@ -319,8 +304,7 @@ static NSComparisonResult oscarsWonCompare(NSString *first, NSString *second, vo
 - (void)processFile:(SapphireFileMetaData *)file
 {
 	if([file oscarsWon]>0)
-		[directory setObject:file forKey:[file path]];
-	[self setReloadTimer];
+		[super processFile:file];
 	
 }
 @end

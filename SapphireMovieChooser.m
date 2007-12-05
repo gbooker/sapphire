@@ -12,12 +12,6 @@
 
 @implementation SapphireMovieChooser
 
-/*!
- * @brief Creates a new movie chooser
- *
- * @param scene The scene
- * @return The chooser
- */
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
@@ -48,21 +42,11 @@
 	[super dealloc];
 }
 
-/*!
- * @brief The list of movies to choose from
- *
- * @return The list of movies to choose from
- */
 - (NSArray *)movies
 {
 	return movies;
 }
 
-/*!
- * @brief Sets the movies to choose from
- *
- * @param movieList The list of movies to choose from
- */
 - (void)setMovies:(NSArray *)movieList
 {
 	movies = [movieList retain];
@@ -71,11 +55,6 @@
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
-/*!
- * @brief Sets the filename to display
- *
- * @param choosingForFileName The filename being choosen for
- */
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	fileName=[choosingForFileName retain] ;
@@ -90,11 +69,6 @@
 	[fileNameText setFrame:frame];
 }
 
-/*!
- * @brief The file name we searched for
- *
- * @return The file name we searched for
- */
 - (NSString *)fileName
 {
 	return fileName;
@@ -106,11 +80,6 @@
 	[(BRListControl *)[self list] setSelection:1];
 }
 
-/*!
- * @brief The item the user selected.  Special values are in the header file
- *
- * @return The user's selection
- */
 - (int)selection
 {
 	return selection - 1;

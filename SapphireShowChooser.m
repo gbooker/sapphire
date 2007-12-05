@@ -12,12 +12,6 @@
 
 @implementation SapphireShowChooser
 
-/*!
- * @brief Creates a new show chooser
- *
- * @param scene The scene
- * @return The chooser
- */
 - (id) initWithScene: (BRRenderScene *) scene
 {
 	self = [super initWithScene:scene];
@@ -50,11 +44,6 @@
 	[super dealloc];
 }
 
-/*!
- * @brief Sets the shows to choose from
- *
- * @param showList The list of shows to choose from
- */
 - (void)setShows:(NSArray *)showList
 {
 	shows = [showList retain];
@@ -63,31 +52,16 @@
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
-/*!
- * @brief The list of shows to choose from
- *
- * @return The list of shows to choose from
- */
 - (NSArray *)shows
 {
 	return shows;
 }
 
-/*!
- * @brief Sets the string we searched for
- *
- * @param search The string we searched for
- */
 - (void)setSearchStr:(NSString *)search
 {
 	searchStr = [search retain];
 }
 
-/*!
-* @brief Sets the filename to display
- *
- * @param choosingForFileName The filename being choosen for
- */
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileName];
@@ -101,11 +75,6 @@
 	[fileName setFrame:frame];
 }
 
-/*!
- * @brief The string we searched for
- *
- * @return The string we searched for
- */
 - (NSString *)searchStr
 {
 	return searchStr;
@@ -117,11 +86,6 @@
 	[(BRListControl *)[self list] setSelection:1];
 }
 
-/*!
- * @brief The item the user selected.  Special values are in the header file
- *
- * @return The user's selection
- */
 - (int)selection
 {
 	return selection - 1;

@@ -136,139 +136,689 @@ typedef enum {
 - (BOOL)getSubFilesCanceled;
 @end
 
+/*!
+ * @brief The base metadata class
+ *
+ * This is the base class for all metadata.  All metadata is based upon this class.
+ */
 @interface SapphireMetaData : NSObject {
-	NSMutableDictionary				*metaData;
-	SapphireMetaData				*parent;
-	/* These two are not retained */
-	NSString						*path;
-	id <SapphireMetaDataDelegate>	delegate;
+	NSMutableDictionary				*metaData;	/*!< @brief A basic dictionary which contains all persistent data*/
+	SapphireMetaData				*parent;	/*!< @brief The parent metadata (not retained)*/
+	NSString						*path;		/*!< @brief The path of this directory or file*/
+	id <SapphireMetaDataDelegate>	delegate;	/*!< @brief The delegate to inform about changes(not retained)*/
 }
 
+/*!
+ * @brief All the video extensions
+ *
+ * This function returns the set of all allowed video extensions
+ *
+ * @return The set of all video extensions
+ */
 + (NSSet *)videoExtensions;
+
+/*!
+ * @brief All the audio extensions
+ *
+ * This function returns the set of all allowed audio extensions
+ *
+ * @return The set of all audio extensions
+ */
 + (NSSet *)audioExtensions;
+
+/*!
+ * @brief Creates a new metadata object
+ *
+ * This creates a new metadata object with a given parent and path.  It reads its data from the given dictionary and recreates a mutable copy of the dictionary.
+ *
+ * @param dict The configuration dictionary.  Note, this dictionary is copied and the copy is modified
+ * @param myParent The parent meta data
+ * @param myPath The path for this meta data
+ * @return The meta data object
+ */
+- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
+
+/*!
+ * @brief Returns the path of the current meta data
+ *
+ * All metadata has a path associated with it; this function returns the path for this one.
+ *
+ * @return The path
+ */
 - (NSString *)path;
 
+/*!
+ * @brief Sets the delegate for the meta data
+ *
+ * @param newDelegate The new delegate
+ */
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
+
+/*!
+ * @brief Write all the meta data to a file.
+ *
+ * This function uses the parent to write the metadata up until it gets to the root.  Then the collection metadata is writen to the persistent store.
+ */
 - (void)writeMetaData;
+
+/*!
+ * @brief Gets the collection
+ *
+ * This function uses the parent to get the collection.  The root metadata is the collection
+ *
+ * @return The metadata collection
+ */
 - (SapphireMetaDataCollection *)collection;
+
+/*!
+ * @brief Get the meta data for display
+ *
+ * The metadata preview needs information about what data to display.  This function gets all the information for this metadata.
+ *
+ * @param order A pointer to an NSArray * in which to store the order in which the meta data is to be displayed
+ * @return The display meta data with the titles as keys
+ */
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 
 @end
 
+/*!
+ * @brief The metadata collection
+ *
+ * This is the root of all the metadata.  Everything is stems from this class
+ */
 @interface SapphireMetaDataCollection : SapphireMetaData {
-	NSMutableDictionary			*directories;
-	NSMutableDictionary			*skipCollection;
-	NSMutableDictionary			*hideCollection;
-	NSString					*dictionaryPath;
-	NSTimer						*writeTimer;
+	NSMutableDictionary			*directories;		/*!< @brief The root directory metadata objects*/
+	NSMutableDictionary			*skipCollection;	/*!< @brief The list of mounts to skip, YES if is should be skipped, NO otherwise*/
+	NSMutableDictionary			*hideCollection;	/*!< @brief The list of mounts to hide, YES if is should be hidden, NO otherwise*/
+	NSString					*dictionaryPath;	/*!< @brief The path of the persistent store*/
+	NSTimer						*writeTimer;		/*!< @brief The timer to consolodate all writes into a single write (not retained)*/
 }
+
+/*!
+ * @brief Create a collection from a file and browsing a directory
+ *
+ * This creates a metadata collection from a persistent store.  It also remembers the location of the persistent store so that it can be saved in the future.
+ *
+ * @param dictionary The path to the dictionary storing the meta data
+ * @param myPath The path to browse for the meta data
+ * @return The meta data collection
+ */
 - (id)initWithFile:(NSString *)dictionary;
+
+/*!
+ * @brief Returns the meta data for a particular path
+ *
+ * Given a particular path, this function returns the metadata at that path.
+ *
+ * @param path The path to find
+ * @return The directory meta data for the path, or nil if none exists
+ */
 - (SapphireMetaData *)dataForPath:(NSString *)path;
-- (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
+
+/*!
+ * @brief Returns the meta data for a particular path with data
+ *
+ * Given a particular path, this function returns the metadata at that path.  If the found metadata contains no data, the inserted metadata is used instead.  This is used for symbolic link resolution.
+ *
+ * @param path The path to find
+ * @param data The meta data to use in place of the source's data
+ * @return The directory meta data for the path, or nil if none exists
+ */
 - (SapphireMetaData *)dataForPath:(NSString *)path withData:(NSDictionary *)data;
+
+/*!
+ * @brief just like dataForPath: but specific to directories
+ *
+ * @param path The path to find
+ * @return The directory meta data for the path, or nil if none exists
+ */
+- (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
+
+/*!
+ * @brief Gets a listing of all valid collection directories.
+ * 
+ * This is the list of all valid collections.  It contains the list of all mounted disks plus homedir/Movies.  These collections are displayed in the main menu (if not hidden).
+ *
+ * @return All the collection locations
+ */
 - (NSArray *)collectionDirectories;
+
+/*!
+ * @brief Returns whether the collection is hidden or not
+ *
+ * If a collection is hidden, then it is not displayed in the main menu
+ *
+ * @return YES if the collection is hidden, NO otherwise
+ */
 - (BOOL)hideCollection:(NSString *)collection;
+
+/*!
+ * @brief Set whether to hide the collection or not
+ *
+ * If a collection is hidden, then it is not displayed in the main menu
+ *
+ * @param hide YES to hide this collection, NO otherwise
+ */
 - (void)setHide:(BOOL)hide forCollection:(NSString *)collection;
+
+/*!
+ * @brief Returns whether the collection is skipped or not
+ *
+ * If a collection is skipped, it will not be imported
+ *
+ * @return YES if the collection is skipped, NO otherwise
+ */
 - (BOOL)skipCollection:(NSString *)collection;
+
+/*!
+ * @brief Set whether to skip the collection or not
+ *
+ * If a collection is skipped, it will not be imported
+ *
+ * @param skip YES to skip this collection, NO otherwise
+ */
 - (void)setSkip:(BOOL)skip forCollection:(NSString *)collection;
 
 @end
 
+/*!
+ * @brief A metadata directory
+ *
+ * This class is designed to be a directory, virtual or real.  It contains other directories and files.
+ */
 @interface SapphireDirectoryMetaData : SapphireMetaData {
-	/*These two are not retained*/
-	NSMutableDictionary			*metaFiles;
-	NSMutableDictionary			*metaDirs;
+	NSMutableDictionary			*metaFiles;				/*!< @brief The metadata persistent store for files (not retained)*/
+	NSMutableDictionary			*metaDirs;				/*!< @brief The metadata persistent store for directories (not retained)*/
 	
-	NSMutableDictionary			*cachedMetaFiles;
-	NSMutableDictionary			*cachedMetaDirs;
+	NSMutableDictionary			*cachedMetaFiles;		/*!< @brief Metadata objects for files*/
+	NSMutableDictionary			*cachedMetaDirs;		/*!< @brief Metadata objects for directories*/
 
-	NSMutableArray				*files;
-	NSMutableArray				*directories;
+	NSMutableArray				*files;					/*!< @brief	File keys in sorted order*/
+	NSMutableArray				*directories;			/*!< @brief Directory keys in sorted order*/
 	
-	NSTimer						*importTimer;
-	NSMutableArray				*importArray;
-	BOOL						scannedDirectory;
+	NSTimer						*importTimer;			/*!< @brief Timer to import data in this directory*/
+	NSMutableArray				*importArray;			/*!< @brief Array of objects left to import*/
+	BOOL						scannedDirectory;		/*!< @brief YES if the directory has already been examined on disk, NO if just using cached information*/
 	
-	/*This is not retained*/
-	SapphireMetaDataCollection	*collection;
+	SapphireMetaDataCollection	*collection;			/*!< @brief The root collection (not retained)*/
 }
 
+/*!
+ * @brief Reloads the directory contents
+ *
+ * This function examines the directory on the disk and reloads the objects contents from what it finds there.
+ */
 - (void)reloadDirectoryContents;
+
+/*!
+ * @brief Get the cover art Path
+ *
+ * Returns the cover art path.  It will also examine up in the directory structure in order to find the cover art.  It examines both the current directory, the "cover art" subdirectory, and the same for parent directories up to 2 levels.
+ *
+ * @return The path for the cover art, nil if none found
+ */
 - (NSString *)coverArtPath;
+
+/*!
+ * @brief Retrieve a list of all file names
+ *
+ * @return An NSArray of all file names
+ */
 - (NSArray *)files;
+
+/*!
+ * @brief Retrieve a list of all directory names
+ *
+ * @return An NSArray of all directory names
+ */
 - (NSArray *)directories;
+
+/*!
+ * @brief Get a listing of predicate files
+ *
+ * @param predicate The predicate to match
+ * @return An NSArray of matches
+ */
 - (NSArray *)predicatedFiles:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Get a listing of predicated directories
+ *
+ * @param predicate The predicate to match
+ * @return An NSArray of matches
+ */
 - (NSArray *)predicatedDirectories:(SapphirePredicate *)predicate;
 
+
+/*!
+ * @brief Get the meta data object for a file.  Creates one if it doesn't already exist
+ *
+ * @param file The file within this dir
+ * @return The file's meta data
+ */
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
+
+/*!
+ * @brief Get the meta data object for a directory.  Creates one if it doesn't alreay exist
+ *
+ * @param dir The directory within this dir
+ * @return The directory's meta data
+ */
 - (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)dir;
 
+
+/*!
+ * @brief Prunes off old data
+ *
+ * This function prunes off non-existing files and directories from the meta data.  This does not prune a directory's content if it contains no files and directories.  In addition, broken sym links are also not pruned.  The theory is these may be the signs of missing mounts.
+ *
+ * @return YES if any data was pruned, NO otherwise
+ */
 - (BOOL)pruneMetaData;
+
+/*!
+ * @brief See if any files need to be updated
+ *
+ * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.
+ *
+ * @return YES if any files need an update, NO otherwise
+ */
 - (BOOL)updateMetaData;
 
+
+/*!
+ * @brief Cancel the import process
+ */
 - (void)cancelImport;
+
+/*!
+ * @brief Resume the import process
+ */
 - (void)resumeImport;
+
+/*!
+ * @brief Delay the import process a while before starting again
+ */
 - (void)resumeDelayedImport;
 
+/*!
+ * @brief Get the meta data for some file or directory beneath this one
+ *
+ * @param subPath The subpath to get the meta data
+ * @return The meta data object
+ */
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
+
+/*!
+ * @brief Get the meta data for all the files contained within this directory tree
+ *
+ * @param subDelegate The delegate to inform when scan is complete
+ * @param skip A set of directories to skip.  Note, this set is modified
+ */
 - (void)getSubFileMetasWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
+
+/*!
+ * @brief Scan for all files contained within this directory tree
+ *
+ * @param subDelegate The delegate to inform when scan is complete
+ * @param skip A set of directories to skip.  Note, this set is modified
+ */
 - (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
+
+/*!
+ * @brief Load all the cached meta data so that dynamic directories can build
+ */
 - (void)loadMetaData;
 
+
+/*!
+ * @brief Returns if directory contains any unwatched files
+ *
+ * @param predicate The predicate to match on
+ * @return YES if all files are watched, NO otherwise
+ */
 - (BOOL)watchedForPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Set subtree as watched
+ *
+ * @param watched YES if set to watched, NO if set to unwatched
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setWatched:(BOOL)watched forPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Returns if directory contains any favorite files
+ *
+ * @param predicate The predicate to match on
+ * @return YES if at least one exists, NO otherwise
+ */
 - (BOOL)favoriteForPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Set subtree as favorite
+ *
+ * @param watched YES if set to favorite, NO if set to not favorite
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setFavorite:(BOOL)favorite forPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Set subtree to re-import from the specified source
+ *
+ * @param source The source on which to re-import
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setToImportFromSource:(NSString *)source forPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Set subtree to the specified class
+ *
+ * @param fileClass The file class
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)setFileClass:(FileClass)fileClass forPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Clear metadata for an entire subtree
+ *
+ * @param predicate The predicate which to restrict setting
+ */
 - (void)clearMetaDataForPredicate:(SapphirePredicate *)predicate;
 
 @end
 
+/*!
+ * @brief A metadata file
+ *
+ * This class is designed to be a file.  It contains information about a specific file.
+ */
 @interface SapphireFileMetaData : SapphireMetaData {
-	NSDictionary		*combinedInfo;
+	NSDictionary		*combinedInfo;	/*!< @brief The combined preview info from multiple sources*/
 }
 
+/*!
+ * @brief Get the cover art Path
+ *
+ * Returns the cover art path.  It will also examine up in the directory structure in order to find the cover art.  It examines both the current directory, the "cover art" subdirectory, and the same for parent directories up to 2 levels.
+ *
+ * @return The path for the cover art, nil if none found
+ */
 - (NSString *)coverArtPath;
 
+/*!
+ * @brief See if any files need to be updated
+ *
+ * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.
+ *
+ * @return YES if any files need an update, NO otherwise
+ */
 - (BOOL) updateMetaData;
 
+
+/*!
+ * @brief Get date of last modification of the file
+ *
+ * @return Seconds since 1970 of last modification
+ */
 - (int)modified;
+
+/*!
+ * @brief Returns whether the file has been watched
+ *
+ * @return YES if watched, NO otherwise
+ */
 - (BOOL)watched;
+
+/*!
+ * @brief Sets the file as watch or not watched
+ *
+ * @param watched YES if set to watched, NO if set to unwatched
+ */
 - (void)setWatched:(BOOL)watched;
+
+/*!
+ * @brief Returns whether the file is favorite
+ *
+ * @return YES if favorite, NO otherwise
+ */
 - (BOOL)favorite;
+
+/*!
+ * @brief Sets the file as favorite or not favorite
+ *
+ * @param watched YES if set to favorite, NO if set to not favorite
+ */
 - (void)setFavorite:(BOOL)favorite;
+
+/*!
+ * @brief Returns the time of import from a source
+ *
+ * @param source The source to check
+ * @return The seconds since 1970 of the import
+ */
 - (long)importedTimeFromSource:(NSString *)source;
+
+/*!
+ * @brief Sets the file to re-import from source
+ *
+ * @param source The source to re-import
+ */
 - (void)setToImportFromSource:(NSString *)source;
+
+/*!
+ * @brief Add data to import from a source
+ *
+ * This data will be combined in the combined info to display in the preview.
+ *
+ * @param newMeta The new meta data
+ * @param source The source we imported from
+ * @param modTime The modification time of the source
+ */
 - (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime;
+
+/*!
+ * @brief Clear the metadata
+ *
+ * Removes all metadata for this file.  Useful if the user misidentified the file and wishes to start over on it.
+ */
 - (void)clearMetaData;
+
+/*!
+ * @brief The resume time of the file
+ *
+ * @return The number of seconds from the begining of the file to resume
+ */
 - (unsigned int)resumeTime;
+
+/*!
+ * @brief Sets the resume time of the file
+ *
+ * @param resumeTime The number of seconds from the beginning of the file to resume
+ */
 - (void)setResumeTime:(unsigned int)resumeTime;
+
+/*!
+ * @brief The file type
+ *
+ * @return The file type
+ */
 - (FileClass)fileClass;
+
+/*!
+ * @brief Sets the file type
+ *
+ * @param fileClass The file type
+ */
 - (void)setFileClass:(FileClass)fileClass;
+
+/*!
+ * @brief The file this has been joined to
+ *
+ * The file is hidden from display as long as its joined file exists
+ *
+ * @return The file this has been joined to
+ */
 - (NSString *)joinedFile;
+
+/*!
+ * @brief Sets the file this has been joined to
+ *
+ * Remember which file a file has been joined to so if the resulting file disappears, the original can be shown again
+ *
+ * @param fileClass The file this has been joined to
+ */
 - (void)setJoinedFile:(NSString *)join;
 
+
+/*!
+ * @brief Returns the file size
+ *
+ * Important:  An int isn't big enough.  This is stored internally using NSNumber, so the size can be much bigger than 4G.
+ *
+ * @return The file size
+ */
 - (long long)size;
+
+/*!
+ * @brief Returns the file's duration in seconds
+ *
+ * @return The file's duration
+ */
 - (float)duration;
+
+/*!
+ * @brief Returns the sample rate of the file
+ *
+ * @return The sample rate of the file
+ */
 - (Float64)sampleRate;
+
+/*!
+ * @brief Returns the audio format of the file
+ *
+ * This is a fourcc code.  AC3 would be 'ac-3' or 0x6D732000
+ *
+ * @return The audio format of the file
+ */
 - (UInt32)audioFormatID;
+
+/*!
+ * @brief Returns whether the file has video
+ *
+ * @return YES if the file has video, NO otherwise
+ */
 - (BOOL)hasVideo;
+
+
+/*!
+ * @brief Returns the epsiode number of the file
+ *
+ * @return The episode number of the file
+ */
 - (int)episodeNumber;
+
+/*!
+ * @brief Returns the season number of the file
+ *
+ * @return The season number of the file
+ */
 - (int)seasonNumber;
+
+/*!
+ * @brief Returns the number of oscars for a movie
+ *
+ * @return The number of oscars won
+ */
 - (int)oscarsWon;
+
+/*!
+ * @brief Returns the rank for a movie in the imdb 250
+ *
+ * @return The number of oscars won
+ */
 - (int)imdbTop250;
+
+/*!
+ * @brief Returns the title of the file
+ *
+ * @return The title of the file
+ */
 - (NSString *)episodeTitle;
+
+/*!
+ * @brief Returns the title of the file
+ *
+ * @return The title of the file
+ */
 - (NSString *)movieTitle;
+
+/*!
+ * @brief Returns the title of the file
+ *
+ * @return The title of the file
+ */
 - (NSDate *)movieReleaseDate;
+
+/*!
+ * @brief Returns movie oscar stats to be used for RightJustifiedText
+ *
+ * @return The desired stat based on availible info
+ */
 - (NSString *)movieStatsOscar;
+
+/*!
+ * @brief Returns movie top250 stats to be used for RightJustifiedText
+ *
+ * @return The desired stat based on availible info
+ */
 - (NSString *)movieStatsTop250;
+
+/*!
+ * @brief Returns the Movie ID of the file
+ *
+ * @return The Movie ID of the file
+ */
 - (NSString *)movieID;
+
+/*!
+ * @brief Returns the show ID of the file
+ *
+ * @return The show ID of the file
+ */
 - (NSString *)showID;
+
+/*!
+ * @brief Returns the show name of the file
+ *
+ * @return The show name of the file
+ */
 - (NSString *)showName ;
+
+/*!
+ * @brief Returns the genre of the movie file
+ *
+ * @return The genre type of the movie file
+ */
 - (NSArray *)movieGenres;
+
+/*!
+ * @brief Returns the cast of the movie file
+ *
+ * @return The cast of the movie file
+ */
 - (NSArray *)movieCast;
+
 - (NSArray *)movieDirectors;
+
+/*!
+ * @brief Returns the size as a string
+ *
+ * This will format the size in a human readable format.  It uses strings like 2.1GB and the like.  It always has one decimal number.
+ *
+ * @return The Size as a string.
+ */
 - (NSString *)sizeString;
 
 @end

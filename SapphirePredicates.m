@@ -11,13 +11,6 @@
 
 @implementation SapphirePredicate
 
-/*!
- * @brief States whether we should accept this file or not
- *
- * @param path The file's path
- * @param metaData The file's meta data if it exists, nil otherwise
- * @return YES if the file is accepted by the predicate, NO otherwise
- */
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 	return NO;
@@ -27,7 +20,6 @@
 
 @implementation SapphireUnwatchedPredicate
 
-/*See super documentation*/
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 	if(metaData == nil)
@@ -41,7 +33,6 @@
 
 @implementation SapphireFavoritePredicate
 
-/*See super documentation*/
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 
@@ -57,7 +48,6 @@
 
 @implementation SapphireTopShowPredicate
 
-/*See super documentation*/
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData
 {
 /*

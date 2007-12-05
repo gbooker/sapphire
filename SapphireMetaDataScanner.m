@@ -11,13 +11,6 @@
 
 @implementation SapphireMetaDataScanner
 
-/*!
- * @brief Create a new scanner on a directory
- *
- * @param meta The meta data's directory to scan
- * @param newDelegate The delegate to ask and tell about the scan
- * @return The scanner
- */
 - (id)initWithDirectoryMetaData:(SapphireDirectoryMetaData *)meta delegate:(id <SapphireMetaDataScannerDelegate>)newDelegate
 {
 	self = [super init];
@@ -39,11 +32,6 @@
 	[super dealloc];
 }
 
-/*!
- * @brief Sets a list of directories to skip.
- *
- * @param skip The set of directories to skip.  Note, this set *is* modified
- */
 - (void)setSkipDirectories:(NSMutableSet *)skip
 {
 	skipDirectories = [skip retain];
@@ -61,11 +49,6 @@
 	}
 }
 
-/*!
- * @brief Sets whether we care for the results or just want a rescan.  This starts the scan
- *
- * @param givesResults YES if the delegate wants results, NO otherwise
- */
 - (void)setGivesResults:(BOOL)givesResults
 {
 	if(givesResults)

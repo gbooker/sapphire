@@ -31,13 +31,6 @@ static NSMutableArray *joinList;
 	joinList = [[NSMutableArray alloc] init];
 }
 
-/*!
- * @brief Create a mark menu for a directory or file
- *
- * @param scene The scene
- * @param meta The meta data
- * @return A new mark menu
- */
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireMetaData *)meta
 {
 	self = [super initWithScene:scene];
