@@ -221,7 +221,7 @@ static NSSet *coverArtExtentions = nil;
 		NSDateFormatter *format = [[NSDateFormatter alloc] init];
 		[format setDateStyle:NSDateFormatterLongStyle];
 		[format setTimeZone:NSDateFormatterNoStyle];
-		value = [NSString stringWithFormat:@"Released: %@",[format stringFromDate:releaseDate]];
+		value = [NSString stringWithFormat:@"Premiered: %@",[format stringFromDate:releaseDate]];
 		[allMeta removeObjectForKey:META_MOVIE_RELEASE_DATE_KEY];
 		[allMeta removeObjectForKey:META_MOVIE_TITLE_KEY];
 	}
