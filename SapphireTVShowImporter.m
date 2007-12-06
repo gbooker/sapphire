@@ -154,6 +154,11 @@
 - (void)addEp:(NSString *)showName title:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID toDict:(NSMutableDictionary *)dict
 {
 	/*Set the key by which to store this.  Either by season/ep or season/title*/
+	NSString * previewArtPath=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Preview Art/"];
+	NSFileManager *FM=[NSFileManager defaultManager];
+	[FM createDirectoryAtPath:previewArtPath attributes:nil];
+	previewArtPath=[previewArtPath stringByAppendingPathComponent:@"@TV"];
+	[FM createDirectoryAtPath:previewArtPath attributes:nil];
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
 	id key = epNum;
 	if(ep == 0)
@@ -170,11 +175,19 @@
 	}
 	/*Add info*/
 	if(showName)
+	{
+		previewArtPath=[previewArtPath stringByAppendingPathComponent:showName];
+		[FM createDirectoryAtPath:previewArtPath attributes:nil];
 		[epDict setObject:showName forKey:META_SHOW_NAME_KEY] ;
+	}
 	if(ep != 0)
 		[epDict setObject:epNum forKey:META_EPISODE_NUMBER_KEY];
 	if(season != 0)
+	{
+		previewArtPath=[previewArtPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Season %d",season]];
+		[FM createDirectoryAtPath:previewArtPath attributes:nil];
 		[epDict setObject:seasonNum forKey:META_SEASON_NUMBER_KEY];
+	}
 	if(epTitle != nil)
 		[epDict setObject:epTitle forKey:META_TITLE_KEY];
 	if(epLink != nil)
