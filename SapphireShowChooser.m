@@ -8,6 +8,7 @@
 
 #import "SapphireShowChooser.h"
 #import "SapphireFrontRowCompat.h"
+#import "SapphireTheme.h"
 
 
 @implementation SapphireShowChooser
@@ -99,13 +100,17 @@
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
 	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	
 	if(row == 0)
 		/*Put in the special "this is not a show"*/
 		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser") forMenu:result];
 	else
+	{
 		/*Put in the show*/
-		[SapphireFrontRowCompat setTitle:[[shows objectAtIndex:row-1] objectForKey:@"name"] forMenu:result];
+		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"  %@",[[shows objectAtIndex:row-1] objectForKey:@"name"]] forMenu:result];
+		[SapphireFrontRowCompat setRightIcon:[theme gem:TVR_GEM_KEY] forMenu:result];
+	}
 	
 	return result;
 }
