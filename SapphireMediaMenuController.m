@@ -39,4 +39,51 @@
 	return YES;
 }
 
+- (int)getSelection
+{
+	BRListControl *list = [self list];
+	int row;
+	NSMethodSignature *signature = [list methodSignatureForSelector:@selector(selection)];
+	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
+	[selInv setSelector:@selector(selection)];
+	[selInv invokeWithTarget:list];
+	if([signature methodReturnLength] == 8)
+	{
+		double retDoub = 0;
+		[selInv getReturnValue:&retDoub];
+		row = retDoub;
+	}
+	else
+		[selInv getReturnValue:&row];
+	return row;
+}
+
+- (BOOL)brEventAction:(BREvent *)event
+{
+	BREventPageUsageHash hashVal = [event pageUsageHash];
+	if ([(BRControllerStack *)[self stack] peekController] != self)
+		hashVal = 0;
+	
+	int itemCount = [[(BRListControl *)[self list] datasource] itemCount];
+	switch (hashVal)
+	{	
+		case kBREventTapUp:
+		case kBREventHoldUp:
+			if([self getSelection] == 0 && [event value] == 1)
+			{
+				[(BRListControl *)[self list] setSelection:itemCount-1];
+				return YES;
+			}
+			break;
+		case kBREventTapDown:
+		case kBREventHoldDown:
+			if([self getSelection] == itemCount-1 && [event value] == 1)
+			{
+				[(BRListControl *)[self list] setSelection:0];
+				return YES;
+			}
+			break;
+	}
+	return [super brEventAction:event];
+}
 @end

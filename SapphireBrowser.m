@@ -792,25 +792,6 @@ BOOL setupAudioOutput(int sampleRate)
     return ( nil );
 }
 
-- (int)getSelection
-{
-	BRListControl *list = [self list];
-	int row;
-	NSMethodSignature *signature = [list methodSignatureForSelector:@selector(selection)];
-	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
-	[selInv setSelector:@selector(selection)];
-	[selInv invokeWithTarget:list];
-	if([signature methodReturnLength] == 8)
-	{
-		double retDoub = 0;
-		[selInv getReturnValue:&retDoub];
-		row = retDoub;
-	}
-	else
-		[selInv getReturnValue:&row];
-	return row;
-}
-
 - (BOOL)brEventAction:(BREvent *)event
 {
 	/*Cancel imports on an action*/
@@ -848,10 +829,8 @@ BOOL setupAudioOutput(int sampleRate)
 		case kBREventTapLeft:
 			[self setNewPredicate:[SapphireApplianceController nextPredicate]];
 			return YES;
-		default:
-			return [super brEventAction:event];
 	}
-	return NO;
+	return [super brEventAction:event];
 }
 
 - (void)updateCompleteForFile:(NSString *)file
