@@ -23,4 +23,13 @@
  * @return The current list selection
  */
 - (int)getSelection;
+
+/*!
+ * @brief Get the list selection
+ *
+ * ATV version 1.0 uses floating point values for selection, where as 1.1 and frontrow use integers.  This method sets the proper value in both cases
+ *
+ * @param sel The list selection
+ */
+- (void)setSelection:(int)sel;
 @end

@@ -58,6 +58,25 @@
 	return row;
 }
 
+- (void)setSelection:(int)sel
+{
+	BRListControl *list = [self list];
+	NSMethodSignature *signature = [list methodSignatureForSelector:@selector(setSelection:)];
+	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
+	[selInv setSelector:@selector(setSelection:)];
+	if(strcmp([signature getArgumentTypeAtIndex:2], "l"))
+	{
+		double dvalue = sel;
+		[selInv setArgument:&dvalue atIndex:2];
+	}
+	else
+	{
+		long lvalue = sel;
+		[selInv setArgument:&lvalue atIndex:2];
+	}
+	[selInv invokeWithTarget:list];
+}
+
 - (BOOL)brEventAction:(BREvent *)event
 {
 	BREventPageUsageHash hashVal = [event pageUsageHash];
@@ -71,7 +90,7 @@
 		case kBREventHoldUp:
 			if([self getSelection] == 0 && [event value] == 1)
 			{
-				[(BRListControl *)[self list] setSelection:itemCount-1];
+				[self setSelection:itemCount-1];
 				return YES;
 			}
 			break;
@@ -79,7 +98,7 @@
 		case kBREventHoldDown:
 			if([self getSelection] == itemCount-1 && [event value] == 1)
 			{
-				[(BRListControl *)[self list] setSelection:0];
+				[self setSelection:0];
 				return YES;
 			}
 			break;
