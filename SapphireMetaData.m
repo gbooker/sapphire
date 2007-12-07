@@ -1911,7 +1911,7 @@ static NSArray *displayedMetaDataOrder = nil;
 				return result;
 		}		
 	}
-	/*Sort by season first*/
+	/*Sort by season next*/
 	/*Put shows with no season at the bottom*/
 	int myNum = [self seasonNumber];
 	int theirNum = [other seasonNumber];
