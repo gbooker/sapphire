@@ -22,7 +22,7 @@
  * If there is a metadata for the file, it is passed in, otherwise nil is used.  A predicate must be able to return a YES or NO based upon the path and/or the metadata.
  *
  * @param path The file's path
- * @param metaData The file's meta data if it exists, nil otherwise
+ * @param metaData The file's metadata if it exists, nil otherwise
  * @return YES if the file is accepted by the predicate, NO otherwise
  */
 - (BOOL)accept:(NSString *)path meta:(SapphireFileMetaData *)metaData;

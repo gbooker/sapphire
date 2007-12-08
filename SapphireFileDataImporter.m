@@ -213,7 +213,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	memset(&sb, 0, sizeof(struct stat));
 	stat([xmlFileName fileSystemRepresentation], &sb);
 	long modTime = sb.st_mtimespec.tv_sec;
-	/*Import into meta data*/
+	/*Import into metadata*/
 	[fileMeta importInfo: metaData fromSource:META_XML_IMPORT_KEY withTime:modTime];
 }
 

@@ -24,9 +24,9 @@
  *
  * This creates a new virtual directory metadata object.  It is similar to its superclass, but has no persistent store.
  *
- * @param myParent The parent meta data
- * @param myPath The path for this meta data
- * @return The meta data object
+ * @param myParent The parent metadata
+ * @param myPath The path for this metadata
+ * @return The metadata object
  */
 - (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath;
 
@@ -106,7 +106,7 @@
  *
  * This method exists to make directories of directories easier.  If a file is added with a certain key, this method does everything that is needed.
  *
- * For example with TV shows.  The SapphireTVDirectory needs to add Dexter 2x12.  It calls this method with the file meta data, the key of "Dexter" and a class of SapphireShowDirectory.  It will lookup the directory with the key "Dexter" and if nothing exists there yet, it will create a new SapphireShowDirectory and place it in the directory.  Then it will call the SapphireShowDirectory object's processFile.  If a new directory was created, and it is still empty after that call, it is then removed.  Lastly, the reload time is called.
+ * For example with TV shows.  The SapphireTVDirectory needs to add Dexter 2x12.  It calls this method with the file metadata, the key of "Dexter" and a class of SapphireShowDirectory.  It will lookup the directory with the key "Dexter" and if nothing exists there yet, it will create a new SapphireShowDirectory and place it in the directory.  Then it will call the SapphireShowDirectory object's processFile.  If a new directory was created, and it is still empty after that call, it is then removed.  Lastly, the reload time is called.
  *
  * @param file The file to add
  * @param key The key of the subdirectory which is to contain the file

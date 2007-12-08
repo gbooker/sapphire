@@ -50,7 +50,7 @@ static NSMutableArray *joinList;
 			BRLocalizedString(@"Mark All as Not Favorite", @"Mark whole directory as not favorite"),
 			BRLocalizedString(@"Mark All to Refetch TV Data", @"Mark whole directory to re-fetch its tv data"),
 			BRLocalizedString(@"Mark All to Refetch Movie Data", @"Mark whole directory to re-fetch its movie data"),
-			BRLocalizedString(@"Mark All to Clear Meta Data", @"Mark whole directory to delete the meta data"),
+			BRLocalizedString(@"Mark All to Clear Metadata", @"Mark whole directory to delete the metadata"),
 			nil];
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
@@ -81,7 +81,7 @@ static NSMutableArray *joinList;
 		}
 		if([fileMeta fileClass] != FILE_CLASS_UNKNOWN)
 		{
-			[names addObject:BRLocalizedString(@"Mark to Clear Meta Data", @"Mark a file to delete the meta data")];
+			[names addObject:BRLocalizedString(@"Mark to Clear Metadata", @"Mark a file to delete the metadata")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_DELETE_METADATA]];
 		}
 		if(![joinList containsObject:fileMeta])

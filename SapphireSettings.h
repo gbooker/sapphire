@@ -46,7 +46,7 @@
  *
  * @param scene The scene
  * @param dictionaryPath The path of the saved setting
- * @param meta The top level meta data
+ * @param meta The top level metadata
  * @return The settings object
  */
 - (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath metaDataCollection:(SapphireMetaDataCollection *)collection;

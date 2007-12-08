@@ -12,7 +12,7 @@
 /*!
  * @brief A subclass of SapphireMediaMenuController for marking files
  *
- * This class is designed to provide the user an interface for changing meta data about a file.  It presents the user with a menu to choose from.
+ * This class is designed to provide the user an interface for changing metadata about a file.  It presents the user with a menu to choose from.
  */
 @interface SapphireMarkMenu : SapphireMediaMenuController {
 	BOOL				isDir;			/*!< @brief YES if the current metadata is a directory*/
@@ -28,7 +28,7 @@
  * Creates a new mark menu with metadata.  The resulting menu can be pushed on the controller stack.
  *
  * @param scene The scene
- * @param meta The meta data
+ * @param meta The metadata
  * @return A new mark menu
  */
 - (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireMetaData *)meta;

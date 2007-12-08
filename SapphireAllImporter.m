@@ -23,7 +23,7 @@
 
 - (NSString *)completionText
 {
-	return BRLocalizedString(@"All availble metadata has been imported", @"The group metadata import complete");
+	return BRLocalizedString(@"All available metadata has been imported", @"The group metadata import complete");
 }
 
 - (NSString *)initialText
@@ -33,7 +33,7 @@
 
 - (NSString *)informativeText
 {
-	return BRLocalizedString(@"This tool will import all the meta data it can find.  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of all meta import");
+	return BRLocalizedString(@"This tool will import all the metadata it can find.  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of all meta import");
 }
 
 - (NSString *)buttonTitle

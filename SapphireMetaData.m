@@ -192,7 +192,7 @@ static NSSet *allExtensions = nil;
 }
 
 /*!
- * @brief Returns the mutable dictionary object containing all the meta data
+ * @brief Returns the mutable dictionary object containing all the metadata
  *
  * @return The dictionary
  */
@@ -352,7 +352,7 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 
 - (id)initWithFile:(NSString *)dictionary
 {
-	/*Read the meta data*/
+	/*Read the metadata*/
 	dictionaryPath = [dictionary retain];
 	NSData *fileData = [NSData dataWithContentsOfFile:dictionary];
 	NSString *error = nil;
@@ -1008,7 +1008,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	importArray = [[NSMutableArray alloc] init];
 	while((fileName = [fileEnum nextObject]) != nil)
 	{
-		/*If the file exists, and no meta data, add to update list*/
+		/*If the file exists, and no metadata, add to update list*/
 		NSDictionary *fileMeta = [metaFiles objectForKey:fileName];
 		if(fileMeta == nil)
 		{
@@ -1107,7 +1107,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	/*If it matches a file, and more path components, this doesn't exist, return nil*/
 	else if([components count] > 1 || ![[NSFileManager defaultManager] fileExistsAtPath:fullPath])
 		return nil;
-	/*Return our file's meta data*/
+	/*Return our file's metadata*/
 	return [self metaDataForFile:file];
 }
 
@@ -1350,7 +1350,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 @implementation SapphireFileMetaData
 
-/*Makes meta data easier to deal with in terms of display*/
+/*Makes metadata easier to deal with in terms of display*/
 static NSDictionary *metaDataSubstitutions = nil;
 static NSSet *displayedMetaData = nil;
 static NSArray *displayedMetaDataOrder = nil;
@@ -1358,7 +1358,7 @@ static NSArray *displayedMetaDataOrder = nil;
 + (void) initialize
 {
 	metaDataSubstitutions = [[NSDictionary alloc] initWithObjectsAndKeys:
-		//These substitute keys in the meta data to nicer display keys
+		//These substitute keys in the metadata to nicer display keys
 		BRLocalizedString(@"Video", @"Video format in metadata display"), VIDEO_DESC_KEY,
 		BRLocalizedString(@"Audio", @"Audio format in metadata display"), AUDIO_DESC_KEY,
 		BRLocalizedString(META_EPISODE_AND_SEASON_KEY, @"Season / Epsiode in metadata display"), META_EPISODE_AND_SEASON_KEY,
@@ -1552,7 +1552,7 @@ static NSArray *displayedMetaDataOrder = nil;
 				} 
 			} 
 		}
-		/*Add the meta data*/
+		/*Add the metadata*/
 		[metaData addEntriesFromDictionary:fileMeta];
 		[self combinedDataChanged];
 	}
@@ -1678,7 +1678,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	return [metaData objectForKey:VIDEO_DESC_KEY] != nil;
 }
 
-/*Combine the meta data from multiple sources*/
+/*Combine the metadata from multiple sources*/
 - (void)constructCombinedData
 {
 	/*Return cached data*/
@@ -1692,7 +1692,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	combinedInfo = ret;
 }
 
-/*Destroy cached meta data*/
+/*Destroy cached metadata*/
 - (void)combinedDataChanged
 {
 	/*Remove cached data*/

@@ -26,7 +26,7 @@
 /*!
  * @brief Create a new scanner on a directory
  *
- * @param meta The meta data's directory to scan
+ * @param meta The metadata's directory to scan
  * @param newDelegate The delegate to ask and tell about the scan
  * @return The scanner
  */

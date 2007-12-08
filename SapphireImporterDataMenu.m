@@ -179,7 +179,7 @@
 }
 
 /*!
- * @brief Meta data delegate method to return final list of files
+ * @brief Metadata delegate method to return final list of files
  *
  * @param subs The files which are children of the current directory
  */
@@ -199,7 +199,7 @@
 }
 
 /*!
- * @brief Meta data delegate method to inform on its scanning progress
+ * @brief Metadata delegate method to inform on its scanning progress
  *
  * @param dir The current directory it is scanning
  */

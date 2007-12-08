@@ -172,14 +172,14 @@ typedef enum {
  * This creates a new metadata object with a given parent and path.  It reads its data from the given dictionary and recreates a mutable copy of the dictionary.
  *
  * @param dict The configuration dictionary.  Note, this dictionary is copied and the copy is modified
- * @param myParent The parent meta data
- * @param myPath The path for this meta data
- * @return The meta data object
+ * @param myParent The parent metadata
+ * @param myPath The path for this metadata
+ * @return The metadata object
  */
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
 
 /*!
- * @brief Returns the path of the current meta data
+ * @brief Returns the path of the current metadata
  *
  * All metadata has a path associated with it; this function returns the path for this one.
  *
@@ -188,14 +188,14 @@ typedef enum {
 - (NSString *)path;
 
 /*!
- * @brief Sets the delegate for the meta data
+ * @brief Sets the delegate for the metadata
  *
  * @param newDelegate The new delegate
  */
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate;
 
 /*!
- * @brief Write all the meta data to a file.
+ * @brief Write all the metadata to a file.
  *
  * This function uses the parent to write the metadata up until it gets to the root.  Then the collection metadata is writen to the persistent store.
  */
@@ -211,12 +211,12 @@ typedef enum {
 - (SapphireMetaDataCollection *)collection;
 
 /*!
- * @brief Get the meta data for display
+ * @brief Get the metadata for display
  *
  * The metadata preview needs information about what data to display.  This function gets all the information for this metadata.
  *
- * @param order A pointer to an NSArray * in which to store the order in which the meta data is to be displayed
- * @return The display meta data with the titles as keys
+ * @param order A pointer to an NSArray * in which to store the order in which the metadata is to be displayed
+ * @return The display metadata with the titles as keys
  */
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
 
@@ -240,30 +240,30 @@ typedef enum {
  *
  * This creates a metadata collection from a persistent store.  It also remembers the location of the persistent store so that it can be saved in the future.
  *
- * @param dictionary The path to the dictionary storing the meta data
- * @param myPath The path to browse for the meta data
- * @return The meta data collection
+ * @param dictionary The path to the dictionary storing the metadata
+ * @param myPath The path to browse for the metadata
+ * @return The metadata collection
  */
 - (id)initWithFile:(NSString *)dictionary;
 
 /*!
- * @brief Returns the meta data for a particular path
+ * @brief Returns the metadata for a particular path
  *
  * Given a particular path, this function returns the metadata at that path.
  *
  * @param path The path to find
- * @return The directory meta data for the path, or nil if none exists
+ * @return The directory metadata for the path, or nil if none exists
  */
 - (SapphireMetaData *)dataForPath:(NSString *)path;
 
 /*!
- * @brief Returns the meta data for a particular path with data
+ * @brief Returns the metadata for a particular path with data
  *
  * Given a particular path, this function returns the metadata at that path.  If the found metadata contains no data, the inserted metadata is used instead.  This is used for symbolic link resolution.
  *
  * @param path The path to find
- * @param data The meta data to use in place of the source's data
- * @return The directory meta data for the path, or nil if none exists
+ * @param data The metadata to use in place of the source's data
+ * @return The directory metadata for the path, or nil if none exists
  */
 - (SapphireMetaData *)dataForPath:(NSString *)path withData:(NSDictionary *)data;
 
@@ -271,7 +271,7 @@ typedef enum {
  * @brief just like dataForPath: but specific to directories
  *
  * @param path The path to find
- * @return The directory meta data for the path, or nil if none exists
+ * @return The directory metadata for the path, or nil if none exists
  */
 - (SapphireDirectoryMetaData *)directoryForPath:(NSString *)path;
 
@@ -392,18 +392,18 @@ typedef enum {
 
 
 /*!
- * @brief Get the meta data object for a file.  Creates one if it doesn't already exist
+ * @brief Get the metadata object for a file.  Creates one if it doesn't already exist
  *
  * @param file The file within this dir
- * @return The file's meta data
+ * @return The file's metadata
  */
 - (SapphireFileMetaData *)metaDataForFile:(NSString *)file;
 
 /*!
- * @brief Get the meta data object for a directory.  Creates one if it doesn't alreay exist
+ * @brief Get the metadata object for a directory.  Creates one if it doesn't alreay exist
  *
  * @param dir The directory within this dir
- * @return The directory's meta data
+ * @return The directory's metadata
  */
 - (SapphireDirectoryMetaData *)metaDataForDirectory:(NSString *)dir;
 
@@ -411,7 +411,7 @@ typedef enum {
 /*!
  * @brief Prunes off old data
  *
- * This function prunes off non-existing files and directories from the meta data.  This does not prune a directory's content if it contains no files and directories.  In addition, broken sym links are also not pruned.  The theory is these may be the signs of missing mounts.
+ * This function prunes off non-existing files and directories from the metadata.  This does not prune a directory's content if it contains no files and directories.  In addition, broken sym links are also not pruned.  The theory is these may be the signs of missing mounts.
  *
  * @return YES if any data was pruned, NO otherwise
  */
@@ -443,15 +443,15 @@ typedef enum {
 - (void)resumeDelayedImport;
 
 /*!
- * @brief Get the meta data for some file or directory beneath this one
+ * @brief Get the metadata for some file or directory beneath this one
  *
- * @param subPath The subpath to get the meta data
- * @return The meta data object
+ * @param subPath The subpath to get the metadata
+ * @return The metadata object
  */
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)path;
 
 /*!
- * @brief Get the meta data for all the files contained within this directory tree
+ * @brief Get the metadata for all the files contained within this directory tree
  *
  * @param subDelegate The delegate to inform when scan is complete
  * @param skip A set of directories to skip.  Note, this set is modified
@@ -467,7 +467,7 @@ typedef enum {
 - (void)scanForNewFilesWithDelegate:(id <SapphireMetaDataScannerDelegate>)subDelegate skipDirectories:(NSMutableSet *)skip;
 
 /*!
- * @brief Load all the cached meta data so that dynamic directories can build
+ * @brief Load all the cached metadata so that dynamic directories can build
  */
 - (void)loadMetaData;
 
@@ -612,7 +612,7 @@ typedef enum {
  *
  * This data will be combined in the combined info to display in the preview.
  *
- * @param newMeta The new meta data
+ * @param newMeta The new metadata
  * @param source The source we imported from
  * @param modTime The modification time of the source
  */
