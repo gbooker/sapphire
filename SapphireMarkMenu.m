@@ -20,6 +20,7 @@ typedef enum {
 	COMMAND_MARK_TO_REFETCH_MOVIE,
 	COMMAND_MARK_TO_DELETE_METADATA,
 	COMMAND_MARK_TO_JOIN,
+	COMMAND_MARK_AND_JOIN,
 	COMMAND_CLEAR_JOIN_MARK,
 	COMMAND_JOIN,
 } MarkCommand;
@@ -86,15 +87,17 @@ static NSMutableArray *joinList;
 		}
 		if(![joinList containsObject:fileMeta])
 		{
-			[names addObject:BRLocalizedString(@"Join This with Other Files", @"Join This with Other Files")];
+			[names addObject:BRLocalizedString(@"Mark This File to Be Joined", @"Mark This File to Be Joined")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_JOIN]];
+			[names addObject:BRLocalizedString(@"Mark This File and Join Group", @"Mark This File and Join Group")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_AND_JOIN]];
 		}
 		if([joinList count])
 		{
-			[names addObject:BRLocalizedString(@"Clear the Join List", @"Clear the Join List")];
-			[commands addObject:[NSNumber numberWithInt:COMMAND_CLEAR_JOIN_MARK]];
 			[names addObject:BRLocalizedString(@"Join Marked Files", @"Join Marked Files")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_JOIN]];
+			[names addObject:BRLocalizedString(@"Clear the Join List", @"Clear the Join List")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_CLEAR_JOIN_MARK]];
 		}
 	}
 	else
@@ -338,6 +341,8 @@ static NSMutableArray *joinList;
 			case COMMAND_CLEAR_JOIN_MARK:
 				[joinList removeAllObjects];
 				break;
+			case COMMAND_MARK_AND_JOIN:
+				[joinList addObject:fileMeta];
 			case COMMAND_JOIN:
 				[self doJoin];
 				break;

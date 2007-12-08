@@ -97,7 +97,7 @@
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	
 	if(row == 0)/*Put in the special "this is not a movie"*/
-		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is NOT a Movie>", @"Mark a file that is not a movie in the movie chooser") forMenu:result];
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"<This is Not a Movie>", @"Mark a file that is not a movie in the movie chooser") forMenu:result];
 	else
 	{
 		/*Put in the movie results*/
