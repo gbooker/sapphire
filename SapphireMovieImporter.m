@@ -220,15 +220,19 @@
 	if([results count]<1)
 	{
 		/* IMDB had the wrong release year link, see if IMP Tried to redirect*/
-		NSString * newPosterPageLink=[[root objectsForXQuery:IMP_LINK_REDIRECT_XPATH error:&error]objectAtIndex:0] ;
-		NSScanner *trimmer=[NSScanner scannerWithString:newPosterPageLink];
-		[trimmer scanUpToString:@"URL=.." intoString:&yearPathComponent];
-		newPosterPageLink=[newPosterPageLink substringFromIndex:[yearPathComponent length]+6];
-		yearPathComponent=[newPosterPageLink stringByDeletingLastPathComponent];
-		url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",newPosterPageLink]] ;
-		document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-		root = [document rootElement];
-		results = [root objectsForXQuery:IMP_POSTER_CANDIDATES_XPATH error:&error];
+		NSArray *newPosterPageLinkArray = [root objectsForXQuery:IMP_LINK_REDIRECT_XPATH error:&error];
+		if([newPosterPageLinkArray count])
+		{
+			NSString * newPosterPageLink=[newPosterPageLinkArray objectAtIndex:0] ;
+			NSScanner *trimmer=[NSScanner scannerWithString:newPosterPageLink];
+			[trimmer scanUpToString:@"URL=.." intoString:&yearPathComponent];
+			newPosterPageLink=[newPosterPageLink substringFromIndex:[yearPathComponent length]+6];
+			yearPathComponent=[newPosterPageLink stringByDeletingLastPathComponent];
+			url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",newPosterPageLink]] ;
+			document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
+			root = [document rootElement];
+			results = [root objectsForXQuery:IMP_POSTER_CANDIDATES_XPATH error:&error];			
+		}
 	}
 
 	if([results count])
@@ -597,7 +601,7 @@
 	else return NO ;
 }
 
-- (BOOL) importMetaData:(SapphireFileMetaData *)metaData
+- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
@@ -670,7 +674,7 @@
 			}
 			else posters=nil ;
 		}
-		if(posters != nil)
+		if([posters count])
 		{
 			[dataMenu pause];
 			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
@@ -697,7 +701,7 @@
 			}
 			[dataMenu resume];
 		}
-	}	
+	}
 	if(selectedPoster && [dict objectForKey:IMP_POSTERS_KEY])
 	{
 		/* Lets move the selected poster to the corresponding Cover Art Directory */
