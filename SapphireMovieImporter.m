@@ -571,7 +571,7 @@
 					nil]];
 			}
 		}
-		if(!uniqueResult)return ret;
+		if(!uniqueResult && [ret count]>0)return ret;
 	}
 	return nil ;
 }
@@ -601,7 +601,8 @@
 	else return NO ;
 }
 
-- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
+/* - (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData */
+- (BOOL) importMetaData:(SapphireFileMetaData *)metaData 
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
@@ -631,6 +632,14 @@
 	{
 		/*Ask the user what movie this is*/
 		NSArray *movies = [self searchResultsForMovie:fileName];
+		/* No need to prompt the user for an empty set */
+		if(movies==nil)
+		{
+			/* We tried to import but found nothing - mark this file to be skipped on future imports */
+			[metaData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
+			[metaData setFileClass:FILE_CLASS_OTHER];
+			return YES;
+		}
 		/*Pause for the user's input*/
 		[dataMenu pause];
 		/*Bring up the prompt*/
