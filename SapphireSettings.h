@@ -94,6 +94,13 @@
 - (BOOL)displayVideo;
 
 /*!
+ * @brief Returns whether to display poster chooser
+ *
+ * @return YES if set, NO otherwise
+ */
+- (BOOL)displayPosterChooser;
+
+/*!
  * @brief Returns whether to disable UI quit
  *
  * @return YES if set, NO otherwise

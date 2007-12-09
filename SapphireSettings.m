@@ -33,6 +33,7 @@ static SapphireSettings *sharedInstance = nil;
 #define	HIDE_SPOILERS_KEY			@"HideSpoilers"
 #define	HIDE_AUDIO_KEY				@"HideAudio"
 #define	HIDE_VIDEO_KEY				@"HideVideo"
+#define HIDE_POSTER_CHOOSER_KEY		@"PosterChooserOptOut"
 #define HIDE_UI_QUIT_KEY			@"HideUIQuit"
 #define	ENABLE_FAST_SWITCHING_KEY	@"EnableFastSwitching"
 #define USE_AC3_PASSTHROUGH			@"EnableAC3Passthrough"
@@ -71,6 +72,7 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"  Hide Show Spoilers", @"Hide show summarys menu item"),
 												BRLocalizedString(@"  Hide Audio Info", @"Hide perian audio info menu item"),
 												BRLocalizedString(@"  Hide Video Info", @"Hide perian video info menu item"),
+												BRLocalizedString(@"  Hide Poster Chooser", @"Hide poster chooser menu item"),
 												BRLocalizedString(@"  Hide UI Quit", @"Hide the ui quitter menu item"),
 												BRLocalizedString(@"  Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
 												BRLocalizedString(@"  Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"),
@@ -88,6 +90,7 @@ static SapphireSettings *sharedInstance = nil;
 													HIDE_SPOILERS_KEY,
 													HIDE_AUDIO_KEY,
 													HIDE_VIDEO_KEY,
+													HIDE_POSTER_CHOOSER_KEY,
 													HIDE_UI_QUIT_KEY,
 													ENABLE_FAST_SWITCHING_KEY,
 													USE_AC3_PASSTHROUGH,
@@ -105,6 +108,7 @@ static SapphireSettings *sharedInstance = nil;
 												[theme gem:NOTE_GEM_KEY],
 												[theme gem:AUDIO_GEM_KEY],
 												[theme gem:VIDEO_GEM_KEY],
+												[theme gem:IMPORT_GEM_KEY],
 												[theme gem:FRONTROW_GEM_KEY],
 												[theme gem:FAST_GEM_KEY],
 												[theme gem:AC3_GEM_KEY],
@@ -120,6 +124,7 @@ static SapphireSettings *sharedInstance = nil;
 		[NSNumber numberWithBool:NO], HIDE_SPOILERS_KEY,
 		[NSNumber numberWithBool:NO], HIDE_AUDIO_KEY,
 		[NSNumber numberWithBool:NO], HIDE_VIDEO_KEY,
+		[NSNumber numberWithBool:NO], HIDE_POSTER_CHOOSER_KEY,
 		[NSNumber numberWithBool:YES], HIDE_UI_QUIT_KEY,
 		[NSNumber numberWithBool:YES], ENABLE_FAST_SWITCHING_KEY,
 		[NSNumber numberWithBool:NO], USE_AC3_PASSTHROUGH,
@@ -195,29 +200,34 @@ static SapphireSettings *sharedInstance = nil;
 	return ![self boolForKey:HIDE_UNWATCHED_KEY];
 }
 
-- (BOOL)displayFavorites;
+- (BOOL)displayFavorites
 {
 	return ![self boolForKey:HIDE_FAVORITE_KEY];
 }
 
-- (BOOL)displayTopShows;
+- (BOOL)displayTopShows
 {
 	return ![self boolForKey:HIDE_TOP_SHOWS_KEY];
 }
 
-- (BOOL)displaySpoilers;
+- (BOOL)displaySpoilers
 {
 	return ![self boolForKey:HIDE_SPOILERS_KEY];
 }
 
-- (BOOL)displayAudio;
+- (BOOL)displayAudio
 {
 	return ![self boolForKey:HIDE_AUDIO_KEY];
 }
 
-- (BOOL)displayVideo;
+- (BOOL)displayVideo
 {
 	return ![self boolForKey:HIDE_VIDEO_KEY];
+}
+
+- (BOOL)displayPosterChooser
+{
+	return ![self boolForKey:HIDE_POSTER_CHOOSER_KEY];
 }
 
 - (BOOL)disableUIQuit

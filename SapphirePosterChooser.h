@@ -30,7 +30,7 @@
 }
 
 /*!
- * @brief check ATV version
+ * @brief check ATV version & poster chooser opt out
  *
  * @return The YES if we can display 
  */

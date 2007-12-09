@@ -7,6 +7,8 @@
 //
 
 #import "SapphirePosterChooser.h"
+#import "SapphireMetaData.h"
+#import	"SapphireSettings.h"
 #import "SapphireFrontRowCompat.h"
 
 NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned int height);
@@ -128,7 +130,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (BOOL)okayToDisplay
 {
 	if([[self list]respondsToSelector:@selector(renderSelection)] || [SapphireFrontRowCompat usingFrontRow])
-		return YES;
+		return [[SapphireSettings sharedSettings] displayPosterChooser];
 	else
 		return NO;
 }
