@@ -77,7 +77,7 @@ NSString *searchCoverArtExtForPath(NSString *path);
 
 - (NSString *)coverArtPathUpToParents:(int)parents
 {
-	NSString *coverPath = searchCoverArtExtForPath([[[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Virtual Cover Art"] stringByAppendingPathComponent:[self path]] stringByAppendingPathComponent:@"cover"]);
+	NSString *coverPath = searchCoverArtExtForPath([[[SapphireMetaData collectionArtPath] stringByAppendingPathComponent:[self path]] stringByAppendingPathComponent:@"cover"]);
 	if([[NSFileManager defaultManager] fileExistsAtPath:coverPath])
 		return coverPath;
 	if(parents != 0 && [parent isKindOfClass:[SapphireDirectoryMetaData class]])

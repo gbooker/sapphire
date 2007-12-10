@@ -9,6 +9,7 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
+#import "NSFileManager-Extensions.h"
 #import "SapphireShowChooser.h"
 #import "SapphireMovieChooser.h"
 
@@ -153,13 +154,6 @@
  */
 - (void)addEp:(NSString *)showName title:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID toDict:(NSMutableDictionary *)dict
 {
-	/* Lets process the cover art directory structure */
-	// this is a temp hard path it might be to our benefit to allow this target to be determined by an entry in the settings.plist
-	NSString * previewArtPath=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Preview Art/"];
-	NSFileManager *FM=[NSFileManager defaultManager];
-	[FM createDirectoryAtPath:previewArtPath attributes:nil];
-	previewArtPath=[previewArtPath stringByAppendingPathComponent:@"@TV"];
-	[FM createDirectoryAtPath:previewArtPath attributes:nil];
 	/*Set the key by which to store this.  Either by season/ep or season/title*/
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
 	id key = epNum;
@@ -179,18 +173,12 @@
 	if(showName)
 	{
 		[epDict setObject:showName forKey:META_SHOW_NAME_KEY] ;
-		/* Make our show title directory for the cover art */
-		previewArtPath=[previewArtPath stringByAppendingPathComponent:showName];
-		[FM createDirectoryAtPath:previewArtPath attributes:nil];
 	}
 	if(ep != 0)
 		[epDict setObject:epNum forKey:META_EPISODE_NUMBER_KEY];
 	if(season != 0)
 	{
 		[epDict setObject:seasonNum forKey:META_SEASON_NUMBER_KEY];
-		/* Make our nested show season directory for the cover art */
-		previewArtPath=[previewArtPath stringByAppendingPathComponent:[NSString stringWithFormat:@"Season %d",season]];
-		[FM createDirectoryAtPath:previewArtPath attributes:nil];
 	}
 	if(epTitle != nil)
 		[epDict setObject:epTitle forKey:META_TITLE_KEY];
@@ -480,6 +468,7 @@
 		index = matches[0].rm_so + 1;
 		/*Insert an artificial season/ep seperator so things are easier later*/
 		NSMutableString *tempStr = [fileName mutableCopy];
+//		if(index > [tempStr length] || index <= 0 )return NO;
 		[tempStr deleteCharactersInRange:NSMakeRange(0, index)];
 		[tempStr insertString:@"x" atIndex:matches[0].rm_eo - index - 3];
 		scanString = [tempStr autorelease];
@@ -545,12 +534,18 @@
 	/*No info, well, no info*/
 	if(!info)
 		return NO;
-	
+		
+	/* Lets process the cover art directory structure */
+	NSString * previewArtPath=[NSString stringWithFormat:@"%@/@TV/%@/%@",
+									[SapphireMetaData collectionArtPath],
+									[info objectForKey:META_SHOW_NAME_KEY],
+									[NSString stringWithFormat:@"Season %d",[[info objectForKey:META_SEASON_NUMBER_KEY] intValue]]];
+						
+	[[NSFileManager defaultManager]constructPath:previewArtPath];
 	/*Check for screen cap locally and on server*/
 	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
 	NSString *image = nil;
-	NSString *coverArtDir = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"];
-	NSString *newPath = [coverArtDir stringByAppendingPathComponent:fileName];
+	NSString *newPath = [previewArtPath stringByAppendingPathComponent:fileName];
 	NSString *imageDestination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
 	BOOL isDir = NO;
 	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
@@ -562,7 +557,6 @@
 		/*Download the screen cap*/
 		NSURL *imageURL = [NSURL URLWithString:image];
 		NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-		[[NSFileManager defaultManager] createDirectoryAtPath:coverArtDir attributes:nil];
 		SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:imageDestination];
 		[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate];
 		[myDelegate release];

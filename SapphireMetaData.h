@@ -57,14 +57,17 @@
 //Sapphire Virtual Directory Movie Folders
 #define VIRTUAL_DIR_ROOT_KEY			@"@MOVIES"
 #define VIRTUAL_DIR_ALL_KEY				@"All Movies"
+//#define VIRTUAL_DIR_PREMIER_KEY			@"By Premier Date"
 #define VIRTUAL_DIR_CAST_KEY			@"By Cast"
 #define VIRTUAL_DIR_DIRECTOR_KEY		@"By Director"
 #define VIRTUAL_DIR_GENRE_KEY			@"By Genre"
 #define VIRTUAL_DIR_TOP250_KEY			@"IMDB Top 250"
+//#define VIRTUAL_DIR_IMDB_RATING_KEY		@"By IMDB User Rating"
 #define VIRTUAL_DIR_OSCAR_KEY			@"Academy Award Winning"
 
-#define META_DATA_FILE_INFO_KIND						@"MetaDataFileInfoKind"
-#define FILE_CLASS_KEY				@"File Class"
+
+#define META_DATA_FILE_INFO_KIND		@"MetaDataFileInfoKind"
+#define FILE_CLASS_KEY					@"File Class"
 typedef enum {
 	FILE_CLASS_NOT_FILE= -1,
 	FILE_CLASS_UNKNOWN = 0,
@@ -165,6 +168,15 @@ typedef enum {
  * @return The set of all audio extensions
  */
 + (NSSet *)audioExtensions;
+
+/*!
+ * @brief the collection art parent path
+ *
+ * This function returns the path for the parent cover art directory
+ *
+ * @return The collection art path
+ */
++ (NSString *)collectionArtPath;
 
 /*!
  * @brief Creates a new metadata object

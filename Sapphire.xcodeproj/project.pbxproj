@@ -59,6 +59,8 @@
 		F5FDA1A20CE27CE700812CE5 /* BRLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */; };
 		F5FDA1A30CE27CF000812CE5 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
 		F5FDA1A80CE27D1C00812CE5 /* CompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */; };
+		FE076E400D0CCAA40053FF1A /* NSFileManager-Extensions.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = FE076E3E0D0CCAA40053FF1A /* NSFileManager-Extensions.h */; };
+		FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */; };
 		FE4239A40C331FFD0035A717 /* Green.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A00C331FFD0035A717 /* Green.png */; };
 		FE4239A50C331FFD0035A717 /* Yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A10C331FFD0035A717 /* Yellow.png */; };
 		FE4239A60C331FFD0035A717 /* Blue.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A20C331FFD0035A717 /* Blue.png */; };
@@ -117,6 +119,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				F5FDA1A80CE27D1C00812CE5 /* CompatClasses.framework in CopyFiles */,
+				FE076E400D0CCAA40053FF1A /* NSFileManager-Extensions.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +199,8 @@
 		F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRLayerController.m; sourceTree = "<group>"; };
 		F5FD9F240CE27BD600812CE5 /* CompatClasses-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "CompatClasses-Info.plist"; sourceTree = "<group>"; };
 		F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE076E3E0D0CCAA40053FF1A /* NSFileManager-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSFileManager-Extensions.h"; sourceTree = "<group>"; };
+		FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager-Extensions.m"; sourceTree = "<group>"; };
 		FE4239A00C331FFD0035A717 /* Green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Green.png; sourceTree = "<group>"; };
 		FE4239A10C331FFD0035A717 /* Yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Yellow.png; sourceTree = "<group>"; };
 		FE4239A20C331FFD0035A717 /* Blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Blue.png; sourceTree = "<group>"; };
@@ -439,6 +444,8 @@
 		F56B74D30C3753C100E934AA /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				FE076E3E0D0CCAA40053FF1A /* NSFileManager-Extensions.h */,
+				FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */,
 				F56B74D40C3753E300E934AA /* NSString-Extensions.h */,
 				F56B74D50C3753E300E934AA /* NSString-Extensions.m */,
 			);
@@ -537,7 +544,6 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "Sapphire" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* ApplianceBase */;
 			projectDirPath = "";
@@ -652,6 +658,7 @@
 				F5C078C70CF1033C007C9A16 /* SapphireVirtualDirectory.m in Sources */,
 				F51F4B050CFC8AB300BEBAD6 /* SapphireVirtualDirectoryLoading.m in Sources */,
 				F51F4B180CFC8C8C00BEBAD6 /* SapphireTextWithSpinnerController.m in Sources */,
+				FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

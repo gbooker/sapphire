@@ -75,6 +75,7 @@
 @end
 
 static NSSet *coverArtExtentions = nil;
+NSString *collectionArtPath = nil;
 
 NSString *searchCoverArtExtForPath(NSString *path)
 {
@@ -153,6 +154,12 @@ static NSSet *allExtensions = nil;
 + (NSSet *)audioExtensions
 {
 	return audioExtensions;
+}
+
++ (NSString *)collectionArtPath
+{
+	collectionArtPath=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Collection Art"];
+	return collectionArtPath;
 }
 
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
@@ -1444,17 +1451,39 @@ static NSArray *displayedMetaDataOrder = nil;
 
 - (NSString *)coverArtPath
 {
-	/*Find cover art for the current file in the "Cover Art" dir*/
+	/*Find cover art for the current file in the "Cover Art" dir */
 	NSString *subPath = [[self path] stringByDeletingPathExtension];
 	NSString *fileName = [subPath lastPathComponent];
-	NSString *ret = searchCoverArtExtForPath([[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:fileName]);
+	NSString * myArtPath=nil;
+	if([self fileClass]==FILE_CLASS_TV_SHOW)
+		myArtPath=[NSString stringWithFormat:@"%@/@TV/%@/%@/%@",
+															[SapphireMetaData collectionArtPath],
+															[self showName],
+															[NSString stringWithFormat:@"Season %d",[self seasonNumber]],
+															fileName];
+	if([self fileClass]==FILE_CLASS_MOVIE)
+		myArtPath=[NSString stringWithFormat:@"%@/@MOVIES/%@",
+															[SapphireMetaData collectionArtPath],
+															fileName];
+	
+	/* Check the Collection Art location */
+	NSString *ret=searchCoverArtExtForPath(myArtPath);
+
+	if(ret != nil)
+		return ret;
+	
+	/* Try Legacy Folders with the file */
+	ret=searchCoverArtExtForPath([[[subPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Cover Art"] stringByAppendingPathComponent:fileName]);
+	
 	if(ret != nil)
 		return ret;
 	
 	/*Find cover art for the current file in the current dir*/
 	ret = searchCoverArtExtForPath(subPath);
+	
 	if(ret != nil)
 		return ret;
+
 	
 	return nil;
 }

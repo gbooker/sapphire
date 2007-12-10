@@ -9,6 +9,7 @@
 #import "SapphireMovieImporter.h"
 #import "SapphireMetaData.h"
 #import "NSString-Extensions.h"
+#import "NSFileManager-Extensions.h"
 #import "SapphireMovieChooser.h"
 #import "SapphirePosterChooser.h"
 #import "SapphireFrontRowCompat.h"
@@ -267,7 +268,7 @@
 {
 	/* download all posters to the scratch folder */
 	NSString *posterBuffer = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
-	[[NSFileManager defaultManager] createDirectoryAtPath:posterBuffer attributes:nil];
+	[[NSFileManager defaultManager] constructPath:posterBuffer];
 	SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterCandidates withDestination:posterBuffer delegate:self];
 	[myDelegate downloadMoviePosters] ;
 	[myDelegate autorelease];
@@ -717,8 +718,8 @@
 		NSFileManager *fileAgent=[NSFileManager defaultManager];
 		NSString * poster=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
 		poster=[poster stringByAppendingPathComponent:[selectedPoster lastPathComponent]];
-		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
-		[fileAgent createDirectoryAtPath:coverart attributes:nil];
+		NSString * coverart=[[SapphireMetaData collectionArtPath]stringByAppendingPathComponent:@"@MOVIES"];
+		[fileAgent constructPath:coverart];
 		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
 		coverart=[coverart stringByAppendingPathExtension:[poster pathExtension]];
 		if([fileAgent fileExistsAtPath:poster])/* See if we need to clean up */
@@ -756,8 +757,8 @@
 	{
 		/* The poster chooser wasn't loaded - ATV 1.0 */
 		NSFileManager *fileAgent=[NSFileManager defaultManager];
-		NSString * coverart=[[path stringByDeletingLastPathComponent]stringByAppendingPathComponent:@"Cover Art"];
-		[fileAgent createDirectoryAtPath:coverart attributes:nil];
+		NSString * coverart=[[SapphireMetaData collectionArtPath]stringByAppendingPathComponent:@"@MOVIES"];
+		[fileAgent constructPath:coverart];
 		NSArray * posterList=[NSArray arrayWithObject:autoSelectPoster];
 		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
 		coverart=[coverart stringByAppendingPathExtension:[autoSelectPoster pathExtension]];
