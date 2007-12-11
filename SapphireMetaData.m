@@ -80,16 +80,19 @@ NSString *collectionArtPath = nil;
 NSString *searchCoverArtExtForPath(NSString *path)
 {
 	NSFileManager *fm = [NSFileManager defaultManager];
-	BOOL isDir = NO;
-	/*Search all extensions*/
-	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
-	NSString *ext = nil;
-	while((ext = [extEnum nextObject]) != nil)
+	NSString *directory = [path stringByDeletingLastPathComponent];
+	NSArray *files = [fm directoryContentsAtPath:directory];
+	NSString *lastComp = [path lastPathComponent];
+	/*Search all files*/
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *file = nil;
+	while((file = [fileEnum nextObject]) != nil)
 	{
-		NSString *candidate = [path stringByAppendingPathExtension:ext];
-		/*Check the candidate*/
-		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
-			return candidate;
+		NSString *ext = [file pathExtension];
+		if([ext length] && 
+		   [coverArtExtentions containsObject:ext] && 
+		   [lastComp isEqualToString:[file stringByDeletingPathExtension]])
+			return [directory stringByAppendingPathComponent:file];
 	}
 	/*Didn't find one*/
 	return nil;
@@ -144,6 +147,7 @@ static NSSet *allExtensions = nil;
 						  @"png",
 						  @"gif",
 						  nil];
+	collectionArtPath=[[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Collection Art"] retain];
 }
 
 + (NSSet *)videoExtensions
@@ -158,7 +162,6 @@ static NSSet *allExtensions = nil;
 
 + (NSString *)collectionArtPath
 {
-	collectionArtPath=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Collection Art"];
 	return collectionArtPath;
 }
 
