@@ -15,7 +15,9 @@
 	if(!([self fileExistsAtPath:proposedPath isDirectory:&isDir]&& isDir))
 		if(![self createDirectoryAtPath:proposedPath attributes:nil])
 			if([self constructPath:[proposedPath stringByDeletingLastPathComponent]])
-				return [self constructPath:proposedPath];
+				return [self createDirectoryAtPath:proposedPath attributes:nil];
+			else
+				return NO;
 	return YES;	
 }
 @end
