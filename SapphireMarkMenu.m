@@ -333,7 +333,7 @@ static NSMutableArray *joinList;
 				[fileMeta setToImportFromSource:META_IMDB_IMPORT_KEY];
 				break;
 			case COMMAND_MARK_TO_DELETE_METADATA:
-				[fileMeta setFileClass:FILE_CLASS_MOVIE];
+				[fileMeta clearMetaData];
 				break;
 			case COMMAND_MARK_TO_JOIN:
 				[joinList addObject:fileMeta];
