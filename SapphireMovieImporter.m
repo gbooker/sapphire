@@ -561,7 +561,7 @@
 					resultTitle=[resultTitle stringByReplacingAllOccurancesOf:@"\n" withString:@" "];
 				}
 				/* Skip image links */
-				else if(resultURL == nil || [resultTitleValue compare:@" "])
+				else if(resultURL == nil || [resultTitleValue characterAtIndex:0] == 160)
 					continue;
 				/*Skip Video Game titles (VG) */
 				if([resultTitleValue rangeOfString:@"(VG)"].location != NSNotFound)
