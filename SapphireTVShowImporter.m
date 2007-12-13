@@ -263,14 +263,17 @@
 				{
 					/*Get the season number and ep numbers*/
 					NSScanner *scanner = [NSScanner scannerWithString:epInfoStr];
-					if([epInfoStr rangeOfString:@" - " options:0].location != NSNotFound)
+					NSRange range = [epInfoStr rangeOfString:@" - " options:0];
+					if(range.location != NSNotFound)
 					{
 						[scanner scanInt:&epNumber];
 						[scanner scanUpToCharactersFromSet:decimalSet intoString:nil];
 						[scanner scanInt:&seasonNum];
 						[scanner scanUpToCharactersFromSet:decimalSet intoString:nil];
 						[scanner scanInt:&ep];
-						[scanner scanCharactersFromSet:skipSet intoString:nil];							
+						[scanner setScanLocation:range.length + range.location];
+						if(seasonNum == 0)
+							seasonNum = season;
 					}
 					else
 						seasonNum = season;
