@@ -205,7 +205,6 @@
 {
 	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
 	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
-	NSCharacterSet *skipSet = [NSCharacterSet characterSetWithCharactersInString:@"- "];
 	/*Get the season's html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@/episode_guide/%d", seriesName, season]];
 	NSError *error = nil;
