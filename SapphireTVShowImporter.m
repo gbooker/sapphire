@@ -251,6 +251,13 @@
 		while((epInfo = [epInfoEnum nextObject]) != nil)
 		{
 			NSString *nodeName = [epInfo name];
+			NSArray *summaryObjects = [epInfo objectsForXQuery:@".//font" error:&error];
+			if([summaryObjects count] && ![nodeName isEqualToString:@"font"])
+			{
+				/*Sometimes, the summary is inside formatting, strip*/
+				epInfo = [summaryObjects objectAtIndex:0];
+				nodeName = [epInfo name];
+			}
 			if(link == nil && [nodeName isEqualToString:@"a"])
 			{
 				/*Get the URL*/
@@ -282,13 +289,13 @@
 			else if(summary == nil && [nodeName isEqualToString:@"font"])
 			{
 				/*Get the summary*/
-				NSArray *summarys = [epInfo objectsForXQuery:@"replace(string(), '\n\n', '\n')" error:&error];
+				NSArray *summaries = [epInfo objectsForXQuery:@"replace(string(), '\n\n', '\n')" error:&error];
 				summary = [NSMutableString string];
-				NSEnumerator *sumEnum = [summarys objectEnumerator];
+				NSEnumerator *sumEnum = [summaries objectEnumerator];
 				NSXMLNode *sum = nil;
 				while((sum = [sumEnum nextObject]) != nil)
 					[summary appendFormat:@"\n%@", sum];
-				if([[summary substringFromIndex:3] isEqualToString:@"No Summary (Add Here)"])
+				if([summary length] > 3 && [[summary substringFromIndex:3] isEqualToString:@"No Summary (Add Here)"])
 					summary = nil;
 				if([summary length])
 					[summary deleteCharactersInRange:NSMakeRange(0,1)];
