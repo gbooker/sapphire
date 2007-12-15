@@ -381,6 +381,9 @@
 						awardsStr=[awardsStr substringFromIndex:3];
 						oscarsWon=[NSNumber numberWithInt:[awardsStr intValue]];
 					}
+					else if([awardsStr hasPrefix:@"Won Oscar"])
+						oscarsWon=[[NSNumber alloc] initWithInt:1];
+					
 				}
 				else if([dataType hasPrefix:@"MPAA"])
 				{
@@ -474,7 +477,7 @@
 	if(mpaaRating)
 		[ret setObject:mpaaRating forKey:META_MOVIE_MPAA_RATING_KEY];
 	else
-		[ret setObject:@"NA" forKey:META_MOVIE_MPAA_RATING_KEY];
+		[ret setObject:@"N/A" forKey:META_MOVIE_MPAA_RATING_KEY];
 	if(directors)
 		[ret setObject:directors forKey:META_MOVIE_DIRECTOR_KEY];
 	if(plot)
