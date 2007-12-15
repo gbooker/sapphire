@@ -24,6 +24,7 @@
 }
 
 - (void) dealloc {
+	[nextFileTimer invalidate];
 	[metaDir release];
 	[remaining release];
 	[results release];
@@ -54,7 +55,7 @@
 	if(givesResults)
 		results = [NSMutableArray new];
 	/*Start the scan*/
-	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(nextFile:) userInfo:nil repeats:NO];
+	nextFileTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(nextFile:) userInfo:nil repeats:NO];
 }
 
 /*!
@@ -85,7 +86,7 @@
 	/*Add the results*/
 	[results addObjectsFromArray:subs];
 	/*Resume*/
-	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(nextFile:) userInfo:nil repeats:NO];
+	nextFileTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(nextFile:) userInfo:nil repeats:NO];
 }
 
 /*!
@@ -116,6 +117,7 @@
  */
 - (void)nextFile:(NSTimer *)timer
 {
+	nextFileTimer = nil;
 	/*Check for cancel and completion*/
 	if(![delegate getSubFilesCanceled] && [remaining count])
 	{

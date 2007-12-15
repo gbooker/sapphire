@@ -354,6 +354,7 @@ typedef enum {
 	BOOL						scannedDirectory;		/*!< @brief YES if the directory has already been examined on disk, NO if just using cached information*/
 	
 	SapphireMetaDataCollection	*collection;			/*!< @brief The root collection (not retained)*/
+	NSTimer						*loadTimer;				/*!< @brief The timer to load this metadata*/
 }
 
 /*!

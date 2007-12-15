@@ -150,6 +150,7 @@
 
 - (void)doSkip:(NSTimer *)timer
 {
+	skipTimer = nil;
 	float time = [self elapsedPlaybackTime];
 	if(skipSpeed < 0)
 	{
@@ -201,6 +202,7 @@
 
 - (void)updateUI:(NSTimer *)Timer
 {
+	updateTimer = nil;
 	if([self elapsedPlaybackTime] >= [self trackDuration])
 		[self stop];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPPlaybackProgressChanged" object:nil];

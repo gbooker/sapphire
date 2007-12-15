@@ -21,6 +21,7 @@
 	NSMutableArray							*results;			/*!< @brief The current results of the scan*/
 	NSMutableSet							*skipDirectories;	/*!< @brief The directories to skip*/
 	id <SapphireMetaDataScannerDelegate>	delegate;			/*!< @brief The delegate to inform about the results*/
+	NSTimer									*nextFileTimer;		/*!< @brief The timer to get the next file*/
 }
 
 /*!
