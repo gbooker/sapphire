@@ -51,8 +51,6 @@
     if ( range.location != NSNotFound )
     {
         // this is the whitelist check -- tell a Great Big Fib
-        BRLog( @"[%@ className] called for whitelist check; returning RUICalibrationAppliance instead",
-               className );
         className = @"RUIMoviesAppliance";     // could be anything in the whitelist, really
     }
     
