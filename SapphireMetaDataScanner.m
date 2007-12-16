@@ -55,6 +55,7 @@
 	if(givesResults)
 		results = [NSMutableArray new];
 	/*Start the scan*/
+	[self retain];
 	nextFileTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(nextFile:) userInfo:nil repeats:NO];
 }
 
@@ -74,6 +75,7 @@
 	}
 	/*Send results*/
 	[delegate gotSubFiles:results];
+	[self autorelease];
 }
 
 /*!
