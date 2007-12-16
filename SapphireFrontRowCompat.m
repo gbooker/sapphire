@@ -7,6 +7,7 @@
 //
 
 #import "SapphireFrontRowCompat.h"
+#import <ExceptionHandling/NSExceptionHandler.h>
 
 /*Yes, this is the wrong class, but otherwise gcc gripes about BRImage class not existing; this removes warnings so no harm*/
 @interface SapphireFrontRowCompat (compat)
@@ -39,6 +40,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @interface BRTextControl (compat)
 - (void)setText:(NSString *)text withAttributes:(NSDictionary *)attr;
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
+@end
+
+@interface NSException (compat)
+- (NSArray *)callStackReturnAddresses;
 @end
 
 @implementation SapphireFrontRowCompat
@@ -206,5 +211,16 @@ static BOOL usingFrontRow = NO;
 {
 	if(!usingFrontRow)
 		[scene renderScene];
+}
+
++ (NSArray *)callStackReturnAddressesForException:(NSException *)exception
+{
+	if([exception respondsToSelector:@selector(callStackReturnAddresses)])
+	{
+		NSArray *ret = [exception callStackReturnAddresses];
+		if([ret count])
+			return ret;
+	}
+	return [[exception userInfo] objectForKey:NSStackTraceKey];
 }
 @end

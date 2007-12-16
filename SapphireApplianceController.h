@@ -46,4 +46,13 @@
  * @return The left icon
  */
 + (BRTexture *)gemForPredicate:(SapphirePredicate *)predicate;
+
+/*!
+ * @brief Log an exception to the console
+ *
+ * This function attempts to log an exception to the console.  If the exception has a nice backtrace, it logs that along with the location of the Sapphire bundle in memory.  If it does not, it logs the entire backtrace is hex addresses along with the location of all memory objects in the trace.  The idea being that with this information, in either format, the developer can use atos to get exact line numbers.
+ *
+ * @param e The exception to log
+ */
++ (void)logException:(NSException *)e;
 @end

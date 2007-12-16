@@ -8,6 +8,7 @@
 
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
+#include <dlfcn.h>
 #import "SapphireBrowser.h"
 #import "SapphireMetaData.h"
 #import "SapphirePredicates.h"
@@ -100,7 +101,39 @@ static NSArray *predicates = nil;
 		return [theme gem:GREEN_GEM_KEY];
 	return nil;
 }
-								
+
++ (void)logException:(NSException *)e
+{
+	NSMutableString *ret = [NSMutableString stringWithFormat:@"Exception:"];
+	if([e respondsToSelector:@selector(backtrace)])
+	{
+		[ret appendFormat:@"%@\n%@", e, [(BRBacktracingException *)e backtrace]];
+		Dl_info info;
+		if(dladdr(&predicates, &info))
+			[ret appendFormat:@"Sapphire is at 0x%X", info.dli_fbase];
+	}
+	else
+	{
+		NSArray *addrs = [SapphireFrontRowCompat callStackReturnAddressesForException:e];
+		NSLog(@"Got addrs: %@", addrs);
+		int i, count = [addrs count];
+		NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
+		for(i=0; i<count; i++)
+		{
+			Dl_info info;
+			const void *addr = [[addrs objectAtIndex:i] pointerValue];
+			if(dladdr(addr, &info))
+				[mapping setObject:[NSString stringWithCString:info.dli_fname] forKey:[NSValue valueWithPointer:info.dli_fbase]];
+			[ret appendFormat:@" 0x%X", addr];
+		}
+		NSEnumerator *mappingEnum = [mapping keyEnumerator];
+		NSValue *key = nil;
+		while((key = [mappingEnum nextObject]) != nil)
+			[ret appendFormat:@"\n0x%X\t%@", [key pointerValue], [mapping objectForKey:key]];
+	}
+	NSLog(@"%@", ret);	
+}
+
 + (NSString *) rootMenuLabel
 {
 	return (@"net.pmerrill.Sapphire" );
@@ -356,7 +389,6 @@ static NSArray *predicates = nil;
 - (void) itemSelected: (long) row
 {
     // This is called when the user presses play/pause on a list item
-	
 	if(row == [controllers count])
 		[[NSApplication sharedApplication] terminate:self];
 	id controller = [controllers objectAtIndex:row];

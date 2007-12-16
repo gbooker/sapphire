@@ -198,4 +198,14 @@
  * @param scene The scene to render, if exists.
  */
 + (void)renderScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Get the call stack addresses for an exception
+ *
+ * This function exists mostly because this method is different on Tiger and Leopard.  This is not a significant differece between the ATV and Frontrow
+ *
+ * @param exception The exception to examine
+ * @return An array of call addresses if successful, nil otherwise
+ */
++ (NSArray *)callStackReturnAddressesForException:(NSException *)exception;
 @end

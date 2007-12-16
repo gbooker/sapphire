@@ -10,6 +10,7 @@
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
 #import "SapphireFrontRowCompat.h"
+#import "SapphireApplianceController.h"
 
 @interface SapphireImporterDataMenu (private)
 - (void)setFileProgress:(NSString *)updateFileProgress;
@@ -226,7 +227,17 @@
  */
 - (BOOL)doImport
 {
-	return [importer importMetaData:[importItems objectAtIndex:0]];
+	BOOL ret = NO;
+	@try {
+		ret = [importer importMetaData:[importItems objectAtIndex:0]];
+	}
+	@catch (NSException * e) {
+		[SapphireApplianceController logException:e];
+		[e raise];
+	}
+	@finally {
+		return ret;
+	}
 }
 
 /*!
