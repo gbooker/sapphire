@@ -241,8 +241,9 @@ typedef enum {
  */
 @interface SapphireMetaDataCollection : SapphireMetaData {
 	NSMutableDictionary			*directories;		/*!< @brief The root directory metadata objects*/
-	NSMutableDictionary			*skipCollection;	/*!< @brief The list of mounts to skip, YES if is should be skipped, NO otherwise*/
-	NSMutableDictionary			*hideCollection;	/*!< @brief The list of mounts to hide, YES if is should be hidden, NO otherwise*/
+	NSMutableDictionary			*skipCollection;	/*!< @brief The list of collections to skip, YES if is should be skipped, NO otherwise*/
+	NSMutableDictionary			*hideCollection;	/*!< @brief The list of collections to hide, YES if is should be hidden, NO otherwise*/
+	NSMutableArray				*collectionDirs;	/*!< @brief The list of extra collections to add to the list*/
 	NSString					*dictionaryPath;	/*!< @brief The path of the persistent store*/
 	NSTimer						*writeTimer;		/*!< @brief The timer to consolodate all writes into a single write (not retained)*/
 }
@@ -331,6 +332,34 @@ typedef enum {
  * @param skip YES to skip this collection, NO otherwise
  */
 - (void)setSkip:(BOOL)skip forCollection:(NSString *)collection;
+
+/*!
+ * @brief Add a collection
+ *
+ * This function adds a directory to the list of collections.
+ *
+ * @param dir The directory to add to the collection list
+ */
+- (void)addCollectionDirectory:(NSString *)dir;
+
+/*!
+ * @brief Checks to see if a dir is a collection
+ *
+ * This function checks a directory to see if it is in the list of collections.
+ *
+ * @param dir The directory to check
+ * @return YES if it is a collection, NO otherwise
+ */
+- (BOOL)isCollectionDirectory:(NSString *)dir;
+
+/*!
+ * @brief Remove a collection
+ *
+ * This function removes a directory frome the list of collections.  This has no effect on mount points.
+ *
+ * @param dir The directory to remove from the collection list
+ */
+- (void)removeCollectionDirectory:(NSString *)dir;
 
 @end
 

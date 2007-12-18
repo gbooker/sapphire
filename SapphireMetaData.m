@@ -13,6 +13,7 @@
 #import "SapphireSettings.h"
 #import "SapphirePredicates.h"
 #import "SapphireMetaDataScanner.h"
+#import "NSArray-Extensions.h"
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"
@@ -21,6 +22,7 @@
 #define META_COLLECTION_OPTIONS		@"Options"
 #define META_COLLECTION_HIDE		@"Hide"
 #define META_COLLECTION_SKIP_SCAN	@"Skip"
+#define META_COLLECTION_DIRS		@"Directories"
 #define META_FILE_VERSION			2
 #define META_COLLECTION_VERSION		4
 
@@ -406,6 +408,11 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 		hideCollection = [[NSMutableDictionary alloc] init];
 	[collectionOptions setObject:hideCollection forKey:META_COLLECTION_HIDE];
 	
+	collectionDirs = [[collectionOptions objectForKey:META_COLLECTION_DIRS] mutableCopy];
+	if(collectionDirs == nil)
+		collectionDirs = [[NSMutableDictionary alloc] init];
+	[collectionOptions setObject:collectionDirs forKey:META_COLLECTION_DIRS];
+	
 	directories = [[NSMutableDictionary alloc] init];
 	
 	/* Hide and skip the / collection by default */
@@ -452,6 +459,7 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	[dictionaryPath release];
 	[skipCollection release];
 	[hideCollection release];
+	[collectionDirs release];
 	if(writeTimer != nil)
 	{
 		[writeTimer invalidate];
@@ -509,6 +517,8 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	[ret removeObject:@"/CIFS"];
 	[ret removeObject:NSHomeDirectory()];
 	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	[ret addObjectsFromArray:collectionDirs];
+	[ret uniqueObjects];
 	[ret sortUsingSelector:@selector(compare:)];
 	return [ret autorelease];
 }
@@ -574,6 +584,22 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 {
 	[skipCollection setObject:[NSNumber numberWithBool:skip] forKey:collection];
 	[self writeMetaData];
+}
+
+- (void)addCollectionDirectory:(NSString *)dir
+{
+	if(![collectionDirs containsObject:dir])
+		[collectionDirs addObject:dir];
+}
+
+- (BOOL)isCollectionDirectory:(NSString *)dir
+{
+	return [collectionDirs containsObject:dir];
+}
+
+- (void)removeCollectionDirectory:(NSString *)dir
+{
+	[collectionDirs removeObject:dir];
 }
 
 @end
