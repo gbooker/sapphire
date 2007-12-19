@@ -21,6 +21,7 @@
 #import "SapphireMetaData.h"
 #import "SapphireLayerController.h"
 
+@protocol SapphireFileMetaDataProtocol;
 @class SapphireImporterDataMenu;
 
 /*!
@@ -36,7 +37,7 @@
  * @param metaData The file to import
  * @return YES if imported, NO otherwise
  */
-- (BOOL)importMetaData:(SapphireFileMetaData *)metaData;
+- (BOOL)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData;
 
 /*!
  * @brief Sets the importer's data menu
@@ -91,12 +92,13 @@
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller;
 @end
 
+
 /*!
  * @brief The importer UI
  *
  * This class creates the importer UI.  It handles all the user interaction and passes commands on to its subordinates.
  */
-@interface SapphireImporterDataMenu : SapphireLayerController <SapphireMetaDataScannerDelegate>
+@interface SapphireImporterDataMenu : SapphireLayerController <SapphireMetaDataScannerDelegate, SapphireImporterBackgroundProtocol>
 {
 	BRHeaderControl					*title;					/*!< @brief The title*/
 	BRButtonControl					*button;				/*!< @brief The button to press*/
@@ -115,6 +117,7 @@
 	float							updated ;				/*!< @brief The number of items with new data*/
 	BOOL							suspended;				/*!< @brief YES if import is suspended, NO otherwise*/
 	BOOL							canceled;				/*!< @brief YES if the import was cancelled, NO otherwise*/
+	BOOL							backgrounded;			/*!< @brief YES if the current file is backgrounded, NO otherwise*/
 	
 	id <SapphireImporter>			importer;				/*!< @brief The importer who does the dirty work*/
 }
@@ -144,6 +147,11 @@
  * @brief Resume the import process
  */
 - (void)resume;
+
+/*!
+ * @brief Say that the file's import is backgrounded
+ */
+- (void)itemImportBackgrounded;
 
 /*!
  * @brief Skip the next item in the queue

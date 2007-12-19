@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		F5B4186D0D0B29D800BDD361 /* Complete Sapphire */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F5B418A20D0B2A2200BDD361 /* Build configuration list for PBXAggregateTarget "Complete Sapphire" */;
+			buildPhases = (
+				F5B418EE0D0B2CA000BDD361 /* CopyFiles */,
+			);
+			dependencies = (
+				F5B418710D0B29DE00BDD361 /* PBXTargetDependency */,
+				F5B418730D0B29DE00BDD361 /* PBXTargetDependency */,
+			);
+			name = "Complete Sapphire";
+			productName = "Complete Sapphire";
+		};
 		FE7810640C56F08A0037779D /* Make SVN Rev */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = FE7810670C56F0B30037779D /* Build configuration list for PBXAggregateTarget "Make SVN Rev" */;
@@ -49,6 +62,9 @@
 		F56B74D60C3753E300E934AA /* NSString-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B74D50C3753E300E934AA /* NSString-Extensions.m */; };
 		F56B765E0C3837CE00E934AA /* SapphireShowChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */; };
 		F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */ = {isa = PBXBuildFile; fileRef = F56B77D60C3858B400E934AA /* DefaultPreview.png */; };
+		F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */; };
+		F5B418650D0B28A200BDD361 /* main_helper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418640D0B28A200BDD361 /* main_helper.m */; };
+		F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5B4185F0D0B288700BDD361 /* ImportHelper */; };
 		F5B8DEE90C8F85BB00489829 /* SapphireTVDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8DEE80C8F85BB00489829 /* SapphireTVDirectory.m */; };
 		F5C078C70CF1033C007C9A16 /* SapphireVirtualDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C078C60CF1033C007C9A16 /* SapphireVirtualDirectory.m */; };
 		F5C4F58B0C677C4D00C99092 /* SapphireAllImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */; };
@@ -98,6 +114,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = Sapphire;
+		};
+		F5B418720D0B29DE00BDD361 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5B4185E0D0B288700BDD361;
+			remoteInfo = ImportHelper;
+		};
+		F5B418740D0B29F000BDD361 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
+			remoteInfo = Sapphire;
+		};
 		F5FDA1C90CE282A800812CE5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -115,6 +152,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		F5B418EE0D0B2CA000BDD361 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Sapphire.frappliance/Contents/Resources;
+			dstSubfolderSpec = 16;
+			files = (
+				F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5FDA1990CE27CC000812CE5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -183,6 +230,10 @@
 		F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireShowChooser.m; sourceTree = "<group>"; };
 		F56B77D60C3858B400E934AA /* DefaultPreview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPreview.png; sourceTree = "<group>"; };
 		F585550E0C3D428F000C0448 /* Sapphire_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Sapphire_Prefix.pch; sourceTree = "<group>"; };
+		F5B418360D0B1EA100BDD361 /* SapphireImportHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireImportHelper.h; sourceTree = "<group>"; };
+		F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireImportHelper.m; sourceTree = "<group>"; };
+		F5B4185F0D0B288700BDD361 /* ImportHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ImportHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5B418640D0B28A200BDD361 /* main_helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_helper.m; sourceTree = "<group>"; };
 		F5B8DEE70C8F85BB00489829 /* SapphireTVDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTVDirectory.h; sourceTree = "<group>"; };
 		F5B8DEE80C8F85BB00489829 /* SapphireTVDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTVDirectory.m; sourceTree = "<group>"; };
 		F5C078C50CF1033C007C9A16 /* SapphireVirtualDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireVirtualDirectory.h; sourceTree = "<group>"; };
@@ -257,6 +308,13 @@
 				F56A19490C3170870022918E /* AppKit.framework in Frameworks */,
 				F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */,
 				F5185B410D1344D700712020 /* ExceptionHandling.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B4185D0D0B288700BDD361 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +411,7 @@
 			children = (
 				8D5B49B6048680CD000E48DA /* Sapphire.frappliance */,
 				F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */,
+				F5B4185F0D0B288700BDD361 /* ImportHelper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -434,6 +493,9 @@
 				38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */,
 				F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */,
 				F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */,
+				F5B418360D0B1EA100BDD361 /* SapphireImportHelper.h */,
+				F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */,
+				F5B418640D0B28A200BDD361 /* main_helper.m */,
 			);
 			name = FRAppliance;
 			sourceTree = "<group>";
@@ -532,6 +594,23 @@
 			productReference = 8D5B49B6048680CD000E48DA /* Sapphire.frappliance */;
 			productType = "com.apple.product-type.bundle";
 		};
+		F5B4185E0D0B288700BDD361 /* ImportHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5B418660D0B28A200BDD361 /* Build configuration list for PBXNativeTarget "ImportHelper" */;
+			buildPhases = (
+				F5B4185C0D0B288700BDD361 /* Sources */,
+				F5B4185D0D0B288700BDD361 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5B418750D0B29F000BDD361 /* PBXTargetDependency */,
+			);
+			name = ImportHelper;
+			productName = ImportHelper;
+			productReference = F5B4185F0D0B288700BDD361 /* ImportHelper */;
+			productType = "com.apple.product-type.tool";
+		};
 		F5FDA19E0CE27CDA00812CE5 /* CompatClasses */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F5FDA1A60CE27CF900812CE5 /* Build configuration list for PBXNativeTarget "CompatClasses" */;
@@ -562,9 +641,11 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				F5B4186D0D0B29D800BDD361 /* Complete Sapphire */,
 				8D5B49AC048680CD000E48DA /* Sapphire */,
 				FE7810640C56F08A0037779D /* Make SVN Rev */,
 				F5FDA19E0CE27CDA00812CE5 /* CompatClasses */,
+				F5B4185E0D0B288700BDD361 /* ImportHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -672,8 +753,17 @@
 				F5C078C70CF1033C007C9A16 /* SapphireVirtualDirectory.m in Sources */,
 				F51F4B050CFC8AB300BEBAD6 /* SapphireVirtualDirectoryLoading.m in Sources */,
 				F51F4B180CFC8C8C00BEBAD6 /* SapphireTextWithSpinnerController.m in Sources */,
+				F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */,
 				FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */,
 				F5FB82E40D18065F0018E4C9 /* NSArray-Extensions.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5B4185C0D0B288700BDD361 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5B418650D0B28A200BDD361 /* main_helper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +778,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F5B418710D0B29DE00BDD361 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D5B49AC048680CD000E48DA /* Sapphire */;
+			targetProxy = F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */;
+		};
+		F5B418730D0B29DE00BDD361 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5B4185E0D0B288700BDD361 /* ImportHelper */;
+			targetProxy = F5B418720D0B29DE00BDD361 /* PBXContainerItemProxy */;
+		};
+		F5B418750D0B29F000BDD361 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D5B49AC048680CD000E48DA /* Sapphire */;
+			targetProxy = F5B418740D0B29F000BDD361 /* PBXContainerItemProxy */;
+		};
 		F5FDA1CA0CE282A800812CE5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F5FDA19E0CE27CDA00812CE5 /* CompatClasses */;
@@ -715,7 +820,6 @@
 		1DEB913B08733D840010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
@@ -790,6 +894,65 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		F5B418610D0B288800BDD361 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ImportHelper;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5B418620D0B288800BDD361 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ImportHelper;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F5B4186E0D0B29D800BDD361 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Complete Sapphire";
+			};
+			name = Debug;
+		};
+		F5B4186F0D0B29D800BDD361 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Complete Sapphire";
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -889,6 +1052,24 @@
 			buildConfigurations = (
 				1DEB913F08733D840010E9CD /* Debug */,
 				1DEB914008733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5B418660D0B28A200BDD361 /* Build configuration list for PBXNativeTarget "ImportHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5B418610D0B288800BDD361 /* Debug */,
+				F5B418620D0B288800BDD361 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5B418A20D0B2A2200BDD361 /* Build configuration list for PBXAggregateTarget "Complete Sapphire" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5B4186E0D0B29D800BDD361 /* Debug */,
+				F5B4186F0D0B29D800BDD361 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

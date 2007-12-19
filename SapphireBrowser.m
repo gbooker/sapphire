@@ -41,9 +41,6 @@
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
-- (void)processFiles:(NSArray *)files;
-- (void)filesProcessed:(NSDictionary *)files;
-- (NSMutableDictionary *)metaDataForPath:(NSString *)path;
 - (void)setNewPredicate:(SapphirePredicate *)newPredicate;
 @end
 
@@ -185,7 +182,7 @@ static BOOL is10Version = NO;
     // always call super
     [super wasPushed];
 	/*Get metadata when we can*/
-	[metaData resumeDelayedImport];
+	[metaData resumeImport];
 }
 
 - (void) willBePopped
@@ -279,7 +276,7 @@ static BOOL is10Version = NO;
 		[[self stack] popController];
 	else
 		/*Resume importing now that we are up again*/
-		[metaData resumeDelayedImport];
+		[metaData resumeImport];
 	//Turn off the AC3 Passthrough hack
 	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
 	CFPreferencesAppSynchronize(A52_DOMIAN);
@@ -343,16 +340,17 @@ static BOOL is10Version = NO;
 		if(meta != nil)
 		{
 			fileCls=[meta fileClass] ;
+			BOOL rightTextSet;
 			if(fileCls==FILE_CLASS_TV_SHOW)
 			{
 				/*Display episode number if availble*/
 				int eps= [meta episodeNumber] ;
 				displayName=[meta episodeTitle] ;
 				if(eps>0)
+				{
 					[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps] forMenu:result];
-				else
-					/*Fallback to size*/
-					[SapphireFrontRowCompat setRightJustifiedText:[meta sizeString] forMenu:result];
+					rightTextSet = YES;
+				}
 			}
 			if(fileCls==FILE_CLASS_MOVIE)
 			{
@@ -365,20 +363,28 @@ static BOOL is10Version = NO;
 					/* This list is already filtered so all displayed movies will have a top250 stat */
 					[SapphireFrontRowCompat setRightJustifiedText:[meta movieStatsTop250] forMenu:result];
 					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
+					rightTextSet = YES;
 				}
 				else if([meta oscarsWon]>0)
 				{
 					[SapphireFrontRowCompat setRightJustifiedText:[meta movieStatsOscar] forMenu:result];
 					[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
+					rightTextSet = YES;
 				}
 				else if([meta imdbTop250]>0)
 				{
 					[SapphireFrontRowCompat setRightJustifiedText:[meta movieStatsTop250] forMenu:result];
 					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
+					rightTextSet = YES;
 				}
 			}
 			watched = [meta watched];
-			favorite = [meta favorite] ;
+			favorite = [meta favorite];
+			NSString *sizeString = [meta sizeString];
+			if(!rightTextSet && [sizeString length] > 1)
+				/*Fallback to size*/
+				[SapphireFrontRowCompat setRightJustifiedText:sizeString forMenu:result];
+
 		}
 	}
 	/*Utility*/
@@ -806,9 +812,6 @@ BOOL setupAudioOutput(int sampleRate)
 
 - (BOOL)brEventAction:(BREvent *)event
 {
-	/*Cancel imports on an action*/
-	[metaData resumeDelayedImport];
-	
 	BREventPageUsageHash hashVal = [event pageUsageHash];
 	if ([(BRControllerStack *)[self stack] peekController] != self)
 		hashVal = 0;

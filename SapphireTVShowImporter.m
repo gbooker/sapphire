@@ -450,7 +450,7 @@
 	[settings writeToFile:settingsPath atomically:YES];
 }
 
-- (BOOL) importMetaData:(SapphireFileMetaData *)metaData
+- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
@@ -505,6 +505,9 @@
 	NSString *show = [showTranslations objectForKey:[searchStr lowercaseString]];
 	if(show == nil)
 	{
+		if(dataMenu == nil)
+			/*There is no data menu, background import. So we can't ask user, skip*/
+			return NO;
 		/*Ask the user what show this is*/
 		NSArray *shows = [self searchResultsForSeries:searchStr];
 		/*Pause for the user's input*/

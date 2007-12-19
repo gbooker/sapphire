@@ -152,11 +152,42 @@ typedef enum {
 @end
 
 /*!
+ * @brief The importer Backgrounding protocol
+ *
+ * This protocol is designed for use with distributed objects.
+ */
+@protocol SapphireImporterBackgroundProtocol <NSObject>
+/*!
+ * @brief Tells the importer of a background import
+ *
+ * This is for use with distributed objects
+ */
+- (oneway void)informComplete:(BOOL)updated;
+@end
+
+/*!
+ * @brief The base metadata protocol
+ *
+ * This protocol is designed for use with distributed objects.
+ */
+@protocol SapphireMetaDataProtocol <NSObject>
+/*!
+ * @brief Returns the path of the current metadata
+ *
+ * All metadata has a path associated with it; this function returns the path for this one.
+ *
+ * @return The path
+ */
+- (NSString *)path;
+
+@end
+
+/*!
  * @brief The base metadata class
  *
  * This is the base class for all metadata.  All metadata is based upon this class.
  */
-@interface SapphireMetaData : NSObject {
+@interface SapphireMetaData : NSObject <SapphireMetaDataProtocol>{
 	NSMutableDictionary				*metaData;	/*!< @brief A basic dictionary which contains all persistent data*/
 	SapphireMetaData				*parent;	/*!< @brief The parent metadata (not retained)*/
 	NSString						*path;		/*!< @brief The path of this directory or file*/
@@ -201,15 +232,6 @@ typedef enum {
  * @return The metadata object
  */
 - (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
-
-/*!
- * @brief Returns the path of the current metadata
- *
- * All metadata has a path associated with it; this function returns the path for this one.
- *
- * @return The path
- */
-- (NSString *)path;
 
 /*!
  * @brief Sets the delegate for the metadata
@@ -380,7 +402,7 @@ typedef enum {
  *
  * This class is designed to be a directory, virtual or real.  It contains other directories and files.
  */
-@interface SapphireDirectoryMetaData : SapphireMetaData {
+@interface SapphireDirectoryMetaData : SapphireMetaData <SapphireImporterBackgroundProtocol>{
 	NSMutableDictionary			*metaFiles;				/*!< @brief The metadata persistent store for files (not retained)*/
 	NSMutableDictionary			*metaDirs;				/*!< @brief The metadata persistent store for directories (not retained)*/
 	
@@ -390,7 +412,7 @@ typedef enum {
 	NSMutableArray				*files;					/*!< @brief	File keys in sorted order*/
 	NSMutableArray				*directories;			/*!< @brief Directory keys in sorted order*/
 	
-	NSTimer						*importTimer;			/*!< @brief Timer to import data in this directory*/
+	int							importing;				/*!< @brief bit 0 is set if background importing of data, bit 1 if awaiting data*/
 	NSMutableArray				*importArray;			/*!< @brief Array of objects left to import*/
 	BOOL						scannedDirectory;		/*!< @brief YES if the directory has already been examined on disk, NO if just using cached information*/
 	
@@ -472,11 +494,11 @@ typedef enum {
 - (BOOL)pruneMetaData;
 
 /*!
- * @brief See if any files need to be updated
+ * @brief Update any files that need to be updated
  *
  * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.
  *
- * @return YES if any files need an update, NO otherwise
+ * @return YES if any files were updated, NO otherwise
  */
 - (BOOL)updateMetaData;
 
@@ -490,11 +512,6 @@ typedef enum {
  * @brief Resume the import process
  */
 - (void)resumeImport;
-
-/*!
- * @brief Delay the import process a while before starting again
- */
-- (void)resumeDelayedImport;
 
 /*!
  * @brief Get the metadata for some file or directory beneath this one
@@ -584,11 +601,77 @@ typedef enum {
 @end
 
 /*!
+ * @brief The metadata file protocol
+ *
+ * This protocol is designed for use with distributed objects.
+ */
+@protocol SapphireFileMetaDataProtocol <SapphireMetaDataProtocol>
+/*!
+ * @brief See if any files need to be updated
+ *
+ * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.
+ *
+ * @return YES if any files need an update, NO otherwise
+ */
+- (BOOL) needsUpdating;
+
+/*!
+ * @brief Adds File data read from the file
+ *
+ * @param fileMeta The new file metadata.
+ */
+- (oneway void)addFileData:(bycopy NSDictionary *)fileMeta;
+
+/*!
+ * @brief Returns the time of import from a source
+ *
+ * @param source The source to check
+ * @return The seconds since 1970 of the import
+ */
+- (long)importedTimeFromSource:(NSString *)source;
+
+/*!
+ * @brief Add data to import from a source
+ *
+ * This data will be combined in the combined info to display in the preview.
+ *
+ * @param newMeta The new metadata
+ * @param source The source we imported from
+ * @param modTime The modification time of the source
+ */
+- (oneway void)importInfo:(bycopy NSMutableDictionary *)newMeta fromSource:(bycopy NSString *)source withTime:(long)modTime;
+
+
+/*!
+ * @brief The file type
+ *
+ * @return The file type
+ */
+- (FileClass)fileClass;
+
+/*!
+ * @brief Sets the file type
+ *
+ * @param fileClass The file type
+ */
+- (void)setFileClass:(FileClass)fileClass;
+@end
+
+/*!
+ * @brief See if the file need to be updated and do so
+ *
+ * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.  If it does, the update is performed.  It is intended to only be used in distributed objects.
+ *
+ * @return YES if file was updated, NO otherwise
+ */
+BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file);
+
+/*!
  * @brief A metadata file
  *
  * This class is designed to be a file.  It contains information about a specific file.
  */
-@interface SapphireFileMetaData : SapphireMetaData {
+@interface SapphireFileMetaData : SapphireMetaData <SapphireFileMetaDataProtocol> {
 	NSDictionary		*combinedInfo;	/*!< @brief The combined preview info from multiple sources*/
 }
 
@@ -602,11 +685,11 @@ typedef enum {
 - (NSString *)coverArtPath;
 
 /*!
- * @brief See if any files need to be updated
+ * @brief See if the file need to be updated and do so
  *
- * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.
+ * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.  If it does, the update is performed.
  *
- * @return YES if any files need an update, NO otherwise
+ * @return YES if file was updated, NO otherwise
  */
 - (BOOL) updateMetaData;
 
@@ -647,30 +730,11 @@ typedef enum {
 - (void)setFavorite:(BOOL)favorite;
 
 /*!
- * @brief Returns the time of import from a source
- *
- * @param source The source to check
- * @return The seconds since 1970 of the import
- */
-- (long)importedTimeFromSource:(NSString *)source;
-
-/*!
  * @brief Sets the file to re-import from source
  *
  * @param source The source to re-import
  */
 - (void)setToImportFromSource:(NSString *)source;
-
-/*!
- * @brief Add data to import from a source
- *
- * This data will be combined in the combined info to display in the preview.
- *
- * @param newMeta The new metadata
- * @param source The source we imported from
- * @param modTime The modification time of the source
- */
-- (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime;
 
 /*!
  * @brief Clear the metadata
@@ -692,20 +756,6 @@ typedef enum {
  * @param resumeTime The number of seconds from the beginning of the file to resume
  */
 - (void)setResumeTime:(unsigned int)resumeTime;
-
-/*!
- * @brief The file type
- *
- * @return The file type
- */
-- (FileClass)fileClass;
-
-/*!
- * @brief Sets the file type
- *
- * @param fileClass The file type
- */
-- (void)setFileClass:(FileClass)fileClass;
 
 /*!
  * @brief The file this has been joined to

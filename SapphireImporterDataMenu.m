@@ -22,6 +22,7 @@
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
 #import "SapphireFrontRowCompat.h"
+#import "SapphireImportHelper.h"
 #import "SapphireApplianceController.h"
 
 @interface SapphireImporterDataMenu (private)
@@ -275,14 +276,14 @@
 		[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
 		
 		current++ ;
-		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 		/*Update the imported count*/
-		if([self doImport])
+		if([self doImport] && !backgrounded)
 			updated++;		
 		
 		/*Check for a suspend and reimport afterwards*/
-		if(suspended)
+		if(suspended || backgrounded)
 		{
+			backgrounded = NO;
 			current--;
 			return;
 		}
@@ -290,10 +291,11 @@
 		/*Start with the first item*/
 		[importItems removeObjectAtIndex:0];
 	}
+	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 	[bar setPercentage:current/max * 100.0f];
 	
 	/*Check for completion*/
-	if(![importItems count])
+	if(current == max)
 	{
 		[importTimer invalidate];
 		importTimer = nil;
@@ -319,6 +321,7 @@
 	[importTimer invalidate];
 	importTimer = nil;
 	[importItems removeAllObjects];
+	[[SapphireImportHelper sharedHelper] removeObjectsWithInform:self];
 	/*Reset the display and write data*/
 	[self resetUIElements];
 	[metaCollection writeMetaData];
@@ -339,6 +342,21 @@
 	/*Resume*/
 	suspended = NO;
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+}
+
+- (oneway void)informComplete:(BOOL)fileUpdated
+{
+	if(fileUpdated)
+		updated++;
+	current++;
+	[self importNextItem:nil];
+}
+
+- (void)itemImportBackgrounded
+{
+	if([importItems count])
+		[importItems removeObjectAtIndex:0];
+	backgrounded = YES;
 }
 
 - (void)skipNextItem

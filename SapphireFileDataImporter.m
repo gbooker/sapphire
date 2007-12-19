@@ -22,6 +22,7 @@
 #import "SapphireMetaData.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "SapphireImportHelper.h"
 
 //Single Attributes
 #define MEDIA_TVSHOW_XML_QUERY		@"/media[@type='TV Show']/text()"
@@ -89,11 +90,20 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return self;
 }
 
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
+- (void) dealloc
 {
+	[dataMenu release];
+	[super dealloc];
 }
 
-- (BOOL) importMetaData:(SapphireFileMetaData *)metaData
+
+- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
+{
+	[dataMenu release];
+	dataMenu = [theDataMenu retain];
+}
+
+- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	/*Initialization*/
 	BOOL ret = NO;
@@ -120,8 +130,11 @@ static NSDictionary *xmlMultiAttributes = nil;
 		}
 	}
 	/*Import file if necessary*/
-	if ([metaData updateMetaData])
-		ret = YES;
+	if([metaData needsUpdating])
+	{
+		[[SapphireImportHelper sharedHelper] importFileData:metaData inform:dataMenu];
+		[dataMenu itemImportBackgrounded];
+	}
 	/*Return whether we imported or not*/
 	return ret;
 }

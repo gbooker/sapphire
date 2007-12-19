@@ -40,7 +40,7 @@
 	[super dealloc];
 }
 
-- (BOOL)importMetaData:(SapphireFileMetaData *)metaData
+- (BOOL)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	BOOL ret = NO;
 	NSEnumerator *importEnum = [importers objectEnumerator];

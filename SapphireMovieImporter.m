@@ -618,7 +618,7 @@
 }
 
 /* - (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData */
-- (BOOL) importMetaData:(SapphireFileMetaData *)metaData 
+- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData 
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
@@ -646,6 +646,9 @@
 	NSMutableDictionary *dict=[movieTranslations objectForKey:[fileName lowercaseString]];
 	if(dict == nil)
 	{
+		if(dataMenu == nil)
+		/*There is no data menu, background import. So we can't ask user, skip*/
+			return NO;
 		/*Ask the user what movie this is*/
 		NSArray *movies = [self searchResultsForMovie:fileName];
 		/* No need to prompt the user for an empty set */
@@ -676,6 +679,9 @@
 	autoSelectPoster=	[dict objectForKey:AUTO_SELECT_POSTER_KEY] ;
 	if(!selectedPoster)
 	{
+		if(dataMenu == nil)
+		/*There is no data menu, background import. So we can't ask user, skip*/
+			return NO;
 		/* Posters will be downloaded, let the user choose one */
 		[SapphireFrontRowCompat renderScene:[dataMenu scene]];
 		NSArray *posters=[dict objectForKey:IMP_POSTERS_KEY];

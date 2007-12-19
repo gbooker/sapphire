@@ -25,6 +25,7 @@
 #import "SapphireSettings.h"
 #import "SapphirePredicates.h"
 #import "SapphireMetaDataScanner.h"
+#import "SapphireImportHelper.h"
 #import "NSArray-Extensions.h"
 
 //Structure Specific Keys
@@ -668,9 +669,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (void)dealloc
 {
 	[loadTimer invalidate];
-	[importTimer invalidate];
 	[self postAllFilesRemoved];
-	[importTimer invalidate];
 	[importArray release];
 	[cachedMetaDirs release];
 	[cachedMetaFiles release];
@@ -705,8 +704,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[cachedMetaFiles removeAllObjects];
 	[importArray release];
 	importArray = nil;
-	[importTimer invalidate];
-	importTimer = nil;
+	importing = NO;
 	scannedDirectory = NO;
 }
 
@@ -1068,12 +1066,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		else
 		{
 			/*If file has been modified since last import, add to update list*/
-			NSString *filePath = [path stringByAppendingPathComponent:fileName];
-			struct stat sb;
-			memset(&sb, 0, sizeof(struct stat));
-			stat([filePath fileSystemRepresentation], &sb);
-			long modTime = sb.st_mtimespec.tv_sec;
-			if([[fileMeta objectForKey:MODIFIED_KEY] intValue] != modTime || [[fileMeta objectForKey:META_VERSION_KEY] intValue] != META_FILE_VERSION)
+			SapphireFileMetaData *file = [self metaDataForFile:fileName];
+			if([file needsUpdating])
 				[importArray addObject:fileName];
 		}
 	}
@@ -1081,58 +1075,43 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	return NO;
 }
 
-/*Timer function to process a single file*/
-- (void)processFiles:(NSTimer *)timer
+/*function to process a single file*/
+- (void)processNextFile
 {
+	if(![importArray count])
+		return;
 	NSString *file = [importArray objectAtIndex:0];
 	
 	/*Get the file and update it*/
-	[[self metaDataForFile:file] updateMetaData];
-	
+	importing |= 2;
+	[[SapphireImportHelper sharedHelper] importFileData:[self metaDataForFile:file] inform:self];
+}
+
+- (oneway void)informComplete:(BOOL)updated
+{
 	/*Write the file info out and tell delegate we updated*/
 	[self writeMetaData];
+	NSString *file = [importArray objectAtIndex:0];
 	[delegate updateCompleteForFile:file];
 	
 	/*Remove from list and redo timer*/
 	[importArray removeObjectAtIndex:0];
-	[self resumeImport];
+	if(importing & 1)
+		[self processNextFile];
+	else
+		importing = 0;
 }
 
 - (void)cancelImport
 {
-	/*Kill the timer*/
-	[importTimer invalidate];
-	importTimer = nil;
+	importing &= ~1;
 }
 
 - (void)resumeImport
 {
-	/*Sanity check*/
-	[importTimer invalidate];
-	/*Check if we need to import*/
-	if([importArray count])
-		/*Wait 1.1 seconds and do an import*/
-		importTimer = [NSTimer scheduledTimerWithTimeInterval:1.1 target:self selector:@selector(processFiles:) userInfo:nil repeats:NO];
-	else
-	{
-		/*No import, so clean up*/
-		importTimer = nil;
-		[importArray release];
-		importArray = nil;
-	}
-}
-
-- (void)resumeDelayedImport
-{
-	/*Sanity check*/
-	[importTimer invalidate];
-	/*Check if we need to import*/
-	if([importArray count])
-		/*Wait 5 seconds before starting the import process*/
-		importTimer = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(resumeImport) userInfo:nil repeats:NO];
-	else
-		/*No import, clean up*/
-		importTimer = nil;
+	importing |= 1;
+	if(!(importing & 2))
+		[self processNextFile];
 }
 
 - (SapphireMetaData *)metaDataForSubPath:(NSString *)subPath
@@ -1533,12 +1512,11 @@ static NSArray *displayedMetaDataOrder = nil;
 	return nil;
 }
 
-- (BOOL) updateMetaData
+- (BOOL)needsUpdating
 {
 	/*Check modified date*/
 	NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
 	int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
-	BOOL updated =FALSE;
 	
 	if(props == nil)
 		/*No file*/
@@ -1546,11 +1524,29 @@ static NSArray *displayedMetaDataOrder = nil;
 	
 	/*Has it been modified since last import?*/
 	if(modTime != [self modified] || [[metaData objectForKey:META_VERSION_KEY] intValue] != META_FILE_VERSION)
+		return YES;
+	return NO;
+}
+
+- (oneway void)addFileData:(bycopy NSDictionary *)fileMeta
+{
+	/*Add the metadata*/
+	[metaData addEntriesFromDictionary:fileMeta];
+	[self combinedDataChanged];	
+}
+
+BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
+{
+	BOOL updated =FALSE;
+	if([file needsUpdating])
 	{
 		/*We did an update*/
 		updated=TRUE ;
 		NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
+		NSString *path = [file path];
 		
+		NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+		int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
 		/*Set modified, size, and version*/
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:MODIFIED_KEY];
 		[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
@@ -1626,11 +1622,14 @@ static NSArray *displayedMetaDataOrder = nil;
 				} 
 			} 
 		}
-		/*Add the metadata*/
-		[metaData addEntriesFromDictionary:fileMeta];
-		[self combinedDataChanged];
+		[file addFileData:fileMeta];
 	}
 	return updated ;
+}
+
+- (BOOL)updateMetaData
+{
+	return updateMetaData(self);
 }
 
 - (int)modified
@@ -1674,7 +1673,7 @@ static NSArray *displayedMetaDataOrder = nil;
 	}
 }
 
-- (void)importInfo:(NSMutableDictionary *)newMeta fromSource:(NSString *)source withTime:(long)modTime
+- (oneway void)importInfo:(bycopy NSMutableDictionary *)newMeta fromSource:(bycopy NSString *)source withTime:(long)modTime
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	NSDictionary *info = [NSDictionary dictionaryWithObject:source forKey:META_DATA_FILE_INFO_KIND];
