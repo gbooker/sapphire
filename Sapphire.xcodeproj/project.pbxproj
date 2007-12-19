@@ -92,6 +92,7 @@
 		FEC18C330CF7D99F001DCAB9 /* FastSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = FEC18C310CF7D99F001DCAB9 /* FastSwitch.png */; };
 		FECB26DA0D012CA700C7C6D5 /* AMPAS_Oscar_H.png in Resources */ = {isa = PBXBuildFile; fileRef = FECB26D90D012CA700C7C6D5 /* AMPAS_Oscar_H.png */; };
 		FECB26EA0D01328900C7C6D5 /* video_H.png in Resources */ = {isa = PBXBuildFile; fileRef = FECB26E90D01328900C7C6D5 /* video_H.png */; };
+		FECE731F0D18C1C500ED6317 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = FECE731E0D18C1C500ED6317 /* LICENSE.txt */; };
 		FED50A020CFB401F006982D2 /* AMPAS_Oscar.png in Resources */ = {isa = PBXBuildFile; fileRef = FED50A010CFB401F006982D2 /* AMPAS_Oscar.png */; };
 		FED5D2D60CD6A205000E9588 /* PH.png in Resources */ = {isa = PBXBuildFile; fileRef = FED5D2D50CD6A205000E9588 /* PH.png */; };
 /* End PBXBuildFile section */
@@ -241,6 +242,7 @@
 		FEC18C310CF7D99F001DCAB9 /* FastSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FastSwitch.png; sourceTree = "<group>"; };
 		FECB26D90D012CA700C7C6D5 /* AMPAS_Oscar_H.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AMPAS_Oscar_H.png; sourceTree = "<group>"; };
 		FECB26E90D01328900C7C6D5 /* video_H.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_H.png; sourceTree = "<group>"; };
+		FECE731E0D18C1C500ED6317 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		FED50A010CFB401F006982D2 /* AMPAS_Oscar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AMPAS_Oscar.png; sourceTree = "<group>"; };
 		FED5D2D50CD6A205000E9588 /* PH.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PH.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -297,6 +299,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FECE731E0D18C1C500ED6317 /* LICENSE.txt */,
 				FECB26E90D01328900C7C6D5 /* video_H.png */,
 				FECB26D90D012CA700C7C6D5 /* AMPAS_Oscar_H.png */,
 				FE7856150CFC0B3900F56C1A /* Audio.png */,
@@ -598,6 +601,7 @@
 				FE7856180CFC0B3900F56C1A /* Video.png in Resources */,
 				FECB26DA0D012CA700C7C6D5 /* AMPAS_Oscar_H.png in Resources */,
 				FECB26EA0D01328900C7C6D5 /* video_H.png in Resources */,
+				FECE731F0D18C1C500ED6317 /* LICENSE.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
