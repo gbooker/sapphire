@@ -452,6 +452,7 @@
 
 - (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
+	NSLog(@"TV Import of %@", [metaData path]);
 	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
@@ -495,6 +496,7 @@
 		scanString = [tempStr autorelease];
 	}
 	
+	NSLog(@"TV Import checking regex");
 	/*See if we found a match*/
 	if(index == NSNotFound)
 		return NO;
@@ -503,6 +505,7 @@
 	NSString *searchStr = [fileName substringToIndex:index];
 	/*Check to see if we know this title*/
 	NSString *show = [showTranslations objectForKey:[searchStr lowercaseString]];
+	NSLog(@"TV Import checking show %@", show);
 	if(show == nil)
 	{
 		if(dataMenu == nil)
@@ -524,6 +527,7 @@
 		return NO;
 	}
 	
+	NSLog(@"TV Import checking episode");
 	int season = 0;
 	int ep = 0;
 	/*Get the season*/
@@ -559,6 +563,7 @@
 	if(!info)
 		return NO;
 		
+	NSLog(@"TV Import checking preview");
 	/* Lets process the cover art directory structure */
 	NSString * previewArtPath=[NSString stringWithFormat:@"%@/@TV/%@/%@",
 									[SapphireMetaData collectionArtPath],
@@ -591,6 +596,7 @@
 	[metaData importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_TV_SHOW];
 	
+	NSLog(@"TV Import done");
 	/*We imported something*/
 	return YES;
 }

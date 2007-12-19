@@ -1084,7 +1084,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	
 	/*Get the file and update it*/
 	importing |= 2;
-	[[SapphireImportHelper sharedHelper] importFileData:[self metaDataForFile:file] inform:self];
+	[[SapphireImportHelper sharedHelper] importAllData:[self metaDataForFile:file] inform:self];
 }
 
 - (oneway void)informComplete:(BOOL)updated
@@ -1093,6 +1093,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self writeMetaData];
 	NSString *file = [importArray objectAtIndex:0];
 	[delegate updateCompleteForFile:file];
+	NSLog(@"Read data for %@", file);
 	
 	/*Remove from list and redo timer*/
 	[importArray removeObjectAtIndex:0];

@@ -21,6 +21,9 @@
 #import "SapphireImportHelper.h"
 #import "SapphireMetaData.h"
 #import "SapphireAllImporter.h"
+#import "SapphireFileDataImporter.h"
+#import "SapphireTVShowImporter.h"
+#import "SapphireMovieImporter.h"
 
 @interface SapphireImportFile : NSObject <SapphireImportFileProtocol>{
 	id <SapphireFileMetaDataProtocol>		file;
@@ -76,7 +79,13 @@ static SapphireImportHelper *shared = nil;
 	if(!self)
 		return nil;
 	
-	allImporter = [[SapphireAllImporter alloc] init];
+	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
+	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
+	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
+	allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:tvImp,movImp,fileImp,nil]];
+	[fileImp release];
+	[tvImp release];
+	[movImp release];
 	
 	return self;
 }

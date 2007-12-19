@@ -57,7 +57,8 @@ static NSArray *predicates = nil;
 	[predicates makeObjectsPerformSelector:@selector(release)];
 	if([SapphireFrontRowCompat usingFrontRow])
 	{
-		NSString *compatPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingString:@"/Contents/Frameworks/CompatClasses.framework"];
+		NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath] ;
+		NSString *compatPath = [myBundlePath stringByAppendingString:@"/Contents/Frameworks/CompatClasses.framework"];
 		NSBundle *compat = [NSBundle bundleWithPath:compatPath];
 		[compat load];
 	}
@@ -180,6 +181,14 @@ static NSArray *predicates = nil;
 	[settings setListTitle:					BRLocalizedString(@" Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
+	if([SapphireFrontRowCompat usingFrontRow])
+	{
+		NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath] ;
+		NSString *onlyPath = [myBundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/LeopardOnly.framework"];
+		NSBundle *only = [NSBundle bundleWithPath:onlyPath];
+		Class onlyClass = [only principalClass];
+		[[onlyClass alloc] initWithCollection:metaCollection];
+	}
 	
 	return self;
 }

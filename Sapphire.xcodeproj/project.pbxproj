@@ -12,10 +12,12 @@
 			buildConfigurationList = F5B418A20D0B2A2200BDD361 /* Build configuration list for PBXAggregateTarget "Complete Sapphire" */;
 			buildPhases = (
 				F5B418EE0D0B2CA000BDD361 /* CopyFiles */,
+				F50044180D19A286003FEA08 /* CopyFiles */,
 			);
 			dependencies = (
 				F5B418710D0B29DE00BDD361 /* PBXTargetDependency */,
 				F5B418730D0B29DE00BDD361 /* PBXTargetDependency */,
+				F50044120D19A242003FEA08 /* PBXTargetDependency */,
 			);
 			name = "Complete Sapphire";
 			productName = "Complete Sapphire";
@@ -39,6 +41,11 @@
 		38FAFC320C012A7800853CFE /* SapphireAppliance.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */; };
 		38FAFC330C012A7800853CFE /* SapphireBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC310C012A7800853CFE /* SapphireBrowser.m */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		F500400B0D1998B4003FEA08 /* SapphireLeopardOnly.h in Headers */ = {isa = PBXBuildFile; fileRef = F50040090D1998B4003FEA08 /* SapphireLeopardOnly.h */; };
+		F500400C0D1998B4003FEA08 /* SapphireLeopardOnly.m in Sources */ = {isa = PBXBuildFile; fileRef = F500400A0D1998B4003FEA08 /* SapphireLeopardOnly.m */; };
+		F50040100D1998FA003FEA08 /* SapphireLeopardFileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F500400E0D1998FA003FEA08 /* SapphireLeopardFileEvents.h */; };
+		F50040110D1998FA003FEA08 /* SapphireLeopardFileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */; };
+		F50044160D19A268003FEA08 /* LeopardOnly.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5003FF90D19980B003FEA08 /* LeopardOnly.framework */; };
 		F5185B410D1344D700712020 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5185B400D1344D700712020 /* ExceptionHandling.framework */; };
 		F51BFEFF0C8CB85D00709A5E /* SapphireCollectionSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFEFE0C8CB85D00709A5E /* SapphireCollectionSettings.m */; };
 		F51DCDB90C30AE010046F25E /* SapphireVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */; };
@@ -114,6 +121,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F50044110D19A242003FEA08 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5003FF80D19980A003FEA08 /* LeopardOnly */;
+			remoteInfo = LeopardOnly;
+		};
 		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -152,6 +166,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		F50044180D19A286003FEA08 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Sapphire.frappliance/Contents/Frameworks;
+			dstSubfolderSpec = 16;
+			files = (
+				F50044160D19A268003FEA08 /* LeopardOnly.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5B418EE0D0B2CA000BDD361 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -187,6 +211,12 @@
 		38FAFC310C012A7800853CFE /* SapphireBrowser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireBrowser.m; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Sapphire.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Sapphire.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		F5003FF90D19980B003FEA08 /* LeopardOnly.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeopardOnly.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5003FFA0D19980B003FEA08 /* LeopardOnly-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LeopardOnly-Info.plist"; sourceTree = "<group>"; };
+		F50040090D1998B4003FEA08 /* SapphireLeopardOnly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireLeopardOnly.h; sourceTree = "<group>"; };
+		F500400A0D1998B4003FEA08 /* SapphireLeopardOnly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLeopardOnly.m; sourceTree = "<group>"; };
+		F500400E0D1998FA003FEA08 /* SapphireLeopardFileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireLeopardFileEvents.h; sourceTree = "<group>"; };
+		F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLeopardFileEvents.m; sourceTree = "<group>"; };
 		F5185B400D1344D700712020 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		F51BFEFD0C8CB85D00709A5E /* SapphireCollectionSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCollectionSettings.h; sourceTree = "<group>"; };
 		F51BFEFE0C8CB85D00709A5E /* SapphireCollectionSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireCollectionSettings.m; sourceTree = "<group>"; };
@@ -311,6 +341,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5003FF70D19980A003FEA08 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5B4185D0D0B288700BDD361 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -338,6 +375,7 @@
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 				F5FD9F240CE27BD600812CE5 /* CompatClasses-Info.plist */,
+				F5003FFA0D19980B003FEA08 /* LeopardOnly-Info.plist */,
 			);
 			name = ApplianceBase;
 			sourceTree = "<group>";
@@ -401,6 +439,7 @@
 				F56B6D910C34714600E934AA /* FRAppliance */,
 				F56B74D30C3753C100E934AA /* Extensions */,
 				F5657BDA0CD637EC0053869E /* Compatibility Classes */,
+				F50040000D199848003FEA08 /* Leopard */,
 				F585550E0C3D428F000C0448 /* Sapphire_Prefix.pch */,
 			);
 			name = Classes;
@@ -412,6 +451,7 @@
 				8D5B49B6048680CD000E48DA /* Sapphire.frappliance */,
 				F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */,
 				F5B4185F0D0B288700BDD361 /* ImportHelper */,
+				F5003FF90D19980B003FEA08 /* LeopardOnly.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -423,6 +463,17 @@
 				3834DF340C031FDC009BE46D /* BackRowUtils.h */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		F50040000D199848003FEA08 /* Leopard */ = {
+			isa = PBXGroup;
+			children = (
+				F500400E0D1998FA003FEA08 /* SapphireLeopardFileEvents.h */,
+				F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */,
+				F50040090D1998B4003FEA08 /* SapphireLeopardOnly.h */,
+				F500400A0D1998B4003FEA08 /* SapphireLeopardOnly.m */,
+			);
+			name = Leopard;
 			sourceTree = "<group>";
 		};
 		F5657BDA0CD637EC0053869E /* Compatibility Classes */ = {
@@ -563,6 +614,15 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		F5003FF40D19980A003FEA08 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F500400B0D1998B4003FEA08 /* SapphireLeopardOnly.h in Headers */,
+				F50040100D1998FA003FEA08 /* SapphireLeopardFileEvents.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5FDA19A0CE27CDA00812CE5 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -593,6 +653,24 @@
 			productName = Sapphire;
 			productReference = 8D5B49B6048680CD000E48DA /* Sapphire.frappliance */;
 			productType = "com.apple.product-type.bundle";
+		};
+		F5003FF80D19980A003FEA08 /* LeopardOnly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5003FFD0D19980B003FEA08 /* Build configuration list for PBXNativeTarget "LeopardOnly" */;
+			buildPhases = (
+				F5003FF40D19980A003FEA08 /* Headers */,
+				F5003FF50D19980A003FEA08 /* Resources */,
+				F5003FF60D19980A003FEA08 /* Sources */,
+				F5003FF70D19980A003FEA08 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LeopardOnly;
+			productName = LeopardOnly;
+			productReference = F5003FF90D19980B003FEA08 /* LeopardOnly.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 		F5B4185E0D0B288700BDD361 /* ImportHelper */ = {
 			isa = PBXNativeTarget;
@@ -646,6 +724,7 @@
 				FE7810640C56F08A0037779D /* Make SVN Rev */,
 				F5FDA19E0CE27CDA00812CE5 /* CompatClasses */,
 				F5B4185E0D0B288700BDD361 /* ImportHelper */,
+				F5003FF80D19980A003FEA08 /* LeopardOnly */,
 			);
 		};
 /* End PBXProject section */
@@ -683,6 +762,13 @@
 				FECB26DA0D012CA700C7C6D5 /* AMPAS_Oscar_H.png in Resources */,
 				FECB26EA0D01328900C7C6D5 /* video_H.png in Resources */,
 				FECE731F0D18C1C500ED6317 /* LICENSE.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5003FF50D19980A003FEA08 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,6 +845,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5003FF60D19980A003FEA08 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F500400C0D1998B4003FEA08 /* SapphireLeopardOnly.m in Sources */,
+				F50040110D1998FA003FEA08 /* SapphireLeopardFileEvents.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5B4185C0D0B288700BDD361 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -778,6 +873,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		F50044120D19A242003FEA08 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5003FF80D19980A003FEA08 /* LeopardOnly */;
+			targetProxy = F50044110D19A242003FEA08 /* PBXContainerItemProxy */;
+		};
 		F5B418710D0B29DE00BDD361 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 8D5B49AC048680CD000E48DA /* Sapphire */;
@@ -894,6 +994,60 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+		F5003FFB0D19980B003FEA08 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "LeopardOnly-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LeopardOnly;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5003FFC0D19980B003FEA08 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = "LeopardOnly-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LeopardOnly;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -1052,6 +1206,15 @@
 			buildConfigurations = (
 				1DEB913F08733D840010E9CD /* Debug */,
 				1DEB914008733D840010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5003FFD0D19980B003FEA08 /* Build configuration list for PBXNativeTarget "LeopardOnly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5003FFB0D19980B003FEA08 /* Debug */,
+				F5003FFC0D19980B003FEA08 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
