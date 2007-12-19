@@ -128,7 +128,6 @@ static NSArray *predicates = nil;
 	else
 	{
 		NSArray *addrs = [SapphireFrontRowCompat callStackReturnAddressesForException:e];
-		NSLog(@"Got addrs: %@", addrs);
 		int i, count = [addrs count];
 		NSMutableDictionary *mapping = [NSMutableDictionary dictionary];
 		for(i=0; i<count; i++)
@@ -187,7 +186,7 @@ static NSArray *predicates = nil;
 		NSString *onlyPath = [myBundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/LeopardOnly.framework"];
 		NSBundle *only = [NSBundle bundleWithPath:onlyPath];
 		Class onlyClass = [only principalClass];
-		[[onlyClass alloc] initWithCollection:metaCollection];
+		leoOnly = [[onlyClass alloc] initWithCollection:metaCollection];
 	}
 	
 	return self;
@@ -195,6 +194,7 @@ static NSArray *predicates = nil;
 
 - (void)dealloc
 {
+	[leoOnly release];
 	[names release];
 	[controllers release];
 	[masterNames release];

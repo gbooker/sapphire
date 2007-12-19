@@ -114,6 +114,13 @@ typedef enum {
  * @param file Filename to the file which completed
  */
 - (void)updateCompleteForFile:(NSString *)file;
+
+/*!
+ * @brief The directory contents changed, update display
+ *
+ * A background import can add or remove files from a directory.  The delegate is informed that this has happened so it can update its UI or some other action
+ */
+- (void)directoryContentsChanged;
 @end
 
 /*!

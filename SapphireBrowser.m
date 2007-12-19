@@ -103,6 +103,10 @@ static BOOL is10Version = NO;
 {
 	/*Tell the metadata to get new data*/
 	[metaData reloadDirectoryContents];
+}
+
+- (void)directoryContentsChanged
+{
 	/*Flush our cache*/
 	[_names removeAllObjects];
 	[items removeAllObjects];

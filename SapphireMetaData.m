@@ -788,8 +788,8 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 		[self writeMetaData];
 	/*Mark directory as scanned*/
 	scannedDirectory = YES;
+	[delegate directoryContentsChanged];
 }
-
 
 - (NSString *)coverArtPathUpToParents:(int)parents
 {
@@ -1093,7 +1093,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self writeMetaData];
 	NSString *file = [importArray objectAtIndex:0];
 	[delegate updateCompleteForFile:file];
-	NSLog(@"Read data for %@", file);
 	
 	/*Remove from list and redo timer*/
 	[importArray removeObjectAtIndex:0];

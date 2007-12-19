@@ -39,8 +39,8 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	scannedDirectory = YES;
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(startedLoading:) name:META_DATA_FILE_INFO_STARTED_LOADING object:nil];
-	[nc addObserver:self selector:@selector(finishedLoading:) name:META_DATA_FILE_INFO_FINISHED_LOADING object:nil];
+	[nc addObserver:self selector:@selector(startedLoading) name:META_DATA_FILE_INFO_STARTED_LOADING object:nil];
+	[nc addObserver:self selector:@selector(finishedLoading) name:META_DATA_FILE_INFO_FINISHED_LOADING object:nil];
 	
 	return self;
 }
@@ -63,6 +63,12 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	[cachedMetaDirs removeAllObjects];
 	[reloadTimer invalidate];
 	reloadTimer = nil;
+	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(completeReloadOfDirectoryContents) userInfo:nil repeats:NO];
+}
+
+- (void)completeReloadOfDirectoryContents
+{
+	[delegate directoryContentsChanged];
 }
 
 - (void)setReloadTimer
@@ -149,12 +155,12 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	return !loading && reloadTimer == nil;
 }
 
-- (void)startedLoading:(NSNotification *)note
+- (void)startedLoading
 {
 	loading = YES;
 }
 
-- (void)finishedLoading:(NSNotification *)note
+- (void)finishedLoading
 {
 	if(loading == NO)
 		//Already handled
@@ -187,16 +193,16 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	reloadTimer = nil;
 }
 
-- (void)finishedLoading:(NSNotification *)note
+- (void)finishedLoading
 {
 	NSEnumerator *keyEnum = [directory keyEnumerator];
 	NSString *key = nil;
 	while((key = [keyEnum nextObject]) != nil)
 	{
 		SapphireVirtualDirectory *dir = [directory objectForKey:key];
-		[dir finishedLoading:note];
+		[dir finishedLoading];
 	}
-	[super finishedLoading:note];
+	[super finishedLoading];
 }
 
 - (BOOL)addFile:(SapphireFileMetaData *)file toKey:(NSString *)key withChildClass:(Class)childClass
@@ -206,6 +212,8 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	if(child == nil)
 	{
 		child = [[childClass alloc] initWithParent:self path:[[self path] stringByAppendingPathComponent:key]];
+		if(loading)
+			[child startedLoading];
 		[directory setObject:child forKey:key];
 		[child release];
 		added = YES;

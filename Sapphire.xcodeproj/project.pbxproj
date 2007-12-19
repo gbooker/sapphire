@@ -125,7 +125,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F5003FF80D19980A003FEA08 /* LeopardOnly */;
+			remoteGlobalIDString = F5003FF80D19980A003FEA08;
 			remoteInfo = LeopardOnly;
 		};
 		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {

@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
 	NSBundle *bundle = [NSBundle bundleWithPath:path];
 	[bundle load];
 	
-	NSLog(@"Helper started");
 	SapphireImportHelperClient *help = [[NSClassFromString(@"SapphireImportHelperClient") alloc] init];
 	[help startChild];
 	

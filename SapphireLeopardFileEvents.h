@@ -24,6 +24,7 @@
 
 @interface SapphireLeopardFileEvents : NSObject {
 	SapphireMetaDataCollection		*collection;
+	FSEventStreamRef				stream;
 }
 - (id)initWithCollection:(SapphireMetaDataCollection *)coll;
 @end

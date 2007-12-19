@@ -19,7 +19,6 @@
  */
 
 #import "SapphireLeopardFileEvents.h"
-#import <CoreServices/CoreServices.h>
 #import "SapphireMetaData.h"
 
 @interface SapphireLeopardFileEvents (private)
@@ -34,7 +33,6 @@ static void fileStreamCallback(ConstFSEventStreamRef stream, void *context, size
 	NSArray *paths = (NSArray *)eventPaths;
 	for(i=0; i<numEvents; i++)
 	{
-		NSLog(@"Got %llu path %@ flag %lu", eventIds[i], [paths objectAtIndex:i], eventFlags[i]);
 		[(SapphireLeopardFileEvents *)context reloadDir:[paths objectAtIndex:i]];
 	}
 }
@@ -54,16 +52,18 @@ static void fileStreamCallback(ConstFSEventStreamRef stream, void *context, size
 	context.retain = NULL;
 	context.release = NULL;
 	context.copyDescription = NULL;
-	FSEventStreamRef stream = FSEventStreamCreate(NULL, &fileStreamCallback, &context, (CFArrayRef)paths, kFSEventStreamEventIdSinceNow, latency, kFSEventStreamCreateFlagUseCFTypes);
+	stream = FSEventStreamCreate(NULL, &fileStreamCallback, &context, (CFArrayRef)paths, kFSEventStreamEventIdSinceNow, latency, kFSEventStreamCreateFlagUseCFTypes);
 	FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
 	FSEventStreamStart(stream);
-	NSLog(@"Started event watcher on %@", paths);
 	
 	return self;
 }
 
 - (void) dealloc
 {
+	FSEventStreamStop(stream);
+	FSEventStreamInvalidate(stream);
+	FSEventStreamRelease(stream);
 	[collection retain];
 	[super dealloc];
 }
@@ -71,7 +71,6 @@ static void fileStreamCallback(ConstFSEventStreamRef stream, void *context, size
 - (void)reloadDir:(NSString *)dir
 {
 	SapphireDirectoryMetaData *directory = [collection directoryForPath:dir];
-	NSLog(@"Reloading %@", [directory path]);
 	[directory reloadDirectoryContents];
 	[directory resumeImport];
 }

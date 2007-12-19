@@ -20,7 +20,7 @@
 
 #import "SapphireMediaMenuController.h"
 
-@class SapphireMetaDataCollection, SapphireSettings, SapphireTheme, SapphirePredicate;
+@class SapphireMetaDataCollection, SapphireSettings, SapphireTheme, SapphirePredicate, SapphireLeopardOnly;
 @protocol SapphireMetaDataDelegate;
 
 /*!
@@ -36,6 +36,7 @@
 	NSArray						*masterNames;			/*!< @brief The list of all names, including hidden*/
 	NSArray						*masterControllers;		/*!< @brief The list of all controllers, including hidden*/
 	SapphireSettings			*settings;				/*!< @brief The settings*/
+	SapphireLeopardOnly			*leoOnly;				/*!< @brief Leopard only stuff*/
 }
 
 /*!
