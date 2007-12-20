@@ -44,7 +44,7 @@ static void fileStreamCallback(ConstFSEventStreamRef stream, void *context, size
 		return nil;
 	
 	collection = [coll retain];
-	NSArray *paths = [NSArray arrayWithObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	NSArray *paths = [collection collectionDirectories];
 	CFAbsoluteTime latency = 3.0; /*Allowed latency in seconds */
 	FSEventStreamContext context;
 	context.version = 0;

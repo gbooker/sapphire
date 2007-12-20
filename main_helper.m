@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
 	
 	[[NSRunLoop currentRunLoop] run];
 	
+	[help release];
 	[pool release];
 	
 	return 0;
