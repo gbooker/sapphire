@@ -1165,11 +1165,16 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[scanner release];
 }
 
+- (void)internalLoadMetaData
+{
+	[loadTimer invalidate];
+	loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:[NSMutableArray arrayWithObject:self] repeats:NO];
+}
+
 - (void)loadMetaData
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_INFO_STARTED_LOADING object:self];
-	[loadTimer invalidate];
-	loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:[NSMutableArray arrayWithObject:self] repeats:NO];
+	[self internalLoadMetaData];
 }
 
 - (void)loadMyMetaData:(NSMutableArray *)queue
@@ -1207,10 +1212,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if([queue count])
 	{
 		nextObj = [queue objectAtIndex:0];
-		id nextTarget = self;
 		if([nextObj isKindOfClass:[SapphireDirectoryMetaData class]])
-			nextTarget = nextObj;
-		loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:nextTarget selector:@selector(loadMetaDataTimer:) userInfo:queue repeats:NO];
+			[(SapphireDirectoryMetaData *)nextObj internalLoadMetaData];
+		else
+			loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:queue repeats:NO];
 	}
 	else
 	{
