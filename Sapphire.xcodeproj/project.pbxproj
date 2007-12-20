@@ -72,6 +72,7 @@
 		F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */; };
 		F5B418650D0B28A200BDD361 /* main_helper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418640D0B28A200BDD361 /* main_helper.m */; };
 		F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5B4185F0D0B288700BDD361 /* ImportHelper */; };
+		F5B54DFA0D1B153200880500 /* SapphireDVDLoadingController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B54DF40D1B149500880500 /* SapphireDVDLoadingController.m */; };
 		F5B8DEE90C8F85BB00489829 /* SapphireTVDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8DEE80C8F85BB00489829 /* SapphireTVDirectory.m */; };
 		F5C078C70CF1033C007C9A16 /* SapphireVirtualDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C078C60CF1033C007C9A16 /* SapphireVirtualDirectory.m */; };
 		F5C4F58B0C677C4D00C99092 /* SapphireAllImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */; };
@@ -261,6 +262,8 @@
 		F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireImportHelper.m; sourceTree = "<group>"; };
 		F5B4185F0D0B288700BDD361 /* ImportHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ImportHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5B418640D0B28A200BDD361 /* main_helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main_helper.m; sourceTree = "<group>"; };
+		F5B54DF30D1B149500880500 /* SapphireDVDLoadingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireDVDLoadingController.h; sourceTree = "<group>"; };
+		F5B54DF40D1B149500880500 /* SapphireDVDLoadingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireDVDLoadingController.m; sourceTree = "<group>"; };
 		F5B8DEE70C8F85BB00489829 /* SapphireTVDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTVDirectory.h; sourceTree = "<group>"; };
 		F5B8DEE80C8F85BB00489829 /* SapphireTVDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTVDirectory.m; sourceTree = "<group>"; };
 		F5C078C50CF1033C007C9A16 /* SapphireVirtualDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireVirtualDirectory.h; sourceTree = "<group>"; };
@@ -476,18 +479,20 @@
 		F5657BDA0CD637EC0053869E /* Compatibility Classes */ = {
 			isa = PBXGroup;
 			children = (
-				F5657BDC0CD6380C0053869E /* SapphireMediaMenuController.h */,
-				F5657BDD0CD6380C0053869E /* SapphireMediaMenuController.m */,
+				F5FD9F140CE27B9C00812CE5 /* BRLayerController.h */,
+				F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */,
 				F5657C430CD66ECA0053869E /* SapphireCenteredMenuController.h */,
 				F5657C440CD66ECB0053869E /* SapphireCenteredMenuController.m */,
+				F5B54DF30D1B149500880500 /* SapphireDVDLoadingController.h */,
+				F5B54DF40D1B149500880500 /* SapphireDVDLoadingController.m */,
+				F5657D0F0CD6858C0053869E /* SapphireFrontRowCompat.h */,
+				F5657D100CD6858F0053869E /* SapphireFrontRowCompat.m */,
 				F54D06930CD690180081D6B1 /* SapphireLayerController.h */,
 				F54D06940CD690180081D6B1 /* SapphireLayerController.m */,
 				F5657C520CD66F740053869E /* SapphireMenuController.h */,
 				F5657C530CD66F750053869E /* SapphireMenuController.m */,
-				F5657D0F0CD6858C0053869E /* SapphireFrontRowCompat.h */,
-				F5657D100CD6858F0053869E /* SapphireFrontRowCompat.m */,
-				F5FD9F140CE27B9C00812CE5 /* BRLayerController.h */,
-				F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */,
+				F5657BDC0CD6380C0053869E /* SapphireMediaMenuController.h */,
+				F5657BDD0CD6380C0053869E /* SapphireMediaMenuController.m */,
 				F51F4B160CFC8C8C00BEBAD6 /* SapphireTextWithSpinnerController.h */,
 				F51F4B170CFC8C8C00BEBAD6 /* SapphireTextWithSpinnerController.m */,
 			);
@@ -838,6 +843,7 @@
 				F51F4B180CFC8C8C00BEBAD6 /* SapphireTextWithSpinnerController.m in Sources */,
 				F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */,
 				FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */,
+				F5B54DFA0D1B153200880500 /* SapphireDVDLoadingController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

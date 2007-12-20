@@ -80,6 +80,7 @@
 
 #define META_DATA_FILE_INFO_KIND		@"MetaDataFileInfoKind"
 #define FILE_CLASS_KEY					@"File Class"
+#define FILE_CONTAINER_TYPE_KEY			@"File Container Type"
 typedef enum {
 	FILE_CLASS_NOT_FILE= -1,
 	FILE_CLASS_UNKNOWN = 0,
@@ -89,6 +90,11 @@ typedef enum {
 	FILE_CLASS_IMAGE = 4,
 	FILE_CLASS_OTHER = 5,
 } FileClass;
+
+typedef enum {
+	FILE_CONTAINER_TYPE_QT_MOVIE = 0,
+	FILE_CONTAINER_TYPE_VIDEO_TS = 1,
+} FileContainerType;
 
 #define META_DATA_FILE_ADDED_NOTIFICATION				@"MetaDataFileAdded"
 #define META_DATA_FILE_REMOVED_NOTIFICATION				@"MetaDataFileRemoved"
@@ -662,6 +668,26 @@ typedef enum {
  * @param fileClass The file type
  */
 - (void)setFileClass:(FileClass)fileClass;
+
+/*!
+ * @brief The file container type
+ *
+ * This indicates if the file is a QT movie or other (such as VIDEO_TS)
+ *
+ * @return The file container type
+ */
+- (FileContainerType)fileContainerType;
+
+/*!
+ * @brief Sets the file container type
+ *
+ * This indicates if the file is a QT movie or other (such as VIDEO_TS)
+ *
+ * @param fileContainerType The file container type
+ */
+- (void)setFileContainerType:(FileContainerType)fileContainerType;
+
+
 @end
 
 /*!

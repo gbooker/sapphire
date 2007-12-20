@@ -245,10 +245,26 @@ static NSSet *allExtensions = nil;
 	return nil;
 }
 
+- (BOOL)hasVIDEO_TS:(NSString *)fullPath
+{
+	BOOL isDir = NO;
+	NSFileManager *fm = [NSFileManager defaultManager];
+	if([fm fileExistsAtPath:[fullPath stringByAppendingPathComponent:@"VIDEO_TS"] isDirectory:&isDir] && isDir)
+		return YES;
+	return NO;
+}
+
 - (BOOL)isDirectory:(NSString *)fullPath
 {
 	BOOL isDir = NO;
-	return [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] && isDir;
+	NSFileManager *fm = [NSFileManager defaultManager];
+	BOOL exists = [fm fileExistsAtPath:fullPath isDirectory:&isDir];
+	if(exists && isDir)
+	{
+		if([self hasVIDEO_TS:fullPath])
+			return NO;
+	}
+	return exists && isDir;
 }
 
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order
@@ -759,7 +775,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 			if(resolvedObject != nil)
 				[cachedMetaDirs setObject:resolvedObject forKey:name];
 		}
-		else if([allExtensions containsObject:[extension lowercaseString]])
+		else if([allExtensions containsObject:[extension lowercaseString]] || [self hasVIDEO_TS:filePath])
 		{
 			if(resolvedObject != nil)
 				[cachedMetaFiles setObject:resolvedObject forKey:name];
@@ -1459,6 +1475,8 @@ static NSArray *displayedMetaDataOrder = nil;
 	if(self == nil)
 		return nil;
 	
+	if([self hasVIDEO_TS:myPath])
+		[self setFileContainerType:FILE_CONTAINER_TYPE_VIDEO_TS];
 	[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_ADDED_NOTIFICATION object:self];
 	
 	return self;
@@ -1556,76 +1574,79 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 		[fileMeta setObject:[props objectForKey:NSFileSize] forKey:SIZE_KEY];
 		[fileMeta setObject:[NSNumber numberWithInt:META_FILE_VERSION] forKey:META_VERSION_KEY];
 		
-		/*Open the movie*/
-		NSError *error = nil;
-		QTMovie *movie = [QTMovie movieWithFile:path error:&error];
-		QTTime duration = [movie duration];
-		[fileMeta setObject:[NSNumber numberWithFloat:(float)duration.timeValue/(float)duration.timeScale] forKey:DURATION_KEY];
-		NSArray *audioTracks = [movie tracksOfMediaType:@"soun"];
-		NSNumber *audioSampleRate = nil;
-		if([audioTracks count])
+		if([file fileContainerType] == FILE_CONTAINER_TYPE_QT_MOVIE)
 		{
-			/*Get the audio track*/
-			QTTrack *track = [audioTracks objectAtIndex:0];
-			QTMedia *media = [track media];
-			if(media != nil)
+			/*Open the movie*/
+			NSError *error = nil;
+			QTMovie *movie = [QTMovie movieWithFile:path error:&error];
+			QTTime duration = [movie duration];
+			[fileMeta setObject:[NSNumber numberWithFloat:(float)duration.timeValue/(float)duration.timeScale] forKey:DURATION_KEY];
+			NSArray *audioTracks = [movie tracksOfMediaType:@"soun"];
+			NSNumber *audioSampleRate = nil;
+			if([audioTracks count])
 			{
-				/*Get the audio format*/
-				Media qtMedia = [media quickTimeMedia];
-				Handle sampleDesc = NewHandle(1);
-				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
-				AudioStreamBasicDescription asbd;
-				ByteCount	propSize = 0;
-				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_AudioStreamBasicDescription, sizeof(asbd), &asbd, &propSize);
-				
-				if(propSize != 0)
+				/*Get the audio track*/
+				QTTrack *track = [audioTracks objectAtIndex:0];
+				QTMedia *media = [track media];
+				if(media != nil)
 				{
-					/*Set the format and sample rate*/
-					NSNumber *format = [NSNumber numberWithUnsignedInt:asbd.mFormatID];
-					[fileMeta setObject:format forKey:AUDIO_FORMAT_KEY];
-					audioSampleRate = [NSNumber numberWithDouble:asbd.mSampleRate];
+					/*Get the audio format*/
+					Media qtMedia = [media quickTimeMedia];
+					Handle sampleDesc = NewHandle(1);
+					GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc);
+					AudioStreamBasicDescription asbd;
+					ByteCount	propSize = 0;
+					QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_AudioStreamBasicDescription, sizeof(asbd), &asbd, &propSize);
+					
+					if(propSize != 0)
+					{
+						/*Set the format and sample rate*/
+						NSNumber *format = [NSNumber numberWithUnsignedInt:asbd.mFormatID];
+						[fileMeta setObject:format forKey:AUDIO_FORMAT_KEY];
+						audioSampleRate = [NSNumber numberWithDouble:asbd.mSampleRate];
+					}
+					
+					CFStringRef userText = nil;
+					propSize = 0;
+					QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_UserReadableText, sizeof(userText), &userText, &propSize);
+					if(userText != nil)
+					{
+						/*Set the description*/
+						[fileMeta setObject:(NSString *)userText forKey:AUDIO_DESC_KEY];
+						CFRelease(userText);
+					}
+					DisposeHandle(sampleDesc);
 				}
-				
-				CFStringRef userText = nil;
-				propSize = 0;
-				QTSoundDescriptionGetProperty((SoundDescriptionHandle)sampleDesc, kQTPropertyClass_SoundDescription, kQTSoundDescriptionPropertyID_UserReadableText, sizeof(userText), &userText, &propSize);
-				if(userText != nil)
-				{
-					/*Set the description*/
-					[fileMeta setObject:(NSString *)userText forKey:AUDIO_DESC_KEY];
-					CFRelease(userText);
-				}
-				DisposeHandle(sampleDesc);
 			}
-		}
-		/*Set the sample rate*/
-		if(audioSampleRate != nil)
-			[fileMeta setObject:audioSampleRate forKey:SAMPLE_RATE_KEY];
-		NSArray *videoTracks = [movie tracksOfMediaType:@"vide"];
-		if([videoTracks count])
-		{
-			/*Get the video track*/
-			QTTrack *track = [videoTracks objectAtIndex:0];
-			QTMedia *media = [track media]; 
-			if(media != nil) 
-			{ 
-				/*Get the video description*/ 
-				Media qtMedia = [media quickTimeMedia]; 
-				Handle sampleDesc = NewHandle(1); 
-				GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc); 
-				CFStringRef userText = nil; 
-				ByteCount propSize = 0; 
-				ICMImageDescriptionGetProperty((ImageDescriptionHandle)sampleDesc, kQTPropertyClass_ImageDescription, kICMImageDescriptionPropertyID_SummaryString, sizeof(userText), &userText, &propSize); 
-				DisposeHandle(sampleDesc); 
-				
-				if(userText != nil) 
+			/*Set the sample rate*/
+			if(audioSampleRate != nil)
+				[fileMeta setObject:audioSampleRate forKey:SAMPLE_RATE_KEY];
+			NSArray *videoTracks = [movie tracksOfMediaType:@"vide"];
+			if([videoTracks count])
+			{
+				/*Get the video track*/
+				QTTrack *track = [videoTracks objectAtIndex:0];
+				QTMedia *media = [track media]; 
+				if(media != nil) 
 				{ 
-					/*Set the description*/ 
-					[fileMeta setObject:(NSString *)userText forKey:VIDEO_DESC_KEY]; 
-					CFRelease(userText); 
+					/*Get the video description*/ 
+					Media qtMedia = [media quickTimeMedia]; 
+					Handle sampleDesc = NewHandle(1); 
+					GetMediaSampleDescription(qtMedia, 1, (SampleDescriptionHandle)sampleDesc); 
+					CFStringRef userText = nil; 
+					ByteCount propSize = 0; 
+					ICMImageDescriptionGetProperty((ImageDescriptionHandle)sampleDesc, kQTPropertyClass_ImageDescription, kICMImageDescriptionPropertyID_SummaryString, sizeof(userText), &userText, &propSize); 
+					DisposeHandle(sampleDesc); 
+					
+					if(userText != nil) 
+					{ 
+						/*Set the description*/ 
+						[fileMeta setObject:(NSString *)userText forKey:VIDEO_DESC_KEY]; 
+						CFRelease(userText); 
+					} 
 				} 
-			} 
-		}
+			}
+		} //QTMovie
 		[file addFileData:fileMeta];
 	}
 	return updated ;
@@ -1706,9 +1727,6 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 
 - (FileClass)fileClass
 {
-	if([[metaData objectForKey:FILE_CLASS_KEY] intValue]==nil)
-		return FILE_CLASS_UNKNOWN;
-	else
 	return [[metaData objectForKey:FILE_CLASS_KEY] intValue];
 }
 
@@ -1716,6 +1734,17 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 {
 	[metaData setObject:[NSNumber numberWithInt:fileClass] forKey:FILE_CLASS_KEY];
 }
+
+- (FileContainerType)fileContainerType
+{
+	return [[metaData objectForKey:FILE_CONTAINER_TYPE_KEY] intValue];
+}
+
+- (void)setFileContainerType:(FileContainerType)fileContainerType
+{
+	[metaData setObject:[NSNumber numberWithInt:fileContainerType] forKey:FILE_CONTAINER_TYPE_KEY];
+}
+
 
 - (NSString *)joinedFile;
 {

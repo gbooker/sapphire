@@ -32,6 +32,7 @@
 #import "SapphireAudioMedia.h"
 #import "SapphireApplianceController.h"
 #import "SapphireFrontRowCompat.h"
+#import "SapphireDVDLoadingController.h"
 
 #import <AudioUnit/AudioUnit.h>
 #import <objc/objc-class.h>
@@ -709,7 +710,15 @@ BOOL setupAudioOutput(int sampleRate)
 			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
 		CFPreferencesAppSynchronize(A52_DOMIAN);
 		
-		if([[SapphireMetaData videoExtensions] containsObject:[path pathExtension]] && [currentPlayFile hasVideo])
+		if ([currentPlayFile fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS)
+		{
+			BRDVDMediaAsset *asset = [[BRDVDMediaAsset alloc] initWithPath:path];
+			SapphireDVDLoadingController *controller = [[SapphireDVDLoadingController alloc] initWithScene:[self scene] forAsset:asset];
+			[asset release];
+			[[self stack] pushController:controller];
+			[controller release];
+		}
+		else if([[SapphireMetaData videoExtensions] containsObject:[path pathExtension]] && [currentPlayFile hasVideo])
 		{
 			/*Video*/
 			/*Set the asset resume time*/
