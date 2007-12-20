@@ -26,7 +26,6 @@
 #import "SapphirePredicates.h"
 #import "SapphireMetaDataScanner.h"
 #import "SapphireImportHelper.h"
-#import "NSArray-Extensions.h"
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"
@@ -525,13 +524,13 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 - (NSArray *)collectionDirectories
 {
 	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
-	NSMutableArray *ret = [[mywork mountedLocalVolumePaths] mutableCopy];
-	[ret removeObject:@"/mnt"];
-	[ret removeObject:@"/CIFS"];
-	[ret removeObject:NSHomeDirectory()];
-	[ret addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
-	[ret addObjectsFromArray:collectionDirs];
-	[ret uniqueObjects];
+	NSMutableSet *colSet = [NSMutableSet setWithArray:[mywork mountedLocalVolumePaths]];
+	[colSet removeObject:@"/mnt"];
+	[colSet removeObject:@"/CIFS"];
+	[colSet removeObject:NSHomeDirectory()];
+	[colSet addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	[colSet addObjectsFromArray:collectionDirs];
+	NSMutableArray *ret = [[colSet allObjects] mutableCopy];
 	[ret sortUsingSelector:@selector(compare:)];
 	return [ret autorelease];
 }

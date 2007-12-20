@@ -80,7 +80,6 @@
 		F5E849C70C3F008100913832 /* SapphireMetaDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
-		F5FB82E40D18065F0018E4C9 /* NSArray-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */; };
 		F5FDA1A20CE27CE700812CE5 /* BRLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FD9F150CE27B9C00812CE5 /* BRLayerController.m */; };
 		F5FDA1A30CE27CF000812CE5 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
 		F5FDA1A80CE27D1C00812CE5 /* CompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5FDA19F0CE27CDA00812CE5 /* CompatClasses.framework */; };
@@ -839,7 +838,6 @@
 				F51F4B180CFC8C8C00BEBAD6 /* SapphireTextWithSpinnerController.m in Sources */,
 				F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */,
 				FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */,
-				F5FB82E40D18065F0018E4C9 /* NSArray-Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
