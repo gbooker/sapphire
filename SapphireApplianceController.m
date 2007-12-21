@@ -36,6 +36,7 @@
 #import "SapphireAllImporter.h"
 #import "SapphireFrontRowCompat.h"
 #import "SapphireVirtualDirectoryLoading.h"
+#import "SapphireImportHelper.h"
 
 #define BROWSER_MENU_ITEM		BRLocalizedString(@"  Browse", @"Browser Menu Item")
 #define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"  Import All Data", @"All Importer Menu Item")
@@ -202,6 +203,7 @@ static NSArray *predicates = nil;
 	[metaCollection release];
 	[SapphireSettings relinquishSettings];
 	[settings release];
+	[SapphireImportHelper relinquishHelper];
 	[super dealloc];
 }
 

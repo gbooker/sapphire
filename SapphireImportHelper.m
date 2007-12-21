@@ -25,6 +25,8 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
 
+#define CONNECTION_NAME @"Sapphire Server"
+
 @interface SapphireImportFile : NSObject <SapphireImportFileProtocol>{
 	id <SapphireFileMetaDataProtocol>		file;
 	id <SapphireImporterBackgroundProtocol>	informer;
@@ -57,6 +59,16 @@ static SapphireImportHelper *shared = nil;
 	return shared;
 }
 
++ (void)relinquishHelper
+{
+	if(shared != nil)
+		[shared relinquishHelper];
+}
+
+- (void)relinquishHelper
+{
+}
+
 - (void)importFileData:(id <SapphireFileMetaDataProtocol>)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
 }
@@ -86,6 +98,7 @@ static SapphireImportHelper *shared = nil;
 	[fileImp release];
 	[tvImp release];
 	[movImp release];
+	keepRunning = YES;
 	
 	return self;
 }
@@ -104,11 +117,33 @@ static SapphireImportHelper *shared = nil;
 - (void)startChild
 {
 	/*Child here*/
-	id serverobj = [[NSConnection rootProxyForConnectionWithRegisteredName:@"Sapphire Server" host:nil] retain];
-	[serverobj setProtocolForProxy:@protocol(SapphireImportServer)];
-	shared = self;
-	[serverobj setClient:(SapphireImportHelperClient *)shared];
-	server = serverobj;	
+	@try {
+		NSConnection *connection = [NSConnection connectionWithRegisteredName:CONNECTION_NAME host:nil];
+		id serverobj = [[connection rootProxy] retain];
+		[serverobj setProtocolForProxy:@protocol(SapphireImportServer)];
+		shared = self;
+		[serverobj setClient:(SapphireImportHelperClient *)shared];
+		server = serverobj;	
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];		
+	}
+	@catch (NSException * e) {
+		keepRunning = NO;
+	}
+}
+
+- (BOOL)keepRunning
+{
+	return keepRunning;
+}
+
+- (void)connectionDidDie:(NSNotification *)note
+{
+	[self exitChild];
+}
+
+- (oneway void)exitChild
+{
+	keepRunning = NO;
 }
 
 - (oneway void)startQueue
@@ -138,9 +173,9 @@ static SapphireImportHelper *shared = nil;
 	queue = [[NSMutableArray alloc] init];
 	queueSuspended = NO;
 	
-	NSConnection *theConnection = [NSConnection defaultConnection];
-	[theConnection setRootObject:self];
-	if([theConnection registerName:@"Sapphire Server"] == NO)
+	serverConnection = [NSConnection defaultConnection];
+	[serverConnection setRootObject:self];
+	if([serverConnection registerName:CONNECTION_NAME] == NO)
 		NSLog(@"Register failed");
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];
@@ -165,7 +200,13 @@ static SapphireImportHelper *shared = nil;
 	[super dealloc];
 }
 
-#define AUTH_DATA_SIZE 16
+- (void)relinquishHelper
+{
+	[client exitChild];
+	[serverConnection setRootObject:nil];
+	[shared autorelease];
+	shared = nil;
+}
 
 - (void)startClient
 {
@@ -185,7 +226,9 @@ static SapphireImportHelper *shared = nil;
 	client = nil;
 	/*Inform that import completed (since it crashed, no update done)*/
 	[self importComplete:NO];
-	[self startClient];
+	if(shared != nil)
+		/* Don't start it again if we are shutting down*/
+		[self startClient];
 }
 
 - (void)itemAdded
@@ -245,6 +288,11 @@ static SapphireImportHelper *shared = nil;
 
 - (oneway void)setClient:(id <SapphireImportClient>)aClient
 {
+	if(shared == nil)
+	{
+		[aClient exitChild];
+		return;
+	}
 	client = [aClient retain];
 	if([queue count])
 	{

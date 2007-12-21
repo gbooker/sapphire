@@ -49,7 +49,9 @@ int main(int argc, char *argv[])
 	SapphireImportHelperClient *help = [[NSClassFromString(@"SapphireImportHelperClient") alloc] init];
 	[help startChild];
 	
-	[[NSRunLoop currentRunLoop] run];
+	NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
+	while([help keepRunning] && [currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
+		;
 	
 	[help release];
 	[pool release];
