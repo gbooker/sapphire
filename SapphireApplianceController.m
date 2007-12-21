@@ -214,6 +214,7 @@ static NSArray *predicates = nil;
 	
 	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
+	[tvDir release];
 	[tvBrowser setListTitle:BRLocalizedString(@" TV Shows", nil)];
 	[tvBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"  TV Shows", nil)];
@@ -223,6 +224,7 @@ static NSArray *predicates = nil;
 	
 	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithCollection:metaCollection];
 	SapphireBrowser *movieBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:movieDir];
+	[movieDir release];
 	[movieBrowser setListTitle:BRLocalizedString(@" Movies", nil)];
 	[movieBrowser setListIcon:predicateGem];
 	[mutableMasterNames addObject:BRLocalizedString(@"  Movies", nil)];
