@@ -48,9 +48,15 @@ NSString *searchCoverArtExtForPath(NSString *path);
 - (void) dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[directory allValues] makeObjectsPerformSelector:@selector(parentDealloced)];
 	[directory release];
 	[reloadTimer invalidate];
 	[super dealloc];
+}
+
+- (void)parentDealloced
+{
+	parent = nil;
 }
 
 - (void)reloadDirectoryContents
@@ -62,12 +68,12 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	[cachedMetaFiles removeAllObjects];
 	[cachedMetaDirs removeAllObjects];
 	[reloadTimer invalidate];
-	reloadTimer = nil;
-	[NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(completeReloadOfDirectoryContents) userInfo:nil repeats:NO];
+	reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(completeReloadOfDirectoryContents) userInfo:nil repeats:NO];
 }
 
 - (void)completeReloadOfDirectoryContents
 {
+	reloadTimer = nil;
 	[delegate directoryContentsChanged];
 }
 
@@ -190,7 +196,6 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	[metaDirs addEntriesFromDictionary:mutDict];
 	[mutDict release];
 	[(SapphireVirtualDirectory *)parent childDisplayChanged];
-	reloadTimer = nil;
 }
 
 - (void)finishedLoading
