@@ -393,7 +393,6 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 - (id)initWithFile:(NSString *)dictionary
 {
 	/*Read the metadata*/
-	dictionaryPath = [dictionary retain];
 	NSData *fileData = [NSData dataWithContentsOfFile:dictionary];
 	NSString *error = nil;
 	NSMutableDictionary *mainDict = [NSPropertyListSerialization propertyListFromData:fileData mutabilityOption:NSPropertyListMutableContainersAndLeaves format:NULL errorDescription:&error];
@@ -404,6 +403,7 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	if(!self)
 		return nil;
 	
+	dictionaryPath = [dictionary retain];
 	/*Version upgrade*/
 	int version = [[metaData objectForKey:META_VERSION_KEY] intValue];
 	int oldVersion = version;
@@ -576,7 +576,6 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 
 - (void)realWriteMetaData
 {
-	[writeTimer invalidate];
 	writeTimer = nil;
 	makeParentDir([NSFileManager defaultManager], [dictionaryPath stringByDeletingLastPathComponent]);
 	NSString *error = nil;
