@@ -64,7 +64,7 @@ static void fileStreamCallback(ConstFSEventStreamRef stream, void *context, size
 	FSEventStreamStop(stream);
 	FSEventStreamInvalidate(stream);
 	FSEventStreamRelease(stream);
-	[collection retain];
+	[collection release];
 	[super dealloc];
 }
 
