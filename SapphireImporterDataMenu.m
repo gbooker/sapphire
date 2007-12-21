@@ -34,7 +34,7 @@
 - (id) initWithScene: (BRRenderScene *) scene metaDataCollection:(SapphireMetaDataCollection *)collection  importer:(id <SapphireImporter>)import
 {
 	if ( [super initWithScene: scene] == nil )
-	return ( nil );
+		return ( nil );
 	metaCollection = [collection retain];
 	collectionDirectories = [[collection collectionDirectories] retain];
 	importer = [import retain];
@@ -94,6 +94,7 @@
 	[collectionDirectories release];
 	[importItems release];
 	[importTimer invalidate];
+	[importer setImporterDataMenu:nil];
 	[importer release];
 	[super dealloc];
 }
@@ -375,12 +376,16 @@
 	[self setFileProgress:@" "];
 	[self setCurrentFile:@" "] ;
 	[bar setPercentage:0.0f];
-	[button setTarget:self];
 	[button setAction: @selector(import)];
 	[button setHidden:NO];
 	[title setTitle:[importer initialText]];
 	[self setText:[importer informativeText]];
 	[button setTitle:[importer buttonTitle]];
+}
+
+- (void)willBePushed
+{
+	[button setTarget:self];
 }
 
 - (void)wasPopped
