@@ -27,6 +27,8 @@
 #import "SapphireFrontRowCompat.h"
 #import "SapphireShowChooser.h"
 
+#define VERSION_KEY					@"Version"
+#define CURRENT_VERSION				2
 /* Translation Keys */
 #define TRANSLATIONS_KEY			@"Translations"
 #define IMDB_LINK_KEY				@"IMDB Link"
@@ -147,6 +149,22 @@
 
 @implementation SapphireMovieImporter
 
+- (int)upgradeFromVersion1
+{
+	NSEnumerator *keyEnum = [[movieTranslations allKeys] objectEnumerator];
+	NSString *key = nil;
+	while((key = [keyEnum nextObject]) != nil)
+	{
+		NSString *newKey = [key stringByDeletingPathExtension];
+		if(![newKey isEqualToString:key])
+		{
+			[movieTranslations setObject:[movieTranslations objectForKey:key] forKey:newKey];
+			[movieTranslations removeObjectForKey:key];
+		}
+	}
+	return 2;
+}
+
 - (id) initWithSavedSetting:(NSString *)path
 {
 	self = [super init];
@@ -160,6 +178,14 @@
 	movieTranslations = [[settings objectForKey:TRANSLATIONS_KEY] mutableCopy];
 	if(movieTranslations == nil)
 		movieTranslations = [NSMutableDictionary new];
+	
+	int version = [[settings objectForKey:VERSION_KEY] intValue];
+	if(version < CURRENT_VERSION)
+	{
+		if(version < 2)
+			version = [self upgradeFromVersion1];
+		[self writeSettings];
+	}
 	
 	return self;
 }
@@ -597,6 +623,7 @@
 - (void)writeSettings
 {
 	NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:CURRENT_VERSION], VERSION_KEY,
 		movieTranslations, TRANSLATIONS_KEY,
 		nil];
 	[settings writeToFile:settingsPath atomically:YES];
@@ -641,7 +668,7 @@
 	/*Get the movie title*/
 	NSString *movieDataLink = nil ;
 	/*Check to see if we know this movie*/
-	NSMutableDictionary *dict=[movieTranslations objectForKey:[fileName lowercaseString]];
+	NSMutableDictionary *dict=[movieTranslations objectForKey:[[fileName lowercaseString] stringByDeletingPathExtension]];
 	if(dict == nil)
 	{
 		if(dataMenu == nil)
@@ -845,7 +872,7 @@
 		{
 			/*They selected a movie title, save the translation and write it*/
 			NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
-			NSString *filename = [[chooser fileName] lowercaseString];
+			NSString *filename = [[[chooser fileName] lowercaseString] stringByDeletingPathExtension];
 			NSMutableDictionary * transDict = [movieTranslations objectForKey:filename];
 			if(transDict == nil)
 			{
@@ -869,11 +896,12 @@
 		else
 		{
 			NSString *selected = [[posterChooser posters] objectAtIndex:selectedPoster];
-			NSMutableDictionary * transDict = [movieTranslations objectForKey:[[posterChooser fileName]lowercaseString]];
+			NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
+			NSMutableDictionary * transDict = [movieTranslations objectForKey:filename];
 			if(transDict == nil)
 			{
 				transDict=[NSMutableDictionary new] ;
-				[movieTranslations setObject:transDict forKey:[[posterChooser fileName]lowercaseString]];
+				[movieTranslations setObject:transDict forKey:filename];
 				[transDict release];
 			}
 			[transDict setObject:selected forKey:SELECTED_POSTER_KEY];
