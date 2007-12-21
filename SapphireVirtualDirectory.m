@@ -54,11 +54,6 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	[super dealloc];
 }
 
-- (void)parentDealloced
-{
-	parent = nil;
-}
-
 - (void)reloadDirectoryContents
 {
 	[files removeAllObjects];

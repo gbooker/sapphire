@@ -203,6 +203,11 @@ static NSSet *allExtensions = nil;
 	[super dealloc];
 }
 
+- (void)parentDealloced
+{
+	parent = nil;
+}
+
 - (void)childDictionaryChanged:(SapphireMetaData *)child
 {
 }
@@ -493,6 +498,8 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 		[writeTimer invalidate];
 		[self realWriteMetaData];
 	}
+	[[directories objectForKey:@"/"] parentDealloced];
+	[directories release];
 	[super dealloc];
 }
 
@@ -685,7 +692,9 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[loadTimer invalidate];
 	[self postAllFilesRemoved];
 	[importArray release];
+	[[cachedMetaDirs allValues] makeObjectsPerformSelector:@selector(parentDealloced)];	
 	[cachedMetaDirs release];
+	[[cachedMetaFiles allValues] makeObjectsPerformSelector:@selector(parentDealloced)];	
 	[cachedMetaFiles release];
 	[files release];
 	[directories release];
@@ -1180,16 +1189,16 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[scanner release];
 }
 
-- (void)internalLoadMetaData
+- (void)internalLoadMetaData:(NSMutableArray *)queue
 {
 	[loadTimer invalidate];
-	loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:[NSMutableArray arrayWithObject:self] repeats:NO];
+	loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:queue repeats:NO];
 }
 
 - (void)loadMetaData
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:META_DATA_FILE_INFO_STARTED_LOADING object:self];
-	[self internalLoadMetaData];
+	[self internalLoadMetaData:[NSMutableArray arrayWithObject:self]];
 }
 
 - (void)loadMyMetaData:(NSMutableArray *)queue
@@ -1228,7 +1237,7 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	{
 		nextObj = [queue objectAtIndex:0];
 		if([nextObj isKindOfClass:[SapphireDirectoryMetaData class]])
-			[(SapphireDirectoryMetaData *)nextObj internalLoadMetaData];
+			[(SapphireDirectoryMetaData *)nextObj internalLoadMetaData:queue];
 		else
 			loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(loadMetaDataTimer:) userInfo:queue repeats:NO];
 	}
