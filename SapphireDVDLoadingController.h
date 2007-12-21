@@ -18,6 +18,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*!
+ * @brief A compatibility class for frontrow
+ *
+ * Frontrow's classes do not have initWithScene since the render scene is completely different.  To work around this, Sapphire has a collection of classes which intercept initWithScene, and call the appropriate real function.  The scene method is also intercepted as well.
+ */
 @interface SapphireDVDLoadingController : BRDVDLoadingController {
 }
 

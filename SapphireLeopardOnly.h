@@ -22,9 +22,19 @@
 
 @class SapphireLeopardFileEvents, SapphireMetaDataCollection;
 
+/*!
+ * @brief Leopard only code
+ *
+ * Leopard has a few APIs which don't exist on the AppleTV.  Such code goes here.
+ */
 @interface SapphireLeopardOnly : NSObject {
-	SapphireLeopardFileEvents		*fileEvents;
+	SapphireLeopardFileEvents		*fileEvents;	/*!< @brief The file event watcher*/
 }
+/*!
+ * @brief Initialize the leopard only APIs
+ *
+ * @param coll The main collection
+ */
 - (id)initWithCollection:(SapphireMetaDataCollection *)coll;
 
 @end

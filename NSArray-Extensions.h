@@ -18,6 +18,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*!
+ * @brief Array extensions
+ */
 @interface NSMutableArray (extensions)
+/*!
+ * @brief Remove duplicate objects in an array, first one in order is kept.
+ */
 - (void)uniqueObjects;
 @end

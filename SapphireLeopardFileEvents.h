@@ -22,9 +22,19 @@
 
 @class SapphireMetaDataCollection;
 
+/*!
+ * @brief Leopard only file event responding
+ *
+ * Leopard has an API to register for file change events within certain paths.  While it is possible to do the same thing in Tiger (AppleTV), this requires a completly different method, involving kernel APIs.
+ */
 @interface SapphireLeopardFileEvents : NSObject {
-	SapphireMetaDataCollection		*collection;
-	FSEventStreamRef				stream;
+	SapphireMetaDataCollection		*collection;	/*!< @brief The metadata collection*/
+	FSEventStreamRef				stream;			/*!< @brief The file event stream*/
 }
+/*!
+ * @brief Create a new file event watcher for a given collection
+ *
+ * @param coll The collection to watch
+ */
 - (id)initWithCollection:(SapphireMetaDataCollection *)coll;
 @end
