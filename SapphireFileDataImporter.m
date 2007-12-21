@@ -90,17 +90,9 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return self;
 }
 
-- (void) dealloc
-{
-	[dataMenu release];
-	[super dealloc];
-}
-
-
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
-	[dataMenu release];
-	dataMenu = [theDataMenu retain];
+	dataMenu = theDataMenu;
 }
 
 - (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData

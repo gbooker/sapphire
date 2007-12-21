@@ -27,7 +27,7 @@
  * This class is a subclass of SapphireMultipleImporter for importing movie data.  It will search IMDB in an attempt to identify the movie.  Then it will present the user with the results it found and ask them to make a choice.  Once the movie is identified, it will then import data from IMDB.  In addition, it will download posters from impawards and ask the user to select a poster to display for cover art.
  */
 @interface SapphireMovieImporter : NSObject <SapphireImporter>{
-	SapphireImporterDataMenu	*dataMenu;				/*!< @brief The UI for the import*/
+	SapphireImporterDataMenu	*dataMenu;				/*!< @brief The UI for the import (not retained)*/
 	SapphireFileMetaData		*currentData;			/*!< @brief The metadata currently being imported(not retained)*/
 	NSMutableDictionary			*movieTranslations;		/*!< @brief The translation dictionary from filename to movie*/
 	NSString					*settingsPath;			/*!< @brief The persistent store of translations*/

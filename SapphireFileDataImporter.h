@@ -28,7 +28,7 @@
  */
 @interface SapphireFileDataImporter : NSObject <SapphireImporter>
 {
-	SapphireImporterDataMenu	*dataMenu;		/*!< @brief The UI for the import*/
+	SapphireImporterDataMenu	*dataMenu;		/*!< @brief The UI for the import (not retained)*/
 	int							xmlFileCount;	/*!< @brief The number of xml files which were imported*/
 }
 @end 

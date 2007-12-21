@@ -112,7 +112,6 @@
 
 - (void)dealloc
 {
-	[dataMenu release];
 	[showTranslations release];
 	[showInfo release];
 	[settingsPath release];
@@ -124,8 +123,7 @@
 
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
-	[dataMenu release];
-	dataMenu = [theDataMenu retain];
+	dataMenu = theDataMenu;
 }
 
 /*!
