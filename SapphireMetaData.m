@@ -22,6 +22,7 @@
 #import <QTKit/QTKit.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mount.h>
 #import "SapphireSettings.h"
 #import "SapphirePredicates.h"
 #import "SapphireMetaDataScanner.h"
@@ -546,8 +547,18 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 
 - (NSArray *)collectionDirectories
 {
-	NSWorkspace *mywork = [NSWorkspace sharedWorkspace];
-	NSMutableSet *colSet = [NSMutableSet setWithArray:[mywork mountedLocalVolumePaths]];
+	NSMutableSet *colSet = [NSMutableSet set];
+    struct statfs *mntbufp;
+
+    int i, mountCount = getmntinfo(&mntbufp, MNT_NOWAIT);
+	for(i=0; i<mountCount; i++)
+	{
+		if(!strcmp(mntbufp[i].f_fstypename, "autofs"))
+			continue;
+		if(!strcmp(mntbufp[i].f_mntonname, "/dev"))
+			continue;
+		[colSet addObject:[NSString stringWithCString:mntbufp[i].f_mntonname]];
+	}
 	[colSet removeObject:@"/mnt"];
 	[colSet removeObject:@"/CIFS"];
 	[colSet removeObject:NSHomeDirectory()];
