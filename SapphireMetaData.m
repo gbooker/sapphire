@@ -555,6 +555,8 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	{
 		if(!strcmp(mntbufp[i].f_fstypename, "autofs"))
 			continue;
+		if(!strcmp(mntbufp[i].f_fstypename, "volfs"))
+			continue;
 		if(!strcmp(mntbufp[i].f_mntonname, "/dev"))
 			continue;
 		[colSet addObject:[NSString stringWithCString:mntbufp[i].f_mntonname]];
