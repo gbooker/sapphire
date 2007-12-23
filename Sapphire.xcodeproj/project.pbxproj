@@ -257,7 +257,6 @@
 		F56B765C0C3837CE00E934AA /* SapphireShowChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireShowChooser.h; sourceTree = "<group>"; };
 		F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireShowChooser.m; sourceTree = "<group>"; };
 		F56B77D60C3858B400E934AA /* DefaultPreview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPreview.png; sourceTree = "<group>"; };
-		F585550E0C3D428F000C0448 /* Sapphire_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Sapphire_Prefix.pch; sourceTree = "<group>"; };
 		F5B418360D0B1EA100BDD361 /* SapphireImportHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireImportHelper.h; sourceTree = "<group>"; };
 		F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireImportHelper.m; sourceTree = "<group>"; };
 		F5B4185F0D0B288700BDD361 /* ImportHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ImportHelper; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -440,7 +439,6 @@
 				F56B74D30C3753C100E934AA /* Extensions */,
 				F5657BDA0CD637EC0053869E /* Compatibility Classes */,
 				F50040000D199848003FEA08 /* Leopard */,
-				F585550E0C3D428F000C0448 /* Sapphire_Prefix.pch */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
