@@ -284,9 +284,9 @@ static BOOL is10Version = NO;
 		/*Resume importing now that we are up again*/
 		[metaData resumeImport];
 	//Turn off the AC3 Passthrough hack
-	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
+	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:((soundState & SOUND_STATE_SOUND_PASSTHROUGH)? 1 : 0)], A52_DOMIAN);
 	CFPreferencesAppSynchronize(A52_DOMIAN);
-	if(soundsWereEnabled)
+	if(soundState & SOUND_STATE_SOUND_ENABLED)
 		[(RUIPreferences *)[RUIPreferences sharedFrontRowPreferences] setBool:YES forKey:@"PlayFrontRowSounds"];
 }
 
@@ -699,6 +699,9 @@ BOOL setupAudioOutput(int sampleRate)
 				useAC3Passthrough = YES;
 		}
 		
+		Boolean temp;
+		BOOL passthrough = CFPreferencesGetAppBooleanValue(PASSTHROUGH_KEY, A52_DOMIAN, &temp);
+		BOOL soundsWereEnabled = NO;
 		if(useAC3Passthrough)
 		{
 			RUIPreferences *prefs = [RUIPreferences sharedFrontRowPreferences];
@@ -709,6 +712,7 @@ BOOL setupAudioOutput(int sampleRate)
 		}
 		else
 			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
+		soundState = (passthrough ? SOUND_STATE_SOUND_PASSTHROUGH : 0) | (soundsWereEnabled ? SOUND_STATE_SOUND_ENABLED : 0);
 		CFPreferencesAppSynchronize(A52_DOMIAN);
 		
 		if ([currentPlayFile fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS)

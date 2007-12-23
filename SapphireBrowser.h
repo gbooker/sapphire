@@ -22,6 +22,9 @@
 #import "SapphireMediaMenuController.h"
 @class SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
 
+#define SOUND_STATE_SOUND_ENABLED		1
+#define SOUND_STATE_SOUND_PASSTHROUGH	2
+
 /*!
  * @brief A subclass of SapphireMediaMenuController for browsing metadata
  *
@@ -37,7 +40,7 @@
 	int								dirCount;			/*!< @brief The number of directories in this directory*/
 	int								fileCount;			/*!< @brief The number of files in this directory*/
 	BOOL							cancelScan;			/*!< @brief Cancel the background importer for this directory*/
-	BOOL							soundsWereEnabled;	/*!< @brief Were sounds enabled before we played the current file*/
+	int								soundState;			/*!< @brief Sound state before we played the current file*/
 }
 
 /*!
