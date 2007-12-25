@@ -180,7 +180,7 @@ static NSSet *allExtensions = nil;
 	return collectionArtPath;
 }
 
-- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
+- (id)initWithDictionary:(NSMutableDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
 {
 	self = [super init];
 	if(!self)
@@ -293,11 +293,11 @@ static NSSet *allExtensions = nil;
 	NSString *element = [pathComponents firstObject];
 	NSMutableDictionary *dir = [source objectForKey:element];
 	if(dir == nil)
+	{
 		dir = [[NSMutableDictionary alloc] init];
-	else
-		dir = [dir mutableCopy];
-	[source setObject:dir forKey:element];
-	[dir release];
+		[source setObject:dir forKey:element];
+		[dir release];
+	}
 	if([pathComponents count] == 1)
 	{
 		/* insert here */
@@ -307,11 +307,11 @@ static NSSet *allExtensions = nil;
 	{
 		NSMutableDictionary *dirs = [dir objectForKey:DIRS_KEY];
 		if(dirs == nil)
+		{
 			dirs = [[NSMutableDictionary alloc] init];
-		else
-			dirs = [dirs mutableCopy];
-		[dir setObject:dirs forKey:DIRS_KEY];
-		[dirs release];
+			[dir setObject:dirs forKey:DIRS_KEY];
+			[dirs release];
+		}
 		
 		[pathComponents removeObjectAtIndex:0];
 		[self insertDictionary:dict atPath:pathComponents withinDictionary:dirs];
@@ -401,7 +401,7 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	/*Read the metadata*/
 	NSData *fileData = [NSData dataWithContentsOfFile:dictionary];
 	NSString *error = nil;
-	NSMutableDictionary *mainDict = [NSPropertyListSerialization propertyListFromData:fileData mutabilityOption:NSPropertyListMutableContainersAndLeaves format:NULL errorDescription:&error];
+	NSMutableDictionary *mainDict = [NSPropertyListSerialization propertyListFromData:fileData mutabilityOption:NSPropertyListMutableContainers format:NULL errorDescription:&error];
 	[error release];
 	if(mainDict == nil)
 		mainDict = [NSMutableDictionary dictionary];
@@ -426,26 +426,34 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	/*version it*/
 	[metaData setObject:[NSNumber numberWithInt:META_COLLECTION_VERSION] forKey:META_VERSION_KEY];
 
-	NSMutableDictionary *collectionOptions = [[metaData objectForKey:META_COLLECTION_OPTIONS] mutableCopy];
+	NSMutableDictionary *collectionOptions = [metaData objectForKey:META_COLLECTION_OPTIONS];
 	if(collectionOptions == nil)
+	{
 		collectionOptions = [[NSMutableDictionary alloc] init];
-	[metaData setObject:collectionOptions forKey:META_COLLECTION_OPTIONS];
-	[collectionOptions release];
+		[metaData setObject:collectionOptions forKey:META_COLLECTION_OPTIONS];
+		[collectionOptions release];
+	}
 	
-	skipCollection = [[collectionOptions objectForKey:META_COLLECTION_SKIP_SCAN] mutableCopy];
+	skipCollection = [[collectionOptions objectForKey:META_COLLECTION_SKIP_SCAN] retain];
 	if(skipCollection == nil)
+	{
 		skipCollection = [[NSMutableDictionary alloc] init];
-	[collectionOptions setObject:skipCollection forKey:META_COLLECTION_SKIP_SCAN];
+		[collectionOptions setObject:skipCollection forKey:META_COLLECTION_SKIP_SCAN];
+	}
 	
-	hideCollection = [[collectionOptions objectForKey:META_COLLECTION_HIDE] mutableCopy];
+	hideCollection = [[collectionOptions objectForKey:META_COLLECTION_HIDE] retain];
 	if(hideCollection == nil)
+	{
 		hideCollection = [[NSMutableDictionary alloc] init];
-	[collectionOptions setObject:hideCollection forKey:META_COLLECTION_HIDE];
+		[collectionOptions setObject:hideCollection forKey:META_COLLECTION_HIDE];
+	}
 	
-	collectionDirs = [[collectionOptions objectForKey:META_COLLECTION_DIRS] mutableCopy];
+	collectionDirs = [[collectionOptions objectForKey:META_COLLECTION_DIRS] retain];
 	if(collectionDirs == nil)
+	{
 		collectionDirs = [[NSMutableDictionary alloc] init];
-	[collectionOptions setObject:collectionDirs forKey:META_COLLECTION_DIRS];
+		[collectionOptions setObject:collectionDirs forKey:META_COLLECTION_DIRS];
+	}
 	
 	directories = [[NSMutableDictionary alloc] init];
 	
@@ -658,23 +666,23 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	/*Get the file listing*/
 	metaFiles = [metaData objectForKey:FILES_KEY];
 	if(metaFiles == nil)
+	{
 		metaFiles = [NSMutableDictionary new];
-	else
-		metaFiles = [metaFiles mutableCopy];
-	[metaData setObject:metaFiles forKey:FILES_KEY];
-	[metaFiles release];
+		[metaData setObject:metaFiles forKey:FILES_KEY];
+		[metaFiles release];
+	}
 	
 	/*Get the directory listing*/
 	metaDirs = [metaData objectForKey:DIRS_KEY];
 	if(metaDirs == nil)
+	{
 		metaDirs = [NSMutableDictionary new];
-	else
-		metaDirs = [metaDirs mutableCopy];
-	[metaData setObject:metaDirs forKey:DIRS_KEY];
-	[metaDirs release];	
+		[metaData setObject:metaDirs forKey:DIRS_KEY];
+		[metaDirs release];	
+	}
 }
 
-- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
+- (id)initWithDictionary:(NSMutableDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
 {
 	self = [super initWithDictionary:dict parent:myParent path:myPath];
 	if(!self)
@@ -980,8 +988,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if(ret == nil)
 	{
 		/*Create it*/
-		ret = [[SapphireFileMetaData alloc] initWithDictionary:[metaFiles objectForKey:file] parent:self path:[path stringByAppendingPathComponent:file]];
-		[metaFiles setObject:[ret dict] forKey:file];
+		NSMutableDictionary *dict = [metaFiles objectForKey:file];
+		ret = [[SapphireFileMetaData alloc] initWithDictionary:dict parent:self path:[path stringByAppendingPathComponent:file]];
+		if(dict == nil)
+			[metaFiles setObject:[ret dict] forKey:file];
 		/*Add to cache*/
 		[cachedMetaFiles setObject:ret forKey:file];
 		[ret autorelease];
@@ -1005,8 +1015,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	if(ret == nil)
 	{
 		/*Create it*/
-		ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:[metaDirs objectForKey:dir] parent:self path:[path stringByAppendingPathComponent:dir]];
-		[metaDirs setObject:[ret dict] forKey:dir];
+		NSMutableDictionary *dict = [metaDirs objectForKey:dir];
+		ret = [[SapphireDirectoryMetaData alloc] initWithDictionary:dict parent:self path:[path stringByAppendingPathComponent:dir]];
+		if(dict == nil)
+			[metaDirs setObject:[ret dict] forKey:dir];
 		/*Add to cache*/
 		[cachedMetaDirs setObject:ret forKey:dir];
 		[ret autorelease];		
@@ -1490,7 +1502,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		[self setFileClass:FILE_CLASS_TV_SHOW];
 }
 
-- (id)initWithDictionary:(NSDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
+- (id)initWithDictionary:(NSMutableDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath
 {
 	self = [super initWithDictionary:dict parent:myParent path:myPath];
 	if(self == nil)
