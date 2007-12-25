@@ -203,6 +203,7 @@ static SapphireImportHelper *shared = nil;
 - (void)relinquishHelper
 {
 	[client exitChild];
+	[serverConnection registerName:nil];
 	[serverConnection setRootObject:nil];
 	[shared autorelease];
 	shared = nil;
