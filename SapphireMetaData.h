@@ -247,6 +247,13 @@ typedef enum {
 - (id)initWithDictionary:(NSMutableDictionary *)dict parent:(SapphireMetaData *)myParent path:(NSString *)myPath;
 
 /*!
+ * @brief Get the delegate for the metadata
+ *
+ * @return The current delegate
+ */
+- (id <SapphireMetaDataDelegate>)delegate;
+
+/*!
  * @brief Sets the delegate for the metadata
  *
  * @param newDelegate The new delegate

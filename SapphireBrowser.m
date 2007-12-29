@@ -95,7 +95,8 @@ static BOOL is10Version = NO;
     // always remember to deallocate your resources
 	[_names release];
 	[items release];
-	[metaData setDelegate:nil];
+	if([metaData delegate] == self)
+		[metaData setDelegate:nil];
 	[metaData release];
 	[predicate release];
     [super dealloc];

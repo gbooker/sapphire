@@ -236,6 +236,11 @@ static NSSet *allExtensions = nil;
 	return path;
 }
 
+- (id <SapphireMetaDataDelegate>)delegate
+{
+	return delegate;
+}
+
 - (void)setDelegate:(id <SapphireMetaDataDelegate>)newDelegate
 {
 	delegate = newDelegate;
