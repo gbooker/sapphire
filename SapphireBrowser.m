@@ -840,8 +840,8 @@ BOOL setupAudioOutput(int sampleRate)
 		{
 			id meta = nil;
 			int row = [self getSelection];
-			if(row > [_names count])
-				return NO;
+			if(row >= [_names count])
+				break;
 			
 			NSString *name = [_names objectAtIndex:row];
 			
@@ -851,7 +851,7 @@ BOOL setupAudioOutput(int sampleRate)
 			else if (row < dirCount + fileCount)
 				meta = [metaData metaDataForFile:name];
 			else
-				return NO;
+				break;
 			/*Do mark menu*/
 			id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
 			[(SapphireMarkMenu *)controller setPredicate:predicate];
