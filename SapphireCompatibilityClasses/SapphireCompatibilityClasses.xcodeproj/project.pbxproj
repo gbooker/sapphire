@@ -38,7 +38,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFCA70D26B86800E22363 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */;
+			remoteGlobalIDString = F51BFCF80D26BB4D00E22363;
 			remoteInfo = SapphireLeopardCompatClasses;
 		};
 /* End PBXContainerItemProxy section */
