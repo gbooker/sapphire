@@ -124,28 +124,28 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */;
+			remoteGlobalIDString = F51BFCD10D26BAED00E22363;
 			remoteInfo = SapphireCompatClasses;
 		};
 		F51BFD340D26BDF300E22363 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */;
+			remoteGlobalIDString = F51BFCF90D26BB4D00E22363;
 			remoteInfo = SapphireLeopardCompatClasses;
 		};
 		F51BFD380D26BDFF00E22363 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */;
+			remoteGlobalIDString = F51BFCD00D26BAED00E22363;
 			remoteInfo = SapphireCompatClasses;
 		};
 		F51BFD3A0D26BDFF00E22363 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */;
+			remoteGlobalIDString = F51BFCF80D26BB4D00E22363;
 			remoteInfo = SapphireLeopardCompatClasses;
 		};
 		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {

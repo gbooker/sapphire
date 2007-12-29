@@ -21,6 +21,9 @@
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
 #include <dlfcn.h>
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
+#import <SapphireCompatClasses/SapphireDVDLoadingController.h>
+
 #import "SapphireBrowser.h"
 #import "SapphireMetaData.h"
 #import "SapphirePredicates.h"
@@ -34,7 +37,6 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
 #import "SapphireAllImporter.h"
-#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireVirtualDirectoryLoading.h"
 #import "SapphireImportHelper.h"
 
@@ -253,6 +255,14 @@ static NSArray *predicates = nil;
 	[controllers removeAllObjects];
 	[names addObjectsFromArray:masterNames];
 	[controllers addObjectsFromArray:masterControllers];
+	NSMutableDictionary *dvds = [NSMutableDictionary dictionary];
+	NSEnumerator *dvdEnum = [[BRDiskArbHandler mountedDVDs] objectEnumerator];
+	BRDiskInfo *dvdInfo;
+	while((dvdInfo = [dvdEnum nextObject]) != nil)
+	{
+		NSString *mountpoint = [dvdInfo mountpoint];
+		[dvds setObject:dvdInfo forKey:mountpoint];
+	}
 	
 	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
 	NSEnumerator *browserPointsEnum = [[metaCollection collectionDirectories] objectEnumerator];
@@ -262,13 +272,26 @@ static NSArray *predicates = nil;
 	{
 		if([metaCollection hideCollection:browserPoint])
 			continue;
-		SapphireBrowser *browser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
-		[browser setListTitle:[NSString stringWithFormat:@" %@",[browserPoint lastPathComponent]]];
-		[browser setListIcon:predicateGem];
-		[names insertObject:[NSString stringWithFormat:@"  %@", browserPoint] atIndex:index];
-		[controllers insertObject:browser atIndex:index];
-		[browser release];
-		index++;
+		id controller = nil;
+		if((dvdInfo = [dvds objectForKey:browserPoint]) != nil)
+		{
+			BRDVDMediaAsset *asset = [BRDVDMediaAsset assetFromDiskInfo:dvdInfo];
+			controller = [[SapphireDVDLoadingController alloc] initWithScene:[self scene] forAsset:asset];
+			[controller retain];
+		}
+		else
+		{
+			controller = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:[metaCollection directoryForPath:browserPoint]];
+			[controller setListTitle:[NSString stringWithFormat:@" %@",[browserPoint lastPathComponent]]];
+			[controller setListIcon:predicateGem];
+		}
+		if(controller != nil)
+		{
+			[names insertObject:[NSString stringWithFormat:@"  %@", browserPoint] atIndex:index];
+			[controllers insertObject:controller atIndex:index];
+			[controller release];
+			index++;
+		}
 	}	
 	
 	if([settings disableUIQuit])
