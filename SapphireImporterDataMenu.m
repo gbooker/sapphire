@@ -21,7 +21,7 @@
 #import "SapphireImporterDataMenu.h"
 #import <BackRow/BackRow.h>
 #import "SapphireMetaData.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireImportHelper.h"
 #import "SapphireApplianceController.h"
 

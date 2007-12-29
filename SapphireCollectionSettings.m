@@ -20,7 +20,7 @@
 
 #import "SapphireCollectionSettings.h"
 #import "SapphireMetaData.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 @implementation SapphireCollectionSettings
 

@@ -19,7 +19,7 @@
  */
 
 #import "SapphireMovieChooser.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import	"SapphireTheme.h"
 
 

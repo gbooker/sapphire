@@ -23,8 +23,9 @@
 #import "SapphireApplianceController.h"
 #import <BackRow/BackRow.h>
 #import <objc/objc-class.h>
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
-#import "BackRowUtils.h"
+#import <SapphireCompatClasses/BackRowUtils.h>
 
 @implementation SapphireAppliance
 
@@ -35,6 +36,7 @@
         return;
 	
     [[cls sharedInstance] enableFeatureNamed: [[NSBundle bundleForClass: self] bundleIdentifier]];
+	SapphireLoadFramework();
 }
 
 + (NSString *) className

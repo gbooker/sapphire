@@ -19,7 +19,7 @@
  */
 
 #import "SapphireTheme.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 @implementation SapphireTheme
 

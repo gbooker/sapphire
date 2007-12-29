@@ -20,7 +20,7 @@
 
 #import "SapphireMarkMenu.h"
 #import "SapphireMetaData.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import <QTKit/QTKit.h>
 
 @implementation SapphireMarkMenu

@@ -31,8 +31,8 @@
 #import "SapphireAudioPlayer.h"
 #import "SapphireAudioMedia.h"
 #import "SapphireApplianceController.h"
-#import "SapphireFrontRowCompat.h"
-#import "SapphireDVDLoadingController.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
+#import <SapphireCompatClasses/SapphireDVDLoadingController.h>
 
 #import <AudioUnit/AudioUnit.h>
 #import <objc/objc-class.h>

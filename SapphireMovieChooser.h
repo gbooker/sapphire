@@ -18,7 +18,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SapphireCenteredMenuController.h"
+#import <SapphireCompatClasses/SapphireCenteredMenuController.h>
 
 #define MOVIE_CHOOSE_CANCEL		-2
 #define MOVIE_CHOOSE_NOT_MOVIE	-1

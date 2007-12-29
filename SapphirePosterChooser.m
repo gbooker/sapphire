@@ -21,7 +21,7 @@
 #import "SapphirePosterChooser.h"
 #import "SapphireMetaData.h"
 #import	"SapphireSettings.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned int height);
 

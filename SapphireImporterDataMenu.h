@@ -19,7 +19,7 @@
  */
 
 #import "SapphireMetaData.h"
-#import "SapphireLayerController.h"
+#import <SapphireCompatClasses/SapphireLayerController.h>
 
 @protocol SapphireFileMetaDataProtocol;
 @class SapphireImporterDataMenu;

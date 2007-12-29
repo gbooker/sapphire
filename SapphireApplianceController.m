@@ -34,7 +34,7 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
 #import "SapphireAllImporter.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireVirtualDirectoryLoading.h"
 #import "SapphireImportHelper.h"
 
@@ -56,13 +56,6 @@ static NSArray *predicates = nil;
 {
 	predicates = [[NSArray alloc] initWithObjects:[[SapphireUnwatchedPredicate alloc] init], [[SapphireFavoritePredicate alloc] init], [[SapphireTopShowPredicate alloc] init], nil];
 	[predicates makeObjectsPerformSelector:@selector(release)];
-	if([SapphireFrontRowCompat usingFrontRow])
-	{
-		NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath] ;
-		NSString *compatPath = [myBundlePath stringByAppendingString:@"/Contents/Frameworks/CompatClasses.framework"];
-		NSBundle *compat = [NSBundle bundleWithPath:compatPath];
-		[compat load];
-	}
 }
 
 + (SapphirePredicate *)predicate

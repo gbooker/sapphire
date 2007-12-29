@@ -19,7 +19,7 @@
  */
 
 #import "SapphireMetaData.h"
-#import "SapphireMediaMenuController.h"
+#import <SapphireCompatClasses/SapphireMediaMenuController.h>
 @class SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
 
 #define SOUND_STATE_SOUND_ENABLED		1

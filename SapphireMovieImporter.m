@@ -24,7 +24,7 @@
 #import "NSFileManager-Extensions.h"
 #import "SapphireMovieChooser.h"
 #import "SapphirePosterChooser.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireShowChooser.h"
 
 #define VERSION_KEY					@"Version"

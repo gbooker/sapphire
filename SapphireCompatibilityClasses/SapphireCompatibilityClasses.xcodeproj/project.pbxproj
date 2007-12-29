@@ -1,0 +1,464 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F51BFCE50D26BB3900E22363 /* SapphireCenteredMenuController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCE60D26BB3900E22363 /* SapphireCenteredMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */; };
+		F51BFCE70D26BB3900E22363 /* SapphireDVDLoadingController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCD90D26BB3900E22363 /* SapphireDVDLoadingController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCE80D26BB3900E22363 /* SapphireDVDLoadingController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCDA0D26BB3900E22363 /* SapphireDVDLoadingController.m */; };
+		F51BFCE90D26BB3900E22363 /* SapphireFrontRowCompat.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCDB0D26BB3900E22363 /* SapphireFrontRowCompat.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCEA0D26BB3900E22363 /* SapphireFrontRowCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCDC0D26BB3900E22363 /* SapphireFrontRowCompat.m */; };
+		F51BFCEB0D26BB3900E22363 /* SapphireLayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCDD0D26BB3900E22363 /* SapphireLayerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCEC0D26BB3900E22363 /* SapphireLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCDE0D26BB3900E22363 /* SapphireLayerController.m */; };
+		F51BFCED0D26BB3900E22363 /* SapphireMediaMenuController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCDF0D26BB3900E22363 /* SapphireMediaMenuController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCEE0D26BB3900E22363 /* SapphireMediaMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCE00D26BB3900E22363 /* SapphireMediaMenuController.m */; };
+		F51BFCEF0D26BB3900E22363 /* SapphireMenuController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCE10D26BB3900E22363 /* SapphireMenuController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCF00D26BB3900E22363 /* SapphireMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCE20D26BB3900E22363 /* SapphireMenuController.m */; };
+		F51BFCF10D26BB3900E22363 /* SapphireTextWithSpinnerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCE30D26BB3900E22363 /* SapphireTextWithSpinnerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F51BFCF20D26BB3900E22363 /* SapphireTextWithSpinnerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCE40D26BB3900E22363 /* SapphireTextWithSpinnerController.m */; };
+		F51BFD0A0D26BC9900E22363 /* BRLayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFD080D26BC9900E22363 /* BRLayerController.m */; };
+		F51BFD0B0D26BC9900E22363 /* BRLayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFD090D26BC9900E22363 /* BRLayerController.h */; };
+		F51BFD110D26BCD200E22363 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD100D26BCD200E22363 /* BackRow.framework */; };
+		F51BFD120D26BCD200E22363 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD100D26BCD200E22363 /* BackRow.framework */; };
+		F51BFD150D26BCEA00E22363 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD130D26BCEA00E22363 /* AppKit.framework */; };
+		F51BFD160D26BCEA00E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD140D26BCEA00E22363 /* Foundation.framework */; };
+		F51BFD170D26BCEA00E22363 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD130D26BCEA00E22363 /* AppKit.framework */; };
+		F51BFD180D26BCEA00E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD140D26BCEA00E22363 /* Foundation.framework */; };
+		F51BFD220D26BD8900E22363 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */; };
+		F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFD540D26BEF900E22363 /* BackRowUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F51BFCFE0D26BB8D00E22363 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFCA70D26B86800E22363 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */;
+			remoteInfo = SapphireLeopardCompatClasses;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SapphireCompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCenteredMenuController.h; sourceTree = "<group>"; };
+		F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireCenteredMenuController.m; sourceTree = "<group>"; };
+		F51BFCD90D26BB3900E22363 /* SapphireDVDLoadingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireDVDLoadingController.h; sourceTree = "<group>"; };
+		F51BFCDA0D26BB3900E22363 /* SapphireDVDLoadingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireDVDLoadingController.m; sourceTree = "<group>"; };
+		F51BFCDB0D26BB3900E22363 /* SapphireFrontRowCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireFrontRowCompat.h; sourceTree = "<group>"; };
+		F51BFCDC0D26BB3900E22363 /* SapphireFrontRowCompat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireFrontRowCompat.m; sourceTree = "<group>"; };
+		F51BFCDD0D26BB3900E22363 /* SapphireLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireLayerController.h; sourceTree = "<group>"; };
+		F51BFCDE0D26BB3900E22363 /* SapphireLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLayerController.m; sourceTree = "<group>"; };
+		F51BFCDF0D26BB3900E22363 /* SapphireMediaMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMediaMenuController.h; sourceTree = "<group>"; };
+		F51BFCE00D26BB3900E22363 /* SapphireMediaMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMediaMenuController.m; sourceTree = "<group>"; };
+		F51BFCE10D26BB3900E22363 /* SapphireMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMenuController.h; sourceTree = "<group>"; };
+		F51BFCE20D26BB3900E22363 /* SapphireMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMenuController.m; sourceTree = "<group>"; };
+		F51BFCE30D26BB3900E22363 /* SapphireTextWithSpinnerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTextWithSpinnerController.h; sourceTree = "<group>"; };
+		F51BFCE40D26BB3900E22363 /* SapphireTextWithSpinnerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTextWithSpinnerController.m; sourceTree = "<group>"; };
+		F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SapphireLeopardCompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F51BFD080D26BC9900E22363 /* BRLayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRLayerController.m; sourceTree = "<group>"; };
+		F51BFD090D26BC9900E22363 /* BRLayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRLayerController.h; sourceTree = "<group>"; };
+		F51BFD100D26BCD200E22363 /* BackRow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackRow.framework; path = /System/Library/PrivateFrameworks/BackRow.framework; sourceTree = "<absolute>"; };
+		F51BFD130D26BCEA00E22363 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		F51BFD140D26BCEA00E22363 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
+		F51BFD540D26BEF900E22363 /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F51BFCCF0D26BAED00E22363 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BFD120D26BCD200E22363 /* BackRow.framework in Frameworks */,
+				F51BFD170D26BCEA00E22363 /* AppKit.framework in Frameworks */,
+				F51BFD180D26BCEA00E22363 /* Foundation.framework in Frameworks */,
+				F51BFD220D26BD8900E22363 /* ExceptionHandling.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BFCF70D26BB4D00E22363 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BFD110D26BCD200E22363 /* BackRow.framework in Frameworks */,
+				F51BFD150D26BCEA00E22363 /* AppKit.framework in Frameworks */,
+				F51BFD160D26BCEA00E22363 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F51BFCA50D26B86800E22363 = {
+			isa = PBXGroup;
+			children = (
+				F51BFCB00D26B87100E22363 /* Classes */,
+				F51BFD0F0D26BCBE00E22363 /* Frameworks */,
+				F51BFCD20D26BAED00E22363 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F51BFCB00D26B87100E22363 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F51BFD540D26BEF900E22363 /* BackRowUtils.h */,
+				F51BFD080D26BC9900E22363 /* BRLayerController.m */,
+				F51BFD090D26BC9900E22363 /* BRLayerController.h */,
+				F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */,
+				F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */,
+				F51BFCD90D26BB3900E22363 /* SapphireDVDLoadingController.h */,
+				F51BFCDA0D26BB3900E22363 /* SapphireDVDLoadingController.m */,
+				F51BFCDB0D26BB3900E22363 /* SapphireFrontRowCompat.h */,
+				F51BFCDC0D26BB3900E22363 /* SapphireFrontRowCompat.m */,
+				F51BFCDD0D26BB3900E22363 /* SapphireLayerController.h */,
+				F51BFCDE0D26BB3900E22363 /* SapphireLayerController.m */,
+				F51BFCDF0D26BB3900E22363 /* SapphireMediaMenuController.h */,
+				F51BFCE00D26BB3900E22363 /* SapphireMediaMenuController.m */,
+				F51BFCE10D26BB3900E22363 /* SapphireMenuController.h */,
+				F51BFCE20D26BB3900E22363 /* SapphireMenuController.m */,
+				F51BFCE30D26BB3900E22363 /* SapphireTextWithSpinnerController.h */,
+				F51BFCE40D26BB3900E22363 /* SapphireTextWithSpinnerController.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		F51BFCD20D26BAED00E22363 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */,
+				F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F51BFD0F0D26BCBE00E22363 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */,
+				F51BFD130D26BCEA00E22363 /* AppKit.framework */,
+				F51BFD140D26BCEA00E22363 /* Foundation.framework */,
+				F51BFD100D26BCD200E22363 /* BackRow.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		F51BFCCC0D26BAED00E22363 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BFCE50D26BB3900E22363 /* SapphireCenteredMenuController.h in Headers */,
+				F51BFCE70D26BB3900E22363 /* SapphireDVDLoadingController.h in Headers */,
+				F51BFCE90D26BB3900E22363 /* SapphireFrontRowCompat.h in Headers */,
+				F51BFCEB0D26BB3900E22363 /* SapphireLayerController.h in Headers */,
+				F51BFCED0D26BB3900E22363 /* SapphireMediaMenuController.h in Headers */,
+				F51BFCEF0D26BB3900E22363 /* SapphireMenuController.h in Headers */,
+				F51BFCF10D26BB3900E22363 /* SapphireTextWithSpinnerController.h in Headers */,
+				F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BFCF40D26BB4D00E22363 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BFD0B0D26BC9900E22363 /* BRLayerController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F51BFCD60D26BAEE00E22363 /* Build configuration list for PBXNativeTarget "SapphireCompatClasses" */;
+			buildPhases = (
+				F51BFCCC0D26BAED00E22363 /* Headers */,
+				F51BFCCD0D26BAED00E22363 /* Resources */,
+				F51BFCCE0D26BAED00E22363 /* Sources */,
+				F51BFCCF0D26BAED00E22363 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F51BFCFF0D26BB8D00E22363 /* PBXTargetDependency */,
+			);
+			name = SapphireCompatClasses;
+			productName = SapphireCompatClasses;
+			productReference = F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F51BFCFD0D26BB4E00E22363 /* Build configuration list for PBXNativeTarget "SapphireLeopardCompatClasses" */;
+			buildPhases = (
+				F51BFCF40D26BB4D00E22363 /* Headers */,
+				F51BFCF50D26BB4D00E22363 /* Resources */,
+				F51BFCF60D26BB4D00E22363 /* Sources */,
+				F51BFCF70D26BB4D00E22363 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SapphireLeopardCompatClasses;
+			productName = SapphireLeopardCompatClasses;
+			productReference = F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F51BFCA70D26B86800E22363 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = F51BFCAA0D26B86800E22363 /* Build configuration list for PBXProject "SapphireCompatibilityClasses" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = F51BFCA50D26B86800E22363;
+			productRefGroup = F51BFCD20D26BAED00E22363 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */,
+				F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F51BFCCD0D26BAED00E22363 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BFCF50D26BB4D00E22363 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F51BFCCE0D26BAED00E22363 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BFCE60D26BB3900E22363 /* SapphireCenteredMenuController.m in Sources */,
+				F51BFCE80D26BB3900E22363 /* SapphireDVDLoadingController.m in Sources */,
+				F51BFCEA0D26BB3900E22363 /* SapphireFrontRowCompat.m in Sources */,
+				F51BFCEC0D26BB3900E22363 /* SapphireLayerController.m in Sources */,
+				F51BFCEE0D26BB3900E22363 /* SapphireMediaMenuController.m in Sources */,
+				F51BFCF00D26BB3900E22363 /* SapphireMenuController.m in Sources */,
+				F51BFCF20D26BB3900E22363 /* SapphireTextWithSpinnerController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BFCF60D26BB4D00E22363 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BFD0A0D26BC9900E22363 /* BRLayerController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F51BFCFF0D26BB8D00E22363 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */;
+			targetProxy = F51BFCFE0D26BB8D00E22363 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F51BFCA80D26B86800E22363 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../build;
+			};
+			name = Debug;
+		};
+		F51BFCA90D26B86800E22363 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					i386,
+					ppc7400,
+				);
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../build;
+			};
+			name = Release;
+		};
+		F51BFCD40D26BAEE00E22363 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
+				INFOPLIST_FILE = "SapphireCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireCompatClasses;
+			};
+			name = Debug;
+		};
+		F51BFCD50D26BAEE00E22363 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
+				INFOPLIST_FILE = "SapphireCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireCompatClasses;
+			};
+			name = Release;
+		};
+		F51BFCFB0D26BB4E00E22363 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "SapphireLeopardCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireLeopardCompatClasses;
+			};
+			name = Debug;
+		};
+		F51BFCFC0D26BB4E00E22363 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "SapphireLeopardCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireLeopardCompatClasses;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F51BFCAA0D26B86800E22363 /* Build configuration list for PBXProject "SapphireCompatibilityClasses" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F51BFCA80D26B86800E22363 /* Debug */,
+				F51BFCA90D26B86800E22363 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F51BFCD60D26BAEE00E22363 /* Build configuration list for PBXNativeTarget "SapphireCompatClasses" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F51BFCD40D26BAEE00E22363 /* Debug */,
+				F51BFCD50D26BAEE00E22363 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F51BFCFD0D26BB4E00E22363 /* Build configuration list for PBXNativeTarget "SapphireLeopardCompatClasses" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F51BFCFB0D26BB4E00E22363 /* Debug */,
+				F51BFCFC0D26BB4E00E22363 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F51BFCA70D26B86800E22363 /* Project object */;
+}

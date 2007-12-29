@@ -19,7 +19,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import "SapphireMediaMenuController.h"
+#import <SapphireCompatClasses/SapphireMediaMenuController.h>
 
 @class SapphireMetaDataCollection;
 

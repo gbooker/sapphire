@@ -23,7 +23,7 @@
 #import "SapphireMedia.h"
 #import "SapphireSettings.h"
 #import <objc/objc-class.h>
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 /*These interfaces are to access variables not available*/
 @interface BRMetadataLayer (protectedAccess)

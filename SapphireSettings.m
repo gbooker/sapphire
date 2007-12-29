@@ -28,7 +28,7 @@
 #import "SapphireMovieImporter.h"
 #import "SapphirePosterChooser.h"
 #import "SapphireCollectionSettings.h"
-#import "SapphireFrontRowCompat.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 static SapphireSettings *sharedInstance = nil;
 
