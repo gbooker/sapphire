@@ -119,6 +119,8 @@
 
 - (void)processFile:(SapphireFileMetaData *)file
 {
+	if(![[NSFileManager defaultManager] fileExistsAtPath:[file path]])
+		return;
 	[[directory allValues] makeObjectsPerformSelector:@selector(processFile:) withObject:file];
 }
 

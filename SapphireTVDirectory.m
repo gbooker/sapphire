@@ -21,43 +21,7 @@
 #import "SapphireTVDirectory.h"
 #import "SapphireMetaData.h"
 
-static NSSet *coverArtExtentions = nil;
-
-static NSString *searchExtForPath(NSString *path)
-{
-	NSFileManager *fm = [NSFileManager defaultManager];
-	BOOL isDir = NO;
-	/*Search all extensions*/
-	NSEnumerator *extEnum = [coverArtExtentions objectEnumerator];
-	NSString *ext = nil;
-	while((ext = [extEnum nextObject]) != nil)
-	{
-		NSString *candidate = [path stringByAppendingPathExtension:ext];
-		/*Check the candidate*/
-		if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
-		{
-			if([fm fileExistsAtPath:candidate isDirectory:&isDir] && !isDir)
-				return candidate;
-		}
-			
-	}
-	/*Didn't find one*/
-	return nil;
-}
-
 @implementation SapphireTVDirectory
-+ (void)initialize
-{
-	/*Initialize the set of cover art extensions*/
-	coverArtExtentions = [[NSSet alloc] initWithObjects:
-		@"jpg",
-		@"jpeg",
-		@"tif",
-		@"tiff",
-		@"png",
-		@"gif",
-		nil];
-}
 
 - (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath
 {
@@ -123,6 +87,8 @@ static NSString *searchExtForPath(NSString *path)
 {
 	NSString *show = [file showName];
 	if(show == nil)
+		return;
+	if(![[NSFileManager defaultManager] fileExistsAtPath:[file path]])
 		return;
 	[self addFile:file toKey:show withChildClass:[SapphireShowDirectory class]];
 }
