@@ -1,5 +1,5 @@
 /*
- * SapphireTVShowDataMenu.m
+ * SapphireTVShowImporter.m
  * Sapphire
  *
  * Created by Graham Booker on Jun. 30, 2007.
@@ -605,7 +605,7 @@
 
 - (NSString *)informativeText
 {
-	return BRLocalizedString(@"This tool will attempt to fetch information about your Movie files from the Internet (IMDB/IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the movie import");
+	return BRLocalizedString(@"This tool will attempt to fetch information about your TV shows files from the Internet (TVRage).  This procedure may take quite some time and could ask you questions.  You may cancel at any time.", @"Description of the movie import");
 }
 
 - (NSString *)buttonTitle

@@ -1,5 +1,5 @@
 /*
- * SapphireTVShowDataMenu.h
+ * SapphireTVShowImporter.h
  * Sapphire
  *
  * Created by Graham Booker on Jun. 30, 2007.
