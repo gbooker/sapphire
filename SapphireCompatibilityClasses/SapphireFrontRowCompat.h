@@ -18,22 +18,6 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define SapphireLoadFramework()\
-if(NSClassFromString(@"SapphireFrontRowCompat") == nil)\
-{\
-	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];\
-	NSString *compatPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks/CompatClasses.framework"];\
-	NSBundle *compat = [NSBundle bundleWithPath:compatPath];\
-	[compat load];\
-	if([SapphireFrontRowCompat usingFrontRow])\
-	{\
-		myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];\
-		compatPath = [[myBundlePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Contents/Frameworks/LeopardCompatClasses.framework"];\
-		compat = [NSBundle bundleWithPath:compatPath];\
-		[compat load];\
-	}\
-}
-
 /*!
  * @brief A compatibility category for frontrow
  *
@@ -237,3 +221,20 @@ if(NSClassFromString(@"SapphireFrontRowCompat") == nil)\
  */
 + (NSArray *)callStackReturnAddressesForException:(NSException *)exception;
 @end
+
+static inline void SapphireLoadFramework(NSString *frameworkPath)
+{
+	if(NSClassFromString(@"SapphireFrontRowCompat") == nil)
+	{
+		NSString *compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireCompatClasses.framework"];
+		NSBundle *compat = [NSBundle bundleWithPath:compatPath];
+		[compat load];
+		if([SapphireFrontRowCompat usingFrontRow])
+		{
+			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireLeopardCompatClasses.framework"];
+			compat = [NSBundle bundleWithPath:compatPath];
+			[compat load];
+		}
+	}	
+}
+

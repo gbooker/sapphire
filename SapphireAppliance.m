@@ -31,12 +31,15 @@
 
 + (void) initialize
 {
+	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
+	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks"];
+	SapphireLoadFramework(frameworkPath);
+	NSLog(@"Got to init");
     Class cls = NSClassFromString( @"BRFeatureManager" );
     if ( cls == Nil )
         return;
 	
     [[cls sharedInstance] enableFeatureNamed: [[NSBundle bundleForClass: self] bundleIdentifier]];
-	SapphireLoadFramework();
 }
 
 + (NSString *) className
