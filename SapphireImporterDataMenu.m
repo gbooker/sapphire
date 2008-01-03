@@ -386,6 +386,7 @@
 - (void)willBePushed
 {
 	[button setTarget:self];
+	[super willBePushed];
 }
 
 - (void)wasPopped

@@ -34,7 +34,6 @@
 	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
 	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks"];
 	SapphireLoadFramework(frameworkPath);
-	NSLog(@"Got to init");
     Class cls = NSClassFromString( @"BRFeatureManager" );
     if ( cls == Nil )
         return;
