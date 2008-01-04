@@ -646,6 +646,20 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	[self writeMetaData];
 }
 
+- (NSSet *)skipDirectories
+{
+	NSMutableSet *ret = [NSMutableSet set];
+	NSEnumerator *colEnum = [[self collectionDirectories] objectEnumerator];
+	NSString *collection;
+	while((collection = [colEnum nextObject]) != nil)
+	{
+		if(![self skipCollection:collection])
+			[ret addObject:collection];
+	}
+	
+	return ret;
+}
+
 - (void)addCollectionDirectory:(NSString *)dir
 {
 	if(![collectionDirs containsObject:dir])

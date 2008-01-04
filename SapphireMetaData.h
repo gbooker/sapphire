@@ -388,6 +388,13 @@ typedef enum {
 - (void)setSkip:(BOOL)skip forCollection:(NSString *)collection;
 
 /*!
+ * @brief The set of directories to skip during import
+ *
+ * @return An NSSet of directories to not import
+ */
+- (NSSet *)skipDirectories;
+
+/*!
  * @brief Add a collection
  *
  * This function adds a directory to the list of collections.

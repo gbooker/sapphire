@@ -56,6 +56,7 @@ static NSMutableArray *joinList;
 	commands = nil;
 	/*Create the menu*/
 	if(isDir)
+	{
 		names = [[NSMutableArray alloc] initWithObjects:
 			BRLocalizedString(@"Mark All as Watched", @"Mark whole directory as watched"),
 			BRLocalizedString(@"Mark All as Unwatched", @"Mark whole directory as unwatched"),
@@ -65,6 +66,17 @@ static NSMutableArray *joinList;
 			BRLocalizedString(@"Mark All to Refetch Movie Data", @"Mark whole directory to re-fetch its movie data"),
 			BRLocalizedString(@"Mark All to Clear Metadata", @"Mark whole directory to delete the metadata"),
 			nil];
+		SapphireMetaDataCollection *collection = [meta collection];
+		NSString *path = [meta path];
+		if([collection skipCollection:path])
+			[names addObject:BRLocalizedString(@"Mark this Directory to Not Skip Import", @"Marks this directory to be no longer be skipped during import")];
+		else
+			[names addObject:BRLocalizedString(@"Mark this Directory to Skip Import", @"Marks this directory to be skipped during import")];
+		if([collection isCollectionDirectory:path])
+			[names addObject:BRLocalizedString(@"Mark this Directory to Not be a Collection", @"Marks the directory to no longer be a collection")];
+		else
+			[names addObject:BRLocalizedString(@"Mark this Directory as a Collection", @"Marks the directory to be a collection")];
+	}
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
 		SapphireFileMetaData *fileMeta = (SapphireFileMetaData *)metaData;
@@ -306,6 +318,8 @@ static NSMutableArray *joinList;
 	if(isDir)
 	{
 		SapphireDirectoryMetaData *dirMeta = (SapphireDirectoryMetaData *)metaData;
+		SapphireMetaDataCollection *collection = [dirMeta collection];
+		NSString *path = [dirMeta path];
 		switch(row)
 		{
 			case 0:
@@ -324,6 +338,18 @@ static NSMutableArray *joinList;
 				[dirMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:predicate];
 			case 5:
 				[dirMeta setToImportFromSource:META_IMDB_IMPORT_KEY forPredicate:predicate];
+				break;
+			case 6:
+				[dirMeta clearMetaDataForPredicate:predicate];
+				break;
+			case 7:
+				[collection setSkip:![collection skipCollection:path] forCollection:path];
+				break;
+			case 8:
+				if([collection isCollectionDirectory:path])
+					[collection removeCollectionDirectory:path];
+				else
+					[collection addCollectionDirectory:path];
 				break;
 		}
 	}

@@ -172,7 +172,7 @@
 		return;
 	}
 	SapphireDirectoryMetaData *meta = [metaCollection directoryForPath:path];
-	[meta getSubFileMetasWithDelegate:self skipDirectories:[NSMutableSet set]];
+	[meta getSubFileMetasWithDelegate:self skipDirectories:[NSMutableSet setWithSet:[metaCollection skipDirectories]]];
 	collectionIndex++;
 }
 
