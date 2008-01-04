@@ -43,6 +43,13 @@
 - (id)initWithParent:(SapphireVirtualDirectory *)myParent path:(NSString *)myPath;
 
 /*!
+ * @brief Does the real work of reloading the directory
+ *
+ * This function reloads the directories contents, but does not inform the delegate.  This is useful for subclasess to override if they need custom directory content behavior.  The normal reload function calls this one, then informs the delegate of the change.
+ */
+- (void)reloadDirectoryContentsWithoutInformDelegate;
+
+/*!
  * @brief Sets a timer to reload
  *
  * The timer is set to reload the contents so that updates can be consolidated.

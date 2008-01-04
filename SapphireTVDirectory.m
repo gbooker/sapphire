@@ -128,9 +128,9 @@
 @end
 
 @implementation SapphireSeasonDirectory
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
-	[super reloadDirectoryContents];
+	[super reloadDirectoryContentsWithoutInformDelegate];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
 	NSEnumerator *keyEnum = [directory keyEnumerator];

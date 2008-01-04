@@ -79,9 +79,9 @@
 	[collection writeMetaData];
 }
 
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
-	[super reloadDirectoryContents];
+	[super reloadDirectoryContentsWithoutInformDelegate];
 	[directories setArray:keyOrder];
 }
 
@@ -228,9 +228,9 @@
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 }
 
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
-	[super reloadDirectoryContents];
+	[super reloadDirectoryContentsWithoutInformDelegate];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
 	NSEnumerator *keyEnum = [directory keyEnumerator];
@@ -280,9 +280,9 @@ static NSComparisonResult imdbTop250Compare(NSString *first, NSString *second, v
 	return NSOrderedSame;
 }
 
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
-	[super reloadDirectoryContents];
+	[super reloadDirectoryContentsWithoutInformDelegate];
 	
 	[files sortUsingFunction:imdbTop250Compare context:metaFiles];
 }
@@ -313,9 +313,9 @@ static NSComparisonResult oscarsWonCompare(NSString *first, NSString *second, vo
 	return NSOrderedSame;
 }
 
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
-	[super reloadDirectoryContents];
+	[super reloadDirectoryContentsWithoutInformDelegate];
 	
 	[files sortUsingFunction:oscarsWonCompare context:metaFiles];
 }

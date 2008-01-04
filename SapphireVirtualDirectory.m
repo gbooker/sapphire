@@ -54,7 +54,7 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	[super dealloc];
 }
 
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
 	[files removeAllObjects];
 	[directories removeAllObjects];
@@ -63,12 +63,12 @@ NSString *searchCoverArtExtForPath(NSString *path);
 	[cachedMetaFiles removeAllObjects];
 	[cachedMetaDirs removeAllObjects];
 	[reloadTimer invalidate];
-	reloadTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(completeReloadOfDirectoryContents) userInfo:nil repeats:NO];
+	reloadTimer = nil;
 }
 
-- (void)completeReloadOfDirectoryContents
+- (void)reloadDirectoryContents
 {
-	reloadTimer = nil;
+	[self reloadDirectoryContentsWithoutInformDelegate];
 	[delegate directoryContentsChanged];
 }
 
@@ -173,9 +173,9 @@ NSString *searchCoverArtExtForPath(NSString *path);
 @end
 
 @implementation SapphireVirtualDirectoryOfDirectories
-- (void)reloadDirectoryContents
+- (void)reloadDirectoryContentsWithoutInformDelegate
 {
-	[super reloadDirectoryContents];
+	[super reloadDirectoryContentsWithoutInformDelegate];
 	NSMutableDictionary *mutDict = [[NSMutableDictionary alloc] init];
 	NSEnumerator *keyEnum = [directory keyEnumerator];
 	NSString *key = nil;
