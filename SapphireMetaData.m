@@ -456,7 +456,7 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	collectionDirs = [[collectionOptions objectForKey:META_COLLECTION_DIRS] retain];
 	if(collectionDirs == nil)
 	{
-		collectionDirs = [[NSMutableDictionary alloc] init];
+		collectionDirs = [[NSMutableArray alloc] init];
 		[collectionOptions setObject:collectionDirs forKey:META_COLLECTION_DIRS];
 	}
 	
