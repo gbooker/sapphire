@@ -35,6 +35,13 @@ typedef enum {
 	COMMAND_MARK_AND_JOIN,
 	COMMAND_CLEAR_JOIN_MARK,
 	COMMAND_JOIN,
+	//Directory commands
+	COMMAND_MARK_WATCHED,
+	COMMAND_MARK_UNWATCHED,
+	COMMAND_MARK_FAVORITE,
+	COMMAND_MARK_NOT_FAVORITE,
+	COMMAND_TOGGLE_SKIP,
+	COMMAND_TOGGLE_COLLECTION
 } MarkCommand;
 
 static NSMutableArray *joinList;
@@ -66,16 +73,30 @@ static NSMutableArray *joinList;
 			BRLocalizedString(@"Mark All to Refetch Movie Data", @"Mark whole directory to re-fetch its movie data"),
 			BRLocalizedString(@"Mark All to Clear Metadata", @"Mark whole directory to delete the metadata"),
 			nil];
-		SapphireMetaDataCollection *collection = [meta collection];
+		commands = [[NSMutableArray alloc] initWithObjects:
+					[NSNumber numberWithInt:COMMAND_MARK_WATCHED],
+					[NSNumber numberWithInt:COMMAND_MARK_UNWATCHED],
+					[NSNumber numberWithInt:COMMAND_MARK_FAVORITE],
+					[NSNumber numberWithInt:COMMAND_MARK_NOT_FAVORITE],
+					[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_TV],
+					[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_MOVIE],
+					[NSNumber numberWithInt:COMMAND_MARK_TO_DELETE_METADATA],
+					nil];
 		NSString *path = [meta path];
-		if([collection skipCollection:path])
-			[names addObject:BRLocalizedString(@"Mark this Directory to Not Skip Import", @"Marks this directory to be no longer be skipped during import")];
-		else
-			[names addObject:BRLocalizedString(@"Mark this Directory to Skip Import", @"Marks this directory to be skipped during import")];
-		if([collection isCollectionDirectory:path])
-			[names addObject:BRLocalizedString(@"Mark this Directory to Not be a Collection", @"Marks the directory to no longer be a collection")];
-		else
-			[names addObject:BRLocalizedString(@"Mark this Directory as a Collection", @"Marks the directory to be a collection")];
+		if([path characterAtIndex:0] != '@')
+		{
+			SapphireMetaDataCollection *collection = [meta collection];
+			if([collection skipCollection:path])
+				[names addObject:BRLocalizedString(@"Mark this Directory to Not Skip Import", @"Marks this directory to be no longer be skipped during import")];
+			else
+				[names addObject:BRLocalizedString(@"Mark this Directory to Skip Import", @"Marks this directory to be skipped during import")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_TOGGLE_SKIP]];
+			if([collection isCollectionDirectory:path])
+				[names addObject:BRLocalizedString(@"Mark this Directory to Not be a Collection", @"Marks the directory to no longer be a collection")];
+			else
+				[names addObject:BRLocalizedString(@"Mark this Directory as a Collection", @"Marks the directory to be a collection")];
+			[commands addObject:[NSNumber numberWithInt:COMMAND_TOGGLE_COLLECTION]];
+		}
 	}
 	else if([meta isKindOfClass:[SapphireFileMetaData class]])
 	{
@@ -320,32 +341,33 @@ static NSMutableArray *joinList;
 		SapphireDirectoryMetaData *dirMeta = (SapphireDirectoryMetaData *)metaData;
 		SapphireMetaDataCollection *collection = [dirMeta collection];
 		NSString *path = [dirMeta path];
-		switch(row)
+		switch([[commands objectAtIndex:row] intValue])
 		{
-			case 0:
+			case COMMAND_MARK_WATCHED:
 				[dirMeta setWatched:YES forPredicate:predicate];
 				break;
-			case 1:
+			case COMMAND_MARK_UNWATCHED:
 				[dirMeta setWatched:NO forPredicate:predicate];
 				break;
-			case 2:
+			case COMMAND_MARK_FAVORITE:
 				[dirMeta setFavorite:YES forPredicate:predicate];
 				break;
-			case 3:
+			case COMMAND_MARK_NOT_FAVORITE:
 				[dirMeta setFavorite:NO forPredicate:predicate];
 				break;
-			case 4:
+			case COMMAND_MARK_TO_REFETCH_TV:
 				[dirMeta setToImportFromSource:META_TVRAGE_IMPORT_KEY forPredicate:predicate];
-			case 5:
+				break;
+			case COMMAND_MARK_TO_REFETCH_MOVIE:
 				[dirMeta setToImportFromSource:META_IMDB_IMPORT_KEY forPredicate:predicate];
 				break;
-			case 6:
+			case COMMAND_MARK_TO_DELETE_METADATA:
 				[dirMeta clearMetaDataForPredicate:predicate];
 				break;
-			case 7:
+			case COMMAND_TOGGLE_SKIP:
 				[collection setSkip:![collection skipCollection:path] forCollection:path];
 				break;
-			case 8:
+			case COMMAND_TOGGLE_COLLECTION:
 				if([collection isCollectionDirectory:path])
 					[collection removeCollectionDirectory:path];
 				else
