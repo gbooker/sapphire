@@ -20,6 +20,7 @@
 
 #import "SapphireFrontRowCompat.h"
 #import <ExceptionHandling/NSExceptionHandler.h>
+#import "SapphireButtonControl.h"
 
 /*Yes, this is the wrong class, but otherwise gcc gripes about BRImage class not existing; this removes warnings so no harm*/
 @interface SapphireFrontRowCompat (compat)
@@ -190,7 +191,7 @@ static BOOL usingFrontRow = NO;
 + (BRButtonControl *)newButtonControlWithScene:(BRRenderScene *)scene  masterLayerSize:(NSSize)size;
 {
 	if(usingFrontRow)
-		return [[BRButtonControl alloc] initWithMasterLayerSize:size];
+		return [[SapphireButtonControl alloc] initWithMasterLayerSize:size];
 	else
 		return [[BRButtonControl alloc] initWithScene:scene masterLayerSize:size];
 }

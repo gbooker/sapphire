@@ -31,6 +31,8 @@
 		F51BFD180D26BCEA00E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD140D26BCEA00E22363 /* Foundation.framework */; };
 		F51BFD220D26BD8900E22363 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */; };
 		F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFD540D26BEF900E22363 /* BackRowUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F580E8740D31288400F2225A /* SapphireButtonControl.h in Headers */ = {isa = PBXBuildFile; fileRef = F580E8720D31288400F2225A /* SapphireButtonControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F580E8750D31288400F2225A /* SapphireButtonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F580E8730D31288400F2225A /* SapphireButtonControl.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,8 @@
 		F51BFD140D26BCEA00E22363 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		F51BFD540D26BEF900E22363 /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
+		F580E8720D31288400F2225A /* SapphireButtonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireButtonControl.h; sourceTree = "<group>"; };
+		F580E8730D31288400F2225A /* SapphireButtonControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireButtonControl.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +127,8 @@
 				F51BFCE20D26BB3900E22363 /* SapphireMenuController.m */,
 				F51BFCE30D26BB3900E22363 /* SapphireTextWithSpinnerController.h */,
 				F51BFCE40D26BB3900E22363 /* SapphireTextWithSpinnerController.m */,
+				F580E8720D31288400F2225A /* SapphireButtonControl.h */,
+				F580E8730D31288400F2225A /* SapphireButtonControl.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -162,6 +168,7 @@
 				F51BFCEF0D26BB3900E22363 /* SapphireMenuController.h in Headers */,
 				F51BFCF10D26BB3900E22363 /* SapphireTextWithSpinnerController.h in Headers */,
 				F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */,
+				F580E8740D31288400F2225A /* SapphireButtonControl.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +268,7 @@
 				F51BFCEE0D26BB3900E22363 /* SapphireMediaMenuController.m in Sources */,
 				F51BFCF00D26BB3900E22363 /* SapphireMenuController.m in Sources */,
 				F51BFCF20D26BB3900E22363 /* SapphireTextWithSpinnerController.m in Sources */,
+				F580E8750D31288400F2225A /* SapphireButtonControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
