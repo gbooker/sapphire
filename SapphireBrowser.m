@@ -81,7 +81,6 @@ static BOOL is10Version = NO;
 	_names = [NSMutableArray new];
 	items = [NSMutableArray new];
 	metaData = [meta retain];
-	[metaData setDelegate:self];
 	predicate = [[SapphireApplianceController predicate] retain];
 
 	// set the datasource *after* you've setup your array
@@ -179,6 +178,7 @@ static BOOL is10Version = NO;
     // always call super
     [super willBePushed];
 	/*Reload upon display*/
+	[metaData setDelegate:self];
 	[self setNewPredicate:[SapphireApplianceController predicate]];
 }
 
