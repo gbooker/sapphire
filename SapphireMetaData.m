@@ -1864,6 +1864,12 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 	return [[combinedInfo objectForKey:META_EPISODE_NUMBER_KEY] intValue] ;
 }
 
+- (int)secondEpisodeNumber
+{
+	[self constructCombinedData];
+	return [[combinedInfo objectForKey:META_EPISODE_2_NUMBER_KEY] intValue];
+}
+
 - (int)seasonNumber
 {
 	[self constructCombinedData];
@@ -2044,7 +2050,13 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 	int season = [self seasonNumber];
 	int ep = [self episodeNumber];
 	if(season != 0 && ep != 0) 
-		[ret setObject:[NSString stringWithFormat:@"%@ - %d / %d",[self showName], season, ep] forKey:META_EPISODE_AND_SEASON_KEY];
+	{
+		int secondEp = [self secondEpisodeNumber];
+		if(secondEp != nil)
+			[ret setObject:[NSString stringWithFormat:@"%@ - %d / %d-%d",[self showName], season, ep, secondEp] forKey:META_EPISODE_AND_SEASON_KEY];
+		else
+			[ret setObject:[NSString stringWithFormat:@"%@ - %d / %d",[self showName], season, ep] forKey:META_EPISODE_AND_SEASON_KEY];
+	}
 	return ret;
 }
 

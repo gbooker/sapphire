@@ -104,8 +104,8 @@
 	showInfo = [NSMutableDictionary new];
 	
 	/*Initialize the regexes*/
-	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+", REG_EXTENDED | REG_ICASE);
-	regcomp(&seasonByEpisode, "[\\. -]?[0-9]+x[S0-9]+", REG_EXTENDED | REG_ICASE);
+	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+(-E[0-9]+)?", REG_EXTENDED | REG_ICASE);
+	regcomp(&seasonByEpisode, "[\\. -]?[0-9]+x[S0-9]+(-[0-9]+)?", REG_EXTENDED | REG_ICASE);
 	regcomp(&seasonEpisodeTriple, "[\\. -][0-9]{1,3}[S0-9]{2}[\\. -]", REG_EXTENDED | REG_ICASE);	
 	return self;
 }
@@ -448,6 +448,35 @@
 	[settings writeToFile:settingsPath atomically:YES];
 }
 
+- (void)combine:(NSMutableDictionary *)info with:(NSMutableDictionary *)info2
+{
+	NSMutableDictionary *tdict = [info2 mutableCopy];
+	[tdict addEntriesFromDictionary:info];
+	NSString *secname = [info2 objectForKey:META_TITLE_KEY];
+	NSString *origname = [info objectForKey:META_TITLE_KEY];
+	if(secname != nil && origname != nil)
+		[tdict setObject:[NSString stringWithFormat:@"%@ / %@", origname, secname] forKey:META_TITLE_KEY];
+
+	if([info objectForKey:META_EPISODE_NUMBER_KEY] != nil)
+	{
+		NSNumber *secondEp = [info2 objectForKey:META_EPISODE_NUMBER_KEY];
+		[tdict setObject:secondEp forKey:META_EPISODE_2_NUMBER_KEY];
+	}
+	NSString *secdesc = [info2 objectForKey:META_DESCRIPTION_KEY];
+	NSString *origdesc = [info objectForKey:META_DESCRIPTION_KEY];
+	if(secdesc != nil && origdesc != nil)
+		[tdict setObject:[NSString stringWithFormat:@"%@ / %@", origdesc, secdesc] forKey:META_DESCRIPTION_KEY];
+
+	if([info objectForKey:META_ABSOLUTE_EP_NUMBER_KEY] != nil)
+	{
+		NSNumber *secondEp = [info2 objectForKey:META_ABSOLUTE_EP_NUMBER_KEY];
+		[tdict setObject:secondEp forKey:META_ABSOLUTE_EP_2_NUMBER_KEY];
+	}
+	
+	[info addEntriesFromDictionary:tdict];
+	[tdict release];
+}
+
 - (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	currentData = metaData;
@@ -468,6 +497,7 @@
 	
 	/*Check regexes to see if this is a tv show*/
 	int index = NSNotFound;
+	int secondEp = -1;
 	regmatch_t matches[3];
 	NSData *fileNameData = [fileName dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
 	const char *theFileName = [fileNameData bytes];
@@ -476,11 +506,13 @@
 	{
 		index = matches[0].rm_so;
 		scanString = [fileName substringFromIndex:index];
+		secondEp = matches[1].rm_so;
 	}
 	else if(!regexec(&seasonByEpisode, theFileName, 3, matches, 0))
 	{
 		index = matches[0].rm_so;
 		scanString = [fileName substringFromIndex:index];
+		secondEp = matches[1].rm_so;
 	}
 	else if(!regexec(&seasonEpisodeTriple, theFileName, 3, matches, 0))
 	{
@@ -540,11 +572,23 @@
 	if(season == 0)
 		return NO;
 	
+	int otherEp = 0;
+	if(secondEp != -1)
+	{
+		[scanner setScanLocation:secondEp - index];
+		[scanner scanUpToCharactersFromSet:digits intoString:nil];
+		[scanner scanInt:&otherEp];
+	}
+	
 	/*Get the episode's info*/
-	NSMutableDictionary *info = nil;
+	NSMutableDictionary *info = nil, *info2 = nil;
 	if(ep != 0)
+	{
 		/*Match on s/e*/
 		info = [self getInfo:show forSeason:season episode:ep];
+		if(otherEp != 0)
+			info2 = [self getInfo:show forSeason:season episode:otherEp];
+	}
 	else
 	{
 		/*Match on show title*/
@@ -563,7 +607,7 @@
 									[info objectForKey:META_SHOW_NAME_KEY],
 									[NSString stringWithFormat:@"Season %d",[[info objectForKey:META_SEASON_NUMBER_KEY] intValue]]];
 						
-	[[NSFileManager defaultManager]constructPath:previewArtPath];
+	[[NSFileManager defaultManager] constructPath:previewArtPath];
 	/*Check for screen cap locally and on server*/
 	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
 	NSString *image = nil;
@@ -584,6 +628,8 @@
 		[myDelegate release];
 	}
 	
+	if(info2 != nil)
+		[self combine:info with:info2];
 	/*Import the info*/
 	[info removeObjectForKey:LINK_KEY];
 	[metaData importInfo:info fromSource:META_TVRAGE_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];

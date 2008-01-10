@@ -37,6 +37,8 @@
 #define META_SUMMARY_KEY				@"Summary"
 #define META_ABSOLUTE_EP_NUMBER_KEY		@"Episode Number"
 #define META_SHOW_IDENTIFIER_KEY		@"Show ID"
+#define META_EPISODE_2_NUMBER_KEY		@"Episode 2"
+#define META_ABSOLUTE_EP_2_NUMBER_KEY	@"Episode Number 2"
 
 //ATV Extra Info
 #define META_SHOW_BROADCASTER_KEY		@"Broadcast Company"
@@ -869,6 +871,13 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file);
  * @return The episode number of the file
  */
 - (int)episodeNumber;
+
+/*!
+ * @brief Returns the second epsiode number of the file for a two part file
+ *
+ * @return The second episode number of the file
+ */
+- (int)secondEpisodeNumber;
 
 /*!
  * @brief Returns the season number of the file

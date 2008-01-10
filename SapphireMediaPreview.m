@@ -211,6 +211,7 @@ static NSSet *coverArtExtentions = nil;
 	{
 		/*Remove the individuals so we don't display them*/
 		[allMeta removeObjectForKey:META_EPISODE_NUMBER_KEY];
+		[allMeta removeObjectForKey:META_EPISODE_2_NUMBER_KEY];
 		[allMeta removeObjectForKey:META_SEASON_NUMBER_KEY];
 	}
 	

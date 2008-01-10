@@ -352,10 +352,14 @@ static BOOL is10Version = NO;
 			{
 				/*Display episode number if availble*/
 				int eps= [meta episodeNumber] ;
+				int ep2= [meta secondEpisodeNumber] ;
 				displayName=[meta episodeTitle] ;
 				if(eps>0)
 				{
-					[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps] forMenu:result];
+					if(ep2>0)
+						[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %02d-%02d",eps, ep2] forMenu:result];
+					else
+						[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %02d",eps] forMenu:result];
 					rightTextSet = YES;
 				}
 			}
