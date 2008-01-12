@@ -642,28 +642,27 @@
 	else return NO ;
 }
 
-/* - (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData */
-- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData 
+- (ImportState) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData 
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importedTimeFromSource:META_IMDB_IMPORT_KEY])
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	id controller = [[dataMenu stack] peekController];
 	/* Check to see if we are waiting on the user to select a show title */
 	if([controller isKindOfClass:[SapphireShowChooser class]])
 	{
 		/* Another chooser is on the screen - delay further processing */
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	}
 	/*Get path*/
 	NSString *path = [metaData path];
 	if(![self isMovieCandidate:[path pathExtension]])
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	/*Get fineName*/
 	NSString *fileName = [path lastPathComponent];
 	if([metaData fileClass]==FILE_CLASS_TV_SHOW) /* File is a TV Show - skip it */
-		return NO ;
+		return IMPORT_STATE_NOT_UPDATED;
 	
 	/*Get the movie title*/
 	NSString *movieDataLink = nil ;
@@ -673,7 +672,7 @@
 	{
 		if(dataMenu == nil)
 		/*There is no data menu, background import. So we can't ask user, skip*/
-			return NO;
+			return IMPORT_STATE_NOT_UPDATED;
 		/*Ask the user what movie this is*/
 		NSArray *movies = [self searchResultsForMovie:fileName];
 		/* No need to prompt the user for an empty set */
@@ -682,10 +681,8 @@
 			/* We tried to import but found nothing - mark this file to be skipped on future imports */
 			[metaData importInfo:[NSMutableDictionary dictionary] fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 			[metaData setFileClass:FILE_CLASS_OTHER];
-			return YES;
+			return IMPORT_STATE_UPDATED;
 		}
-		/*Pause for the user's input*/
-		[dataMenu pause];
 		/*Bring up the prompt*/
 		SapphireMovieChooser *chooser = [[SapphireMovieChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setMovies:movies];
@@ -694,7 +691,7 @@
 		/*And display prompt*/
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
-		return NO ;
+		return IMPORT_STATE_NEEDS_SUSPEND;
 		//Data will be ready for access on the next call
 	}
 
@@ -706,7 +703,7 @@
 	{
 		if(dataMenu == nil)
 		/*There is no data menu, background import. So we can't ask user, skip*/
-			return NO;
+			return IMPORT_STATE_NOT_UPDATED;
 		/* Posters will be downloaded, let the user choose one */
 		[SapphireFrontRowCompat renderScene:[dataMenu scene]];
 		NSArray *posters=[dict objectForKey:IMP_POSTERS_KEY];
@@ -732,7 +729,6 @@
 		}
 		if([posters count])
 		{
-			[dataMenu pause];
 			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 			if(![posterChooser okayToDisplay])
 			{
@@ -753,7 +749,7 @@
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 				[[dataMenu stack] pushController:posterChooser];
 				[posterChooser release];
-				return NO;
+				return IMPORT_STATE_NEEDS_SUSPEND;
 			}
 			[dataMenu resume];
 		}
@@ -797,7 +793,6 @@
 			[myDelegate downloadSingleMoviePoster] ;
 			[myDelegate autorelease];
 		}
-//		return NO;
 	}
 	else if(autoSelectPoster)
 	{
@@ -819,12 +814,12 @@
 	movieDataLink=[dict objectForKey:IMDB_LINK_KEY];
 	infoIMDB = [self getMetaForMovie:movieDataLink withPath:path];
 	if(!infoIMDB)
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	[infoIMDB removeObjectForKey:IMDB_LINK_KEY];
 	[metaData importInfo:infoIMDB fromSource:META_IMDB_IMPORT_KEY withTime:[[NSDate date] timeIntervalSince1970]];
 	[metaData setFileClass:FILE_CLASS_MOVIE];
 	/*We imported something*/
-	return YES;
+	return IMPORT_STATE_UPDATED;
 }
 
 

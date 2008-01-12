@@ -27,6 +27,8 @@
  */
 @interface SapphireMultipleImporter : NSObject <SapphireImporter>{
 	NSArray		*importers;		/*!< @brief The list of importers to use, in order*/
+	int			importIndex;	/*!< @brief The index of the next importer to run*/
+	ImportState	resumedState;	/*!< @brief The state to use when we finally resume */
 }
 
 /*!

@@ -156,7 +156,7 @@ static SapphireImportHelper *shared = nil;
 		if(type == IMPORT_TYPE_FILE_DATA)
 			ret = updateMetaData([file file]);
 		else
-			ret = [allImporter importMetaData:[file file]];
+			ret = ([allImporter importMetaData:[file file]] == IMPORT_STATE_UPDATED);
 		[server importComplete:ret];
 	}
 }

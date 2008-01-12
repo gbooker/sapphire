@@ -25,6 +25,16 @@
 @class SapphireImporterDataMenu;
 
 /*!
+ * @brief Status of an import
+ */
+typedef enum{
+	IMPORT_STATE_NOT_UPDATED,		/*!< @brief The data was not updated*/
+	IMPORT_STATE_UPDATED,			/*!< @brief The data was updated*/
+	IMPORT_STATE_NEEDS_SUSPEND,		/*!< @brief The data update has been suspended; run it again later*/
+	IMPORT_STATE_BACKGROUND,		/*!< @brief The data was backgrounded*/
+} ImportState;
+
+/*!
  * @brief The importer protocol
  *
  * This protocol is the basic functionality that all importers must implement.  Through this, a common UI can implement all the importers.
@@ -35,9 +45,9 @@
  * @brief Import a single File
  *
  * @param metaData The file to import
- * @return YES if imported, NO otherwise
+ * @return The state of the import
  */
-- (BOOL)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData;
+- (ImportState)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData;
 
 /*!
  * @brief Sets the importer's data menu
@@ -139,19 +149,9 @@
 @interface SapphireImporterDataMenu (protectedAccess)
 
 /*!
- * @brief Pause the import process
- */
-- (void)pause;
-
-/*!
  * @brief Resume the import process
  */
 - (void)resume;
-
-/*!
- * @brief Say that the file's import is backgrounded
- */
-- (void)itemImportBackgrounded;
 
 /*!
  * @brief Skip the next item in the queue

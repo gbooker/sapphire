@@ -477,18 +477,18 @@
 	[tdict release];
 }
 
-- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
+- (ImportState) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	id controller = [[dataMenu stack] peekController];
 	/* Check to see if we are waiting on the user to select a movie title */
 	if([controller isKindOfClass:[SapphireMovieChooser class]])
 	{
 		/* Another chooser is on the screen - delay further processing */
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	}
 	/*Get path*/
 	NSString *path = [metaData path];
@@ -527,7 +527,7 @@
 	
 	/*See if we found a match*/
 	if(index == NSNotFound)
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	
 	/*Get the show title*/
 	NSString *searchStr = [fileName substringToIndex:index];
@@ -537,11 +537,9 @@
 	{
 		if(dataMenu == nil)
 			/*There is no data menu, background import. So we can't ask user, skip*/
-			return NO;
+			return IMPORT_STATE_NOT_UPDATED;
 		/*Ask the user what show this is*/
 		NSArray *shows = [self searchResultsForSeries:searchStr];
-		/*Pause for the user's input*/
-		[dataMenu pause];
 		/*Bring up the prompt*/
 		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setShows:shows];
@@ -551,7 +549,7 @@
 		/*And display prompt*/
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
-		return NO;
+		return IMPORT_STATE_NEEDS_SUSPEND;
 	}
 	
 	int season = 0;
@@ -570,7 +568,7 @@
 		ep = 0;
 	/*No season, no info*/
 	if(season == 0)
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 	
 	int otherEp = 0;
 	if(secondEp != -1)
@@ -599,7 +597,7 @@
 	}
 	/*No info, well, no info*/
 	if(!info)
-		return NO;
+		return IMPORT_STATE_NOT_UPDATED;
 		
 	/* Lets process the cover art directory structure */
 	NSString * previewArtPath=[NSString stringWithFormat:@"%@/@TV/%@/%@",
@@ -636,7 +634,7 @@
 	[metaData setFileClass:FILE_CLASS_TV_SHOW];
 	
 	/*We imported something*/
-	return YES;
+	return IMPORT_STATE_UPDATED;
 }
 
 - (NSString *)completionText

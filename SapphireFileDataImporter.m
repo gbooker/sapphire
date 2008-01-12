@@ -95,10 +95,10 @@ static NSDictionary *xmlMultiAttributes = nil;
 	dataMenu = theDataMenu;
 }
 
-- (BOOL) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
+- (ImportState) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	/*Initialization*/
-	BOOL ret = NO;
+	ImportState ret = NO;
 	NSFileManager *fm = [NSFileManager defaultManager];
 	/*Get the file*/
 	/*Check for XML file*/
@@ -118,14 +118,14 @@ static NSDictionary *xmlMultiAttributes = nil;
 			/*Import the XML file and update counts*/
 			[self importXMLFile:xmlFilePath forMeta:metaData] ;
 			xmlFileCount++ ;
-			ret = YES;
+			ret = IMPORT_STATE_UPDATED;
 		}
 	}
 	/*Import file if necessary*/
 	if([metaData needsUpdating])
 	{
 		[[SapphireImportHelper sharedHelper] importFileData:metaData inform:dataMenu];
-		[dataMenu itemImportBackgrounded];
+		ret = IMPORT_STATE_BACKGROUND;
 	}
 	/*Return whether we imported or not*/
 	return ret;

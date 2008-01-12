@@ -28,6 +28,8 @@
 @interface SapphireImporterDataMenu (private)
 - (void)setFileProgress:(NSString *)updateFileProgress;
 - (void)resetUIElements;
+- (void)pause;
+- (void)itemImportBackgrounded;
 @end
 
 @implementation SapphireImporterDataMenu
@@ -243,7 +245,21 @@
 {
 	BOOL ret = NO;
 	@try {
-		ret = [importer importMetaData:[importItems objectAtIndex:0]];
+		ImportState result = [importer importMetaData:[importItems objectAtIndex:0]];
+		switch(result)
+		{
+			case IMPORT_STATE_UPDATED:
+				ret = YES;
+				break;
+			case IMPORT_STATE_NEEDS_SUSPEND:
+				[self pause];
+				ret = NO;
+				break;
+			case IMPORT_STATE_BACKGROUND:
+				[self itemImportBackgrounded];
+				ret = NO;
+				break;
+		}
 	}
 	@catch (NSException * e) {
 		[SapphireApplianceController logException:e];
@@ -355,7 +371,7 @@
 
 - (void)itemImportBackgrounded
 {
-	if([importItems count])
+	if([importItems count] && !suspended)
 		[importItems removeObjectAtIndex:0];
 	backgrounded = YES;
 }

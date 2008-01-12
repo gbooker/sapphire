@@ -30,6 +30,7 @@
 		return nil;
 	
 	importers = [importerList retain];
+	importIndex = 0;
 	
 	return self;
 }
@@ -40,14 +41,31 @@
 	[super dealloc];
 }
 
-- (BOOL)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
+- (ImportState)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
-	BOOL ret = NO;
-	NSEnumerator *importEnum = [importers objectEnumerator];
-	id <SapphireImporter> importer = nil;
-	while((importer = [importEnum nextObject]) != nil)
-		ret |= [importer importMetaData:metaData];
+	ImportState ret = resumedState;
+	int count = [importers count];
+	for(;importIndex < count; importIndex++)
+	{
+		id <SapphireImporter> importer = [importers objectAtIndex:importIndex];
+		ImportState result = [importer importMetaData:metaData];
+		switch(result)
+		{
+			case IMPORT_STATE_NEEDS_SUSPEND:
+				resumedState = ret;
+				return result;
+			case IMPORT_STATE_BACKGROUND:
+				ret = result;
+				break;
+			case IMPORT_STATE_UPDATED:
+				if(ret != IMPORT_STATE_BACKGROUND)
+					ret = result;
+				break;
+		}
+	}
 	
+	importIndex = 0;
+	resumedState = IMPORT_STATE_NOT_UPDATED;
 	return ret;
 }
 

@@ -23,7 +23,7 @@
 
 @implementation SapphireAllImporter
 
-- (BOOL)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
+- (ImportState)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
 {
 	return [super importMetaData:metaData];
 }
