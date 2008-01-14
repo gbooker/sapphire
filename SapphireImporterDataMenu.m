@@ -38,7 +38,6 @@
 	if ( [super initWithScene: scene] == nil )
 		return ( nil );
 	metaCollection = [collection retain];
-	collectionDirectories = [[collection collectionDirectories] retain];
 	importer = [import retain];
 	[importer setImporterDataMenu:self];
 	importItems = [[NSMutableArray alloc] init];
@@ -192,6 +191,8 @@
 	canceled = NO;
 	suspended = NO;
 	collectionIndex = 0;
+	[collectionDirectories release];
+	collectionDirectories = [[metaCollection collectionDirectories] retain];
 	[self getItems];
 }
 
