@@ -37,6 +37,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 + (id)folderMenuItem;
 + (id)menuItem;
 - (void)setTitle:(NSString *)title;
+- (void)setTitle:(NSString *)title withAttributes:(NSDictionary *)attributes;
 - (void)setRightJustifiedText:(NSString *)text;
 - (void)setLeftIconInfo:(BRTexture *)icon;
 - (void)setRightIconInfo:(BRTexture *)icon;
@@ -44,6 +45,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 @interface BRThemeInfo (compat)
 - (id)selectedSettingImage;
+- (id)unplayedPodcastImage;
+- (id)returnToImage;
 @end
 
 @interface BRButtonControl (compat)
@@ -57,6 +60,18 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 @interface NSException (compat)
 - (NSArray *)callStackReturnAddresses;
+@end
+
+@interface BRAlertController (compat)
++ (BRAlertController *)alertOfType:(int)type titled:(NSString *)title primaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText;
+@end
+
+@interface BROptionDialog (compat)
+- (void)setPrimaryInfoText:(NSString *)text withAttributes:(NSDictionary *)attributes;
+@end
+
+@interface BRTextWithSpinnerController (compat)
+- (BRTextWithSpinnerController *)initWithTitle:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent;
 @end
 
 @implementation SapphireFrontRowCompat
@@ -78,6 +93,32 @@ static BOOL usingFrontRow = NO;
 {
 	Class cls = NSClassFromString(@"BRImage");
 	return [cls imageWithPath:path];
+}
+
++ (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene
+{
+  if(usingFrontRow) {
+    return [self imageAtPath:path];
+  } else {
+    NSURL             *url      = [NSURL fileURLWithPath:path];
+    BRTexture         *ret      = nil;
+    CGImageRef        imageRef  = NULL;
+    CGImageSourceRef  sourceRef;
+    
+    sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+    if(sourceRef) {
+      imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+      CFRelease(sourceRef);
+    }
+    
+    if(imageRef != NULL) {
+      /*Create a texture*/
+      ret = [BRBitmapTexture textureWithImage:imageRef context:[scene resourceContext] mipmap:YES];
+      CFRelease(imageRef);
+    }
+    
+    return ret;
+  }
 }
 
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder
@@ -106,6 +147,20 @@ static BOOL usingFrontRow = NO;
 		[[menu textItem] setTitle:title];
 }
 
++ (void)setTitle:(NSString *)title withAttributes:(NSDictionary *)attributes forMenu:(BRAdornedMenuItemLayer *)menu
+{
+	if(usingFrontRow)
+		[menu setTitle:title withAttributes:attributes];
+	else
+		[[menu textItem] setTitle:title withAttributes:attributes];
+}
+
++ (NSString *)titleForMenu:(BRAdornedMenuItemLayer *)menu {
+  if(usingFrontRow)
+    return [menu title];
+  else
+    return [[menu textItem] title];
+}
 + (void)setRightJustifiedText:(NSString *)text forMenu:(BRAdornedMenuItemLayer *)menu
 {
 	if(usingFrontRow)
@@ -140,6 +195,21 @@ static BOOL usingFrontRow = NO;
 		return [[BRThemeInfo sharedTheme] selectedSettingImage];
 	else
 		return [[BRThemeInfo sharedTheme] selectedSettingImageForScene:scene];
+}
+
++ (id)unplayedPodcastImageForScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRThemeInfo sharedTheme] unplayedPodcastImage];
+	else
+		return [[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:scene];
+}
+
++ (id)returnToImageForScene:(BRRenderScene *)scene {
+  if(usingFrontRow)
+    return [[BRThemeInfo sharedTheme] returnToImage];
+  else
+    return [[BRThemeInfo sharedTheme] returnToImageForScene:scene];
 }
 
 + (NSRect)frameOfController:(id)controller
@@ -178,6 +248,13 @@ static BOOL usingFrontRow = NO;
 		[[controller layer] addSublayer:sub];
 	else
 		[[controller masterLayer] addSublayer:sub];
+}
+
++ (void)insertSublayer:(id)sub toControl:(id)controller atIndex:(long)index {
+  if(usingFrontRow)
+    [[controller layer] insertSublayer:sub atIndex:index];
+  else
+    [[controller masterLayer] insertSublayer:sub atIndex:index];
 }
 
 + (BRHeaderControl *)newHeaderControlWithScene:(BRRenderScene *)scene
@@ -220,10 +297,68 @@ static BOOL usingFrontRow = NO;
 		return [[BRMarchingIconLayer alloc] initWithScene:scene];
 }
 
++ (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene {
+  if(usingFrontRow)
+    return [[BRImageLayer alloc] init];
+  else
+    return [BRImageLayer layerWithScene:scene];
+}
+
++ (void)setImage:(id)image forLayer:(BRImageLayer *)layer {
+  if(usingFrontRow)
+    // this cast is not proper, it just makes a warning disappear.
+    [layer setImage:(CGImageRef)image];
+  else
+    [layer setTexture:image];
+}
+
++ (BRImageLayer *)newImageLayerWithImage:(id)image scene:(BRRenderScene *)scene {
+  BRImageLayer *result = [self newImageLayerWithScene:scene];
+  [self setImage:image forLayer:result];
+  return result;
+}
+
 + (void)renderScene:(BRRenderScene *)scene
 {
 	if(!usingFrontRow)
 		[scene renderScene];
+}
+
++ (BRAlertController *)alertOfType:(int)type titled:(NSString *)title primaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText withScene:(BRRenderScene *)scene {
+  if(usingFrontRow)
+    return [BRAlertController alertOfType:type
+                                   titled:title
+                              primaryText:primaryText
+                            secondaryText:secondaryText];
+  else
+    return [BRAlertController alertOfType:type
+                                   titled:title
+                              primaryText:primaryText
+                            secondaryText:secondaryText
+                                    withScene:scene];
+}
+
++ (BROptionDialog *)optionDialogWithScene:(BRRenderScene *)scene {
+  if(usingFrontRow)
+    return [[BROptionDialog alloc] init];
+  else
+    return [[BROptionDialog alloc] initWithScene:scene];
+}
+
++ (void)setOptionDialogPrimaryInfoText:(NSString *)primaryInfoText withAttributes:(NSDictionary *)attributes optionDialog:(BROptionDialog *)dialog {
+  if(usingFrontRow) {
+    [dialog setPrimaryInfoText:primaryInfoText withAttributes:attributes];
+  } else {
+    [dialog setPrimaryInfoText:primaryInfoText];
+    [dialog setPrimaryInfoTextAttributes:attributes];
+  }
+}
+
++ (BRTextWithSpinnerController *)textWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene {
+  if(usingFrontRow)
+    return [[BRTextWithSpinnerController alloc] initWithTitle:title text:text isNetworkDependent:networkDependent];
+  else
+    return [[BRTextWithSpinnerController alloc] initWithScene:scene title:title text:text showBack:NO isNetworkDependent:NO];
 }
 
 + (NSArray *)callStackReturnAddressesForException:(NSException *)exception

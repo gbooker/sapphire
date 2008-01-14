@@ -56,6 +56,16 @@
 + (id)imageAtPath:(NSString *)path;
 
 /*!
+ * @brief Load an image texture at a path
+ *
+ * This is like imageAtPath:, only it will return a BRBitmapTexture
+ * on the ATV for setting as a menu item icon.
+ *
+ * @return BRImage or BRBitmapTexture at a path
+ */
++ (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene;
+
+/*!
  * @brief Get a menu text menu item
  *
  * Menu items are of different classes on the ATV and in frontrow.
@@ -75,6 +85,26 @@
  * @param menu The menu item to set
  */
 + (void)setTitle:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu;
+
+/*!
+ * @brief Set a menu item's title with attributes
+ *
+ * Menu items work differently in fronrow
+ *
+ * @param title The new title
+ * @param attributes The new attributes
+ * @param menu The menu item to set
+ */
++ (void)setTitle:(NSString *)title withAttributes:(NSDictionary *)attributes forMenu:(BRAdornedMenuItemLayer *)menu;
+
+/*!
+ * @brief Get a menu item's title
+ *
+ * Menu items work differently in frontrow
+ *
+ * @param menu The menu item
+ */
++ (NSString *)titleForMenu:(BRAdornedMenuItemLayer *)menu;
 
 /*!
  * @brief Set a menu item's right justified text
@@ -113,6 +143,22 @@
  * @return The checkmark image
  */
 + (id)selectedSettingImageForScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Get the blue unplayed dot image
+ *
+ * @param scene The scene, if it exists
+ * @return The blue unplayed dot image
+ */
++ (id)unplayedPodcastImageForScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Get the return to arrow image
+ *
+ * @param scene The scene, if it exists
+ * @return The return to arrow image
+ */  
++ (id)returnToImageForScene:(BRRenderScene *)scene;
 
 /*!
  * @brief Get a controller's frame
@@ -155,6 +201,16 @@
  */
 + (void)addSublayer:(id)sub toControl:(id)controller;
 
+/*!
+ * @brief Insert a sublayer at a position in a control
+ * 
+ * Controllers and layers are different in frontrow
+ *
+ * @param sub The sublayer to add
+ * @param controller The controller to add to
+ * @param index The index to add the sublayer at
+ */
++ (void)insertSublayer:(id)sub toControl:(id)controller atIndex:(long)index;
 
 /*!
  * @brief Create a new header control
@@ -203,6 +259,34 @@
 + (BRMarchingIconLayer *)newMarchingIconLayerWithScene:(BRRenderScene *)scene;
 
 /*!
+ * @brief Create a new image layer
+ *
+ * Layers are different in frontrow
+ *
+ * @param scene The scene, if it exists.
+ */
++ (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Set the image on a BRImageLayer
+ *
+ * FR uses BRImage instead of BRTexture
+ *
+ * @param image The image (BRImage on FR/BRTexture on ATV)
+ */
++ (void)setImage:(id)image forLayer:(BRImageLayer *)layer;
+
+/*!
+ * @brief Create a new image layer with an image
+ *
+ * Just a shortcut around the previous two
+ *
+ * @param image The image (BRImage on FR/BRTexture on ATV)
+ * @param scene The scene, if it exists.
+ */
++ (BRImageLayer *)newImageLayerWithImage:(id)image scene:(BRRenderScene *)scene;
+
+/*!
  * @brief Render scene on the ATV
  *
  * Only does something on the ATV; frontrow has no need for this
@@ -210,6 +294,51 @@
  * @param scene The scene to render, if exists.
  */
 + (void)renderScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Create a new BRAlertController
+ *
+ * Scene doesn't exist on frontrow
+ *
+ * @param type The type of the alert
+ * @param titled The title of the alert
+ * @param primaryText the primary text of the alert
+ * @param secondaryText the secondary text of the alert
+ * @param scene the scene
+ */
++ (BRAlertController *)alertOfType:(int)type titled:(NSString *)title primaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText withScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Create a new BROptionDialog
+ *
+ * Scene doesn't exist in frontrow
+ *
+ * @param scene the scene
+ */
++ (BROptionDialog *)optionDialogWithScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Set the primary info text on a BROptionDialog
+ *
+ * Text/attributes are different on frontrow
+ *
+ * @param primaryInfoText the primary info text
+ * @param attributes the attributes
+ * @param dialog the BROptionDialog
+ */
++ (void)setOptionDialogPrimaryInfoText:(NSString *)primaryInfoText withAttributes:(NSDictionary *)attributes optionDialog:(BROptionDialog *)dialog;
+
+/*!
+ * @brief Create a new BRTextWithSpinnerController
+ *
+ * Method is different on frontrow
+ *
+ * @param title the title
+ * @param text the text
+ * @param networkDependent unknown
+ * @param scene the scene
+ */
++ (BRTextWithSpinnerController *)textWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene;
 
 /*!
  * @brief Get the call stack addresses for an exception
