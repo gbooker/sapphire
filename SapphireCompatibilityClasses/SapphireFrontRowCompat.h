@@ -49,9 +49,9 @@
 /*!
  * @brief Load an image at a path
  *
- * This only works on frontrow
+ * This returns a CGImageRef or a BRImage, depending on platform.
  *
- * @return The BRImage at a path
+ * @return The BRImage on Front Row or CGImageRef on ATV at a path
  */
 + (id)imageAtPath:(NSString *)path;
 

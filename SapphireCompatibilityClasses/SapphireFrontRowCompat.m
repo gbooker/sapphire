@@ -91,17 +91,12 @@ static BOOL usingFrontRow = NO;
 
 + (id)imageAtPath:(NSString *)path
 {
-	Class cls = NSClassFromString(@"BRImage");
-	return [cls imageWithPath:path];
-}
-
-+ (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene
-{
   if(usingFrontRow) {
-    return [self imageAtPath:path];
+    Class cls = NSClassFromString(@"BRImage");
+    return [cls imageWithPath:path];
   } else {
+    // this returns a CGImageRef
     NSURL             *url      = [NSURL fileURLWithPath:path];
-    BRTexture         *ret      = nil;
     CGImageRef        imageRef  = NULL;
     CGImageSourceRef  sourceRef;
     
@@ -110,6 +105,18 @@ static BOOL usingFrontRow = NO;
       imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
       CFRelease(sourceRef);
     }
+    
+    return (id)imageRef;
+	}
+}
+
++ (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene
+{
+  if(usingFrontRow) {
+    return [self imageAtPath:path];
+  } else {
+    CGImageRef imageRef  = (CGImageRef)[self imageAtPath:path];
+    BRTexture  *ret      = nil;
     
     if(imageRef != NULL) {
       /*Create a texture*/
