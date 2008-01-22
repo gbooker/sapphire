@@ -1,8 +1,8 @@
 /*
- * SapphireFileDataImporter.m
+ * SapphireAllFileDataImporter.h
  * Sapphire
  *
- * Created by pnmerrill on Jun. 24, 2007.
+ * Created by pnmerrill on Jan. 21, 2008.
  * Copyright 2007 Sapphire Development Team and/or www.nanopi.net
  * All rights reserved.
  *
@@ -18,38 +18,33 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "SapphireAllFileDataImporter.h"
 #import "SapphireFileDataImporter.h"
-#import "SapphireMetaData.h"
-#include "SapphireImportHelper.h"
+#import "SapphireXMLFileDataImporter.h"
 
-@implementation SapphireFileDataImporter
+@implementation SapphireAllFileDataImporter
 
-- (id)init
+- (id) init
 {
-	self = [super init];
-	if(self == nil)
-		return nil;
-	
-	xmlFileCount=0;
-	
+	NSArray *ourImporters = [[NSArray alloc] initWithObjects:
+						  [[SapphireFileDataImporter alloc] init],
+						  [[SapphireXMLFileDataImporter alloc] init],
+						  nil];
+	self = [super initWithImporters:ourImporters];
+	[ourImporters makeObjectsPerformSelector:@selector(release)];
+	[ourImporters release];
 	return self;
+}
+
+
+- (ImportState)importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
+{
+	return [super importMetaData:metaData];
 }
 
 - (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
 {
-	dataMenu = theDataMenu;
-}
-
-- (ImportState) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData
-{
-	/*Import file if necessary*/
-	if([metaData needsUpdating])
-	{
-		[[SapphireImportHelper sharedHelper] importFileData:metaData inform:dataMenu];
-		return IMPORT_STATE_BACKGROUND;
-	}
-	/*Return whether we imported or not*/
-	return IMPORT_STATE_NOT_UPDATED;
+	[super setImporterDataMenu:theDataMenu];
 }
 
 - (NSString *)completionText
@@ -72,7 +67,9 @@
 	return BRLocalizedString(@"Start Populating Data", @"Button");
 }
 
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void) wasExhumedByPoppingController:(BRLayerController *) controller
 {
+	[super wasExhumedByPoppingController:controller];
 }
+
 @end

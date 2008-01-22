@@ -23,7 +23,7 @@
 #import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"
-#import "SapphireFileDataImporter.h"
+#import "SapphireAllFileDataImporter.h"
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
 #import "SapphirePosterChooser.h"
@@ -406,7 +406,7 @@ static SapphireSettings *sharedInstance = nil;
 	/*Check for populate show data*/
 	if(row==0)
 	{
-		SapphireFileDataImporter *importer = [[SapphireFileDataImporter alloc] init];
+		SapphireAllFileDataImporter *importer = [[SapphireAllFileDataImporter alloc] init];
 		SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] metaDataCollection:metaCollection importer:importer];
 		[[self stack] pushController:menu];
 		[menu release];

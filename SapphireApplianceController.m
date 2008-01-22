@@ -33,6 +33,7 @@
 #import "SapphireMovieDirectory.h"
 
 #import "SapphireImporterDataMenu.h"
+#import "SapphireXMLFileDataImporter.h"
 #import "SapphireFileDataImporter.h"
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
@@ -149,10 +150,12 @@ static NSArray *predicates = nil;
 
 - (SapphireImporterDataMenu *)allImporterForCollection:(SapphireMetaDataCollection *)collection
 {
+	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
 	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/tvdata.plist"]];
 	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithSavedSetting:[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/movieData.plist"]];
-	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:tvImp,movImp,fileImp,nil]];
+	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
+	[xmlImpr release];
 	[fileImp release];
 	[tvImp release];
 	[movImp release];

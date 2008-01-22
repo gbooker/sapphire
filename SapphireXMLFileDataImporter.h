@@ -1,8 +1,8 @@
 /*
- * SapphireFileDataImporter.h
+ * SapphireXMLFileDataImporter.h
  * Sapphire
  *
- * Created by pnmerrill on Jun. 24, 2007.
+ * Created by pnmerrill on Jan. 21, 2008.
  * Copyright 2007 Sapphire Development Team and/or www.nanopi.net
  * All rights reserved.
  *
@@ -24,11 +24,10 @@
 /*!
  * @brief The importer of file data
  *
- * This class is a subclass of SapphireMultipleImporter for importing file data.  It will read in data from the file, such as size, length, and codecs.
+ * This class is a for importing xml file data.  It will read in data stored in XML files with the file.
  */
-@interface SapphireFileDataImporter : NSObject <SapphireImporter>
-{
+@interface SapphireXMLFileDataImporter : NSObject <SapphireImporter> {
 	SapphireImporterDataMenu	*dataMenu;		/*!< @brief The UI for the import (not retained)*/
-	int							xmlFileCount;	/*!< @brief The number of xml files which were imported*/
 }
-@end 
+
+@end
