@@ -72,6 +72,8 @@
 		F5B8DEE90C8F85BB00489829 /* SapphireTVDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B8DEE80C8F85BB00489829 /* SapphireTVDirectory.m */; };
 		F5C078C70CF1033C007C9A16 /* SapphireVirtualDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C078C60CF1033C007C9A16 /* SapphireVirtualDirectory.m */; };
 		F5C4F58B0C677C4D00C99092 /* SapphireAllImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */; };
+		F5CE69560D45732C003C4B2D /* SapphireXMLFileDataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */; };
+		F5CE69660D4575DC003C4B2D /* SapphireAllFileDataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */; };
 		F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D0DEB50C331D76007652B2 /* SapphireTheme.m */; };
 		F5DF246B0C8636DE005C7ECB /* SapphireMultipleImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */; };
 		F5E849C70C3F008100913832 /* SapphireMetaDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */; };
@@ -268,6 +270,10 @@
 		F5C078C60CF1033C007C9A16 /* SapphireVirtualDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireVirtualDirectory.m; sourceTree = "<group>"; };
 		F5C4F5890C677C4D00C99092 /* SapphireAllImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireAllImporter.h; sourceTree = "<group>"; };
 		F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireAllImporter.m; sourceTree = "<group>"; };
+		F5CE69540D45732C003C4B2D /* SapphireXMLFileDataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireXMLFileDataImporter.h; sourceTree = "<group>"; };
+		F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireXMLFileDataImporter.m; sourceTree = "<group>"; };
+		F5CE69640D4575DC003C4B2D /* SapphireAllFileDataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireAllFileDataImporter.h; sourceTree = "<group>"; };
+		F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireAllFileDataImporter.m; sourceTree = "<group>"; };
 		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
 		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
 		F5DF24690C8636DE005C7ECB /* SapphireMultipleImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireMultipleImporter.h; sourceTree = "<group>"; };
@@ -556,6 +562,10 @@
 		F57FFFC00C64028900450D81 /* MetaData Importing */ = {
 			isa = PBXGroup;
 			children = (
+				F5CE69640D4575DC003C4B2D /* SapphireAllFileDataImporter.h */,
+				F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */,
+				F5C4F5890C677C4D00C99092 /* SapphireAllImporter.h */,
+				F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */,
 				FE88FD0E0C2F564700C55E3F /* SapphireFileDataImporter.h */,
 				FE88FD0F0C2F564700C55E3F /* SapphireFileDataImporter.m */,
 				F56B72780C3716B300E934AA /* SapphireImporterDataMenu.h */,
@@ -566,8 +576,8 @@
 				F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */,
 				F56B72ED0C371E4B00E934AA /* SapphireTVShowImporter.h */,
 				F56B72EE0C371E4B00E934AA /* SapphireTVShowImporter.m */,
-				F5C4F5890C677C4D00C99092 /* SapphireAllImporter.h */,
-				F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */,
+				F5CE69540D45732C003C4B2D /* SapphireXMLFileDataImporter.h */,
+				F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */,
 			);
 			name = "MetaData Importing";
 			sourceTree = "<group>";
@@ -787,6 +797,8 @@
 				F51F4B050CFC8AB300BEBAD6 /* SapphireVirtualDirectoryLoading.m in Sources */,
 				F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */,
 				FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */,
+				F5CE69560D45732C003C4B2D /* SapphireXMLFileDataImporter.m in Sources */,
+				F5CE69660D4575DC003C4B2D /* SapphireAllFileDataImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
