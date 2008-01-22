@@ -39,14 +39,6 @@
 - (void)startClient;
 @end
 
-static void childHandler(int i)
-{
-	int status;
-	pid_t child;
-	
-	while((child = waitpid(-1, &status, WNOHANG)) > 0);
-}
-
 @implementation SapphireImportHelper
 
 static SapphireImportHelper *shared = nil;
@@ -179,12 +171,6 @@ static SapphireImportHelper *shared = nil;
 		NSLog(@"Register failed");
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];
-	/*Handle children crashing*/
-	struct sigaction act;
-	
-	act.sa_handler = childHandler;
-	act.sa_flags = SA_NOCLDWAIT;
-	sigaction(SIGCHLD,  &act, NULL);
 	
 	[self startClient];
 	
@@ -212,13 +198,7 @@ static SapphireImportHelper *shared = nil;
 - (void)startClient
 {
 	NSString *path = [[NSBundle bundleForClass:[SapphireImportHelper class]] pathForResource:@"ImportHelper" ofType:@""];
-	const char *cpath = [path fileSystemRepresentation];
-	int pid = fork();
-	if(pid == 0)
-	{
-		const char *argv[2] = {cpath, NULL};
-		execve(cpath, argv, NULL);
-	}	
+	[NSTask launchedTaskWithLaunchPath:path arguments:[NSArray array]];
 }
 
 - (void)connectionDidDie:(NSNotification *)note
