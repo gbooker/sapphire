@@ -1876,6 +1876,33 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 	return [[combinedInfo objectForKey:META_SEASON_NUMBER_KEY] intValue];
 }
 
+- (int)overriddenSeasonNumber
+{
+	[self constructCombinedData];
+	NSNumber *info = [combinedInfo objectForKey:META_SEARCH_SEASON_NUMBER_KEY];
+	if(info != nil)
+		return [info intValue];
+	return -1;
+}
+
+- (int)overriddenEpisodeNumber
+{
+	[self constructCombinedData];
+	NSNumber *info = [combinedInfo objectForKey:META_SEARCH_EPISODE_NUMBER_KEY];
+	if(info != nil)
+		return [info intValue];
+	return -1;
+}
+
+- (int)overriddenSecondEpisodeNumber
+{
+	[self constructCombinedData];
+	NSNumber *info = [combinedInfo objectForKey:META_SEARCH_EPISODE_2_NUMBER_KEY];
+	if(info != nil)
+		return [info intValue];
+	return -1;
+}
+
 - (int)oscarsWon
 {
 	[self constructCombinedData];

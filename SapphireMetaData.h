@@ -39,6 +39,9 @@
 #define META_SHOW_IDENTIFIER_KEY		@"Show ID"
 #define META_EPISODE_2_NUMBER_KEY		@"Episode 2"
 #define META_ABSOLUTE_EP_2_NUMBER_KEY	@"Episode Number 2"
+#define META_SEARCH_SEASON_NUMBER_KEY	@"Search Season"
+#define META_SEARCH_EPISODE_NUMBER_KEY	@"Search Episode"
+#define META_SEARCH_EPISODE_2_NUMBER_KEY	@"Search Episode 2"
 
 //ATV Extra Info
 #define META_SHOW_BROADCASTER_KEY		@"Broadcast Company"
@@ -703,6 +706,32 @@ typedef enum {
  */
 - (void)setFileContainerType:(FileContainerType)fileContainerType;
 
+/*!
+ * @brief Get the overridden season number
+ *
+ * Sometimes TVRage's information is horribly wrong (such as Firefly) and it would be a pain to correct.  This allows the user to provide a season number to override what is in the filename while not interferring with the number stored in the real season number.
+ *
+ * @return the season number to use, -1 if none exists
+ */
+- (int)overriddenSeasonNumber;
+
+/*!
+ * @brief Get the overridden episode number
+ *
+ * Sometimes TVRage's information is horribly wrong (such as Firefly) and it would be a pain to correct.  This allows the user to provide a episode number to override what is in the filename while not interferring with the number stored in the real episode number.
+ *
+ * @return the episode number to use, -1 if none exists
+ */
+- (int)overriddenEpisodeNumber;
+
+/*!
+ * @brief Get the overridden second episode number
+ *
+ * Sometimes TVRage's information is horribly wrong (such as Firefly) and it would be a pain to correct.  This allows the user to provide a second episode number to override what is in the filename while not interferring with the number stored in the real second episode number.
+ *
+ * @return the second episode number to use, -1 if none exists
+ */
+- (int)overriddenSecondEpisodeNumber;
 
 @end
 

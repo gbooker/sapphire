@@ -566,6 +566,15 @@
 	/*Was there an S before the episode number?*/
 	if([skipped hasSuffix:@"S"])
 		ep = 0;
+	
+	int overriddenSeason = [metaData overriddenSeasonNumber];
+	if(overriddenSeason != -1)
+		season = overriddenSeason;
+
+	int overriddenEpisode = [metaData overriddenEpisodeNumber];
+	if(overriddenEpisode != -1)
+		ep = overriddenEpisode;
+
 	/*No season, no info*/
 	if(season == 0)
 		return IMPORT_STATE_NOT_UPDATED;
@@ -578,6 +587,10 @@
 		[scanner scanInt:&otherEp];
 	}
 	
+	overriddenEpisode = [metaData overriddenSecondEpisodeNumber];
+	if(overriddenEpisode != -1)
+		otherEp = overriddenEpisode;
+
 	/*Get the episode's info*/
 	NSMutableDictionary *info = nil, *info2 = nil;
 	if(ep != 0)

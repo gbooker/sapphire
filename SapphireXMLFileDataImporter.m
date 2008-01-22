@@ -35,8 +35,12 @@
 #define BROADCASTER_XML_QUERY		@"/media/broadcaster/text()"
 #define EPISODE_NUMBER_XML_QUERY	@"/media/episodeNumber/text()"
 #define EPISODE_XML_QUERY			@"/media/episode/text()"
+#define SEC_EPISODE_XML_QUERY		@"/media/secondEpisode/text()"
 #define SEASON_XML_QUERY			@"/media/season/text()"
 #define PUBLISHED_XML_QUERY			@"/media/published/text()"
+#define SEARCH_SEASON_XML_QUERY		@"/media/searchSeason/text()"
+#define SEARCH_SEC_EPISODE_XML_QUERY	@"/media/searchSecondEpisode/text()"
+#define SEARCH_EPISODE_XML_QUERY	@"/media/searchEpisode/text()"
 //Multi Attributes		
 #define TITLE_XML_QUERY				@"/media/title/text()"
 #define GENRES_XML_QUERY			@"/media/genres/genre/text()"
@@ -62,10 +66,15 @@ static NSDictionary *xmlMultiAttributes = nil;
 						   META_SHOW_RATING_KEY,			RATING_XML_QUERY,
 						   META_SHOW_NAME_KEY,				SERIES_NAME_XML_QUERY,
 						   META_SHOW_BROADCASTER_KEY,		BROADCASTER_XML_QUERY,
-						   META_ABSOLUTE_EP_NUMBER_KEY,	EPISODE_NUMBER_XML_QUERY,
-						   META_EPISODE_NUMBER_KEY,		EPISODE_XML_QUERY,
+						   META_ABSOLUTE_EP_NUMBER_KEY,		EPISODE_NUMBER_XML_QUERY,
+						   META_EPISODE_NUMBER_KEY,			EPISODE_XML_QUERY,
+						   META_EPISODE_2_NUMBER_KEY,		SEC_EPISODE_XML_QUERY,
 						   META_SEASON_NUMBER_KEY,			SEASON_XML_QUERY,
-						   META_SHOW_PUBLISHED_DATE_KEY,	PUBLISHED_XML_QUERY,nil] ;
+						   META_SHOW_PUBLISHED_DATE_KEY,	PUBLISHED_XML_QUERY,
+						   META_SEARCH_SEASON_NUMBER_KEY,	SEARCH_SEASON_XML_QUERY,
+						   META_SEARCH_EPISODE_NUMBER_KEY,	SEARCH_EPISODE_XML_QUERY,
+						   META_SEARCH_EPISODE_2_NUMBER_KEY,SEARCH_SEC_EPISODE_XML_QUERY,
+						   nil] ;
 	xmlMultiAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
 						  @"Genres",				GENRES_XML_QUERY,
 						  @"Cast",				CAST_XML_QUERY,
@@ -169,7 +178,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 			[newMetaData setObject:newValue forKey:META_SHOW_AQUIRED_DATE];
 	}
 	/*Values which need to be converted to numbers*/
-	NSArray *convertToNumbers = [NSArray arrayWithObjects:META_SHOW_FAVORITE_RATING_KEY, META_ABSOLUTE_EP_NUMBER_KEY, META_SEASON_NUMBER_KEY, META_EPISODE_NUMBER_KEY, nil];
+	NSArray *convertToNumbers = [NSArray arrayWithObjects:META_SHOW_FAVORITE_RATING_KEY, META_ABSOLUTE_EP_NUMBER_KEY, META_SEASON_NUMBER_KEY, META_EPISODE_NUMBER_KEY, META_EPISODE_2_NUMBER_KEY, META_SEARCH_SEASON_NUMBER_KEY, META_SEARCH_EPISODE_NUMBER_KEY, META_SEARCH_EPISODE_2_NUMBER_KEY, nil];
 	NSEnumerator *numEnum = [convertToNumbers objectEnumerator];
 	while((key = [numEnum nextObject]) != nil)
 	{
