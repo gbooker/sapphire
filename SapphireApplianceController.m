@@ -259,7 +259,7 @@ static NSArray *predicates = nil;
 	[names addObjectsFromArray:masterNames];
 	[controllers addObjectsFromArray:masterControllers];
 	NSMutableDictionary *dvds = [NSMutableDictionary dictionary];
-	NSEnumerator *dvdEnum = [[BRDiskArbHandler mountedDVDs] objectEnumerator];
+	NSEnumerator *dvdEnum = [[NSClassFromString(@"BRDiskArbHandler") mountedDVDs] objectEnumerator];
 	BRDiskInfo *dvdInfo;
 	while((dvdInfo = [dvdEnum nextObject]) != nil)
 	{
