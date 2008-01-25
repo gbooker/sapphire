@@ -1,0 +1,16 @@
+/*
+ *  SLoader_Prefix.h
+ *  Software Loader
+ *
+ *  Created by Graham Booker on 12/22/07.
+ *  Copyright 2007 __MyCompanyName__. All rights reserved.
+ *
+ */
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+	#import <BackRow/BackRow.h>
+	#define BRLocalizedString(key, comment)\
+	[BRLocalizedStringManager appliance:self localizedStringForKey:(key) inFile:nil]
+#endif
+

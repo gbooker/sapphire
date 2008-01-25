@@ -1,0 +1,1155 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F509021F0D28527B00A76F67 /* SLoadPerianInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5AEE0B40D282EA8003FF831 /* SLoadPerianInstaller.framework */; };
+		F509022B0D28532E00A76F67 /* SLoadUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */; };
+		F509027F0D285E5D00A76F67 /* SLoadFrappInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F50902710D285E2C00A76F67 /* SLoadFrappInstaller.framework */; };
+		F50902860D2860CF00A76F67 /* SLoadFrappInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = F50902840D2860CF00A76F67 /* SLoadFrappInstaller.h */; };
+		F50902870D2860CF00A76F67 /* SLoadFrappInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = F50902850D2860CF00A76F67 /* SLoadFrappInstaller.m */; };
+		F509028F0D28613B00A76F67 /* SLoadUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */; };
+		F50902900D28613F00A76F67 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
+		F50902910D28614000A76F67 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
+		F50902D80D2ACEEF00A76F67 /* SLoadChannelParser.h in Headers */ = {isa = PBXBuildFile; fileRef = F50902D60D2ACEEF00A76F67 /* SLoadChannelParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50902D90D2ACEEF00A76F67 /* SLoadChannelParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F50902D70D2ACEEF00A76F67 /* SLoadChannelParser.m */; };
+		F50902F00D2ADA6100A76F67 /* SLoadInstallerInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = F50902EF0D2ADA6100A76F67 /* SLoadInstallerInstaller.m */; };
+		F51B91C50D401A3600C66E8A /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C80D1D953900B3EF25 /* BackRow.framework */; };
+		F51B91C60D401A3900C66E8A /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C80D1D953900B3EF25 /* BackRow.framework */; };
+		F51B91C70D401A3B00C66E8A /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C80D1D953900B3EF25 /* BackRow.framework */; };
+		F51BF6910D258EB900E22363 /* SLoadInstallServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BF6900D258EB900E22363 /* SLoadInstallServer.m */; };
+		F51BF6D00D25993B00E22363 /* helper.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BF6CF0D25993B00E22363 /* helper.m */; };
+		F51BF6D70D259A6F00E22363 /* SLoadInstallClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BF67A0D258AFB00E22363 /* SLoadInstallClient.m */; };
+		F51BF6D80D259A7000E22363 /* SLoadInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BF17C50D243D9E00FBF85A /* SLoadInstaller.m */; };
+		F51BF6E30D259A8D00E22363 /* InstallHelper in Resources */ = {isa = PBXBuildFile; fileRef = F51BF6CA0D25991200E22363 /* InstallHelper */; };
+		F51BFA730D259AC600E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
+		F51BFA740D259AC600E22363 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C80D1D953900B3EF25 /* BackRow.framework */; };
+		F51BFA750D259AC600E22363 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
+		F51BFAEB0D259ED100E22363 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFAEA0D259ED100E22363 /* libcrypto.dylib */; };
+		F51BFB510D26902F00E22363 /* SLoadInstallProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFB500D26902F00E22363 /* SLoadInstallProgress.m */; };
+		F51BFB7F0D26A12000E22363 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFB7E0D26A12000E22363 /* ExceptionHandling.framework */; };
+		F5AEE0610D282818003FF831 /* NSData-HashSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE03E0D2826D7003FF831 /* NSData-HashSupport.m */; };
+		F5AEE0620D282818003FF831 /* NSData-HashSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE03D0D2826D7003FF831 /* NSData-HashSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5AEE0640D28282A003FF831 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
+		F5AEE0650D28282D003FF831 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
+		F5AEE0670D282832003FF831 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFAEA0D259ED100E22363 /* libcrypto.dylib */; };
+		F5AEE06B0D282852003FF831 /* SLoadFileUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0690D282852003FF831 /* SLoadFileUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5AEE06C0D282852003FF831 /* SLoadFileUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE06A0D282852003FF831 /* SLoadFileUtilities.m */; };
+		F5AEE0770D282A36003FF831 /* SLoadDownloadDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0750D282A36003FF831 /* SLoadDownloadDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5AEE0780D282A36003FF831 /* SLoadDownloadDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0760D282A36003FF831 /* SLoadDownloadDelegate.m */; };
+		F5AEE0810D282BD3003FF831 /* SLoadDelegateProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0800D282BD3003FF831 /* SLoadDelegateProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5AEE08B0D282C68003FF831 /* SLoadUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */; };
+		F5AEE0BC0D282EE8003FF831 /* SLoadPerianInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0BA0D282EE8003FF831 /* SLoadPerianInstaller.h */; };
+		F5AEE0BD0D282EE8003FF831 /* SLoadPerianInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0BB0D282EE8003FF831 /* SLoadPerianInstaller.m */; };
+		F5AEE0C00D282F26003FF831 /* SLoadBaseInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0BE0D282F26003FF831 /* SLoadBaseInstaller.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5AEE0C10D282F26003FF831 /* SLoadBaseInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AEE0BF0D282F26003FF831 /* SLoadBaseInstaller.m */; };
+		F5AEE0C90D28303F003FF831 /* SLoadUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */; };
+		F5AEE0CF0D283047003FF831 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
+		F5AEE0D00D28304A003FF831 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
+		F5AEE0DB0D2830F1003FF831 /* SLoadInstallerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0DA0D2830F1003FF831 /* SLoadInstallerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5EBE74F0D4A7CCA00042BA0 /* SapphireCompatClasses.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5EBE7450D4A7CB400042BA0 /* SapphireCompatClasses.framework */; };
+		F5EBE7500D4A7CCB00042BA0 /* SapphireLeopardCompatClasses.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5EBE7470D4A7CB400042BA0 /* SapphireLeopardCompatClasses.framework */; };
+		F5EBE7540D4A7CD900042BA0 /* SapphireCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5EBE7450D4A7CB400042BA0 /* SapphireCompatClasses.framework */; };
+		F5EBE7550D4A7CD900042BA0 /* SapphireLeopardCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5EBE7470D4A7CB400042BA0 /* SapphireLeopardCompatClasses.framework */; };
+		F5F314C60D1D952800B3EF25 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
+		F5F314C70D1D952800B3EF25 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
+		F5F314C90D1D953900B3EF25 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C80D1D953900B3EF25 /* BackRow.framework */; };
+		F5F314D10D1D956D00B3EF25 /* SLoadAppliance.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F314A60D1D93B100B3EF25 /* SLoadAppliance.m */; };
+		F5F314E60D1D979300B3EF25 /* SLoadApplianceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F314E50D1D979300B3EF25 /* SLoadApplianceController.m */; };
+		F5F315E00D2060DC00B3EF25 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F315DF0D2060DC00B3EF25 /* Security.framework */; };
+		F5F316160D20699800B3EF25 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F316030D20664700B3EF25 /* main.m */; };
+		F5F3161B0D2069D700B3EF25 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F315DF0D2060DC00B3EF25 /* Security.framework */; };
+		F5F3161C0D2069DE00B3EF25 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
+		F5F3161D0D2069DE00B3EF25 /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C80D1D953900B3EF25 /* BackRow.framework */; };
+		F5F3161E0D2069DF00B3EF25 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F50902150D28525400A76F67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5AEE05A0D2827E8003FF831;
+			remoteInfo = SLoadUtilities;
+		};
+		F50902170D28525400A76F67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5AEE0B30D282EA8003FF831;
+			remoteInfo = SLoadPerianInstaller;
+		};
+		F50902760D285E4800A76F67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5AEE05A0D2827E8003FF831;
+			remoteInfo = SLoadUtilities;
+		};
+		F509027B0D285E5300A76F67 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F50902700D285E2C00A76F67;
+			remoteInfo = SLoadFrappInstaller;
+		};
+		F51BF6E10D259A8000E22363 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F51BF6C90D25991200E22363;
+			remoteInfo = InstallHelper;
+		};
+		F5AEE0870D282C61003FF831 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5AEE05A0D2827E8003FF831;
+			remoteInfo = SLoadUtilities;
+		};
+		F5AEE0D40D28308A003FF831 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5AEE05A0D2827E8003FF831;
+			remoteInfo = SLoadUtilities;
+		};
+		F5EBE7440D4A7CB400042BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F51BFCD10D26BAED00E22363;
+			remoteInfo = SapphireCompatClasses;
+		};
+		F5EBE7460D4A7CB400042BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F51BFCF90D26BB4D00E22363;
+			remoteInfo = SapphireLeopardCompatClasses;
+		};
+		F5EBE74B0D4A7CC100042BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F51BFCD00D26BAED00E22363;
+			remoteInfo = SapphireCompatClasses;
+		};
+		F5EBE74D0D4A7CC100042BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F51BFCF80D26BB4D00E22363;
+			remoteInfo = SapphireLeopardCompatClasses;
+		};
+		F5F316110D20672B00B3EF25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5F314960D1D934800B3EF25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5F314BB0D1D94A700B3EF25;
+			remoteInfo = "Software Loader";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F50902220D28529E00A76F67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Installers;
+			dstSubfolderSpec = 7;
+			files = (
+				F509027F0D285E5D00A76F67 /* SLoadFrappInstaller.framework in CopyFiles */,
+				F509021F0D28527B00A76F67 /* SLoadPerianInstaller.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BFC950D26B57900E22363 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F5EBE7540D4A7CD900042BA0 /* SapphireCompatClasses.framework in CopyFiles */,
+				F5EBE7550D4A7CD900042BA0 /* SapphireLeopardCompatClasses.framework in CopyFiles */,
+				F509022B0D28532E00A76F67 /* SLoadUtilities.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F50902710D285E2C00A76F67 /* SLoadFrappInstaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SLoadFrappInstaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F50902840D2860CF00A76F67 /* SLoadFrappInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadFrappInstaller.h; sourceTree = "<group>"; };
+		F50902850D2860CF00A76F67 /* SLoadFrappInstaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadFrappInstaller.m; sourceTree = "<group>"; };
+		F50902D60D2ACEEF00A76F67 /* SLoadChannelParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadChannelParser.h; sourceTree = "<group>"; };
+		F50902D70D2ACEEF00A76F67 /* SLoadChannelParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadChannelParser.m; sourceTree = "<group>"; };
+		F50902EE0D2ADA6100A76F67 /* SLoadInstallerInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadInstallerInstaller.h; sourceTree = "<group>"; };
+		F50902EF0D2ADA6100A76F67 /* SLoadInstallerInstaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadInstallerInstaller.m; sourceTree = "<group>"; };
+		F51BF6790D258AFB00E22363 /* SLoadInstallClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadInstallClient.h; sourceTree = "<group>"; };
+		F51BF67A0D258AFB00E22363 /* SLoadInstallClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadInstallClient.m; sourceTree = "<group>"; };
+		F51BF68F0D258EB900E22363 /* SLoadInstallServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadInstallServer.h; sourceTree = "<group>"; };
+		F51BF6900D258EB900E22363 /* SLoadInstallServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadInstallServer.m; sourceTree = "<group>"; };
+		F51BF6CA0D25991200E22363 /* InstallHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = InstallHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		F51BF6CF0D25993B00E22363 /* helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = helper.m; sourceTree = "<group>"; };
+		F51BFAEA0D259ED100E22363 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
+		F51BFB4F0D26902F00E22363 /* SLoadInstallProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadInstallProgress.h; sourceTree = "<group>"; };
+		F51BFB500D26902F00E22363 /* SLoadInstallProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadInstallProgress.m; sourceTree = "<group>"; };
+		F51BFB7E0D26A12000E22363 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
+		F5AEE03D0D2826D7003FF831 /* NSData-HashSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData-HashSupport.h"; sourceTree = "<group>"; };
+		F5AEE03E0D2826D7003FF831 /* NSData-HashSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData-HashSupport.m"; sourceTree = "<group>"; };
+		F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SLoadUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5AEE0690D282852003FF831 /* SLoadFileUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadFileUtilities.h; sourceTree = "<group>"; };
+		F5AEE06A0D282852003FF831 /* SLoadFileUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadFileUtilities.m; sourceTree = "<group>"; };
+		F5AEE0750D282A36003FF831 /* SLoadDownloadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadDownloadDelegate.h; sourceTree = "<group>"; };
+		F5AEE0760D282A36003FF831 /* SLoadDownloadDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadDownloadDelegate.m; sourceTree = "<group>"; };
+		F5AEE0800D282BD3003FF831 /* SLoadDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadDelegateProtocol.h; sourceTree = "<group>"; };
+		F5AEE0B40D282EA8003FF831 /* SLoadPerianInstaller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SLoadPerianInstaller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5AEE0BA0D282EE8003FF831 /* SLoadPerianInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadPerianInstaller.h; sourceTree = "<group>"; };
+		F5AEE0BB0D282EE8003FF831 /* SLoadPerianInstaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadPerianInstaller.m; sourceTree = "<group>"; };
+		F5AEE0BE0D282F26003FF831 /* SLoadBaseInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadBaseInstaller.h; sourceTree = "<group>"; };
+		F5AEE0BF0D282F26003FF831 /* SLoadBaseInstaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadBaseInstaller.m; sourceTree = "<group>"; };
+		F5AEE0DA0D2830F1003FF831 /* SLoadInstallerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadInstallerProtocol.h; sourceTree = "<group>"; };
+		F5BF17C40D243D9E00FBF85A /* SLoadInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadInstaller.h; sourceTree = "<group>"; };
+		F5BF17C50D243D9E00FBF85A /* SLoadInstaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadInstaller.m; sourceTree = "<group>"; };
+		F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SapphireCompatibilityClasses.xcodeproj; path = ../SapphireCompatibilityClasses/SapphireCompatibilityClasses.xcodeproj; sourceTree = SOURCE_ROOT; };
+		F5F314A50D1D93B100B3EF25 /* SLoadAppliance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadAppliance.h; sourceTree = "<group>"; };
+		F5F314A60D1D93B100B3EF25 /* SLoadAppliance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadAppliance.m; sourceTree = "<group>"; };
+		F5F314BC0D1D94A700B3EF25 /* Software Loader.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Software Loader.frappliance"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5F314C20D1D950000B3EF25 /* SLoader_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoader_Prefix.pch; sourceTree = "<group>"; };
+		F5F314C40D1D952800B3EF25 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		F5F314C50D1D952800B3EF25 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		F5F314C80D1D953900B3EF25 /* BackRow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackRow.framework; path = /System/Library/PrivateFrameworks/BackRow.framework; sourceTree = "<absolute>"; };
+		F5F314E20D1D977200B3EF25 /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
+		F5F314E40D1D979300B3EF25 /* SLoadApplianceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadApplianceController.h; sourceTree = "<group>"; };
+		F5F314E50D1D979300B3EF25 /* SLoadApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadApplianceController.m; sourceTree = "<group>"; };
+		F5F315DF0D2060DC00B3EF25 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		F5F315FD0D2065E200B3EF25 /* Tester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tester; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5F316030D20664700B3EF25 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F509026F0D285E2C00A76F67 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F509028F0D28613B00A76F67 /* SLoadUtilities.framework in Frameworks */,
+				F50902900D28613F00A76F67 /* AppKit.framework in Frameworks */,
+				F50902910D28614000A76F67 /* Foundation.framework in Frameworks */,
+				F51B91C70D401A3B00C66E8A /* BackRow.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BF6C80D25991200E22363 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE08B0D282C68003FF831 /* SLoadUtilities.framework in Frameworks */,
+				F51BFA730D259AC600E22363 /* Foundation.framework in Frameworks */,
+				F51BFA740D259AC600E22363 /* BackRow.framework in Frameworks */,
+				F51BFA750D259AC600E22363 /* AppKit.framework in Frameworks */,
+				F51BFAEB0D259ED100E22363 /* libcrypto.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0590D2827E8003FF831 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE0640D28282A003FF831 /* AppKit.framework in Frameworks */,
+				F5AEE0650D28282D003FF831 /* Foundation.framework in Frameworks */,
+				F5AEE0670D282832003FF831 /* libcrypto.dylib in Frameworks */,
+				F51B91C50D401A3600C66E8A /* BackRow.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0B20D282EA8003FF831 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE0C90D28303F003FF831 /* SLoadUtilities.framework in Frameworks */,
+				F5AEE0CF0D283047003FF831 /* AppKit.framework in Frameworks */,
+				F5AEE0D00D28304A003FF831 /* Foundation.framework in Frameworks */,
+				F51B91C60D401A3900C66E8A /* BackRow.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F314BA0D1D94A700B3EF25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5F314C60D1D952800B3EF25 /* AppKit.framework in Frameworks */,
+				F5F314C70D1D952800B3EF25 /* Foundation.framework in Frameworks */,
+				F5F314C90D1D953900B3EF25 /* BackRow.framework in Frameworks */,
+				F5F315E00D2060DC00B3EF25 /* Security.framework in Frameworks */,
+				F51BFB7F0D26A12000E22363 /* ExceptionHandling.framework in Frameworks */,
+				F5EBE74F0D4A7CCA00042BA0 /* SapphireCompatClasses.framework in Frameworks */,
+				F5EBE7500D4A7CCB00042BA0 /* SapphireLeopardCompatClasses.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F315FB0D2065E200B3EF25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5F3161B0D2069D700B3EF25 /* Security.framework in Frameworks */,
+				F5F3161C0D2069DE00B3EF25 /* Foundation.framework in Frameworks */,
+				F5F3161D0D2069DE00B3EF25 /* BackRow.framework in Frameworks */,
+				F5F3161E0D2069DF00B3EF25 /* AppKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F50902680D285E0600A76F67 /* Frapp Installer */ = {
+			isa = PBXGroup;
+			children = (
+				F50902840D2860CF00A76F67 /* SLoadFrappInstaller.h */,
+				F50902850D2860CF00A76F67 /* SLoadFrappInstaller.m */,
+			);
+			name = "Frapp Installer";
+			sourceTree = "<group>";
+		};
+		F5AEE02D0D282655003FF831 /* SLoadUtilities */ = {
+			isa = PBXGroup;
+			children = (
+				F5AEE03D0D2826D7003FF831 /* NSData-HashSupport.h */,
+				F5AEE03E0D2826D7003FF831 /* NSData-HashSupport.m */,
+				F5AEE0690D282852003FF831 /* SLoadFileUtilities.h */,
+				F5AEE06A0D282852003FF831 /* SLoadFileUtilities.m */,
+				F5AEE0750D282A36003FF831 /* SLoadDownloadDelegate.h */,
+				F5AEE0760D282A36003FF831 /* SLoadDownloadDelegate.m */,
+				F5AEE0800D282BD3003FF831 /* SLoadDelegateProtocol.h */,
+				F5AEE0BE0D282F26003FF831 /* SLoadBaseInstaller.h */,
+				F5AEE0BF0D282F26003FF831 /* SLoadBaseInstaller.m */,
+				F5AEE0DA0D2830F1003FF831 /* SLoadInstallerProtocol.h */,
+				F50902D60D2ACEEF00A76F67 /* SLoadChannelParser.h */,
+				F50902D70D2ACEEF00A76F67 /* SLoadChannelParser.m */,
+			);
+			name = SLoadUtilities;
+			sourceTree = "<group>";
+		};
+		F5AEE0B90D282EBF003FF831 /* Perian Installer */ = {
+			isa = PBXGroup;
+			children = (
+				F5AEE0BA0D282EE8003FF831 /* SLoadPerianInstaller.h */,
+				F5AEE0BB0D282EE8003FF831 /* SLoadPerianInstaller.m */,
+			);
+			name = "Perian Installer";
+			sourceTree = "<group>";
+		};
+		F5BF17C30D243D3900FBF85A /* suidRoot */ = {
+			isa = PBXGroup;
+			children = (
+				F5BF17C40D243D9E00FBF85A /* SLoadInstaller.h */,
+				F5BF17C50D243D9E00FBF85A /* SLoadInstaller.m */,
+				F51BF6790D258AFB00E22363 /* SLoadInstallClient.h */,
+				F51BF67A0D258AFB00E22363 /* SLoadInstallClient.m */,
+				F51BF6CF0D25993B00E22363 /* helper.m */,
+				F50902EE0D2ADA6100A76F67 /* SLoadInstallerInstaller.h */,
+				F50902EF0D2ADA6100A76F67 /* SLoadInstallerInstaller.m */,
+			);
+			name = suidRoot;
+			sourceTree = "<group>";
+		};
+		F5EBE73D0D4A7CB400042BA0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5EBE7450D4A7CB400042BA0 /* SapphireCompatClasses.framework */,
+				F5EBE7470D4A7CB400042BA0 /* SapphireLeopardCompatClasses.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5F314940D1D934800B3EF25 = {
+			isa = PBXGroup;
+			children = (
+				F5F314A90D1D945A00B3EF25 /* Classes */,
+				F5F314D60D1D95BC00B3EF25 /* Other Sources */,
+				F5F314A80D1D944400B3EF25 /* Frameworks */,
+				F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */,
+				F5F314BD0D1D94A700B3EF25 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F5F3149E0D1D935500B3EF25 /* FRAppliance */ = {
+			isa = PBXGroup;
+			children = (
+				F5F314A50D1D93B100B3EF25 /* SLoadAppliance.h */,
+				F5F314A60D1D93B100B3EF25 /* SLoadAppliance.m */,
+				F5F314E40D1D979300B3EF25 /* SLoadApplianceController.h */,
+				F5F314E50D1D979300B3EF25 /* SLoadApplianceController.m */,
+				F51BF68F0D258EB900E22363 /* SLoadInstallServer.h */,
+				F51BF6900D258EB900E22363 /* SLoadInstallServer.m */,
+				F51BFB4F0D26902F00E22363 /* SLoadInstallProgress.h */,
+				F51BFB500D26902F00E22363 /* SLoadInstallProgress.m */,
+			);
+			name = FRAppliance;
+			sourceTree = "<group>";
+		};
+		F5F314A80D1D944400B3EF25 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F51BFB7E0D26A12000E22363 /* ExceptionHandling.framework */,
+				F51BFAEA0D259ED100E22363 /* libcrypto.dylib */,
+				F5F315DF0D2060DC00B3EF25 /* Security.framework */,
+				F5F314C80D1D953900B3EF25 /* BackRow.framework */,
+				F5F314C40D1D952800B3EF25 /* AppKit.framework */,
+				F5F314C50D1D952800B3EF25 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F5F314A90D1D945A00B3EF25 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F5F3149E0D1D935500B3EF25 /* FRAppliance */,
+				F5BF17C30D243D3900FBF85A /* suidRoot */,
+				F5AEE02D0D282655003FF831 /* SLoadUtilities */,
+				F5AEE0B90D282EBF003FF831 /* Perian Installer */,
+				F50902680D285E0600A76F67 /* Frapp Installer */,
+				F5F316030D20664700B3EF25 /* main.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		F5F314BD0D1D94A700B3EF25 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5F314BC0D1D94A700B3EF25 /* Software Loader.frappliance */,
+				F5F315FD0D2065E200B3EF25 /* Tester */,
+				F51BF6CA0D25991200E22363 /* InstallHelper */,
+				F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */,
+				F5AEE0B40D282EA8003FF831 /* SLoadPerianInstaller.framework */,
+				F50902710D285E2C00A76F67 /* SLoadFrappInstaller.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F5F314D60D1D95BC00B3EF25 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				F5F314E20D1D977200B3EF25 /* BackRowUtils.h */,
+				F5F314C20D1D950000B3EF25 /* SLoader_Prefix.pch */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		F509026C0D285E2C00A76F67 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F50902860D2860CF00A76F67 /* SLoadFrappInstaller.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0560D2827E8003FF831 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE0620D282818003FF831 /* NSData-HashSupport.h in Headers */,
+				F5AEE06B0D282852003FF831 /* SLoadFileUtilities.h in Headers */,
+				F5AEE0770D282A36003FF831 /* SLoadDownloadDelegate.h in Headers */,
+				F5AEE0810D282BD3003FF831 /* SLoadDelegateProtocol.h in Headers */,
+				F5AEE0C00D282F26003FF831 /* SLoadBaseInstaller.h in Headers */,
+				F5AEE0DB0D2830F1003FF831 /* SLoadInstallerProtocol.h in Headers */,
+				F50902D80D2ACEEF00A76F67 /* SLoadChannelParser.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0AF0D282EA8003FF831 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE0BC0D282EE8003FF831 /* SLoadPerianInstaller.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		F50902700D285E2C00A76F67 /* SLoadFrappInstaller */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F50902750D285E2C00A76F67 /* Build configuration list for PBXNativeTarget "SLoadFrappInstaller" */;
+			buildPhases = (
+				F509026C0D285E2C00A76F67 /* Headers */,
+				F509026D0D285E2C00A76F67 /* Resources */,
+				F509026E0D285E2C00A76F67 /* Sources */,
+				F509026F0D285E2C00A76F67 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F50902770D285E4800A76F67 /* PBXTargetDependency */,
+			);
+			name = SLoadFrappInstaller;
+			productName = SLoadFrappInstaller;
+			productReference = F50902710D285E2C00A76F67 /* SLoadFrappInstaller.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F51BF6C90D25991200E22363 /* InstallHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F51BF6CE0D25993B00E22363 /* Build configuration list for PBXNativeTarget "InstallHelper" */;
+			buildPhases = (
+				F51BF6C70D25991200E22363 /* Sources */,
+				F51BF6C80D25991200E22363 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5AEE0880D282C61003FF831 /* PBXTargetDependency */,
+			);
+			name = InstallHelper;
+			productName = InstallHelper;
+			productReference = F51BF6CA0D25991200E22363 /* InstallHelper */;
+			productType = "com.apple.product-type.tool";
+		};
+		F5AEE05A0D2827E8003FF831 /* SLoadUtilities */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5AEE05F0D2827E8003FF831 /* Build configuration list for PBXNativeTarget "SLoadUtilities" */;
+			buildPhases = (
+				F5AEE0560D2827E8003FF831 /* Headers */,
+				F5AEE0570D2827E8003FF831 /* Resources */,
+				F5AEE0580D2827E8003FF831 /* Sources */,
+				F5AEE0590D2827E8003FF831 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SLoadUtilities;
+			productName = SLoadUtilities;
+			productReference = F5AEE05B0D2827E8003FF831 /* SLoadUtilities.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F5AEE0B30D282EA8003FF831 /* SLoadPerianInstaller */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5AEE0B80D282EA8003FF831 /* Build configuration list for PBXNativeTarget "SLoadPerianInstaller" */;
+			buildPhases = (
+				F5AEE0AF0D282EA8003FF831 /* Headers */,
+				F5AEE0B00D282EA8003FF831 /* Resources */,
+				F5AEE0B10D282EA8003FF831 /* Sources */,
+				F5AEE0B20D282EA8003FF831 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5AEE0D50D28308A003FF831 /* PBXTargetDependency */,
+			);
+			name = SLoadPerianInstaller;
+			productName = SLoadPerianInstaller;
+			productReference = F5AEE0B40D282EA8003FF831 /* SLoadPerianInstaller.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F5F314BB0D1D94A700B3EF25 /* Software Loader */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5F314C10D1D94A700B3EF25 /* Build configuration list for PBXNativeTarget "Software Loader" */;
+			buildPhases = (
+				F5F314B80D1D94A700B3EF25 /* Resources */,
+				F5F314B90D1D94A700B3EF25 /* Sources */,
+				F5F314BA0D1D94A700B3EF25 /* Frameworks */,
+				F51BFC950D26B57900E22363 /* CopyFiles */,
+				F50902220D28529E00A76F67 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F51BF6E20D259A8000E22363 /* PBXTargetDependency */,
+				F50902160D28525400A76F67 /* PBXTargetDependency */,
+				F50902180D28525400A76F67 /* PBXTargetDependency */,
+				F509027C0D285E5300A76F67 /* PBXTargetDependency */,
+				F5EBE74C0D4A7CC100042BA0 /* PBXTargetDependency */,
+				F5EBE74E0D4A7CC100042BA0 /* PBXTargetDependency */,
+			);
+			name = "Software Loader";
+			productName = "Software Loader";
+			productReference = F5F314BC0D1D94A700B3EF25 /* Software Loader.frappliance */;
+			productType = "com.apple.product-type.bundle";
+		};
+		F5F315FC0D2065E200B3EF25 /* Tester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F5F316010D20660000B3EF25 /* Build configuration list for PBXNativeTarget "Tester" */;
+			buildPhases = (
+				F5F315FA0D2065E200B3EF25 /* Sources */,
+				F5F315FB0D2065E200B3EF25 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5F316120D20672B00B3EF25 /* PBXTargetDependency */,
+			);
+			name = Tester;
+			productName = Tester;
+			productReference = F5F315FD0D2065E200B3EF25 /* Tester */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F5F314960D1D934800B3EF25 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = F5F314990D1D934800B3EF25 /* Build configuration list for PBXProject "Software Loader" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = F5F314940D1D934800B3EF25;
+			productRefGroup = F5F314BD0D1D94A700B3EF25 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F5EBE73D0D4A7CB400042BA0 /* Products */;
+					ProjectRef = F5EBE73C0D4A7CB400042BA0 /* SapphireCompatibilityClasses.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				F5F314BB0D1D94A700B3EF25 /* Software Loader */,
+				F5F315FC0D2065E200B3EF25 /* Tester */,
+				F51BF6C90D25991200E22363 /* InstallHelper */,
+				F5AEE05A0D2827E8003FF831 /* SLoadUtilities */,
+				F5AEE0B30D282EA8003FF831 /* SLoadPerianInstaller */,
+				F50902700D285E2C00A76F67 /* SLoadFrappInstaller */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F5EBE7450D4A7CB400042BA0 /* SapphireCompatClasses.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SapphireCompatClasses.framework;
+			remoteRef = F5EBE7440D4A7CB400042BA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F5EBE7470D4A7CB400042BA0 /* SapphireLeopardCompatClasses.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SapphireLeopardCompatClasses.framework;
+			remoteRef = F5EBE7460D4A7CB400042BA0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F509026D0D285E2C00A76F67 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0570D2827E8003FF831 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0B00D282EA8003FF831 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F314B80D1D94A700B3EF25 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BF6E30D259A8D00E22363 /* InstallHelper in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F509026E0D285E2C00A76F67 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F50902870D2860CF00A76F67 /* SLoadFrappInstaller.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F51BF6C70D25991200E22363 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F51BF6D00D25993B00E22363 /* helper.m in Sources */,
+				F51BF6D70D259A6F00E22363 /* SLoadInstallClient.m in Sources */,
+				F51BF6D80D259A7000E22363 /* SLoadInstaller.m in Sources */,
+				F50902F00D2ADA6100A76F67 /* SLoadInstallerInstaller.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0580D2827E8003FF831 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE0610D282818003FF831 /* NSData-HashSupport.m in Sources */,
+				F5AEE06C0D282852003FF831 /* SLoadFileUtilities.m in Sources */,
+				F5AEE0780D282A36003FF831 /* SLoadDownloadDelegate.m in Sources */,
+				F5AEE0C10D282F26003FF831 /* SLoadBaseInstaller.m in Sources */,
+				F50902D90D2ACEEF00A76F67 /* SLoadChannelParser.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5AEE0B10D282EA8003FF831 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5AEE0BD0D282EE8003FF831 /* SLoadPerianInstaller.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F314B90D1D94A700B3EF25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5F314D10D1D956D00B3EF25 /* SLoadAppliance.m in Sources */,
+				F5F314E60D1D979300B3EF25 /* SLoadApplianceController.m in Sources */,
+				F51BF6910D258EB900E22363 /* SLoadInstallServer.m in Sources */,
+				F51BFB510D26902F00E22363 /* SLoadInstallProgress.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F315FA0D2065E200B3EF25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5F316160D20699800B3EF25 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F50902160D28525400A76F67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5AEE05A0D2827E8003FF831 /* SLoadUtilities */;
+			targetProxy = F50902150D28525400A76F67 /* PBXContainerItemProxy */;
+		};
+		F50902180D28525400A76F67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5AEE0B30D282EA8003FF831 /* SLoadPerianInstaller */;
+			targetProxy = F50902170D28525400A76F67 /* PBXContainerItemProxy */;
+		};
+		F50902770D285E4800A76F67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5AEE05A0D2827E8003FF831 /* SLoadUtilities */;
+			targetProxy = F50902760D285E4800A76F67 /* PBXContainerItemProxy */;
+		};
+		F509027C0D285E5300A76F67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F50902700D285E2C00A76F67 /* SLoadFrappInstaller */;
+			targetProxy = F509027B0D285E5300A76F67 /* PBXContainerItemProxy */;
+		};
+		F51BF6E20D259A8000E22363 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F51BF6C90D25991200E22363 /* InstallHelper */;
+			targetProxy = F51BF6E10D259A8000E22363 /* PBXContainerItemProxy */;
+		};
+		F5AEE0880D282C61003FF831 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5AEE05A0D2827E8003FF831 /* SLoadUtilities */;
+			targetProxy = F5AEE0870D282C61003FF831 /* PBXContainerItemProxy */;
+		};
+		F5AEE0D50D28308A003FF831 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5AEE05A0D2827E8003FF831 /* SLoadUtilities */;
+			targetProxy = F5AEE0D40D28308A003FF831 /* PBXContainerItemProxy */;
+		};
+		F5EBE74C0D4A7CC100042BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SapphireCompatClasses;
+			targetProxy = F5EBE74B0D4A7CC100042BA0 /* PBXContainerItemProxy */;
+		};
+		F5EBE74E0D4A7CC100042BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SapphireLeopardCompatClasses;
+			targetProxy = F5EBE74D0D4A7CC100042BA0 /* PBXContainerItemProxy */;
+		};
+		F5F316120D20672B00B3EF25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5F314BB0D1D94A700B3EF25 /* Software Loader */;
+			targetProxy = F5F316110D20672B00B3EF25 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F50902730D285E2C00A76F67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "SLoadFrappInstaller-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				PREBINDING = NO;
+				PRODUCT_NAME = SLoadFrappInstaller;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F50902740D285E2C00A76F67 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "SLoadFrappInstaller-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				PREBINDING = NO;
+				PRODUCT_NAME = SLoadFrappInstaller;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F51BF6CC0D25991200E22363 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = InstallHelper;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F51BF6CD0D25991200E22363 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/bin;
+				PREBINDING = NO;
+				PRODUCT_NAME = InstallHelper;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F5AEE05D0D2827E8003FF831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "SLoadUtilities-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PREBINDING = NO;
+				PRODUCT_NAME = SLoadUtilities;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5AEE05E0D2827E8003FF831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "SLoadUtilities-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PREBINDING = NO;
+				PRODUCT_NAME = SLoadUtilities;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F5AEE0B60D282EA8003FF831 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "SLoadPerianInstaller-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				PREBINDING = NO;
+				PRODUCT_NAME = SLoadPerianInstaller;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5AEE0B70D282EA8003FF831 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "SLoadPerianInstaller-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				PREBINDING = NO;
+				PRODUCT_NAME = SLoadPerianInstaller;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F5F314970D1D934800B3EF25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../build;
+			};
+			name = Debug;
+		};
+		F5F314980D1D934800B3EF25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../build;
+			};
+			name = Release;
+		};
+		F5F314BF0D1D94A700B3EF25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "Software Loader-Info.plist";
+				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Software Loader";
+				WRAPPER_EXTENSION = frappliance;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5F314C00D1D94A700B3EF25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)\"";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INFOPLIST_FILE = "Software Loader-Info.plist";
+				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Software Loader";
+				WRAPPER_EXTENSION = frappliance;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F5F315FF0D2065E200B3EF25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Tester;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		F5F316000D2065E200B3EF25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = SLoader_Prefix.pch;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Tester;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F50902750D285E2C00A76F67 /* Build configuration list for PBXNativeTarget "SLoadFrappInstaller" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F50902730D285E2C00A76F67 /* Debug */,
+				F50902740D285E2C00A76F67 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F51BF6CE0D25993B00E22363 /* Build configuration list for PBXNativeTarget "InstallHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F51BF6CC0D25991200E22363 /* Debug */,
+				F51BF6CD0D25991200E22363 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5AEE05F0D2827E8003FF831 /* Build configuration list for PBXNativeTarget "SLoadUtilities" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5AEE05D0D2827E8003FF831 /* Debug */,
+				F5AEE05E0D2827E8003FF831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5AEE0B80D282EA8003FF831 /* Build configuration list for PBXNativeTarget "SLoadPerianInstaller" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5AEE0B60D282EA8003FF831 /* Debug */,
+				F5AEE0B70D282EA8003FF831 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5F314990D1D934800B3EF25 /* Build configuration list for PBXProject "Software Loader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5F314970D1D934800B3EF25 /* Debug */,
+				F5F314980D1D934800B3EF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5F314C10D1D94A700B3EF25 /* Build configuration list for PBXNativeTarget "Software Loader" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5F314BF0D1D94A700B3EF25 /* Debug */,
+				F5F314C00D1D94A700B3EF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5F316010D20660000B3EF25 /* Build configuration list for PBXNativeTarget "Tester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5F315FF0D2065E200B3EF25 /* Debug */,
+				F5F316000D2065E200B3EF25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F5F314960D1D934800B3EF25 /* Project object */;
+}
