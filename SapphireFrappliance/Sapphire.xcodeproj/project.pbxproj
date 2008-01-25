@@ -163,14 +163,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */;
+			remoteGlobalIDString = F51BFCD00D26BAED00E22363;
 			remoteInfo = SapphireCompatClasses;
 		};
 		F5EBE7080D4A795200042BA0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */;
+			remoteGlobalIDString = F51BFCF80D26BB4D00E22363;
 			remoteInfo = SapphireLeopardCompatClasses;
 		};
 		FE7810650C56F0950037779D /* PBXContainerItemProxy */ = {
@@ -935,6 +935,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -952,6 +953,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
