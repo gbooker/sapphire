@@ -77,8 +77,6 @@
 		F5E849C70C3F008100913832 /* SapphireMetaDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
-		F5EBE70A0D4A795C00042BA0 /* SapphireLeopardCompatClasses.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5EBE6DF0D4A775400042BA0 /* SapphireLeopardCompatClasses.framework */; };
-		F5EBE70B0D4A795C00042BA0 /* SapphireCompatClasses.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5EBE6DD0D4A775400042BA0 /* SapphireCompatClasses.framework */; };
 		F5EBE70C0D4A796600042BA0 /* SapphireCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5EBE6DD0D4A775400042BA0 /* SapphireCompatClasses.framework */; };
 		F5EBE70D0D4A796600042BA0 /* SapphireLeopardCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5EBE6DF0D4A775400042BA0 /* SapphireLeopardCompatClasses.framework */; };
 		FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */; };
@@ -339,8 +337,6 @@
 				38FAF9B60C0129E400853CFE /* BackRow.framework in Frameworks */,
 				F56A19490C3170870022918E /* AppKit.framework in Frameworks */,
 				F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */,
-				F5EBE70A0D4A795C00042BA0 /* SapphireLeopardCompatClasses.framework in Frameworks */,
-				F5EBE70B0D4A795C00042BA0 /* SapphireCompatClasses.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
