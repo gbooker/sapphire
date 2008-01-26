@@ -838,13 +838,14 @@ BOOL setupAudioOutput(int sampleRate)
 	BREventPageUsageHash hashVal = [event pageUsageHash];
 	if ([(BRControllerStack *)[self stack] peekController] != self)
 		hashVal = 0;
+		
+	int row = [self getSelection];
 	
 	switch (hashVal)
 	{
 		case kBREventTapRight:
 		{
 			id meta = nil;
-			int row = [self getSelection];
 			if(row >= [_names count])
 				break;
 			
@@ -860,13 +861,31 @@ BOOL setupAudioOutput(int sampleRate)
 			/*Do mark menu*/
 			id controller = [[SapphireMarkMenu alloc] initWithScene:[self scene] metaData:meta];
 			[(SapphireMarkMenu *)controller setPredicate:predicate];
+			[(SapphireMarkMenu *)controller setListTitle:name];
 			[[self stack] pushController:controller];
 			[controller release];
 			return YES;
 		}
 		case kBREventTapLeft:
+		{
+			NSString *oldName=nil;
+			if(row < [_names count])
+				oldName = [self titleForRow:row];
 			[self setNewPredicate:[SapphireApplianceController nextPredicate]];
+			/*Attempt to preserve the user's current highlighted selection*/
+			if(oldName)
+			{
+				row=[self rowForTitle:oldName];
+				if(row>=0)
+					[(BRListControl *)[self list] setSelection:row];
+				else
+					[(BRListControl *)[self list] setSelection:0];
+			}
+			/*Force a reload on the mediaPreviewController*/
+			/* Not working in FrontRow */
+			[self wasPushed];
 			return YES;
+		}
 	}
 	return [super brEventAction:event];
 }
