@@ -158,12 +158,12 @@
 		if([settingName hasPrefix:@"Hide"])
 		{
 			settingName = [NSString stringWithFormat:@"Hide Collection \"%@\"",[names objectAtIndex:item]];
-			settingDescription=BRLocalizedString(@"tells Sapphire to hide this collection on the main menu.", @"Collection setting description");
+			settingDescription=BRLocalizedString(@"tells Sapphire to hide this collection on the main menu.", @"Hide collections setting description");
 		}
 		else
 		{
 			settingName = [NSString stringWithFormat:@"Don't Import \"%@\"",[names objectAtIndex:item]];
-			settingDescription=BRLocalizedString(@"tells Sapphire to ignore this collection when running any import tool.", @"Collection setting description");
+			settingDescription=BRLocalizedString(@"tells Sapphire to ignore this collection when running any import tool.", @"Import collections setting description");
 		}
 		/* Construct a gerneric metadata asset for display */
 		NSMutableDictionary *settingMeta=[[NSMutableDictionary alloc] init];
