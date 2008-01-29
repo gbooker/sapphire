@@ -20,6 +20,7 @@
 
 #import "SapphireCollectionSettings.h"
 #import "SapphireMetaData.h"
+#import "SapphireMediaPreview.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 @implementation SapphireCollectionSettings
@@ -148,6 +149,33 @@
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
     // passes over an item.
+	if(item >= [names count])
+		return nil;
+	else
+	{
+		NSString *settingName = (NSString *)[self listTitle];
+		NSString *settingDescription=nil;
+		if([settingName hasPrefix:@"Hide"])
+		{
+			settingName = [NSString stringWithFormat:@"Hide Collection \"%@\"",[names objectAtIndex:item]];
+			settingDescription=BRLocalizedString(@"tells Sapphire to hide this collection on the main menu.", @"Collection setting description");
+		}
+		else
+		{
+			settingName = [NSString stringWithFormat:@"Don't Import \"%@\"",[names objectAtIndex:item]];
+			settingDescription=BRLocalizedString(@"tells Sapphire to ignore this collection when running any import tool.", @"Collection setting description");
+		}
+		/* Construct a gerneric metadata asset for display */
+		NSMutableDictionary *settingMeta=[[NSMutableDictionary alloc] init];
+		[settingMeta setObject:settingName forKey:META_TITLE_KEY];
+		[settingMeta setObject:[NSNumber numberWithInt:FILE_CLASS_UTILITY] forKey:FILE_CLASS_KEY];
+		[settingMeta setObject:settingDescription forKey:META_DESCRIPTION_KEY];
+		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
+		[preview setUtilityData:settingMeta];
+		[preview setShowsMetadataImmediately:YES];
+		/*And go*/
+		return [preview autorelease];
+	}
     return ( nil );
 }
 
