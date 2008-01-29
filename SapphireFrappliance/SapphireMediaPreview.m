@@ -169,7 +169,7 @@ static NSSet *coverArtExtentions = nil;
 }
 
 /*!
-* @brief populate metadata for TV Shows
+ * @brief populate metadata for TV Shows
  */
 - (void) populateTVShowMetadataWith:(NSMutableDictionary*)allMeta
 {
@@ -214,11 +214,10 @@ static NSSet *coverArtExtentions = nil;
 		[allMeta removeObjectForKey:META_EPISODE_2_NUMBER_KEY];
 		[allMeta removeObjectForKey:META_SEASON_NUMBER_KEY];
 	}
-	
 }
 
 /*!
-* @brief populate metadata for Movies
+ * @brief populate metadata for Movies
  */
 - (void) populateMovieMetadataWith:(NSMutableDictionary*)allMeta
 {
@@ -326,6 +325,100 @@ static NSSet *coverArtExtentions = nil;
 	}
 }
 
+/*!
+ * @brief populate generic file data
+ */
+- (void)populateGenericMetadataWith:(NSMutableDictionary *)allMeta
+{
+	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
+	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
+	if(value != nil)
+		[metaLayer setTitle:value];
+	
+	/*Get the rating*/
+	value = [allMeta objectForKey:META_RATING_KEY];
+	if(value != nil)
+		[metaLayer setRating:value];
+	
+	/*Get the description*/
+	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
+	if(value != nil)
+		if([[SapphireSettings sharedSettings] displaySpoilers])
+			[metaLayer setSummary:value];
+	
+	/*Get the copyright*/
+	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
+	if(value != nil)
+		[metaLayer setCopyright:value];
+	
+	/*Get the rating*/
+	value=nil;
+	value = [allMeta objectForKey:META_MOVIE_MPAA_RATING_KEY];
+	if(value != nil)
+		[metaLayer setRating:value];
+	/*Get the movie plot*/
+	value=nil;
+	value = [allMeta objectForKey:META_MOVIE_PLOT_KEY];
+	if(value != nil)
+		if([[SapphireSettings sharedSettings] displaySpoilers])
+			[metaLayer setSummary:value];
+	
+	NSArray *values=nil;
+	/* Get genres */
+	values=[allMeta objectForKey:META_MOVIE_GENRES_KEY];
+	value=[NSString string];
+	if(values!=nil)
+	{
+		NSEnumerator *valuesEnum = [values objectEnumerator] ;
+		NSString *aValue=nil;
+		while((aValue = [valuesEnum nextObject]) !=nil)
+		{
+			value=[value stringByAppendingString:[NSString stringWithFormat:@"%@, ",aValue]];
+		}
+		/* get rid of the extra comma */
+		value=[value substringToIndex:[value length]-2];
+		/* sub the array for a formatted string */
+		[allMeta setObject:value forKey:META_MOVIE_GENRES_KEY];
+	}
+	/* Get directors */
+	values=nil;
+	values=[allMeta objectForKey:META_MOVIE_DIRECTOR_KEY];
+	value=[NSString string];
+	if(values!=nil)
+	{
+		NSEnumerator *valuesEnum = [values objectEnumerator] ;
+		NSString *aValue=nil;
+		while((aValue = [valuesEnum nextObject]) !=nil)
+		{
+			value=[value stringByAppendingString:[NSString stringWithFormat:@"%@, ",aValue]];
+		}
+		/* get rid of the extra comma */
+		value=[value substringToIndex:[value length]-2];
+		/* sub the array for a formatted string */
+		[allMeta setObject:value forKey:META_MOVIE_DIRECTOR_KEY];
+	}
+	/* Get cast */
+	values=nil;
+	values=[allMeta objectForKey:META_MOVIE_CAST_KEY];
+	value=[NSString string];
+	if(values!=nil)
+	{
+		NSEnumerator *valuesEnum = [values objectEnumerator] ;
+		NSString *aValue=nil;
+		NSString *lastToAdd = nil;
+		if([values count]>2)
+			lastToAdd=[values objectAtIndex:2] ;
+		while((aValue = [valuesEnum nextObject]) !=nil)
+		{
+			value=[value stringByAppendingString:[NSString stringWithFormat:@"%@, ",aValue]];
+			if([aValue isEqualToString:lastToAdd])break;
+		}
+		/* get rid of the extra comma */
+		value=[value substringToIndex:[value length]-2];
+		/* sub the array for a formatted string */
+		[allMeta setObject:value forKey:META_MOVIE_CAST_KEY];
+	}	
+}
 
 /*!
  * @brief populate metadata for media files
@@ -376,6 +469,10 @@ static NSSet *coverArtExtentions = nil;
 	else if(fileClass==FILE_CLASS_MOVIE)
 	{
 		[self populateMovieMetadataWith:allMeta];
+	}
+	else if(fileClass != FILE_CLASS_NOT_FILE)
+	{
+		[self populateGenericMetadataWith:allMeta];
 	}
 	/* Directory Preview Handeling */
 	else
