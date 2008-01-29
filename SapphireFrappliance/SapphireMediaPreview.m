@@ -96,6 +96,16 @@ static NSSet *coverArtExtentions = nil;
 	[super dealloc];
 }
 
+- (void)setUtilityData:(NSMutableDictionary *)newMeta
+{
+	[meta release];
+	meta=[newMeta retain];
+	SapphireMedia *asset  =[SapphireMedia alloc];
+	[asset setImagePath:[[NSBundle bundleForClass:[self class]] pathForResource:@"DefaultPreview" ofType:@"png"]];
+	[self setAsset:asset];
+
+}
+
 - (void)setMetaData:(SapphireMetaData *)newMeta inMetaData:(SapphireDirectoryMetaData *)dir
 {
 	[meta release];
@@ -326,6 +336,22 @@ static NSSet *coverArtExtentions = nil;
 }
 
 /*!
+ * @brief populate utility data
+ */
+- (void)populateUtilityDataWith:(NSMutableDictionary *)allMeta
+{
+	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
+	/* Get the setting name */
+	NSString *value = [allMeta objectForKey:META_TITLE_KEY];
+	if(value != nil)
+		[metaLayer setTitle:value];
+	/*Get the setting description*/
+	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
+	if(value != nil)
+			[metaLayer setSummary:value];
+}
+
+/*!
  * @brief populate generic file data
  */
 - (void)populateGenericMetadataWith:(NSMutableDictionary *)allMeta
@@ -450,15 +476,19 @@ static NSSet *coverArtExtentions = nil;
 {
 	/*Get our data then*/
 	NSArray *order = nil;
-	NSMutableDictionary *allMeta = [meta getDisplayedMetaDataInOrder:&order];
-	
+	NSMutableDictionary *allMeta = nil;
 	FileClass fileClass=FILE_CLASS_UNKNOWN ;
-	if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
-		fileClass=FILE_CLASS_NOT_FILE;
-	else
-		fileClass=(FileClass)[(SapphireFileMetaData *) meta fileClass];
+	if([meta respondsToSelector:@selector(getDisplayedMetaDataInOrder:)])
+	{
+		allMeta=[meta getDisplayedMetaDataInOrder:&order];
+		if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
+			fileClass=FILE_CLASS_NOT_FILE;
+		else
+			fileClass=(FileClass)[(SapphireFileMetaData *) meta fileClass];
+	}
+	if(!allMeta)
+		fileClass=FILE_CLASS_UTILITY;
 		
-	
 	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
 	/* TV Show Preview Handeling */
 	if(fileClass==FILE_CLASS_TV_SHOW)
@@ -469,6 +499,11 @@ static NSSet *coverArtExtentions = nil;
 	else if(fileClass==FILE_CLASS_MOVIE)
 	{
 		[self populateMovieMetadataWith:allMeta];
+	}
+	/* Utility Preview Handeling */
+	else if(fileClass == FILE_CLASS_UTILITY)
+	{
+		[self populateUtilityDataWith:(NSMutableDictionary *)meta];
 	}
 	else if(fileClass != FILE_CLASS_NOT_FILE)
 	{

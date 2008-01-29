@@ -41,5 +41,6 @@
  * @param dir The directory which contains this metadata
  */
 - (void)setMetaData:(SapphireMetaData *)newMeta inMetaData:(SapphireDirectoryMetaData *)dir;
+- (void)setUtilityData:(NSMutableDictionary *)newMeta;
 
 @end

@@ -29,13 +29,14 @@
  */
 @interface SapphireSettings : SapphireMediaMenuController
 {
-	NSArray						*names;				/*!< @brief The menu names in order*/
-	NSArray						*keys;				/*!< @brief The setting keys, in order*/
-	NSArray						*gems;				/*!< @brief The left icons, in order*/
-	NSMutableDictionary			*options;			/*!< @brief The settings, in order*/
-	NSString					*path;				/*!< @brief The persistent store path*/
-	NSDictionary				*defaults;			/*!< @brief The default settings, in order*/
-	SapphireMetaDataCollection	*metaCollection;	/*!< @brief The collection*/
+	NSArray						*names;					/*!< @brief The menu names in order*/
+	NSArray						*settingDescriptions;	/*!< @brief The menu names in order*/
+	NSArray						*keys;					/*!< @brief The setting keys, in order*/
+	NSArray						*gems;					/*!< @brief The left icons, in order*/
+	NSMutableDictionary			*options;				/*!< @brief The settings, in order*/
+	NSString					*path;					/*!< @brief The persistent store path*/
+	NSDictionary				*defaults;				/*!< @brief The default settings, in order*/
+	SapphireMetaDataCollection	*metaCollection;		/*!< @brief The collection*/
 }
 
 /*!

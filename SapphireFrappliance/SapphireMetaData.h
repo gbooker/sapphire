@@ -87,6 +87,7 @@
 #define FILE_CLASS_KEY					@"File Class"
 #define FILE_CONTAINER_TYPE_KEY			@"File Container Type"
 typedef enum {
+	FILE_CLASS_UTILITY= -2,
 	FILE_CLASS_NOT_FILE= -1,
 	FILE_CLASS_UNKNOWN = 0,
 	FILE_CLASS_TV_SHOW = 1,
