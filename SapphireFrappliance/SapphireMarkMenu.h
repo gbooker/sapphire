@@ -27,11 +27,12 @@
  * This class is designed to provide the user an interface for changing metadata about a file.  It presents the user with a menu to choose from.
  */
 @interface SapphireMarkMenu : SapphireMediaMenuController {
-	BOOL				isDir;			/*!< @brief YES if the current metadata is a directory*/
-	NSMutableArray		*names;			/*!< @brief The menu names for the mark menu*/
-	NSMutableArray		*commands;		/*!< @brief The commands for the mark menu*/
-	SapphireMetaData	*metaData;		/*!< @brief The metadata currently being marked*/
-	SapphirePredicate	*predicate;		/*!< @brief The current predicate*/
+	BOOL				isDir;				/*!< @brief YES if the current metadata is a directory*/
+	NSMutableArray		*names;				/*!< @brief The menu names for the mark menu*/
+	NSMutableArray		*markDescriptions;	/*!< @brief The descriptions for the mark menu items*/
+	NSMutableArray		*commands;			/*!< @brief The commands for the mark menu*/
+	SapphireMetaData	*metaData;			/*!< @brief The metadata currently being marked*/
+	SapphirePredicate	*predicate;			/*!< @brief The current predicate*/
 }
 
 /*!
