@@ -147,7 +147,7 @@ static NSMutableArray *joinList;
 		else
 		{
 			favorite	 = BRLocalizedString(@"Mark as Favorite", @"Mark file as not a favorite");
-			favoriteDesc = BRLocalizedString(@"Sapphire will add this file as favorite.", @"Mark directory as favorite description");
+			favoriteDesc = BRLocalizedString(@"Sapphire will add this file as a favorite.", @"Mark directory as favorite description");
 
 		}
 		names			 = [[NSMutableArray alloc] initWithObjects:watched, favorite, nil];
@@ -156,14 +156,14 @@ static NSMutableArray *joinList;
 		if([fileMeta importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
 		{
 			[names addObject:BRLocalizedString(@"Mark to Refetch TV Data", @"Mark file to re-fetch its tv data")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to refetch TV Show metadata for this file the next time an import is done.", @"Mark file to refetch tv data description")];
+			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to refetch TV Show metadata for this file the next time an import is run.", @"Mark file to refetch tv data description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_TV]];
 		}
 		if([fileMeta importedTimeFromSource:META_IMDB_IMPORT_KEY])
 		{
 			[names addObject:BRLocalizedString(@"Mark to Refetch Movie Data", @"Mark file to re-fetch its movie data")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to refetch Movie metadata for this file the next time an import is done.", @"Mark file to refetch movie description")];
+			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to refetch Movie metadata for this file the next time an import is run.", @"Mark file to refetch movie description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_MOVIE]];
 		}
@@ -177,10 +177,10 @@ static NSMutableArray *joinList;
 		if(![joinList containsObject:fileMeta])
 		{
 			[names addObject:BRLocalizedString(@"Mark This File to Be Joined", @"Mark This File to Be Joined")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire you wish to add this file to the list of files to join. The files will be joined in the order they were added to the list.", @"Mark file to be joined description")];
+			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire you wish to add this file to a list of files to be joined. The files will be joined in the order they were added to the list.", @"Mark file to be joined description")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_JOIN]];
 			[names addObject:BRLocalizedString(@"Mark This File and Join Group", @"Mark This File and Join Group")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to use this file and complete the joined list.", @"Mark file and join description")];
+			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to use this file to complete the joined list.", @"Mark file and join description")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_AND_JOIN]];
 		}
 		if([joinList count])
