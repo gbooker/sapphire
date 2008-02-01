@@ -494,6 +494,11 @@ static SapphireSettings *sharedInstance = nil;
 
 }
 
+- (id<BRMediaPreviewController>) previewControlForItem: (long) row
+{
+	return [self previewControllerForItem:row];
+}
+
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
