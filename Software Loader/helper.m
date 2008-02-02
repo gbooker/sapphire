@@ -23,7 +23,9 @@
 int main(int argc, char *argv[])
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+#ifdef DEBUG_BUILD
 	Debugger();
+#endif
 	NSString *myPath = [[NSBundle bundleForClass:[SLoadInstallClient class]] bundlePath];
 	NSString *utilsFrameworkPath = [myPath stringByAppendingPathComponent:@"Contents/Frameworks/SLoadUtilities.framework"];
 	NSBundle *utilsFramework = [NSBundle bundleWithPath:utilsFrameworkPath];

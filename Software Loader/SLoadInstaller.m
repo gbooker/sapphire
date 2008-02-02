@@ -45,8 +45,10 @@
 		if(![[candidate pathExtension] isEqualToString:@"framework"])
 			continue;
 		NSString *bundlePath = [installersPath stringByAppendingPathComponent:candidate];
-/*		if(![[[fm fileAttributesAtPath:bundlePath traverseLink:YES] objectForKey:NSFileOwnerAccountName] isEqualToString:@"root"])
-			continue;*/
+#ifndef DEBUG_BUILD
+		if(![[[fm fileAttributesAtPath:bundlePath traverseLink:YES] objectForKey:NSFileOwnerAccountName] isEqualToString:@"root"])
+			continue;
+#endif
 		NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
 		NSDictionary *info = [bundle infoDictionary];
 		NSString *installerName = [info objectForKey:INSTALLER_NAME_KEY];
