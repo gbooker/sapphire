@@ -632,12 +632,15 @@
 /*!
 * @brief verify file extention of a file
  *
- * @param filePAth The file's path 
+ * @param metaData The file's metadata
  * @return YES if candidate, NO otherwise
  */
-- (BOOL)isMovieCandidate:(NSString*)fileExt
+- (BOOL)isMovieCandidate:(id <SapphireFileMetaDataProtocol>)metaData;
 {
+	NSString *fileExt = [[metaData path] pathExtension];
 	if([[SapphireMetaData videoExtensions] member:fileExt])
+		return YES;
+	if([metaData fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS)
 		return YES;
 	else return NO ;
 }
@@ -656,10 +659,10 @@
 		return IMPORT_STATE_NOT_UPDATED;
 	}
 	/*Get path*/
-	NSString *path = [metaData path];
-	if(![self isMovieCandidate:[path pathExtension]])
+	if(![self isMovieCandidate:metaData])
 		return IMPORT_STATE_NOT_UPDATED;
 	/*Get fineName*/
+	NSString *path = [metaData path];
 	NSString *fileName = [path lastPathComponent];
 	if([metaData fileClass]==FILE_CLASS_TV_SHOW) /* File is a TV Show - skip it */
 		return IMPORT_STATE_NOT_UPDATED;
