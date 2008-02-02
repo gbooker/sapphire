@@ -131,8 +131,17 @@
 {
 	if(xmlDoc == nil)
 		[self loadXML];
-	if(softwareList == nil || installers == nil)
+	if([softwareList count] == 0 || [installers count] == 0)
 		[self parseXML];
+}
+
+- (void)reloadList
+{
+	[xmlDoc release];
+	xmlDoc = nil;
+	[softwareList removeAllObjects];
+	[installers removeAllObjects];
+	[self loadAndParseXML];
 }
 
 - (NSArray *)softwareList

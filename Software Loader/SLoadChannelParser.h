@@ -23,6 +23,7 @@
 	NSMutableArray			*softwareList;
 	NSMutableDictionary		*installers;
 }
+- (void)reloadList;
 - (NSArray *)softwareList;
 - (NSDictionary *)installers;
 @end

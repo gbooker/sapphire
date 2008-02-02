@@ -23,6 +23,8 @@
 #import "SLoadInstallServer.h"
 #import "SLoadInstallClient.h"
 #import "SLoadInstallProgress.h"
+#import <SLoadUtilities/SLoadChannelParser.h>
+#import <SLoadUtilities/SLoadInstallerProtocol.h>
 
 @implementation SLoadApplianceController
 
@@ -34,7 +36,9 @@
 	
 	installServer = [[SLoadInstallServer alloc] init];
 	
-	names = [[NSArray alloc] initWithObjects:@"Install Perian", nil];
+	parser = [[SLoadInstaller alloc] init];
+	software = [[parser softwareList] retain];
+	
 	[[self list] setDatasource:self];
 	
 	return self;
@@ -42,28 +46,29 @@
 
 - (void) dealloc
 {
-	[names release];
+	[software release];
 	[installServer release];
+	[parser release];
 	[super dealloc];
 }
 
 - (long) itemCount
 {
-	return [names count];
+	return [software count];
 }
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
 	BRAdornedMenuItemLayer *ret = [BRAdornedMenuItemLayer adornedMenuItemWithScene:[self scene]];
-	[[ret textItem] setTitle:[names objectAtIndex:row]];
+	[[ret textItem] setTitle:[[software objectAtIndex:row] objectForKey:INSTALL_DISPLAY_NAME_KEY]];
 }
 
 - (NSString *) titleForRow: (long) row
 {
 	
-	if ( row > [ names count] ) return ( nil );
+	if ( row > [ software count] ) return ( nil );
 	
-	NSString *result = [ names objectAtIndex: row] ;
+	NSString *result = [[software objectAtIndex:row] objectForKey:INSTALL_DISPLAY_NAME_KEY];
 	return ( result ) ;
 }
 

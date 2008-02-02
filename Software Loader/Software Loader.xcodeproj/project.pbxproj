@@ -223,7 +223,6 @@
 		F5F314C40D1D952800B3EF25 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		F5F314C50D1D952800B3EF25 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		F5F314C80D1D953900B3EF25 /* BackRow.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BackRow.framework; path = /System/Library/PrivateFrameworks/BackRow.framework; sourceTree = "<absolute>"; };
-		F5F314E20D1D977200B3EF25 /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
 		F5F314E40D1D979300B3EF25 /* SLoadApplianceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SLoadApplianceController.h; sourceTree = "<group>"; };
 		F5F314E50D1D979300B3EF25 /* SLoadApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SLoadApplianceController.m; sourceTree = "<group>"; };
 		F5F315DF0D2060DC00B3EF25 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -433,7 +432,6 @@
 		F5F314D60D1D95BC00B3EF25 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				F5F314E20D1D977200B3EF25 /* BackRowUtils.h */,
 				F5F314C20D1D950000B3EF25 /* SLoader_Prefix.pch */,
 			);
 			name = "Other Sources";
@@ -963,6 +961,7 @@
 				ARCHS = "$(NATIVE_ARCH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../build;
 			};

@@ -20,13 +20,14 @@
 
 #import <SapphireCompatClasses/SapphireMediaMenuController.h>
 
-@class SLoadInstallServer;
+@class SLoadInstallServer, SLoadChannelParser;
 
 @interface SLoadApplianceController : SapphireMediaMenuController
 {
-	NSArray				*names;
+	NSArray				*software;
 	NSString			*error;
 	NSFileManager		*filemanager;
 	SLoadInstallServer	*installServer;
+	SLoadChannelParser	*parser;
 }
 @end

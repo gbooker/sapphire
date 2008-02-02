@@ -86,8 +86,8 @@ NSString *FrapInstallStrings[] = {
 	FrapStageSet(FRAP_INSTALL_STAGE_INSTALL);
 	if(success)
 		success = [fileUtils move:[tmpPath stringByAppendingPathComponent:[installDict objectForKey:INSTALL_NAME_KEY]] toDir:installPath withReplacement:YES];
-	FrapStageSet(FRAP_INSTALL_STAGE_STAGES);
 	[fileUtils remountReadOnly];
+	FrapStageSet(FRAP_INSTALL_STAGE_STAGES);
 }
 
 @end
