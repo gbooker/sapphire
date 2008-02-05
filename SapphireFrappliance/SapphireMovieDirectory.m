@@ -242,7 +242,10 @@
 		{
 			NSString * title=[file movieTitle];
 			if(title != nil)
+			{
+				title = [NSString stringWithFormat:@"%@ - %@", title, [file movieReleaseDate]];
 				[mutDict setObject:file forKey:title];
+			}
 		}
 	}
 	[files addObjectsFromArray:[mutDict allKeys]];

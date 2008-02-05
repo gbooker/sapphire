@@ -544,6 +544,8 @@
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"_" withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"." withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"-" withString:@" "];
+	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"(" withString:@" "];
+	searchStr = [searchStr stringByReplacingAllOccurancesOf:@")" withString:@" "];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com/find?s=all&q=%@", [searchStr URLEncode]]];
 	NSError * error = nil;
 	BOOL uniqueResult=NO ;
@@ -642,7 +644,7 @@
 		return YES;
 	if([metaData fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS)
 		return YES;
-	else return NO ;
+	return NO ;
 }
 
 - (ImportState) importMetaData:(id <SapphireFileMetaDataProtocol>)metaData 
