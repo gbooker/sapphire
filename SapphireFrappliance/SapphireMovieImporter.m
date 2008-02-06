@@ -655,7 +655,7 @@
 		return IMPORT_STATE_NOT_UPDATED;
 	id controller = [[dataMenu stack] peekController];
 	/* Check to see if we are waiting on the user to select a show title */
-	if([controller isKindOfClass:[SapphireShowChooser class]])
+	if(![controller isKindOfClass:[SapphireImporterDataMenu class]])
 	{
 		/* Another chooser is on the screen - delay further processing */
 		return IMPORT_STATE_NOT_UPDATED;
