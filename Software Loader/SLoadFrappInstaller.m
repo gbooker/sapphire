@@ -43,6 +43,7 @@ NSString *FrapInstallStrings[] = {
 	@"Downloading",
 	@"Extracting",
 	@"Installing",
+	@"Install Complete",
 };
 
 #define FrapStageSet(stage) [delegate setStage:stage of:FRAP_INSTALL_STAGE_STAGES withName:BRLocalizedString(FrapInstallStrings[stage], nil)]
@@ -86,6 +87,8 @@ NSString *FrapInstallStrings[] = {
 	FrapStageSet(FRAP_INSTALL_STAGE_INSTALL);
 	if(success)
 		success = [fileUtils move:[tmpPath stringByAppendingPathComponent:[installDict objectForKey:INSTALL_NAME_KEY]] toDir:installPath withReplacement:YES];
+	if(!success)
+		[delegate instalFailed:[self error]];
 	[fileUtils remountReadOnly];
 	FrapStageSet(FRAP_INSTALL_STAGE_STAGES);
 }

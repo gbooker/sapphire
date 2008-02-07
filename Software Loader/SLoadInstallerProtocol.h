@@ -21,11 +21,14 @@
 #define INSTALLER_NAME_KEY @"SLoadInstallerName"
 
 #define INSTALL_URL_KEY				@"link"
-#define INSTALL_MD5_KEY				@"MD5"
-#define INSTALL_NAME_KEY			@"InstallName"
-#define INSTALL_DISPLAY_NAME_KEY	@"Title"
-#define INSTALL_VERSION_KEY			@"Version"
-#define INSTALL_INSTALLER_KEY		@"Installer"
+#define INSTALL_MD5_KEY				@"md5"
+#define INSTALL_NAME_KEY			@"installname"
+#define INSTALL_DISPLAY_NAME_KEY	@"title"
+#define INSTALL_VERSION_KEY			@"version"
+#define INSTALL_INSTALLER_KEY		@"installer"
+#define INSTALL_SOFTWARE_TYPE		@"type"
+#define INSTALL_TYPE_INSTALLER		@"installer"
+#define INSTALL_TYPE_SOFTWARE		@"software"
 
 @protocol SLoadDelegateProtocol;
 

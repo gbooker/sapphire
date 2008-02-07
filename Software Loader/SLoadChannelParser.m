@@ -23,10 +23,6 @@
 
 #define CHANNEL_URL					@"http://appletv.nanopi.net/software.xml"
 
-#define SOFTWARE_TYPE				@"Type"
-#define SOFTWARE_TYPE_INSTALLER		@"Installer"
-#define SOFTWARE_TYPE_SOFTWARE		@"Software"
-
 @implementation SLoadChannelParser
 
 - (id) init
@@ -50,10 +46,32 @@
 	[super dealloc];
 }
 
+NSString *testList = @"<channel>\
+	<item>\
+		<title>Perian</title>\
+		<link>http://perian.cachefly.org/Perian_1.0.dmg</link>\
+		<md5>1234567890abcdef1234567890abcdef</md5>\
+		<installname>perian</installname>\
+		<version>1.0</version>\
+		<type>software</type>\
+		<installer version=\"1.0\">PerianInstaller</installer>\
+	</item>\
+	<item>\
+		<title>Sapphire</title>\
+		<link>http://appletv.nanopi.net/download/8/</link>\
+		<md5>777a6bdb96f9d02da3e3b93c052a5d99</md5>\
+		<installname>sapphire</installname>\
+		<version>1.0b5</version>\
+		<type>software</type>\
+		<installer version=\"1.0\">FrappInstaller</installer>\
+	</item>\
+</channel>";
+
 - (void)loadXML
 {
-	NSURL *url = [NSURL URLWithString:CHANNEL_URL];
-	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyXML error:nil];
+/*	NSURL *url = [NSURL URLWithString:CHANNEL_URL];
+	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyXML error:nil];*/
+	xmlDoc = [[NSXMLDocument alloc] initWithXMLString:testList options:NSXMLDocumentTidyXML error:nil];
 }
 
 - (NSDictionary *)parseNode:(NSXMLElement *)node
@@ -78,7 +96,11 @@
 	objects = [node objectsForXQuery:INSTALL_VERSION_KEY error:nil];
 	if([objects count])
 		[ret setObject:[[objects objectAtIndex:0] stringValue] forKey:INSTALL_VERSION_KEY];
-
+	
+	objects = [node objectsForXQuery:INSTALL_SOFTWARE_TYPE error:nil];
+	if([objects count])
+		[ret setObject:[[objects objectAtIndex:0] stringValue] forKey:INSTALL_SOFTWARE_TYPE];
+	
 	objects = [node objectsForXQuery:INSTALL_INSTALLER_KEY error:nil];
 	NSEnumerator *objectEnum = [objects objectEnumerator];
 	NSXMLElement *element;
@@ -112,13 +134,13 @@
 	while((item = [itemEnum nextObject]) != nil)
 	{
 		NSDictionary *result = [self parseNode:item];
-		if([[result objectForKey:SOFTWARE_TYPE] isEqualToString:SOFTWARE_TYPE_INSTALLER])
+		if([[result objectForKey:INSTALL_SOFTWARE_TYPE] isEqualToString:INSTALL_TYPE_INSTALLER])
 		{
 			NSString *name = [result objectForKey:INSTALL_NAME_KEY];
 			if(name != nil)
 				[installers setObject:result forKey:name];
 		}
-		else if([[result objectForKey:SOFTWARE_TYPE] isEqualToString:SOFTWARE_TYPE_SOFTWARE])
+		else if([[result objectForKey:INSTALL_SOFTWARE_TYPE] isEqualToString:INSTALL_TYPE_SOFTWARE])
 		{
 			NSString *name = [result objectForKey:INSTALL_NAME_KEY];
 			if(name != nil)

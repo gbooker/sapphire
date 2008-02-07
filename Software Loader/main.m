@@ -27,6 +27,9 @@ int main(int argc, char *argv[])
 	NSString *frapPath = [[myBundle bundlePath] stringByAppendingPathComponent:@"Software Loader.frappliance"];
 	NSBundle *frap = [NSBundle bundleWithPath:frapPath];
 	[frap load];
+	NSString *utilsPath = [frapPath stringByAppendingPathComponent:@"Contents/Frameworks/SLoadUtilities.framework"];
+	NSBundle *utils = [NSBundle bundleWithPath:utilsPath];
+	[utils load];
 	SLoadApplianceController *cont = [[SLoadApplianceController alloc] initWithScene:nil];
 	[NSTimer scheduledTimerWithTimeInterval:4.0 target:cont selector:@selector(itemSelected:) userInfo:nil repeats:NO];
 	[[NSRunLoop currentRunLoop] run];

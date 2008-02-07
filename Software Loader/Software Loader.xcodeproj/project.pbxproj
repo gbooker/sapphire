@@ -51,8 +51,6 @@
 		F5AEE0CF0D283047003FF831 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
 		F5AEE0D00D28304A003FF831 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C50D1D952800B3EF25 /* Foundation.framework */; };
 		F5AEE0DB0D2830F1003FF831 /* SLoadInstallerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = F5AEE0DA0D2830F1003FF831 /* SLoadInstallerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F5EBE74F0D4A7CCA00042BA0 /* SapphireCompatClasses.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5EBE7450D4A7CB400042BA0 /* SapphireCompatClasses.framework */; };
-		F5EBE7500D4A7CCB00042BA0 /* SapphireLeopardCompatClasses.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5EBE7470D4A7CB400042BA0 /* SapphireLeopardCompatClasses.framework */; };
 		F5EBE7540D4A7CD900042BA0 /* SapphireCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5EBE7450D4A7CB400042BA0 /* SapphireCompatClasses.framework */; };
 		F5EBE7550D4A7CD900042BA0 /* SapphireLeopardCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5EBE7470D4A7CB400042BA0 /* SapphireLeopardCompatClasses.framework */; };
 		F5F314C60D1D952800B3EF25 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F314C40D1D952800B3EF25 /* AppKit.framework */; };
@@ -285,8 +283,6 @@
 				F5F314C90D1D953900B3EF25 /* BackRow.framework in Frameworks */,
 				F5F315E00D2060DC00B3EF25 /* Security.framework in Frameworks */,
 				F51BFB7F0D26A12000E22363 /* ExceptionHandling.framework in Frameworks */,
-				F5EBE74F0D4A7CCA00042BA0 /* SapphireCompatClasses.framework in Frameworks */,
-				F5EBE7500D4A7CCB00042BA0 /* SapphireLeopardCompatClasses.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -961,6 +957,7 @@
 				ARCHS = "$(NATIVE_ARCH)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG_BUILD;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../build;

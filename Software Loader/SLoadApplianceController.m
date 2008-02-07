@@ -36,7 +36,7 @@
 	
 	installServer = [[SLoadInstallServer alloc] init];
 	
-	parser = [[SLoadInstaller alloc] init];
+	parser = [[SLoadChannelParser alloc] init];
 	software = [[parser softwareList] retain];
 	
 	[[self list] setDatasource:self];
@@ -97,9 +97,12 @@ typedef enum{
 - (void) itemSelected: (long) row
 {
 	NSLog(@"Running install");
+	row = 1;
 	SLoadInstallProgress *progress = [[SLoadInstallProgress alloc] initWithScene:[self scene]];
 	[[installServer client] setDelegate:progress];
-	[[installServer client] installSoftware:nil withInstaller:@"PerianInstaller"];
+	NSDictionary *install = [software objectAtIndex:row];
+	NSString *installer = [[[install objectForKey:INSTALL_INSTALLER_KEY] objectAtIndex:0] objectForKey:INSTALL_NAME_KEY];
+	[[installServer client] installSoftware:install withInstaller:installer];
 	[progress release];
 }
 
