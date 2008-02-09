@@ -79,9 +79,9 @@ static NSMutableArray *joinList;
 			BRLocalizedString(@"Sapphire will save this directory as unwatched.", @"Mark directory as unwatched description"),
 			BRLocalizedString(@"Sapphire will add this directory as favorite.", @"Mark directory as favorite description"),
 			BRLocalizedString(@"Sapphire will remove this directory from favorites.", @"Mark directory as not favorite"),
-			BRLocalizedString(@"tells Sapphire to refetch TV Show metadata for this directory the next time an import is run.", @"Mark directory to refetch tv data description"),
-			BRLocalizedString(@"tells Sapphire to refetch Movie metadata for this directory the next time an import is run.", @"Mark whole directory to re-fetch its movie data"),
-			BRLocalizedString(@"tells Sapphire to remove all metadata for this directory.", @"Mark directory to delete metadata description"),
+			BRLocalizedString(@"Tells Sapphire to refetch TV Show metadata for this directory the next time an import is run.", @"Mark directory to refetch tv data description"),
+			BRLocalizedString(@"Tells Sapphire to refetch Movie metadata for this directory the next time an import is run.", @"Mark whole directory to re-fetch its movie data"),
+			BRLocalizedString(@"Tells Sapphire to remove all metadata for this directory.", @"Mark directory to delete metadata description"),
 			nil];
 		commands = [[NSMutableArray alloc] initWithObjects:
 					[NSNumber numberWithInt:COMMAND_MARK_WATCHED],
@@ -99,23 +99,23 @@ static NSMutableArray *joinList;
 			if([collection skipCollection:path])
 			{
 				[names addObject:BRLocalizedString(@"Mark Directory For Importing", @"Marks this directory to be no longer be skipped during import")];
-				[markDescriptions addObject:BRLocalizedString(@"tells Sapphire it's okay to import from this directory.", @"Mark Directory For Importing description")];
+				[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire it's okay to import from this directory.", @"Mark Directory For Importing description")];
 			}
 			else
 			{
 				[names addObject:BRLocalizedString(@"Mark this Directory to Skip Import", @"Marks this directory to be skipped during import")];
-				[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to skip this directory when importing.", @"Mark this Directory to Skip Import description")];
+				[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to skip this directory when importing.", @"Mark this Directory to Skip Import description")];
 			}
 			[commands addObject:[NSNumber numberWithInt:COMMAND_TOGGLE_SKIP]];
 			if([collection isCollectionDirectory:path])
 			{
 				[names addObject:BRLocalizedString(@"Mark this Directory to Not be a Collection", @"Marks the directory to no longer be a collection")];
-				[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to remove this directory from the Collections list.", @"Marks the directory to no longer be a collection description")];
+				[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to remove this directory from the Collections list.", @"Marks the directory to no longer be a collection description")];
 			}
 			else
 			{
 				[names addObject:BRLocalizedString(@"Mark this Directory as a Collection", @"Marks the directory to be a collection")];
-				[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to add this directory to the Collections list.", @"Marks the directory to be a collection description")];
+				[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to add this directory to the Collections list.", @"Marks the directory to be a collection description")];
 			}
 			[commands addObject:[NSNumber numberWithInt:COMMAND_TOGGLE_COLLECTION]];
 		}
@@ -156,41 +156,41 @@ static NSMutableArray *joinList;
 		if([fileMeta importedTimeFromSource:META_TVRAGE_IMPORT_KEY])
 		{
 			[names addObject:BRLocalizedString(@"Mark to Refetch TV Data", @"Mark file to re-fetch its tv data")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to refetch TV Show metadata for this file the next time an import is run.", @"Mark file to refetch tv data description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to refetch TV Show metadata for this file the next time an import is run.", @"Mark file to refetch tv data description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_TV]];
 		}
 		if([fileMeta importedTimeFromSource:META_IMDB_IMPORT_KEY])
 		{
 			[names addObject:BRLocalizedString(@"Mark to Refetch Movie Data", @"Mark file to re-fetch its movie data")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to refetch Movie metadata for this file the next time an import is run.", @"Mark file to refetch movie description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to refetch Movie metadata for this file the next time an import is run.", @"Mark file to refetch movie description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_MOVIE]];
 		}
 		if([fileMeta fileClass] != FILE_CLASS_UNKNOWN)
 		{
 			[names addObject:BRLocalizedString(@"Mark to Clear Metadata", @"Mark a file to delete the metadata")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to remove all metadata for this file.", @"Mark file to delete metadata description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to remove all metadata for this file.", @"Mark file to delete metadata description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_DELETE_METADATA]];
 		}
 		if(![joinList containsObject:fileMeta])
 		{
 			[names addObject:BRLocalizedString(@"Mark This File to Be Joined", @"Mark This File to Be Joined")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire you wish to add this file to a list of files to be joined. The files will be joined in the order they were added to the list.", @"Mark file to be joined description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire you wish to add this file to a list of files to be joined. The files will be joined in the order they were added to the list.", @"Mark file to be joined description")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_TO_JOIN]];
 			[names addObject:BRLocalizedString(@"Mark This File and Join Group", @"Mark This File and Join Group")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to use this file to complete the joined list.", @"Mark file and join description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to use this file to complete the joined list.", @"Mark file and join description")];
 			[commands addObject:[NSNumber numberWithInt:COMMAND_MARK_AND_JOIN]];
 		}
 		if([joinList count])
 		{
 			[names addObject:BRLocalizedString(@"Join Marked Files", @"Join Marked Files")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to complete the file join.", @"Join Marked Files description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to complete the file join.", @"Join Marked Files description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_JOIN]];
 			[names addObject:BRLocalizedString(@"Clear the Join List", @"Clear the Join List")];
-			[markDescriptions addObject:BRLocalizedString(@"tells Sapphire to clear the file join list.", @"clear file join list description")];
+			[markDescriptions addObject:BRLocalizedString(@"Tells Sapphire to clear the file join list.", @"clear file join list description")];
 
 			[commands addObject:[NSNumber numberWithInt:COMMAND_CLEAR_JOIN_MARK]];
 		}

@@ -92,23 +92,23 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"  Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
 	
 	settingDescriptions=[[NSArray alloc] initWithObjects:
-												BRLocalizedString(@"tells Sapphire to examine all files, and remember the file size, length and other information that can be gathered from the file itself.", @"Populate File Data description"),
-												BRLocalizedString(@"tells Sapphire that for every TV episode, gather more information about this episode from the internet.", @"Fetch TV Show Data description"),
-												BRLocalizedString(@"tells Sapphire that for every Movie, gather more information from the internet.", @"Fetch Movie Data description"),
+												BRLocalizedString(@"Tells Sapphire to examine all files, and remember the file size, length and other information that can be gathered from the file itself.", @"Populate File Data description"),
+												BRLocalizedString(@"Tells Sapphire that for every TV episode, gather more information about this episode from the internet.", @"Fetch TV Show Data description"),
+												BRLocalizedString(@"Tells Sapphire that for every Movie, gather more information from the internet.", @"Fetch Movie Data description"),
 /*												BRLocalizedString(@"Choose Movie Posters", @"Start Poster Chooser description"),*/
-												BRLocalizedString(@"allows the user to specify which collections should be hidden from Sapphire's main menu.", @"Hide Collections description"),
-												BRLocalizedString(@"allows to user to specify which collections should be skipped when importing meta data.", @"Don't Import Collections description"),
-												BRLocalizedString(@"tells Sapphire that when changing filter settings, skip over the favorite shows filter.", @"Skip Favorite shows description"),
+												BRLocalizedString(@"Allows the user to specify which collections should be hidden from Sapphire's main menu.", @"Hide Collections description"),
+												BRLocalizedString(@"Allows to user to specify which collections should be skipped when importing meta data.", @"Don't Import Collections description"),
+												BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the favorite shows filter.", @"Skip Favorite shows description"),
 /*												BRLocalizedString(@"Skip \"Top Shows\" filter", @"Skip Top shows description"),*/
-												BRLocalizedString(@"tells Sapphire that when changing filter settings, skip over the unwatched shows filter.", @"Skip Unwatched shows description"), 
-												BRLocalizedString(@"tells Sapphire to disable the display of the show's synopsis.", @"Hide show summarys description"),
-												BRLocalizedString(@"tells Sapphire to disable the display of audio codec and sample rate information.", @"Hide perian audio info description"),
-												BRLocalizedString(@"tells Sapphire to disable the display of video codec, resolution, and color depth information.", @"Hide perian video info description"),
-												BRLocalizedString(@"tells Sapphire to automatically choose posters for movies instead of asking the user to choose one.", @"Hide poster chooser description"),
-												BRLocalizedString(@"tells Sapphire to hide the main menu element forcing frontrow to quit.", @"Hide the ui quitter description"),
-												BRLocalizedString(@"tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files.", @"Fast Directory Switching description"),
-												BRLocalizedString(@"tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 output.", @"Enable AC3 Passthrough description"),
-												BRLocalizedString(@"tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use.", @"Disable the anonymous reporting description"), nil];
+												BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the unwatched shows filter.", @"Skip Unwatched shows description"), 
+												BRLocalizedString(@"Tells Sapphire to disable the display of the show's synopsis.", @"Hide show summarys description"),
+												BRLocalizedString(@"Tells Sapphire to disable the display of audio codec and sample rate information.", @"Hide perian audio info description"),
+												BRLocalizedString(@"Tells Sapphire to disable the display of video codec, resolution, and color depth information.", @"Hide perian video info description"),
+												BRLocalizedString(@"Tells Sapphire to automatically choose posters for movies instead of asking the user to choose one.", @"Hide poster chooser description"),
+												BRLocalizedString(@"Tells Sapphire to hide the main menu element forcing frontrow to quit.", @"Hide the ui quitter description"),
+												BRLocalizedString(@"Tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files.", @"Fast Directory Switching description"),
+												BRLocalizedString(@"Tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 output.", @"Enable AC3 Passthrough description"),
+												BRLocalizedString(@"Tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use.", @"Disable the anonymous reporting description"), nil];
 		
 	keys = [[NSArray alloc] initWithObjects:		@"",
 													@"",
@@ -521,7 +521,6 @@ static SapphireSettings *sharedInstance = nil;
 		/*And go*/
 		return [preview autorelease];
 	}
-	
     return ( nil );
 }
 
