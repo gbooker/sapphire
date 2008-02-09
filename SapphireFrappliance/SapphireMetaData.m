@@ -1903,6 +1903,12 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 	return -1;
 }
 
+- (NSDate *)airDate
+{
+	[self constructCombinedData];
+	return [combinedInfo objectForKey:META_SHOW_AIR_DATE];
+}
+
 - (int)oscarsWon
 {
 	[self constructCombinedData];
@@ -2124,10 +2130,17 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 	/*Sort by episode next*/
 	myNum = [self episodeNumber];
 	theirNum = [other episodeNumber];
-	if(myNum == 0)
-		myNum = INT_MAX;
-	if(theirNum == 0)
-		theirNum = INT_MAX;
+	if(myNum == 0 || theirNum == 0)
+	{
+		NSDate *otherDate = [other airDate];
+		NSDate *myDate = [self airDate];
+		if(otherDate != nil && myDate != nil)
+			return [myDate compare:otherDate];
+		if(myNum == 0)
+			myNum = INT_MAX;
+		if(theirNum == 0)
+			theirNum = INT_MAX;
+	}
 	if(myNum > theirNum)
 		return NSOrderedDescending;
 	if(theirNum > myNum)

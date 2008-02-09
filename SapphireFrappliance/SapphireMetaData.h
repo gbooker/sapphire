@@ -917,6 +917,13 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file);
 - (int)seasonNumber;
 
 /*!
+ * @brief Returns the air date of the episode
+ *
+ * @return The episode's air date, nil if unknown
+ */
+- (NSDate *)airDate;
+
+/*!
  * @brief Returns the number of oscars for a movie
  *
  * @return The number of oscars won
