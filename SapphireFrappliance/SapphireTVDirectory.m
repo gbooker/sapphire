@@ -127,6 +127,14 @@
 }
 @end
 
+NSComparisonResult keyedEpisodeCompare(id key1, id key2, void *context)
+{
+	NSDictionary *dict = (NSDictionary *)context;
+	SapphireFileMetaData *val1 = [dict objectForKey:key1];
+	SapphireFileMetaData *val2 = [dict objectForKey:key2];
+	return [val1 episodeCompare:val2];
+}
+
 @implementation SapphireSeasonDirectory
 - (void)reloadDirectoryContentsWithoutInformDelegate
 {
@@ -150,7 +158,7 @@
 		}
 	}
 	[files addObjectsFromArray:[mutDict allKeys]];
-	[files sortUsingSelector:@selector(directoryNameCompare:)];
+	[files sortUsingFunction:keyedEpisodeCompare context:mutDict];
 	[cachedMetaFiles addEntriesFromDictionary:mutDict];
 	[metaFiles addEntriesFromDictionary:mutDict];
 	[mutDict release];
@@ -160,7 +168,6 @@
 - (NSString *)classDefaultCoverPath
 {
 	return [[NSBundle bundleForClass:[self class]] pathForResource:@"TV" ofType:@"png"];
-	
 }
 
 - (void)processFile:(SapphireFileMetaData *)file

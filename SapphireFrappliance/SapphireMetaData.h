@@ -1018,4 +1018,13 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file);
  */
 - (NSString *)sizeString;
 
+/*!
+ * @brief Compare the metadata by episode
+ *
+ * The metadata is first compared by show name, then season, then episode.  This is used for display in the browser
+ *
+ * @return The Comparison
+ */
+- (NSComparisonResult) episodeCompare:(SapphireFileMetaData *)other;
+
 @end
