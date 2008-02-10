@@ -25,9 +25,10 @@
 @interface SLoadApplianceController : SapphireMediaMenuController
 {
 	NSArray				*software;
-	NSString			*error;
 	NSFileManager		*filemanager;
 	SLoadInstallServer	*installServer;
 	SLoadChannelParser	*parser;
+	NSDictionary		*install;
 }
+- (void)installerCompletedWithError:(BOOL)error;
 @end

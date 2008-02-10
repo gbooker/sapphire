@@ -46,6 +46,7 @@ NSString *InstallerInstallStrings[] = {
 	@"Downloading",
 	@"Extracting",
 	@"Installing",
+	@"Install Complete",
 };
 
 #define InstallerStageSet(stage) 	[delegate setStage:stage of:INSTALLER_INSTALL_STAGES withName:BRLocalizedString(InstallerInstallStrings[stage], nil)]
@@ -99,9 +100,10 @@ NSString *InstallerInstallStrings[] = {
 	if(success)
 		success = [fileUtils move:[tmpPath stringByAppendingPathComponent:[installDict objectForKey:INSTALL_NAME_KEY]] toDir:installPath withReplacement:YES];
 	InstallerStageSet(INSTALLER_INSTALL_STAGES);
-	[fileUtils remountReadOnly];
 	if(!success)
 		[delegate instalFailed:[self error]];
+	[fileUtils remountReadOnly];
+	InstallerStageSet(INSTALLER_INSTALL_STAGES);
 }
 
 @end

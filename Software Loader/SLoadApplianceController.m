@@ -26,6 +26,65 @@
 #import <SLoadUtilities/SLoadChannelParser.h>
 #import <SLoadUtilities/SLoadInstallerProtocol.h>
 
+@interface SLoadInstallerIntermediateDelegate : NSObject <SLoadDelegateProtocol> {
+	id <SLoadDelegateProtocol>		delegate;
+	SLoadApplianceController		*controller;
+	BOOL							hasError;
+}
+- (id)initWithDeleate:(id <SLoadDelegateProtocol>)aDelegate withController:(SLoadApplianceController *)aController;
+@end
+
+@implementation SLoadInstallerIntermediateDelegate
+
+- (id)initWithDeleate:(id <SLoadDelegateProtocol>)aDelegate withController:(SLoadApplianceController *)aController
+{
+	self = [super init];
+	if(self == nil)
+		return nil;
+	
+	delegate = [aDelegate retain];
+	controller = [aController retain];
+	
+	return self;
+}
+
+- (void) dealloc
+{
+	[delegate release];
+	[controller release];
+	[super dealloc];
+}
+
+- (void)setStage:(int)stage of:(int)totalStages withName:(NSString *)name
+{
+	[delegate setStage:stage of:totalStages withName:name];
+	if(stage == totalStages)
+		[controller installerCompletedWithError:hasError];
+}
+
+- (void)setDownloadedBytes:(unsigned int)bytes ofTotal:(unsigned int)total
+{
+	[delegate setDownloadedBytes:bytes ofTotal:total];
+}
+
+- (void)setHasDownload:(BOOL)hasDownload
+{
+	[delegate setHasDownload:hasDownload];
+}
+
+- (void)downloadCompleted
+{
+	[delegate downloadCompleted];
+}
+
+- (void)instalFailed:(NSString *)error
+{
+	[delegate instalFailed:error];
+	hasError = YES;
+}
+
+@end
+
 @implementation SLoadApplianceController
 
 - (id) initWithScene: (BRRenderScene *) scene
@@ -97,18 +156,39 @@ typedef enum{
 - (void) itemSelected: (long) row
 {
 	NSLog(@"Running install");
-	row = 1;
 	SLoadInstallProgress *progress = [[SLoadInstallProgress alloc] initWithScene:[self scene]];
-	[[installServer client] setDelegate:progress];
-	NSDictionary *install = [software objectAtIndex:row];
+	id <SLoadClient> client = [installServer client];
+	[client setDelegate:progress];
+	install = [software objectAtIndex:row];
 	NSString *installer = [[[install objectForKey:INSTALL_INSTALLER_KEY] objectAtIndex:0] objectForKey:INSTALL_NAME_KEY];
-	[[installServer client] installSoftware:install withInstaller:installer];
+	if(![[client installerList] containsObject:installer])
+	{
+		SLoadInstallerIntermediateDelegate *newDelegate = [[SLoadInstallerIntermediateDelegate alloc] initWithDeleate:progress withController:self];
+		[client setDelegate:newDelegate];
+		[client installInstaller:installer];
+		[newDelegate release];
+	}
+	else
+		[client installSoftware:install withInstaller:installer];
 	[progress release];
 }
 
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item
 {
 	return nil;
+}
+
+- (void)installerCompletedWithError:(BOOL)error
+{
+	if(error == YES)
+		return;
+	
+	SLoadInstallProgress *progress = [[SLoadInstallProgress alloc] initWithScene:[self scene]];
+	id <SLoadClient> client = [installServer client];
+	[client setDelegate:progress];
+	NSString *installer = [[[install objectForKey:INSTALL_INSTALLER_KEY] objectAtIndex:0] objectForKey:INSTALL_NAME_KEY];
+	[client installSoftware:install withInstaller:installer];
+	[progress release];
 }
 
 @end

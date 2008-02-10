@@ -24,6 +24,10 @@
 #import "SLoadInstallClient.h"
 #import "SLoadInstallerInstaller.h"
 
+@interface SLoadInstaller (private)
+- (BOOL)loadInstaller:(NSString *)bundlePath;
+@end
+
 @implementation SLoadInstaller
 
 - (id)init
@@ -36,7 +40,6 @@
 	NSString *myPath = [[NSBundle bundleForClass:[SLoadInstaller class]] bundlePath];
 	NSString *installersPath = [myPath stringByAppendingPathComponent:@"Contents/Resources/Installers"];
 	NSArray *candidates = [fm directoryContentsAtPath:installersPath];
-	NSMutableDictionary *foundInstallers = [[NSMutableDictionary alloc] init];
 	
 	NSEnumerator *candidateEnum = [candidates objectEnumerator];
 	NSString *candidate;
@@ -49,24 +52,9 @@
 		if(![[[fm fileAttributesAtPath:bundlePath traverseLink:YES] objectForKey:NSFileOwnerAccountName] isEqualToString:@"root"])
 			continue;
 #endif
-		NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
-		NSDictionary *info = [bundle infoDictionary];
-		NSString *installerName = [info objectForKey:INSTALLER_NAME_KEY];
-		if(installerName == nil)
-			continue;
-		if([foundInstallers objectForKey:installerName] != nil)
-			continue;
-		Class installerClass = [bundle principalClass];
-		if(![installerClass conformsToProtocol:@protocol(SLoadInstallerProtocol)])
-			continue;
-		id installer = [[installerClass alloc] init];
-		[foundInstallers setObject:installer forKey:installerName];
-		[installer release];
+		[self loadInstaller:bundlePath];
 	}
-	
-	installers = [[NSDictionary alloc] initWithDictionary:foundInstallers];
-	[foundInstallers release];
-	
+		
 	return self;
 }
 
@@ -75,6 +63,24 @@
 	[currentInstaller release];
 	[installers release];
 	[super dealloc];
+}
+
+- (BOOL)loadInstaller:(NSString *)bundlePath
+{
+	NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+	NSDictionary *info = [bundle infoDictionary];
+	NSString *installerName = [info objectForKey:INSTALLER_NAME_KEY];
+	if(installerName == nil)
+		return NO;
+	if([installers objectForKey:installerName] != nil)
+		return NO;
+	Class installerClass = [bundle principalClass];
+	if(![installerClass conformsToProtocol:@protocol(SLoadInstallerProtocol)])
+		return NO;
+	id installer = [[installerClass alloc] init];
+	[installers setObject:installer forKey:installerName];
+	[installer release];
+	return YES;
 }
 
 - (void)setDelegate:(id <SLoadDelegateProtocol>)aDelegate
@@ -109,6 +115,11 @@
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:installerName, @"lalala",nil];
 	[self runInstaller:installer withData:info];
 	[installer release];
+}
+
+- (NSArray *)installerList
+{
+	return [installers allKeys];
 }
 
 @end

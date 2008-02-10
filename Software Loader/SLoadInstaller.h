@@ -25,10 +25,11 @@
 @interface SLoadInstaller : NSObject{
 	id <SLoadInstallerProtocol>		currentInstaller;
 	id <SLoadDelegateProtocol>		delegate;
-	NSDictionary					*installers;
+	NSMutableDictionary				*installers;
 }
 - (void)setDelegate:(id <SLoadDelegateProtocol>)aDelegate;
 - (void)cancel;
 - (void)installSoftware:(NSDictionary *)software withInstaller:(NSString *)installer;
 - (void)installInstaller:(NSString *)installer;
+- (NSArray *)installerList;
 @end

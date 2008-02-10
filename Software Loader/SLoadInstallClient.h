@@ -26,6 +26,7 @@
 - (oneway void)cancel;
 - (oneway void)installSoftware:(NSDictionary *)software withInstaller:(NSString *)installer;
 - (oneway void)installInstaller:(NSString *)installer;
+- (NSArray *)installerList;
 - (oneway void)exitClient;
 @end
 

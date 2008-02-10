@@ -65,6 +65,11 @@
 	keepRunning = NO;
 }
 
+- (NSArray *)installerList
+{
+	return [realClient installerList];
+}
+
 - (void)startChild
 {
 	@try {

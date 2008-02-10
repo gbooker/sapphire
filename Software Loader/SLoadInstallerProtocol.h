@@ -20,15 +20,18 @@
 
 #define INSTALLER_NAME_KEY @"SLoadInstallerName"
 
-#define INSTALL_URL_KEY				@"link"
-#define INSTALL_MD5_KEY				@"md5"
-#define INSTALL_NAME_KEY			@"installname"
-#define INSTALL_DISPLAY_NAME_KEY	@"title"
-#define INSTALL_VERSION_KEY			@"version"
-#define INSTALL_INSTALLER_KEY		@"installer"
-#define INSTALL_SOFTWARE_TYPE		@"type"
-#define INSTALL_TYPE_INSTALLER		@"installer"
-#define INSTALL_TYPE_SOFTWARE		@"software"
+#define INSTALL_URL_KEY				@"link"				/*Download URL*/
+#define INSTALL_MD5_KEY				@"md5"				/*Md5 of the download*/
+#define INSTALL_NAME_KEY			@"installname"		/*Filename of extracted file*/
+#define INSTALL_DISPLAY_NAME_KEY	@"title"			/*Display title*/
+#define INSTALL_VERSION_KEY			@"version"			/*Version*/
+#define INSTALL_INSTALLER_KEY		@"installer"		/*Installers to use*/
+#define INSTALL_BUNDLE_PATH			@"bundlePath"		/*Bundle path to check version*/
+#define INSTALL_SOFTWARE_TYPE		@"type"				/*Software type*/
+
+/*Softawre types*/
+#define INSTALL_TYPE_INSTALLER		@"installer"		/*An installer*/
+#define INSTALL_TYPE_SOFTWARE		@"software"			/*Installed Software*/
 
 @protocol SLoadDelegateProtocol;
 
