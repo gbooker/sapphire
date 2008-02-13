@@ -258,7 +258,7 @@ static BOOL usingFrontRow = NO;
 {
 	if(usingFrontRow) {
     // ATV2
-    if([controller respondsToSelector:@selector(addControl:)])
+    if(NSClassFromString(@"BRPanel") == nil)
       [controller addControl:sub];
     // 10.5
     else
@@ -271,7 +271,7 @@ static BOOL usingFrontRow = NO;
 + (void)insertSublayer:(id)sub toControl:(id)controller atIndex:(long)index {
   if(usingFrontRow) {
     // ATV2
-    if([controller respondsToSelector:@selector(insertControl:atIndex:)])
+    if(NSClassFromString(@"BRPanel") == nil)
       [controller insertControl:sub atIndex:index];
     // 10.5
     else
@@ -321,12 +321,12 @@ static BOOL usingFrontRow = NO;
 }
 
 + (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene {
-  // ATV2
-  if(NSClassFromString(@"BRImageControl") != nil) 
-    return [[NSClassFromString(@"BRImageControl") alloc] init];
   // 10.5
-  else if(usingFrontRow)
+  if(usingFrontRow && NSClassFromString(@"BRImageLayer") != nil) 
     return [[BRImageLayer alloc] init];
+  // ATV2
+  else if(usingFrontRow)
+    return [[NSClassFromString(@"BRImageControl") alloc] init];
   else
     return [BRImageLayer layerWithScene:scene];
 }
