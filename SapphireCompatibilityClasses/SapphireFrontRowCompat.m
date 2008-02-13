@@ -223,7 +223,12 @@ static BOOL usingFrontRow = NO;
 {
 	if(usingFrontRow)
 	{
-		return [controller controllerFrame];
+    // ATV2
+    if([controller respondsToSelector:@selector(frame)])
+      return [controller frame];
+    // 10.5
+    else
+      return [controller controllerFrame];
 	}
 	else
 		return [[controller masterLayer] frame];
@@ -251,16 +256,27 @@ static BOOL usingFrontRow = NO;
 
 + (void)addSublayer:(id)sub toControl:(id)controller
 {
-	if(usingFrontRow)
-		[[controller layer] addSublayer:sub];
+	if(usingFrontRow) {
+    // ATV2
+    if([controller respondsToSelector:@selector(addControl:)])
+      [controller addControl:sub];
+    // 10.5
+    else
+      [[controller layer] addSublayer:sub];
+  }
 	else
 		[[controller masterLayer] addSublayer:sub];
 }
 
 + (void)insertSublayer:(id)sub toControl:(id)controller atIndex:(long)index {
-  if(usingFrontRow)
-    [[controller layer] insertSublayer:sub atIndex:index];
-  else
+  if(usingFrontRow) {
+    // ATV2
+    if([controller respondsToSelector:@selector(insertControl:atIndex:)])
+      [controller insertControl:sub atIndex:index];
+    // 10.5
+    else
+      [[controller layer] insertSublayer:sub atIndex:index];
+  } else
     [[controller masterLayer] insertSublayer:sub atIndex:index];
 }
 
@@ -305,7 +321,11 @@ static BOOL usingFrontRow = NO;
 }
 
 + (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene {
-  if(usingFrontRow)
+  // ATV2
+  if(NSClassFromString(@"BRImageControl") != nil) 
+    return [[NSClassFromString(@"BRImageControl") alloc] init];
+  // 10.5
+  else if(usingFrontRow)
     return [[BRImageLayer alloc] init];
   else
     return [BRImageLayer layerWithScene:scene];
