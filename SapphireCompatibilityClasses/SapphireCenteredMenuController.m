@@ -30,6 +30,7 @@
 
 @interface SapphireCenteredMenuController (compat)
 - (id)firstSublayerNamed:(NSString *)name;
+- (id)firstControlNamed:(NSString *)name;
 - (void)setLayoutManager:(id)newLayout;
 - (id)layoutManager;
 @end
@@ -60,7 +61,14 @@
 {
 	[realLayout layoutSublayersOfLayer:layer];
 	NSRect master = [layer frame];
-	id listLayer = [layer firstSublayerNamed:@"list"];
+  
+  id listLayer;
+  
+  if([layer respondsToSelector:@selector(firstControlNamed:)])
+    listLayer = [layer firstControlNamed:@"list"];
+  else
+    listLayer = [layer firstSublayerNamed:@"list"];
+  
 	NSRect listFrame = [listLayer frame];
 	listFrame = [delegate listRectWithSize:listFrame inMaster:master];
 	[listLayer setFrame:listFrame];
