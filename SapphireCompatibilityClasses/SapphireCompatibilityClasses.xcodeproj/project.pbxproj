@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DCA299C40D64A3B30092E9BB /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD100D26BCD200E22363 /* BackRow.framework */; };
+		DCA299C50D64A3B30092E9BB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD130D26BCEA00E22363 /* AppKit.framework */; };
+		DCA299C60D64A3B30092E9BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD140D26BCEA00E22363 /* Foundation.framework */; };
+		DCA299F40D64A4EF0092E9BB /* BRMetadataPreviewController.h in Headers */ = {isa = PBXBuildFile; fileRef = DCA299F20D64A4EF0092E9BB /* BRMetadataPreviewController.h */; };
+		DCA299F50D64A4EF0092E9BB /* BRMetadataPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */; };
 		F51BFCE50D26BB3900E22363 /* SapphireCenteredMenuController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F51BFCE60D26BB3900E22363 /* SapphireCenteredMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */; };
 		F51BFCE70D26BB3900E22363 /* SapphireDVDLoadingController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCD90D26BB3900E22363 /* SapphireDVDLoadingController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -46,6 +51,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DCA299CA0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SapphireTakeTwoCompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCA299CB0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SapphireTakeTwoCompatClasses-Info.plist"; sourceTree = "<group>"; };
+		DCA299F20D64A4EF0092E9BB /* BRMetadataPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMetadataPreviewController.h; sourceTree = "<group>"; };
+		DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMetadataPreviewController.m; sourceTree = "<group>"; };
 		F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SapphireCompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCenteredMenuController.h; sourceTree = "<group>"; };
 		F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireCenteredMenuController.m; sourceTree = "<group>"; };
@@ -74,6 +83,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DCA299C30D64A3B30092E9BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA299C40D64A3B30092E9BB /* BackRow.framework in Frameworks */,
+				DCA299C50D64A3B30092E9BB /* AppKit.framework in Frameworks */,
+				DCA299C60D64A3B30092E9BB /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F51BFCCF0D26BAED00E22363 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -104,6 +123,7 @@
 				F51BFCB00D26B87100E22363 /* Classes */,
 				F51BFD0F0D26BCBE00E22363 /* Frameworks */,
 				F51BFCD20D26BAED00E22363 /* Products */,
+				DCA299CB0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,6 +149,8 @@
 				F51BFCE40D26BB3900E22363 /* SapphireTextWithSpinnerController.m */,
 				F580E8720D31288400F2225A /* SapphireButtonControl.h */,
 				F580E8730D31288400F2225A /* SapphireButtonControl.m */,
+				DCA299F20D64A4EF0092E9BB /* BRMetadataPreviewController.h */,
+				DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -138,6 +160,7 @@
 			children = (
 				F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */,
 				F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */,
+				DCA299CA0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -156,6 +179,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		DCA299BE0D64A3B30092E9BB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA299F40D64A4EF0092E9BB /* BRMetadataPreviewController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F51BFCCC0D26BAED00E22363 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -183,6 +214,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		DCA299BD0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCA299C70D64A3B30092E9BB /* Build configuration list for PBXNativeTarget "SapphireTakeTwoCompatClasses" */;
+			buildPhases = (
+				DCA299BE0D64A3B30092E9BB /* Headers */,
+				DCA299C00D64A3B30092E9BB /* Resources */,
+				DCA299C10D64A3B30092E9BB /* Sources */,
+				DCA299C30D64A3B30092E9BB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SapphireTakeTwoCompatClasses;
+			productName = SapphireLeopardCompatClasses;
+			productReference = DCA299CA0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F51BFCD60D26BAEE00E22363 /* Build configuration list for PBXNativeTarget "SapphireCompatClasses" */;
@@ -235,11 +284,19 @@
 			targets = (
 				F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */,
 				F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */,
+				DCA299BD0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		DCA299C00D64A3B30092E9BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F51BFCCD0D26BAED00E22363 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -257,6 +314,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		DCA299C10D64A3B30092E9BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCA299F50D64A4EF0092E9BB /* BRMetadataPreviewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F51BFCCE0D26BAED00E22363 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -291,6 +356,70 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		DCA299C80D64A3B30092E9BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "SapphireTakeTwoCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireTakeTwoCompatClasses;
+			};
+			name = Debug;
+		};
+		DCA299C90D64A3B30092E9BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "SapphireTakeTwoCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireTakeTwoCompatClasses;
+			};
+			name = Release;
+		};
 		F51BFCA80D26B86800E22363 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -439,6 +568,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DCA299C70D64A3B30092E9BB /* Build configuration list for PBXNativeTarget "SapphireTakeTwoCompatClasses" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCA299C80D64A3B30092E9BB /* Debug */,
+				DCA299C90D64A3B30092E9BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F51BFCAA0D26B86800E22363 /* Build configuration list for PBXProject "SapphireCompatibilityClasses" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

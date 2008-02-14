@@ -364,6 +364,13 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 			compat = [NSBundle bundleWithPath:compatPath];
 			[compat load];
 		}
+    // ATV2
+    if(NSClassFromString(@"BRMetadataPreviewController") == nil)
+    {
+      compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoCompatClasses.framework"];
+      compat = [NSBundle bundleWithPath:compatPath];
+      [compat load];
+    }
 	}	
 }
 
