@@ -74,6 +74,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (BRTextWithSpinnerController *)initWithTitle:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent;
 @end
 
+@interface BRControl (compat)
+- (void)insertControl:(id)control atIndex:(long)index;
+@end
+
 @implementation SapphireFrontRowCompat
 
 static BOOL usingFrontRow = NO;
