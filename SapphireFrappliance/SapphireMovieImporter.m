@@ -447,6 +447,8 @@
 								aGenre=[aGenre substringToIndex:[aGenre length]-6];
 							else if([aGenre hasSuffix:@" "])
 								aGenre=[aGenre substringToIndex:[aGenre length]-1];
+							else if([aGenre hasSuffix:@"\n"])
+								aGenre=[aGenre substringToIndex:[aGenre length]-1];
 							[myGenres addObject:aGenre];
 						}
 						else
