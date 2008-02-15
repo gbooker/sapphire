@@ -142,6 +142,13 @@
 - (BOOL)fastSwitching;
 
 /*!
+ * @brief Returns whether to use directory based lookup
+ *
+ * @return YES if set, NO otherwise
+ */
+- (BOOL)dirLookup;
+
+/*!
  * @brief Returns the index of the last predicate used
  *
  * @return The index of the last predicate used

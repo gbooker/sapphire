@@ -50,6 +50,7 @@ static SapphireSettings *sharedInstance = nil;
 #define HIDE_UI_QUIT_KEY			@"HideUIQuit"
 #define	ENABLE_FAST_SWITCHING_KEY	@"EnableFastSwitching"
 #define USE_AC3_PASSTHROUGH			@"EnableAC3Passthrough"
+#define ENABLE_DIR_LOOKUP			@"EnableDirLookup"
 #define	DISABLE_ANON_KEY			@"DisableAnonymousReporting"
 #define LAST_PREDICATE				@"LastPredicate"
 
@@ -89,6 +90,7 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"  Hide UI Quit", @"Hide the ui quitter menu item"),
 												BRLocalizedString(@"  Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"),
 												BRLocalizedString(@"  Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"),
+												BRLocalizedString(@"  Use Directory Lookup", @"Use directory names instead of filename for movie lookup"),
 												BRLocalizedString(@"  Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), nil];
 	
 	settingDescriptions=[[NSArray alloc] initWithObjects:
@@ -108,6 +110,7 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"Tells Sapphire to hide the main menu element forcing frontrow to quit.", @"Hide the ui quitter description"),
 												BRLocalizedString(@"Tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files.", @"Fast Directory Switching description"),
 												BRLocalizedString(@"Tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 output.", @"Enable AC3 Passthrough description"),
+												BRLocalizedString(@"Tells Sapphire that you want to use directory instead of filenames for movie lookup", @"Enable Directory lookup description"),
 												BRLocalizedString(@"Tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use.", @"Disable the anonymous reporting description"), nil];
 		
 	keys = [[NSArray alloc] initWithObjects:		@"",
@@ -126,6 +129,7 @@ static SapphireSettings *sharedInstance = nil;
 													HIDE_UI_QUIT_KEY,
 													ENABLE_FAST_SWITCHING_KEY,
 													USE_AC3_PASSTHROUGH,
+													ENABLE_DIR_LOOKUP,
 													DISABLE_ANON_KEY, nil];
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	gems = [[NSArray alloc] initWithObjects:	[theme gem:IMPORT_GEM_KEY],
@@ -144,6 +148,7 @@ static SapphireSettings *sharedInstance = nil;
 												[theme gem:FRONTROW_GEM_KEY],
 												[theme gem:FAST_GEM_KEY],
 												[theme gem:AC3_GEM_KEY],
+												[theme gem:IMDB_GEM_KEY],
 												[theme gem:REPORT_GEM_KEY], nil];		
 	
 	path = [dictionaryPath retain];
@@ -160,6 +165,7 @@ static SapphireSettings *sharedInstance = nil;
 		[NSNumber numberWithBool:YES], HIDE_UI_QUIT_KEY,
 		[NSNumber numberWithBool:YES], ENABLE_FAST_SWITCHING_KEY,
 		[NSNumber numberWithBool:NO], USE_AC3_PASSTHROUGH,
+		[NSNumber numberWithBool:NO], ENABLE_DIR_LOOKUP,
 		[NSNumber numberWithBool:NO], DISABLE_ANON_KEY,
 		[NSNumber numberWithInt:NSNotFound], LAST_PREDICATE,
 		nil];
@@ -281,6 +287,12 @@ static SapphireSettings *sharedInstance = nil;
 {
 	return [self boolForKey:ENABLE_FAST_SWITCHING_KEY];
 
+}
+
+- (BOOL)dirLookup
+{
+	return [self boolForKey:ENABLE_DIR_LOOKUP];
+	
 }
 
 - (int)indexOfLastPredicate

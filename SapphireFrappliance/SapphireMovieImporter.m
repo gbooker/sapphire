@@ -26,6 +26,7 @@
 #import "SapphirePosterChooser.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireShowChooser.h"
+#import "SapphireSettings.h"
 
 #define VERSION_KEY					@"Version"
 #define CURRENT_VERSION				2
@@ -663,23 +664,28 @@
 	/*Get path*/
 	if(![self isMovieCandidate:metaData])
 		return IMPORT_STATE_NOT_UPDATED;
-	/*Get fineName*/
 	NSString *path = [metaData path];
 	NSString *fileName = [path lastPathComponent];
+	/*choose between file or directory name for lookup */
+	NSString *lookupName;
+	if([[SapphireSettings sharedSettings] dirLookup])
+		lookupName = [[path stringByDeletingLastPathComponent] lastPathComponent];
+	else
+		lookupName = fileName;
 	if([metaData fileClass]==FILE_CLASS_TV_SHOW) /* File is a TV Show - skip it */
 		return IMPORT_STATE_NOT_UPDATED;
 	
 	/*Get the movie title*/
 	NSString *movieDataLink = nil ;
 	/*Check to see if we know this movie*/
-	NSMutableDictionary *dict=[movieTranslations objectForKey:[[fileName lowercaseString] stringByDeletingPathExtension]];
+	NSMutableDictionary *dict=[movieTranslations objectForKey:[[lookupName lowercaseString] stringByDeletingPathExtension]];
 	if(dict == nil)
 	{
 		if(dataMenu == nil)
 		/*There is no data menu, background import. So we can't ask user, skip*/
 			return IMPORT_STATE_NOT_UPDATED;
 		/*Ask the user what movie this is*/
-		NSArray *movies = [self searchResultsForMovie:fileName];
+		NSArray *movies = [self searchResultsForMovie:lookupName];
 		/* No need to prompt the user for an empty set */
 		if(movies==nil)
 		{
@@ -691,7 +697,7 @@
 		/*Bring up the prompt*/
 		SapphireMovieChooser *chooser = [[SapphireMovieChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setMovies:movies];
-		[chooser setFileName:fileName];		
+		[chooser setFileName:lookupName];		
 		[chooser setListTitle:BRLocalizedString(@"Select Movie Title", @"Prompt the user for title of movie")];
 		/*And display prompt*/
 		[[dataMenu stack] pushController:chooser];
@@ -750,7 +756,7 @@
 			{
 				[self downloadPosterCandidates:posters];
 				[posterChooser setPosters:posters] ;
-				[posterChooser setFileName:fileName];
+				[posterChooser setFileName:lookupName];
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 				[[dataMenu stack] pushController:posterChooser];
 				[posterChooser release];
