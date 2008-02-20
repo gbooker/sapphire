@@ -19,11 +19,23 @@
  */
 
 /*!
+ * @brief The ATV 2 protocol
+ *
+ * This protocol defines the new methods in ATV 2.
+ */
+@protocol BRAppliance <NSObject>
+- (id)applianceInfo;
+- (id)applianceCategories;
+- (id)identifierForContentAlias:(id)fp8;
+- (id)controllerForIdentifier:(id)fp8;
+@end
+
+/*!
  * @brief The Main class
  *
  * This class bypasses the whitelist check and sets up backrow to load and use the main controller.
  */
-@interface SapphireAppliance : BRAppliance 
-{
+@interface SapphireAppliance : NSObject <BRAppliance, BRApplianceProtocol> {
 }
 @end
+

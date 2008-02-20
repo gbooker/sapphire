@@ -122,6 +122,13 @@
 			remoteGlobalIDString = F5003FF80D19980A003FEA08;
 			remoteInfo = LeopardOnly;
 		};
+		F56895E00D6CE30D00F9D9B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DCA299CA0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses.framework */;
+			remoteInfo = SapphireTakeTwoCompatClasses;
+		};
 		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -578,6 +585,7 @@
 			children = (
 				F5EBE6DD0D4A775400042BA0 /* SapphireCompatClasses.framework */,
 				F5EBE6DF0D4A775400042BA0 /* SapphireLeopardCompatClasses.framework */,
+				F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -682,6 +690,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SapphireTakeTwoCompatClasses.framework;
+			remoteRef = F56895E00D6CE30D00F9D9B0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F5EBE6DD0D4A775400042BA0 /* SapphireCompatClasses.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;

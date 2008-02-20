@@ -29,6 +29,26 @@
 	<key>FRRemoteAppliance</key>
 	<true/>
 	<key>NSPrincipalClass</key>
-	<string>SapphireAppliance</string>
+	<string>SapphireAppliance</string>	
+	<!-- ATV2 -->
+	<key>FRApplianceCategoryDescriptors</key>
+	<array>
+		<dict>
+			<key>identifier</key>
+			<string>Sapphire</string>
+			<key>is-network-dependent</key>
+			<false/>
+			<key>is-share-dependent</key>
+			<false/>
+			<key>is-store-category</key>
+			<false/>
+			<key>name</key>
+			<string>Sapphire</string>
+			<key>preferred-order</key>
+			<real>1</real>
+			<key>priority</key>
+			<real>6</real>
+		</dict>
+	</array>
 </dict>
 </plist>
