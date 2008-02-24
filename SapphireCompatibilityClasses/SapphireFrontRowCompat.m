@@ -81,16 +81,25 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @implementation SapphireFrontRowCompat
 
 static BOOL usingFrontRow = NO;
+static BOOL usingTakeTwo = NO;
 
 + (void)initialize
 {
 	if(NSClassFromString(@"BRAdornedMenuItemLayer") == nil)
 		usingFrontRow = YES;
+  
+  if(NSClassFromString(@"BRBaseAppliance") != nil)
+    usingTakeTwo = YES;
 }
 
 + (BOOL)usingFrontRow
 {
 	return usingFrontRow;
+}
+
++ (BOOL)usingTakeTwo
+{
+  return usingTakeTwo;
 }
 
 + (id)imageAtPath:(NSString *)path

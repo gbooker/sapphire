@@ -47,6 +47,13 @@
 + (BOOL)usingFrontRow;
 
 /*!
+ * @brief Are we on ATV Take Two?
+ *
+ * @return YES if on take two, NO otherwise
+ */
++ (BOOL)usingTakeTwo;
+
+/*!
  * @brief Load an image at a path
  *
  * This returns a CGImageRef or a BRImage, depending on platform.
