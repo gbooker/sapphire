@@ -40,10 +40,19 @@
 }
 @end
 
-@interface SapphireMediaPreview (private)
-- (void)doPopulation;
-- (NSString *)coverArtForPath;
+/* There is no BRMetadataLayer class in ATV2.0 anymore, it seems to be BRMetadataControl now*/
+/* So just do the same stuff as above, but for BRMetadataControl*/
+@interface BRMetadataControl : NSObject
 @end
+
+@implementation BRMetadataControl (protectedAccess)
+	-(NSArray *)gimmieMetadataObjs {
+	Class klass = [self class];
+	Ivar ret = class_getInstanceVariable(klass, "_metadataObjs");
+	return *(NSArray * *)(((char *)self)+ret->ivar_offset);
+}
+@end
+
 
 @interface BRMetadataPreviewController (compat)
 - (void)_updateMetadataLayer;
@@ -61,6 +70,11 @@
 	
 	return *(BRMetadataLayer * *)(((char *)self)+ret->ivar_offset);
 }
+@end
+
+@interface SapphireMediaPreview (private)
+- (void)doPopulation;
+- (NSString *)coverArtForPath;
 @end
 
 @implementation SapphireMediaPreview

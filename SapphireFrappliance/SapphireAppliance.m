@@ -121,7 +121,6 @@
 
 - (id)applianceController
 {
-	NSLog(@"in -SapphireApplicance applianceController");
 	return ( [[[SapphireApplianceController alloc] initWithScene: nil] autorelease] );
 }
 
@@ -135,8 +134,6 @@
  * This implements the BRAppliance protocol from ATV2.
  */
 -(id)applianceInfo {
-	NSLog(@"in -SapphireApplicance applianceInfo");
-	
 	BRApplianceInfo* p = [BRApplianceInfo infoForApplianceBundle:[NSBundle bundleForClass:[self class]]];
 	NSMutableArray *categories = [NSMutableArray array];
 	
@@ -145,13 +142,11 @@
 	while((obj = [enumerator nextObject]) != nil) {
 		BRApplianceCategory *category = [BRApplianceCategory categoryWithName:[obj valueForKey:@"name"] identifier:[obj valueForKey:@"identifier"] preferredOrder:[[obj valueForKey:@"preferred-order"] floatValue]];
 		[categories addObject:category];
-		NSLog(@"asdsa");
 	}
 	return [BRApplianceInfo infoForApplianceBundle:[NSBundle bundleForClass:[self class]]];
 }
 
 -(id)applianceCategories {
-	NSLog(@"in -SapphireApplicance applianceCategories");
 	NSMutableArray *categories = [NSMutableArray array];
 	
 	NSEnumerator *enumerator = [[[self applianceInfo] applianceCategoryDescriptors] objectEnumerator];

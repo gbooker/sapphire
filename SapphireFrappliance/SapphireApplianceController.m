@@ -179,7 +179,7 @@ static NSArray *predicates = nil;
 	[settings setListTitle:					BRLocalizedString(@" Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
-	if([SapphireFrontRowCompat usingFrontRow])
+	if([SapphireFrontRowCompat usingFrontRow] && ![SapphireFrontRowCompat usingTakeTwo])
 	{
 		NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath] ;
 		NSString *onlyPath = [myBundlePath stringByAppendingPathComponent:@"/Contents/Frameworks/LeopardOnly.framework"];

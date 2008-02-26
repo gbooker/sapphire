@@ -25,7 +25,7 @@
 	<key>FRApplianceIconReflectionOffset</key>
 	<real>-0.20999999999999999</real>
 	<key>FRAppliancePreferedOrderValue</key>
-	<integer>-1</integer>
+	<real>0.0</real>
 	<key>FRRemoteAppliance</key>
 	<true/>
 	<key>NSPrincipalClass</key>
