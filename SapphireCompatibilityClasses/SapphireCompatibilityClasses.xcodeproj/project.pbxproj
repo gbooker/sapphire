@@ -38,6 +38,8 @@
 		F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFD540D26BEF900E22363 /* BackRowUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F580E8740D31288400F2225A /* SapphireButtonControl.h in Headers */ = {isa = PBXBuildFile; fileRef = F580E8720D31288400F2225A /* SapphireButtonControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F580E8750D31288400F2225A /* SapphireButtonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F580E8730D31288400F2225A /* SapphireButtonControl.m */; };
+		F585A9DC0D74ED780043AB22 /* BRMusicNowPlayingController.h in Headers */ = {isa = PBXBuildFile; fileRef = F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */; };
+		F585A9DD0D74ED780043AB22 /* BRMusicNowPlayingController.m in Sources */ = {isa = PBXBuildFile; fileRef = F585A9DB0D74ED780043AB22 /* BRMusicNowPlayingController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +82,8 @@
 		F51BFD540D26BEF900E22363 /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
 		F580E8720D31288400F2225A /* SapphireButtonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireButtonControl.h; sourceTree = "<group>"; };
 		F580E8730D31288400F2225A /* SapphireButtonControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireButtonControl.m; sourceTree = "<group>"; };
+		F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMusicNowPlayingController.h; sourceTree = "<group>"; };
+		F585A9DB0D74ED780043AB22 /* BRMusicNowPlayingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMusicNowPlayingController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +155,8 @@
 				F580E8730D31288400F2225A /* SapphireButtonControl.m */,
 				DCA299F20D64A4EF0092E9BB /* BRMetadataPreviewController.h */,
 				DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */,
+				F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */,
+				F585A9DB0D74ED780043AB22 /* BRMusicNowPlayingController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -184,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCA299F40D64A4EF0092E9BB /* BRMetadataPreviewController.h in Headers */,
+				F585A9DC0D74ED780043AB22 /* BRMusicNowPlayingController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCA299F50D64A4EF0092E9BB /* BRMetadataPreviewController.m in Sources */,
+				F585A9DD0D74ED780043AB22 /* BRMusicNowPlayingController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

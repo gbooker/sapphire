@@ -64,6 +64,7 @@
 		F56B74D60C3753E300E934AA /* NSString-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B74D50C3753E300E934AA /* NSString-Extensions.m */; };
 		F56B765E0C3837CE00E934AA /* SapphireShowChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */; };
 		F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */ = {isa = PBXBuildFile; fileRef = F56B77D60C3858B400E934AA /* DefaultPreview.png */; };
+		F585A9C80D74EA870043AB22 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */; };
 		F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */; };
 		F5B418650D0B28A200BDD361 /* main_helper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418640D0B28A200BDD361 /* main_helper.m */; };
 		F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5B4185F0D0B288700BDD361 /* ImportHelper */; };
@@ -126,7 +127,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = DCA299CA0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses.framework */;
+			remoteGlobalIDString = DCA299CA0D64A3B30092E9BB;
+			remoteInfo = SapphireTakeTwoCompatClasses;
+		};
+		F585A9C60D74EA810043AB22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DCA299BD0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses */;
 			remoteInfo = SapphireTakeTwoCompatClasses;
 		};
 		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {
@@ -216,6 +224,7 @@
 			files = (
 				F5EBE70C0D4A796600042BA0 /* SapphireCompatClasses.framework in CopyFiles */,
 				F5EBE70D0D4A796600042BA0 /* SapphireLeopardCompatClasses.framework in CopyFiles */,
+				F585A9C80D74EA870043AB22 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -620,6 +629,7 @@
 				FE7810660C56F0950037779D /* PBXTargetDependency */,
 				F5EBE7070D4A795200042BA0 /* PBXTargetDependency */,
 				F5EBE7090D4A795200042BA0 /* PBXTargetDependency */,
+				F585A9C70D74EA810043AB22 /* PBXTargetDependency */,
 			);
 			name = Sapphire;
 			productInstallPath = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
@@ -841,6 +851,11 @@
 			isa = PBXTargetDependency;
 			target = F5003FF80D19980A003FEA08 /* LeopardOnly */;
 			targetProxy = F50044110D19A242003FEA08 /* PBXContainerItemProxy */;
+		};
+		F585A9C70D74EA810043AB22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SapphireTakeTwoCompatClasses;
+			targetProxy = F585A9C60D74EA810043AB22 /* PBXContainerItemProxy */;
 		};
 		F5B418710D0B29DE00BDD361 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

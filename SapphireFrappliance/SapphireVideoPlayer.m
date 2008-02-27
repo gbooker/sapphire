@@ -19,6 +19,7 @@
  */
 
 #import "SapphireVideoPlayer.h"
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import <QTKit/QTKit.h>
 #import <objc/objc-class.h>
 
@@ -52,7 +53,10 @@
 	Class myClass = [self class];
 	Ivar ret = class_getInstanceVariable(myClass, "_movie");
 	
-	return *(QTMovie * *)(((char *)self)+ret->ivar_offset);
+	if(![SapphireFrontRowCompat usingTakeTwo])
+		return *(QTMovie * *)(((char *)self)+ret->ivar_offset);
+	Movie mov = *(Movie *)(((char *)self)+ret->ivar_offset);
+	return [QTMovie movieWithQuickTimeMovie:mov disposeWhenDone:NO error:nil];
 }
 @end
 
