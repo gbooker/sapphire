@@ -38,6 +38,7 @@ typedef enum{
  * If the file does not contain chapters, this class is enabled.  The first skip will skip 5 seconds, then 10, then 20, and so on in exponentially increasing order.  The moment the user skips in the opposite direction, the skip time decreases exponentially.
  */
 @interface SapphireVideoPlayer : BRQTKitVideoPlayer {
+	int						padding[4];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/
 	double					skipTime;		/*!< @brief Time by which next skip should advance/reverse*/
 	SkipState				state;			/*!< @brief Current state we are in*/
 	BOOL					enabled;		/*!< @brief YES if we are enabled, NO if we behave the same as the super class*/
