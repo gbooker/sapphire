@@ -248,6 +248,15 @@
 + (BRTextControl *)newTextControlWithScene:(BRRenderScene *)scene;
 
 /*!
+ * @brief Get the text control's rendered size within constraints
+ *
+ * @param text The text control
+ * @param maxSize The contrained maximum size
+ * @return The rendered size
+ */
++ (NSSize)textControl:(BRTextControl *)text renderedSizeWithMaxSize:(NSSize)maxSize;
+
+/*!
  * @brief Create a new progress bar widget
  *
  * Widgets are alloced differently in frontrow

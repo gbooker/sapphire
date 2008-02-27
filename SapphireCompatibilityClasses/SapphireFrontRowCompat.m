@@ -56,6 +56,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @interface BRTextControl (compat)
 - (void)setText:(NSString *)text withAttributes:(NSDictionary *)attr;
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
+- (NSSize)renderedSizeWithMaxSize:(NSSize)maxSize; /*technically wrong; it is really a CGSize*/
 @end
 
 @interface NSException (compat)
@@ -257,6 +258,15 @@ static BOOL usingTakeTwo = NO;
 			[control setTextAttributes:attributes];
 		[control setText:text];
 	}
+}
+
++ (NSSize)textControl:(BRTextControl *)text renderedSizeWithMaxSize:(NSSize)maxSize
+{
+	if(usingTakeTwo)
+		return [text renderedSizeWithMaxSize:maxSize];
+	
+	[text setMaximumSize:maxSize];
+	return [text renderedSize];
 }
 
 + (void)addDividerAtIndex:(int)index toList:(BRListControl *)list

@@ -110,8 +110,7 @@
 	[SapphireFrontRowCompat setText:theText withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:text];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	[text setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
-	NSSize txtSize = [text renderedSize];
+	NSSize txtSize = [SapphireFrontRowCompat textControl:text renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
 	
 	NSRect frame;
 	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
@@ -130,8 +129,7 @@
 	[SapphireFrontRowCompat setText:theFileProgress withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileProgress];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	[fileProgress setMaximumSize:NSMakeSize(master.size.width * 1.0f/2.0f, master.size.height * 0.3f)];
-	NSSize progressSize = [fileProgress renderedSize];
+	NSSize progressSize = [SapphireFrontRowCompat textControl:fileProgress renderedSizeWithMaxSize:NSMakeSize(master.size.width * 1.0f/2.0f, master.size.height * 0.3f)];
 	
 	NSRect frame;
 	frame.origin.x =  (master.size.width) * 0.1f;
@@ -150,8 +148,7 @@
 	[SapphireFrontRowCompat setText:theCurrentFile withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:currentFile];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	[currentFile setMaximumSize:NSMakeSize(master.size.width * 9.0f/10.0f, master.size.height * 0.3f)];
-	NSSize currentFileSize = [currentFile renderedSize];
+	NSSize currentFileSize = [SapphireFrontRowCompat textControl:currentFile renderedSizeWithMaxSize:NSMakeSize(master.size.width * 9.0f/10.0f, master.size.height * 0.3f)];
 	
 	NSRect frame;
 	frame.origin.x =  (master.size.width) * 0.1f;
