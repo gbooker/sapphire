@@ -25,7 +25,12 @@
 #import "SapphireImportHelper.h"
 #import "SapphireApplianceController.h"
 
+@interface BRLayerController (compatounth)
+- (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
+@end
+
 @interface SapphireImporterDataMenu (private)
+- (void)layoutFrame;
 - (void)setFileProgress:(NSString *)updateFileProgress;
 - (void)resetUIElements;
 - (void)pause;
@@ -44,16 +49,10 @@
 	/*Setup the Header Control with default contents*/
 	title = [SapphireFrontRowCompat newHeaderControlWithScene:scene];
 	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
-	/*Set the size*/
-	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
-	frame.origin.y += frame.size.height * 0.80f;
-	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
-	[title setFrame: frame];
 	
 	/*Setup the button control*/
-	frame = [SapphireFrontRowCompat frameOfController:self];
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	button = [SapphireFrontRowCompat newButtonControlWithScene:scene masterLayerSize:frame.size];
-	[button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
 
 	/*Setup the text entry control*/
 	text = [SapphireFrontRowCompat newTextControlWithScene:scene];
@@ -62,15 +61,7 @@
 	
 	/*Setup the progress bar*/
 	bar = [SapphireFrontRowCompat newProgressBarWidgetWithScene:scene];
-	frame = [SapphireFrontRowCompat frameOfController:self];
-	frame.origin.y += frame.size.height * 5.0f / 16.0f;
-	frame.origin.x = frame.size.width / 6.0f;
-	frame.size.height = frame.size.height / 16.0f;
-	frame.size.width = frame.size.width * 2.0f / 3.0f;
-	[bar setFrame: frame] ;
-	
-	/*Setup the names*/
-	[self resetUIElements];
+	[self layoutFrame];
 	
 	/*add controls*/
 	[self addControl: button];
@@ -98,6 +89,28 @@
 	[importer setImporterDataMenu:nil];
 	[importer release];
 	[super dealloc];
+}
+
+- (void)layoutFrame
+{
+	/*title*/
+	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
+	frame.origin.y += frame.size.height * 0.80f;
+	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
+	[title setFrame: frame];
+	
+	/*button*/
+	frame = [SapphireFrontRowCompat frameOfController:self];
+	[button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
+	
+	/*bar*/
+	/*Setup the progress bar*/
+	frame = [SapphireFrontRowCompat frameOfController:self];
+	frame.origin.y += frame.size.height * 5.0f / 16.0f;
+	frame.origin.x = frame.size.width / 6.0f;
+	frame.size.height = frame.size.height / 16.0f;
+	frame.size.width = frame.size.width * 2.0f / 3.0f;
+	[bar setFrame: frame] ;
 }
 
 /*!
@@ -181,7 +194,7 @@
 {
 	/*Change display*/
 	[button setTitle:BRLocalizedString(@"Cancel Import", @"Cancel the import process")];
-	[button setAction:@selector(cancel)];
+	action = @selector(cancel);
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 	/*Initialize the import process*/
@@ -306,6 +319,8 @@
 		/*Start with the first item*/
 		[importItems removeObjectAtIndex:0];
 	}
+	else
+		[self setCurrentFile:BRLocalizedString(@"Waiting for background import to complete", @"The import is complete, just waiting on background processes")];
 	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 	[bar setPercentage:current/max * 100.0f];
 	
@@ -317,7 +332,7 @@
 		[metaCollection writeMetaData];
 		/*Update display*/
 		[button setHidden:YES];
-		[button setTarget:nil];
+		action = NULL;
 		[title setTitle:BRLocalizedString(@"Import Complete", @"The import is complete")];
 		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Updated %0.0f Entries.", @"Import complete format with number updated"), updated]];
 		[self setCurrentFile:@""];
@@ -390,17 +405,18 @@
 	[self setFileProgress:@" "];
 	[self setCurrentFile:@" "] ;
 	[bar setPercentage:0.0f];
-	[button setAction: @selector(import)];
+	action = @selector(import);
 	[button setHidden:NO];
 	[title setTitle:[importer initialText]];
 	[self setText:[importer informativeText]];
 	[button setTitle:[importer buttonTitle]];
 }
 
-- (void)willBePushed
+- (void)wasPushed
 {
-	[button setTarget:self];
-	[super willBePushed];
+	[self layoutFrame];
+	[self resetUIElements];
+	[super wasPushed];
 }
 
 - (void)wasPopped
@@ -414,6 +430,23 @@
 {
 	[importer wasExhumedByPoppingController:controller];
 	[super wasExhumedByPoppingController:controller];
+}
+
+- (BOOL)brEventAction:(BREvent *)event{
+	BREventPageUsageHash hashVal = [event pageUsageHash];
+	
+	if([(BRControllerStack *)[self stack] peekController] != self || action == NULL)
+		hashVal = 0;
+	
+	switch(hashVal)
+	{
+		case kBREventTapPlayPause:
+		case kBREventHoldPlayPause:
+			[self performSelector:action];
+			return YES;
+			break;
+	}
+	return [super brEventAction:event];
 }
 
 @end

@@ -130,6 +130,7 @@ typedef enum{
 	BOOL							backgrounded;			/*!< @brief YES if the current file is backgrounded, NO otherwise*/
 	
 	id <SapphireImporter>			importer;				/*!< @brief The importer who does the dirty work*/
+	SEL								action;					/*!< @brief The action selector when the button is hit*/
 }
 /*!
  * @brief Creates a new Importer Data Menu

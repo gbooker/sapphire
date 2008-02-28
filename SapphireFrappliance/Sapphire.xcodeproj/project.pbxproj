@@ -134,7 +134,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = DCA299BD0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses */;
+			remoteGlobalIDString = DCA299BD0D64A3B30092E9BB;
 			remoteInfo = SapphireTakeTwoCompatClasses;
 		};
 		F5B418700D0B29DE00BDD361 /* PBXContainerItemProxy */ = {
