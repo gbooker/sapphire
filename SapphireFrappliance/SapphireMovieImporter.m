@@ -759,6 +759,7 @@
 				[self downloadPosterCandidates:posters];
 				[posterChooser setPosters:posters] ;
 				[posterChooser setFileName:lookupName];
+				[posterChooser setFile:(SapphireFileMetaData *)metaData];
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 				[[dataMenu stack] pushController:posterChooser];
 				[posterChooser release];

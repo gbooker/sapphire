@@ -79,8 +79,7 @@
 {
 	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileName];
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	[fileName setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
-	NSSize txtSize = [fileName renderedSize];
+	NSSize txtSize = [SapphireFrontRowCompat textControl:fileName renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
 	NSRect frame;
 	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
 	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;

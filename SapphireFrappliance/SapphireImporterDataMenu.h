@@ -19,7 +19,7 @@
  */
 
 #import "SapphireMetaData.h"
-#import <SapphireCompatClasses/SapphireLayerController.h>
+#import <SapphireCompatClasses/SapphireCenteredMenuController.h>
 
 @protocol SapphireFileMetaDataProtocol;
 @class SapphireImporterDataMenu;
@@ -108,10 +108,8 @@ typedef enum{
  *
  * This class creates the importer UI.  It handles all the user interaction and passes commands on to its subordinates.
  */
-@interface SapphireImporterDataMenu : SapphireLayerController <SapphireMetaDataScannerDelegate, SapphireImporterBackgroundProtocol>
+@interface SapphireImporterDataMenu : SapphireCenteredMenuController <SapphireMetaDataScannerDelegate, SapphireImporterBackgroundProtocol>
 {
-	BRHeaderControl					*title;					/*!< @brief The title*/
-	BRButtonControl					*button;				/*!< @brief The button to press*/
 	BRTextControl					*text;					/*!< @brief The informative text*/
 	BRTextControl					*fileProgress;			/*!< @brief The progress text*/
 	BRTextControl					*currentFile;			/*!< @brief The current file text*/
@@ -131,6 +129,7 @@ typedef enum{
 	
 	id <SapphireImporter>			importer;				/*!< @brief The importer who does the dirty work*/
 	SEL								action;					/*!< @brief The action selector when the button is hit*/
+	NSString						*buttonTitle;			/*!< @brief The fake button title*/
 }
 /*!
  * @brief Creates a new Importer Data Menu

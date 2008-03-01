@@ -577,7 +577,9 @@ void recurseSetFileClass(NSMutableDictionary *metaData)
 	[colSet removeObject:@"/mnt"];
 	[colSet removeObject:@"/CIFS"];
 	[colSet removeObject:NSHomeDirectory()];
-	[colSet addObject:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"]];
+	NSString *homeMoviesPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
+	if([[NSFileManager defaultManager] fileExistsAtPath:homeMoviesPath])
+		[colSet addObject:homeMoviesPath];
 	[colSet addObjectsFromArray:collectionDirs];
 	NSMutableArray *ret = [[colSet allObjects] mutableCopy];
 	[ret sortUsingSelector:@selector(compare:)];

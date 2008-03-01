@@ -47,12 +47,7 @@
 	[importer setImporterDataMenu:self];
 	importItems = [[NSMutableArray alloc] init];
 	/*Setup the Header Control with default contents*/
-	title = [SapphireFrontRowCompat newHeaderControlWithScene:scene];
-	[title setTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
-	
-	/*Setup the button control*/
-	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
-	button = [SapphireFrontRowCompat newButtonControlWithScene:scene masterLayerSize:frame.size];
+	[self setListTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
 
 	/*Setup the text entry control*/
 	text = [SapphireFrontRowCompat newTextControlWithScene:scene];
@@ -63,9 +58,9 @@
 	bar = [SapphireFrontRowCompat newProgressBarWidgetWithScene:scene];
 	[self layoutFrame];
 	
+	[[self list] setDatasource:self];
+	
 	/*add controls*/
-	[self addControl: button];
-	[self addControl: title];
 	[self addControl: text];
 	[self addControl: fileProgress] ;
 	[self addControl: currentFile] ;
@@ -76,8 +71,6 @@
 
 - (void) dealloc
 {
-	[title release];
-	[button release];
 	[text release];
 	[fileProgress release];
 	[currentFile release];
@@ -88,6 +81,7 @@
 	[importTimer invalidate];
 	[importer setImporterDataMenu:nil];
 	[importer release];
+	[buttonTitle release];
 	[super dealloc];
 }
 
@@ -95,17 +89,6 @@
 {
 	/*title*/
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
-	frame.origin.y += frame.size.height * 0.80f;
-	frame.size.height = [[BRThemeInfo sharedTheme] listIconHeight];
-	[title setFrame: frame];
-	
-	/*button*/
-	frame = [SapphireFrontRowCompat frameOfController:self];
-	[button setYPosition: frame.origin.y + (frame.size.height * (1.0f / 8.0f))];
-	
-	/*bar*/
-	/*Setup the progress bar*/
-	frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y += frame.size.height * 5.0f / 16.0f;
 	frame.origin.x = frame.size.width / 6.0f;
 	frame.size.height = frame.size.height / 16.0f;
@@ -187,13 +170,27 @@
 	collectionIndex++;
 }
 
+- (void)setButtonTitle:(NSString *)title
+{
+	if(title != nil)
+	{
+		[buttonTitle release];
+		buttonTitle = [title retain];
+	}
+	BRListControl *list = [self list];
+	
+	[list setHidden:(title == nil)];
+	
+	[list reload];
+}
+
 /*!
  * @brief Start the import process
  */
 - (void)import
 {
 	/*Change display*/
-	[button setTitle:BRLocalizedString(@"Cancel Import", @"Cancel the import process")];
+	[self setButtonTitle:BRLocalizedString(@"Cancel Import", @"Cancel the import process")];
 	action = @selector(cancel);
 	[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 	[SapphireFrontRowCompat renderScene:[self scene]];
@@ -331,9 +328,9 @@
 		importTimer = nil;
 		[metaCollection writeMetaData];
 		/*Update display*/
-		[button setHidden:YES];
+		[self setButtonTitle:nil];
 		action = NULL;
-		[title setTitle:BRLocalizedString(@"Import Complete", @"The import is complete")];
+		[self setListTitle:BRLocalizedString(@"Import Complete", @"The import is complete")];
 		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Updated %0.0f Entries.", @"Import complete format with number updated"), updated]];
 		[self setCurrentFile:@""];
 		[self setCompletionText];
@@ -406,10 +403,9 @@
 	[self setCurrentFile:@" "] ;
 	[bar setPercentage:0.0f];
 	action = @selector(import);
-	[button setHidden:NO];
-	[title setTitle:[importer initialText]];
+	[self setListTitle:[importer initialText]];
 	[self setText:[importer informativeText]];
-	[button setTitle:[importer buttonTitle]];
+	[self setButtonTitle:[importer buttonTitle]];
 }
 
 - (void)wasPushed
@@ -447,6 +443,54 @@
 			break;
 	}
 	return [super brEventAction:event];
+}
+
+- (long) itemCount
+{
+	return 1;
+}
+
+- (id<BRMenuItemLayer>) itemForRow: (long) row
+{
+	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+	[SapphireFrontRowCompat setTitle:buttonTitle forMenu:result];
+	
+	return result;
+}
+
+- (NSString *) titleForRow: (long) row
+{
+	
+	if ( row >= 1 ) return ( nil );
+	
+	NSString *result = buttonTitle ;
+	
+	return [NSString stringWithFormat:@"  ????? %@", result];
+}
+
+- (long) rowForTitle: (NSString *) aTitle
+{
+    long result = -1;
+    long i, count = [self itemCount];
+    for ( i = 0; i < count; i++ )
+    {
+        if ( [aTitle isEqualToString: [self titleForRow: i]] )
+        {
+            result = i;
+            break;
+        }
+    }
+    
+    return ( result );
+}
+
+- (NSRect)listRectWithSize:(NSRect)listFrame inMaster:(NSRect)master
+{
+	listFrame.size.height = master.size.height / 8.0f;
+	listFrame.origin.y = master.size.height / 8.0f;
+	listFrame.size.width = master.size.width / 3.0f;
+	listFrame.origin.x = master.size.width / 3.0f;
+	return listFrame;
 }
 
 @end

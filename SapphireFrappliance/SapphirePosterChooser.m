@@ -21,6 +21,9 @@
 #import "SapphirePosterChooser.h"
 #import "SapphireMetaData.h"
 #import	"SapphireSettings.h"
+#import "SapphireMediaPreview.h"
+#import "SapphireMedia.h"
+#import "SapphireMetaData.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned int height);
@@ -83,6 +86,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[fileInfoText release];
 	[posterMarch release];
 	[defaultImage release];
+	[meta release];
 	[super dealloc];
 }
 
@@ -100,6 +104,24 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
     
     // always call super
     [super willBePushed];
+}
+
+- (void)doMyLayout
+{
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	NSSize txtSize = [SapphireFrontRowCompat textControl:fileInfoText renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	frame.size = txtSize;
+	[fileInfoText setFrame:frame];
+}
+
+- (void)wasPushed
+{
+	[self doMyLayout];
+	[[self list] reload];
+	[super wasPushed];
 }
 
 - (void) wasPopped
@@ -184,15 +206,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
 	else
 		[SapphireFrontRowCompat setText:fileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
-	
-	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	[fileInfoText setMaximumSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
-	NSSize txtSize = [fileInfoText renderedSize];
-	NSRect frame;
-	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
-	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
-	frame.size = txtSize;
-	[fileInfoText setFrame:frame];
+}
+
+- (void)setFile:(SapphireFileMetaData *)aMeta;
+{
+	[meta release];
+	meta = [aMeta retain];
 }
 
 - (NSString *)fileName
@@ -375,11 +394,14 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	else
 		frame.size.height = ([fileInfoText frame].origin.y - frame.origin.y) * 1.2f;
     [posterMarch setFrame: frame];
-	[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
+	if(posterMarch != nil)
+		[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
 }
 
 - (void)setSelectionForPoster:(double)sel
 {
+	if(posterMarch == nil)
+		return;
 	NSMethodSignature *signature = [posterMarch methodSignatureForSelector:@selector(setSelection:)];
 	NSInvocation *selInv = [NSInvocation invocationWithMethodSignature:signature];
 	[selInv setSelector:@selector(setSelection:)];
@@ -404,6 +426,33 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	/* ATV version 1.0 */
 	else
 		[self setSelectionForPoster:[(BRListControl *)[note object] selection]];
+}
+
+- (id<BRMediaPreviewController>) previewControlForItem: (long) row
+{
+	if(posterMarch != nil)
+		return nil;
+	NSLog(@"Requested preview");
+	SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
+	SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
+	NSString *poster = [posters objectAtIndex:row];
+	NSString *posterDest=[NSString stringWithFormat:@"%@/%@",
+						  [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"],
+						  [poster lastPathComponent]];
+	[preview setShowsMetadataImmediately:NO];
+	SapphireDirectoryMetaData *parent = (SapphireDirectoryMetaData *)[[meta collection] dataForPath:[[meta path] stringByDeletingLastPathComponent]];
+	[preview setMetaData:meta inMetaData:parent];
+	[asset setImagePath:posterDest];
+	[preview setAsset:asset];
+	[asset release];
+	NSLog(@"Path is %@", posterDest);
+	
+	return preview;
+}
+
+- (id<BRMediaPreviewController>) previewControllerForItem: (long) row
+{
+	return [self previewControlForItem:row];
 }
 
 

@@ -18,19 +18,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <SapphireCompatClasses/SapphireCenteredMenuController.h>
+#import <SapphireCompatClasses/SapphireMediaMenuController.h>
 
 #define POSTER_CHOOSE_CANCEL		-1
 #define POSTER_CHOOSE_REFRESH		0
 
-@class BRRenderScene, BRRenderLayer, BRMarchingIconLayer;
+@class BRRenderScene, BRRenderLayer, BRMarchingIconLayer, SapphireFileMetaData;
 
 /*!
  * @brief A subclass of SapphireCenteredMenuController to provide a means to select between posters
  *
  * This class provides a menu and maching icons to display posters for the user to choose.
  */
-@interface SapphirePosterChooser : SapphireCenteredMenuController <BRIconSourceProtocol, BRMenuListItemProvider> {
+@interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider> {
 	NSArray					*posters;		/*!< @brief The array of poster paths*/
 	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
 	NSString				*fileName;		/*!< @brief The movie filename*/
@@ -39,6 +39,7 @@
 	BRTextControl			*fileInfoText;	/*!< @brief The text control to display filename and movie title*/
 	BRMarchingIconLayer		*posterMarch;	/*!< @brief The icon march to display the posters*/
 	BRBlurryImageLayer		*defaultImage;	/*!< @brief The image to use when the poster isn't loaded yet*/
+	SapphireFileMetaData	*meta;			/*!< @brief The file's meta*/
 }
 
 /*!
@@ -80,6 +81,13 @@
  * @param choosingForFileName The filename being choosen for
  */
 - (void)setFileName:(NSString *)choosingForFileName;
+
+/*!
+ * @brief Sets the file's metadata
+ *
+ * @param path The file's metadata
+ */
+- (void)setFile:(SapphireFileMetaData *)aMeta;
 
 /*!
  * @brief Sets the string we searched for
