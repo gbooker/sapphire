@@ -235,15 +235,12 @@ static BOOL usingTakeTwo = NO;
 
 + (NSRect)frameOfController:(id)controller
 {
-	if(usingFrontRow)
-	{
-    // ATV2
-    if([controller respondsToSelector:@selector(frame)])
-      return [controller frame];
-    // 10.5
-    else
-      return [controller controllerFrame];
-	}
+	if(usingTakeTwo)
+		// ATV2
+		return [controller frame];
+	else if(usingFrontRow)
+		// 10.5
+		return [controller controllerFrame];
 	else
 		return [[controller masterLayer] frame];
 }
@@ -337,6 +334,8 @@ static BOOL usingTakeTwo = NO;
 
 + (BRMarchingIconLayer *)newMarchingIconLayerWithScene:(BRRenderScene *)scene
 {
+	if(usingTakeTwo)
+		return nil;
 	if(usingFrontRow)
 		return [[BRMarchingIconLayer alloc] init];
 	else
