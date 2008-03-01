@@ -60,5 +60,17 @@
 	[[self lozenge] setHidden:yn];
 }
 
+- (void)setYPosition:(float)pos
+{
+	if([BRButtonControl instancesRespondToSelector:@selector(setYPosition:)])
+		[super setYPosition:pos];
+	else
+	{
+		NSRect frame = [super frame];
+		frame.origin.y = pos;
+		[super setFrame:frame];
+	}
+}
+
 @end
 
