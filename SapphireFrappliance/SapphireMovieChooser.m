@@ -22,6 +22,9 @@
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import	"SapphireTheme.h"
 
+@interface SapphireMovieChooser (private)
+- (void)doMyLayout;
+@end
 
 @implementation SapphireMovieChooser
 
@@ -35,13 +38,8 @@
 	/* Set a control to display the fileName */
 	fileNameText = [SapphireFrontRowCompat newTextControlWithScene:scene];
 	[SapphireFrontRowCompat setText:@"File:" withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileNameText];
-	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
-	//	frame.size.height = frame.size.height / 16.0f;
-	//	frame.size.width = frame.size.width * 2.0f / 3.0f;
-	frame.origin.y = frame.size.height / 1.25f;
-	frame.origin.x = (frame.size.width / 4.0f) ;
-	[fileNameText setFrame: frame];
 	
+	[self doMyLayout];
 	[self addControl: fileNameText];	
 	[[self list] setDatasource:self];
 	
@@ -53,6 +51,17 @@
 	[movies release];
 	[fileName release];
 	[super dealloc];
+}
+
+- (void)doMyLayout
+{
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	NSSize txtSize = [SapphireFrontRowCompat textControl:fileNameText renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
+	frame.size = txtSize;
+	[fileNameText setFrame:frame];
 }
 
 - (NSArray *)movies
@@ -72,13 +81,6 @@
 {
 	fileName=[choosingForFileName retain] ;
 	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileNameText];
-	NSRect master = [SapphireFrontRowCompat frameOfController:self];
-	NSSize txtSize = [SapphireFrontRowCompat textControl:fileNameText renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
-	NSRect frame;
-	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
-	frame.origin.y = (master.size.height * 0.44f - txtSize.height) + master.size.height * 0.3f/0.8f + master.origin.y;
-	frame.size = txtSize;
-	[fileNameText setFrame:frame];
 }
 
 - (NSString *)fileName
@@ -90,6 +92,12 @@
 {
 	[super willBePushed];
 	[(BRListControl *)[self list] setSelection:1];
+}
+
+- (void)wasPushed
+{
+	[self doMyLayout];
+	[super wasPushed];
 }
 
 - (int)selection
