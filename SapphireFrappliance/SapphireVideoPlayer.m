@@ -179,9 +179,12 @@ typedef enum {
 	double current = [self elapsedPlaybackTime];
 	double ret = current + [self offsetForCommand:STATE_COMMAND_FORWARD];
 	
-	if(ret > duration + 10.0f)
+	if(ret > duration + 5.0f)
+	{
 		/*Halve the distance to the end of the file if skipping so much*/
 		ret = (current + duration) / 2;
+		skipTime = duration - current;
+	}
 	
 	/*Start the reset timer*/
 	[self setNewTimer];
