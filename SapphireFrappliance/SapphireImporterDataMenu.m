@@ -486,7 +486,7 @@
 
 - (NSRect)listRectWithSize:(NSRect)listFrame inMaster:(NSRect)master
 {
-	listFrame.size.height = master.size.height / 8.0f;
+	listFrame.size.height = master.size.height * 3.0f / 16.0f;
 	listFrame.origin.y = master.size.height / 8.0f;
 	listFrame.size.width = master.size.width / 3.0f;
 	listFrame.origin.x = master.size.width / 3.0f;
