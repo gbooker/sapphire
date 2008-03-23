@@ -521,7 +521,7 @@
 		NSMutableString *tempStr = [fileName mutableCopy];
 //		if(index > [tempStr length] || index <= 0 )return NO;
 		[tempStr deleteCharactersInRange:NSMakeRange(0, index+1)];
-		[tempStr insertString:@"x" atIndex:matches[0].rm_eo - index - 2];
+		[tempStr insertString:@"x" atIndex:matches[0].rm_eo - index - 4];
 		scanString = [tempStr autorelease];
 	}
 	
