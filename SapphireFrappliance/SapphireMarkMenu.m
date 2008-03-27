@@ -432,6 +432,7 @@ static NSMutableArray *joinList;
 		{
 			case COMMAND_TOGGLE_WATCHED:
 				[fileMeta setWatched:![fileMeta watched]];
+				[fileMeta setResumeTime:0];
 				break;
 			case COMMAND_TOGGLE_FAVORITE:
 				[fileMeta setFavorite:![fileMeta favorite]];
