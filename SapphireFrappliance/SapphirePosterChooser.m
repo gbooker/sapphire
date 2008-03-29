@@ -432,7 +432,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	if(posterMarch != nil)
 		return nil;
-	NSLog(@"Requested preview");
 	SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 	SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
 	NSString *poster = [posters objectAtIndex:row];
@@ -445,7 +444,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[asset setImagePath:posterDest];
 	[preview setAsset:asset];
 	[asset release];
-	NSLog(@"Path is %@", posterDest);
 	
 	return preview;
 }
