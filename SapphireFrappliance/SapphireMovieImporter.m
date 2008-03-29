@@ -27,6 +27,7 @@
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireShowChooser.h"
 #import "SapphireSettings.h"
+#import "NSArray-Extensions.h"
 
 #define VERSION_KEY					@"Version"
 #define CURRENT_VERSION				2
@@ -298,6 +299,7 @@
 			}
 		}
 	}
+	[candidatePosterLinks uniqueObjects];
 	return [[candidatePosterLinks copy] autorelease];
 }
 
