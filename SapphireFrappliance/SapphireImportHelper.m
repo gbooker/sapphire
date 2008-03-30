@@ -143,6 +143,7 @@ static SapphireImportHelper *shared = nil;
 	id <SapphireImportFileProtocol> file = nil;
 	while((file = [server nextFile]) != nil)
 	{
+		NSAutoreleasePool *singleImportPool = [[NSAutoreleasePool alloc] init];
 		ImportType type = [file importType];
 		BOOL ret;
 		if(type == IMPORT_TYPE_FILE_DATA)
@@ -150,6 +151,7 @@ static SapphireImportHelper *shared = nil;
 		else
 			ret = ([allImporter importMetaData:[file file]] == IMPORT_STATE_UPDATED);
 		[server importComplete:ret];
+		[singleImportPool release];
 	}
 }
 @end
