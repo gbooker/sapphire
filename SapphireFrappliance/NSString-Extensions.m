@@ -46,11 +46,10 @@
 	NSString *returnPath=directoryPath ;
 	if(dirLength>requestedLength)
 	{
-		NSLog(@"Directory %@ is %d - req %d",directoryPath, dirLength,requestedLength);
 		NSRange croppedRange;
 		croppedRange.location=dirLength-requestedLength;
 		croppedRange.length=requestedLength;
-		returnPath=[NSString stringWithFormat:@" ../%@/",[NSString pathWithComponents:[[directoryPath pathComponents] subarrayWithRange:croppedRange]]];
+		returnPath=[NSString stringWithFormat:@" .../%@",[NSString pathWithComponents:[[directoryPath pathComponents] subarrayWithRange:croppedRange]]];
 	}
 	return returnPath;
 }
