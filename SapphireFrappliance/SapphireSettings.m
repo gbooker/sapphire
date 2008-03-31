@@ -30,6 +30,7 @@
 #import "SapphirePosterChooser.h"
 #import "SapphireCollectionSettings.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
+#import "NSString-Extensions.h"
 
 static SapphireSettings *sharedInstance = nil;
 
@@ -99,7 +100,7 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"Tells Sapphire that for every Movie, gather more information from the internet.", @"Fetch Movie Data description"),
 /*												BRLocalizedString(@"Choose Movie Posters", @"Start Poster Chooser description"),*/
 												BRLocalizedString(@"Allows the user to specify which collections should be hidden from Sapphire's main menu.", @"Hide Collections description"),
-												BRLocalizedString(@"Allows to user to specify which collections should be skipped when importing meta data.", @"Don't Import Collections description"),
+												BRLocalizedString(@"Allows the user to specify which collections should be skipped when importing meta data.", @"Don't Import Collections description"),
 												BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the favorite shows filter.", @"Skip Favorite shows description"),
 /*												BRLocalizedString(@"Skip \"Top Shows\" filter", @"Skip Top shows description"),*/
 												BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the unwatched shows filter.", @"Skip Unwatched shows description"), 
@@ -110,7 +111,7 @@ static SapphireSettings *sharedInstance = nil;
 												BRLocalizedString(@"Tells Sapphire to hide the main menu element forcing frontrow to quit.", @"Hide the ui quitter description"),
 												BRLocalizedString(@"Tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files.", @"Fast Directory Switching description"),
 												BRLocalizedString(@"Tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 output.", @"Enable AC3 Passthrough description"),
-												BRLocalizedString(@"Tells Sapphire that you want to use directory instead of filenames for movie lookup", @"Enable Directory lookup description"),
+												BRLocalizedString(@"Tells Sapphire that you want to use directory names instead of file names for identifying movies.", @"Enable Directory lookup description"),
 												BRLocalizedString(@"Tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use.", @"Disable the anonymous reporting description"), nil];
 		
 	keys = [[NSArray alloc] initWithObjects:		@"",

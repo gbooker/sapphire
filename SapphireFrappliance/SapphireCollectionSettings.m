@@ -22,6 +22,7 @@
 #import "SapphireMetaData.h"
 #import "SapphireMediaPreview.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
+#import "NSString-Extensions.h"
 
 @implementation SapphireCollectionSettings
 
@@ -93,7 +94,7 @@
 		[SapphireFrontRowCompat setLeftIcon:[SapphireFrontRowCompat selectedSettingImageForScene:[self scene]] forMenu:result];
 	
 	// add text
-	[SapphireFrontRowCompat setTitle:name forMenu:result];
+	[SapphireFrontRowCompat setTitle:[NSString stringByCroppingDirectoryPath:name toLength:3] forMenu:result];
 				
 	return ( result ) ;
 }
@@ -157,13 +158,13 @@
 		NSString *settingDescription=nil;
 		if([settingName hasPrefix:@"Hide"])
 		{
-			settingName = [NSString stringWithFormat:@"Hide Collection \"%@\"",[names objectAtIndex:item]];
-			settingDescription=BRLocalizedString(@"tells Sapphire to hide this collection on the main menu.", @"Hide collections setting description");
+			settingName = [NSString stringWithFormat:@"Hide Collection \"%@\"",[NSString stringByCroppingDirectoryPath:[names objectAtIndex:item] toLength:3]];
+			settingDescription=BRLocalizedString(@"Tells Sapphire to hide this collection on the main menu.", @"Hide collections setting description");
 		}
 		else
 		{
-			settingName = [NSString stringWithFormat:@"Don't Import \"%@\"",[names objectAtIndex:item]];
-			settingDescription=BRLocalizedString(@"tells Sapphire to ignore this collection when running any import tool.", @"Import collections setting description");
+			settingName = [NSString stringWithFormat:@"Don't Import \"%@\"",[NSString stringByCroppingDirectoryPath:[names objectAtIndex:item] toLength:3]];
+			settingDescription=BRLocalizedString(@"Tells Sapphire to ignore this collection when running any import tool.", @"Import collections setting description");
 		}
 		/* Construct a gerneric metadata asset for display */
 		NSMutableDictionary *settingMeta=[[NSMutableDictionary alloc] init];

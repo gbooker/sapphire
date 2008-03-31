@@ -24,6 +24,7 @@
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireImportHelper.h"
 #import "SapphireApplianceController.h"
+#import "NSString-Extensions.h"
 
 @interface BRLayerController (compatounth)
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
@@ -230,7 +231,7 @@
  */
 - (void)scanningDir:(NSString *)dir
 {
-	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Scanning Directory: %@", "Current scan import process format, directory"),dir]];
+	[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Scanning Directory: %@", "Current scan import process format, directory"),[NSString stringByCroppingDirectoryPath:dir toLength:3]]];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
@@ -298,7 +299,7 @@
 		/*Update the display*/
 		SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
 		NSString * fileName=[[fileMeta path] lastPathComponent] ;
-		[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Current File: %@", "Current TV Show import process format, filename"),fileName]];
+		[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Fetching For: %@", "Current TV Show import process format, filename"),fileName]];
 		
 		current++ ;
 		/*Update the imported count*/
@@ -318,7 +319,7 @@
 	}
 	else
 		[self setCurrentFile:BRLocalizedString(@"Waiting for background import to complete", @"The import is complete, just waiting on background processes")];
-	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"File Progress: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
+	[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Finished Processing: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 	[bar setPercentage:current/max * 100.0f];
 	
 	/*Check for completion*/
