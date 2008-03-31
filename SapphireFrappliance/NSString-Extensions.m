@@ -39,6 +39,24 @@
 }
 @end
 
+@implementation NSString (Additions)
++ (NSString *)stringByCroppingDirectoryPath:(NSString *)directoryPath toLength:(int)requestedLength
+{
+	int dirLength=[[directoryPath pathComponents] count];
+	NSString *returnPath=directoryPath ;
+	if(dirLength>requestedLength)
+	{
+		NSLog(@"Directory %@ is %d - req %d",directoryPath, dirLength,requestedLength);
+		NSRange croppedRange;
+		croppedRange.location=dirLength-requestedLength;
+		croppedRange.length=requestedLength;
+		returnPath=[NSString stringWithFormat:@" ../%@/",[NSString pathWithComponents:[[directoryPath pathComponents] subarrayWithRange:croppedRange]]];
+	}
+	return returnPath;
+}
+@end
+
+
 @implementation NSMutableString (Replacements)
 - (void)replaceAllOccurancesOf:(NSString *)search withString:(NSString *)replacement
 {

@@ -50,6 +50,19 @@
 - (NSString *)stringByReplacingAllOccurancesOf:(NSString *)search withString:(NSString *)replacement;
 @end
 
+@interface NSString (Additions)
+/*!
+ * @brief Crop a string (path) into something shorter
+ *
+ * This method creates a crops a string (path) if it is greater than the desired path component length
+ *
+ * @param directoryPath The path string
+ * @param toLength The number of path components to return
+ * @return The new string after cropping
+ */
++ (NSString *)stringByCroppingDirectoryPath:(NSString *)directoryPath toLength:(int)requestedLength;
+@end
+
 /*!
  * @brief Mutable string extensions for Replacements
  *
