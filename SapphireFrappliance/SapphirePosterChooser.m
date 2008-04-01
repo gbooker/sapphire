@@ -177,6 +177,11 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (void)setPosters:(NSArray *)posterList
 {
 	posters = [posterList retain];
+	if([posters count] > 5)
+	{
+		[posterMarch release];
+		posterMarch = nil;
+	}
 	[self loadPosters];
     [posterMarch setIconSource: self];
 	[[self list] setDatasource:self];
@@ -441,6 +446,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[preview setShowsMetadataImmediately:NO];
 	SapphireDirectoryMetaData *parent = (SapphireDirectoryMetaData *)[[meta collection] dataForPath:[[meta path] stringByDeletingLastPathComponent]];
 	[preview setMetaData:meta inMetaData:parent];
+	[preview setShowsMetadataImmediately:YES];
 	[asset setImagePath:posterDest];
 	[preview setAsset:asset];
 	[asset release];
