@@ -651,11 +651,11 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 - (NSSet *)skipDirectories
 {
 	NSMutableSet *ret = [NSMutableSet set];
-	NSEnumerator *colEnum = [[self collectionDirectories] objectEnumerator];
+	NSEnumerator *colEnum = [skipCollection keyEnumerator];
 	NSString *collection;
 	while((collection = [colEnum nextObject]) != nil)
 	{
-		if(![self skipCollection:collection])
+		if([self skipCollection:collection])
 			[ret addObject:collection];
 	}
 	
