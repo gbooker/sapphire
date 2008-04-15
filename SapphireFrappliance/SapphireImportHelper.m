@@ -18,6 +18,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Security/Security.h>
+#include <sys/stat.h>
+#include <sys/mount.h>
+
 #import "SapphireImportHelper.h"
 #import "SapphireMetaData.h"
 #import "SapphireAllImporter.h"
@@ -197,10 +201,74 @@ static SapphireImportHelper *shared = nil;
 	shared = nil;
 }
 
+- (BOOL)isSlashReadOnly
+{
+	struct statfs *mntbufp;
+	
+    int i, mountCount = getmntinfo(&mntbufp, MNT_NOWAIT);
+	for(i=0; i<mountCount; i++)
+	{
+		if(!strcmp(mntbufp[i].f_mntonname, "/"))
+			return (mntbufp[i].f_flags & MNT_RDONLY) ? YES : NO;
+	}
+	
+	return NO;
+}
+
+- (BOOL)fixClientPermissions:(NSString *)path
+{
+	/* Permissions are incorrect */
+	AuthorizationItem authItems[2] = {
+		{kAuthorizationEnvironmentUsername, strlen("frontrow"), "frontrow", 0},
+		{kAuthorizationEnvironmentPassword, strlen("frontrow"), "frontrow", 0},
+	};
+	AuthorizationEnvironment environ = {2, authItems};
+	AuthorizationItem rightSet[] = {{kAuthorizationRightExecute, 0, NULL, 0}};
+	AuthorizationRights rights = {1, rightSet};
+	AuthorizationRef auth;
+	OSStatus result = AuthorizationCreate(&rights, &environ, kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights, &auth);
+	if(result == errAuthorizationSuccess)
+	{
+		BOOL roslash = [self isSlashReadOnly];
+		if(roslash)
+		{
+			char *command = "mount -uw /";
+			char *arguments[] = {"-c", command, NULL};
+			AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+		}
+		char *command = "chmod +rx \"$HELP\"";
+		setenv("HELP", [path fileSystemRepresentation], 1);
+		char *arguments[] = {"-c", command, NULL};
+		result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+		unsetenv("HELP");
+		if(roslash)
+		{
+			char *command = "mount -ur /";
+			char *arguments[] = {"-c", command, NULL};
+			AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+		}
+	}
+	if(result != errAuthorizationSuccess)
+		return NO;
+	
+	return YES;
+}
+
 - (void)startClient
 {
 	NSString *path = [[NSBundle bundleForClass:[SapphireImportHelper class]] pathForResource:@"ImportHelper" ofType:@""];
-	[NSTask launchedTaskWithLaunchPath:path arguments:[NSArray array]];
+	NSDictionary *attrs = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+	if(([[attrs objectForKey:NSFilePosixPermissions] intValue] | S_IXOTH) || [self fixClientPermissions:path])
+	{
+		@try {
+			[NSTask launchedTaskWithLaunchPath:path arguments:[NSArray array]];
+		}
+		@catch (NSException * e) {
+			NSLog(@"Could not launch helper because of exception %@ launching %@.  Make this file executable", e, path);
+		}		
+	}
+	else
+		NSLog(@"Could not correct helper permissions on %@.  Make this file executable!", path);
 }
 
 - (void)connectionDidDie:(NSNotification *)note
