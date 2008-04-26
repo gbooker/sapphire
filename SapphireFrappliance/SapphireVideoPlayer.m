@@ -34,7 +34,7 @@
 @end
 
 @interface BRVideo (privateFunctions)
-- (QTMovie *)gimmieMovie;
+- (Movie)gimmieMovie;
 @end
 
 @implementation BRQTKitVideoPlayer (privateFunctions)
@@ -48,15 +48,15 @@
 @end
 
 @implementation BRVideo (privateFunctions)
-- (QTMovie *)gimmieMovie
+- (Movie)gimmieMovie
 {
 	Class myClass = [self class];
 	Ivar ret = class_getInstanceVariable(myClass, "_movie");
 	
-	if(![SapphireFrontRowCompat usingTakeTwo])
-		return *(QTMovie * *)(((char *)self)+ret->ivar_offset);
-	Movie mov = *(Movie *)(((char *)self)+ret->ivar_offset);
-	return [QTMovie movieWithQuickTimeMovie:mov disposeWhenDone:NO error:nil];
+	if([SapphireFrontRowCompat usingTakeTwo])
+		return *(Movie *)(((char *)self)+ret->ivar_offset);
+	QTMovie *qtmov = *(QTMovie * *)(((char *)self)+ret->ivar_offset);
+	return [qtmov quickTimeMovie];
 }
 @end
 
@@ -85,8 +85,25 @@ typedef enum {
 
 - (void)dealloc
 {
-	[resetTimer invalidate];
+//	[resetTimer invalidate];
 	[super dealloc];
+}
+
+- (BOOL)movieHasChapters:(Movie)mov
+{
+	int tkCount = GetMovieTrackCount(mov);
+	int i;
+	for(i=0; i<tkCount; i++)
+	{
+		Track track = GetMovieIndTrack(mov, i);
+		if(!GetTrackEnabled(track))
+			continue;
+		
+		if(GetTrackReference(track, 'chap', 1) != NULL)
+			return YES;
+	}
+	
+	return NO;
 }
 
 - (BOOL)prerollMedia:(NSError * *)fp8
@@ -97,12 +114,14 @@ typedef enum {
 		return ret;
 	
 	/*Check to see if the movie has any chapters by default*/
-	QTMovie *myMovie = [[self gimmieVideo] gimmieMovie];
-	if(![myMovie hasChapters])
+	Movie myMovie = [[self gimmieVideo] gimmieMovie];
+	
+	BOOL hasChapters = [self movieHasChapters:myMovie];
+	duration = ((double)GetMovieDuration(myMovie)) / ((double)GetMovieTimeScale(myMovie));
+	
+	if(!hasChapters)
 		enabled = TRUE;
-	
-	QTGetTimeInterval([myMovie duration], &duration);
-	
+
 	return ret;
 }
 
