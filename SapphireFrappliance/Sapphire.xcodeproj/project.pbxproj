@@ -54,6 +54,7 @@
 		F523996F0C2DCC9100D5DA2E /* SapphirePredicates.m in Sources */ = {isa = PBXBuildFile; fileRef = F523996E0C2DCC9100D5DA2E /* SapphirePredicates.m */; };
 		F531A5BA0C2CB43400E46F62 /* SapphireMetaData.m in Sources */ = {isa = PBXBuildFile; fileRef = F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */; };
 		F531A98F0C2DACBE00E46F62 /* SapphireApplianceController.m in Sources */ = {isa = PBXBuildFile; fileRef = F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */; };
+		F53420560DC2F17F00498822 /* SapphireVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F53420550DC2F17F00498822 /* SapphireVideoPlayerController.m */; };
 		F541CBF50D9C2D19002F9278 /* SapphireRadioSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = F541CBF40D9C2D19002F9278 /* SapphireRadioSetting.m */; };
 		F565A1FD0C5BE81F00AE7110 /* SapphireAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F565A1FC0C5BE81F00AE7110 /* SapphireAudioPlayer.m */; };
 		F565A34A0C5BF69D00AE7110 /* SapphireAudioMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F565A3490C5BF69D00AE7110 /* SapphireAudioMedia.m */; };
@@ -76,6 +77,7 @@
 		F5CE69560D45732C003C4B2D /* SapphireXMLFileDataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */; };
 		F5CE69660D4575DC003C4B2D /* SapphireAllFileDataImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */; };
 		F5D0DEB60C331D76007652B2 /* SapphireTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D0DEB50C331D76007652B2 /* SapphireTheme.m */; };
+		F5D909190DB520B900F12E12 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5D909180DB520B900F12E12 /* Security.framework */; };
 		F5DF246B0C8636DE005C7ECB /* SapphireMultipleImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */; };
 		F5E849C70C3F008100913832 /* SapphireMetaDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
@@ -261,6 +263,8 @@
 		F531A5B90C2CB43400E46F62 /* SapphireMetaData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMetaData.m; sourceTree = "<group>"; };
 		F531A98D0C2DACBE00E46F62 /* SapphireApplianceController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireApplianceController.h; sourceTree = "<group>"; };
 		F531A98E0C2DACBE00E46F62 /* SapphireApplianceController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireApplianceController.m; sourceTree = "<group>"; };
+		F53420540DC2F17F00498822 /* SapphireVideoPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireVideoPlayerController.h; sourceTree = "<group>"; };
+		F53420550DC2F17F00498822 /* SapphireVideoPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireVideoPlayerController.m; sourceTree = "<group>"; };
 		F541CBF30D9C2D19002F9278 /* SapphireRadioSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireRadioSetting.h; sourceTree = "<group>"; };
 		F541CBF40D9C2D19002F9278 /* SapphireRadioSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireRadioSetting.m; sourceTree = "<group>"; };
 		F565A1FB0C5BE81F00AE7110 /* SapphireAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireAudioPlayer.h; sourceTree = "<group>"; };
@@ -296,6 +300,7 @@
 		F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireAllFileDataImporter.m; sourceTree = "<group>"; };
 		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
 		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
+		F5D909180DB520B900F12E12 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		F5DF24690C8636DE005C7ECB /* SapphireMultipleImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireMultipleImporter.h; sourceTree = "<group>"; };
 		F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireMultipleImporter.m; sourceTree = "<group>"; };
 		F5E849C50C3F008100913832 /* SapphireMetaDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMetaDataScanner.h; sourceTree = "<group>"; };
@@ -357,6 +362,7 @@
 				38FAF9B60C0129E400853CFE /* BackRow.framework in Frameworks */,
 				F56A19490C3170870022918E /* AppKit.framework in Frameworks */,
 				F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */,
+				F5D909190DB520B900F12E12 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +400,7 @@
 		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F5D909180DB520B900F12E12 /* Security.framework */,
 				F5185B400D1344D700712020 /* ExceptionHandling.framework */,
 				F56A1DF40C31CE190022918E /* QTKit.framework */,
 				F56A19480C3170870022918E /* AppKit.framework */,
@@ -562,6 +569,8 @@
 				F5EA91340C3063F500B1EC7D /* SapphireMedia.m */,
 				F51DCDB70C30AE010046F25E /* SapphireVideoPlayer.h */,
 				F51DCDB80C30AE010046F25E /* SapphireVideoPlayer.m */,
+				F53420540DC2F17F00498822 /* SapphireVideoPlayerController.h */,
+				F53420550DC2F17F00498822 /* SapphireVideoPlayerController.m */,
 			);
 			name = Players;
 			sourceTree = "<group>";
@@ -832,6 +841,7 @@
 				F5CE69660D4575DC003C4B2D /* SapphireAllFileDataImporter.m in Sources */,
 				F541CBF50D9C2D19002F9278 /* SapphireRadioSetting.m in Sources */,
 				F59B29D10D9E8C6E002D5DBD /* NSArray-Extensions.m in Sources */,
+				F53420560DC2F17F00498822 /* SapphireVideoPlayerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

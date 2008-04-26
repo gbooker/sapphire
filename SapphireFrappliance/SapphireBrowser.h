@@ -22,9 +22,6 @@
 #import <SapphireCompatClasses/SapphireMediaMenuController.h>
 @class SapphireSettings, BRSegmentedSortControl, SapphirePredicate;
 
-#define SOUND_STATE_SOUND_ENABLED		1
-#define SOUND_STATE_SOUND_PASSTHROUGH	2
-
 /*!
  * @brief A subclass of SapphireMediaMenuController for browsing metadata
  *
@@ -36,11 +33,9 @@
 	NSMutableArray					*items;				/*!< @brief Chached BRAdornedMenuItemLayer for menu items*/
 	SapphireDirectoryMetaData		*metaData;			/*!< @brief The directory for the browser*/
 	SapphirePredicate				*predicate;			/*!< @brief Predicate to determine which files are matched*/
-	SapphireFileMetaData			*currentPlayFile;	/*!< @brief If we are the browser to actually play something, the file we are playing*/
 	int								dirCount;			/*!< @brief The number of directories in this directory*/
 	int								fileCount;			/*!< @brief The number of files in this directory*/
 	BOOL							cancelScan;			/*!< @brief Cancel the background importer for this directory*/
-	int								soundState;			/*!< @brief Sound state before we played the current file*/
 }
 
 /*!

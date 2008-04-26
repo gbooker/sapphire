@@ -31,14 +31,11 @@
 #import "SapphireAudioPlayer.h"
 #import "SapphireAudioMedia.h"
 #import "SapphireApplianceController.h"
+#import "SapphireVideoPlayerController.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import <SapphireCompatClasses/SapphireDVDLoadingController.h>
 
-#import <AudioUnit/AudioUnit.h>
 #import <objc/objc-class.h>
-
-#define PASSTHROUGH_KEY		(CFStringRef)@"attemptPassthrough"
-#define A52_DOMIAN			(CFStringRef)@"com.cod3r.a52codec"
 
 @interface SapphireBrowser (private)
 - (void)reloadDirectoryContents;
@@ -234,38 +231,6 @@ static BOOL is10Version = NO;
 {
     // the user pressed Menu, but we've not been revealed yet
     
-	/*Check to see if the user stopped playing something*/
-	id controller = [[self stack] peekController];
-	float elapsed = 0.0;
-	float duration = 0.0000001; //prevent a div by 0
-	if([controller isKindOfClass:[BRVideoPlayerController class]])
-	{
-		/*Check for 90% completion*/
-		BRVideoPlayer *player = [(BRVideoPlayerController *)controller player];
-		elapsed = [player elapsedPlaybackTime];
-		duration = [player trackDuration];
-	}
-	else if([controller isKindOfClass:[BRMusicNowPlayingController class]])
-	{
-		BRMusicPlayer *player = [(BRMusicNowPlayingController *)controller player];
-		elapsed = [player elapsedPlaybackTime];
-		duration = [player trackDuration];
-		[player stop];
-	}
-	if(elapsed / duration > 0.9f)
-		/*Mark as watched and reload info*/
-		[currentPlayFile setWatched:YES];
-	
-	/*Get the resume time to save*/
-	if(elapsed < duration - 2)
-		[currentPlayFile setResumeTime:elapsed];
-	else
-		[currentPlayFile setResumeTime:0];
-	[currentPlayFile writeMetaData];
-
-	/*cleanup*/
-	[currentPlayFile release];
-	currentPlayFile = nil;
 	/*Reload our display*/
 	[self setNewPredicate:[SapphireApplianceController predicate]];
     // always call super
@@ -284,11 +249,6 @@ static BOOL is10Version = NO;
 	else
 		/*Resume importing now that we are up again*/
 		[metaData resumeImport];
-	//Turn off the AC3 Passthrough hack
-	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:((soundState & SOUND_STATE_SOUND_PASSTHROUGH)? 1 : 0)], A52_DOMIAN);
-	CFPreferencesAppSynchronize(A52_DOMIAN);
-	if(soundState & SOUND_STATE_SOUND_ENABLED)
-		[(RUIPreferences *)[RUIPreferences sharedFrontRowPreferences] setBool:YES forKey:@"PlayFrontRowSounds"];
 }
 
 - (long) itemCount
@@ -302,11 +262,6 @@ static BOOL is10Version = NO;
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
-/*
-    // build a BRTextMenuItemLayer or a BRAdornedMenuItemLayer, etc. here
-    // return that object, it will be used to display the list item.
-    return ( nil );
-*/
 	NSString * displayName=nil ;
 	FileClass fileCls=0 ;
 	/*Check for no items*/
@@ -446,120 +401,6 @@ static BOOL is10Version = NO;
     return ( result );
 }
 
-BOOL findCorrectDescriptionForStream(AudioStreamID streamID, int sampleRate)
-{
-	OSStatus err;
-	UInt32 propertySize = 0;
-	err = AudioStreamGetPropertyInfo(streamID, 0, kAudioStreamPropertyPhysicalFormats, &propertySize, NULL);
-	
-	if(err != noErr || propertySize == 0)
-		return NO;
-	
-	AudioStreamBasicDescription *descs = malloc(propertySize);
-	if(descs == NULL)
-		return NO;
-	
-	int formatCount = propertySize / sizeof(AudioStreamBasicDescription);
-	err = AudioStreamGetProperty(streamID, 0, kAudioStreamPropertyPhysicalFormats, &propertySize, descs);
-	
-	if(err != noErr)
-	{
-		free(descs);
-		return NO;
-	}
-	
-	int i;
-	BOOL ret = NO;
-	for(i=0; i<formatCount; i++)
-	{
-		if (descs[i].mBitsPerChannel == 16 && descs[i].mFormatID == kAudioFormatLinearPCM)
-		{
-			if(descs[i].mSampleRate == sampleRate)
-			{
-				err = AudioStreamSetProperty(streamID, NULL, 0, kAudioStreamPropertyPhysicalFormat, sizeof(AudioStreamBasicDescription), descs + i);
-				if(err != noErr)
-					continue;
-				ret = YES;
-				break;
-			}
-		}
-	}
-	free(descs);
-	return ret;
-}
-
-BOOL setupDevice(AudioDeviceID devID, int sampleRate)
-{
-	OSStatus err;
-	UInt32 propertySize = 0;
-	err = AudioDeviceGetPropertyInfo(devID, 0, FALSE, kAudioDevicePropertyStreams, &propertySize, NULL);
-	
-	if(err != noErr || propertySize == 0)
-		return NO;
-	
-	AudioStreamID *streams = malloc(propertySize);
-	if(streams == NULL)
-		return NO;
-	
-	int streamCount = propertySize / sizeof(AudioStreamID);
-	err = AudioDeviceGetProperty(devID, 0, FALSE, kAudioDevicePropertyStreams, &propertySize, streams);
-	if(err != noErr)
-	{
-		free(streams);
-		return NO;
-	}
-	
-	int i;
-	BOOL ret = NO;
-	for(i=0; i<streamCount; i++)
-	{
-		if(findCorrectDescriptionForStream(streams[i], sampleRate))
-		{
-			ret = YES;
-			break;
-		}
-	}
-	free(streams);
-	return ret;
-}
-
-BOOL setupAudioOutput(int sampleRate)
-{
-	OSErr err;
-	UInt32 propertySize = 0;
-	
-	err = AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &propertySize, NULL);
-	if(err != noErr || propertySize == 0)
-		return NO;
-	
-	AudioDeviceID *devs = malloc(propertySize);
-	if(devs == NULL)
-		return NO;
-	
-	err = AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &propertySize, devs);
-	if(err != noErr)
-	{
-		free(devs);
-		return NO;
-	}
-	
-	int i, devCount = propertySize/sizeof(AudioDeviceID);
-	BOOL ret = NO;
-	for(i=0; i<devCount; i++)
-	{
-		if(setupDevice(devs[i], sampleRate))
-		{
-			err = AudioHardwareSetProperty(kAudioHardwarePropertyDefaultOutputDevice, sizeof(AudioDeviceID), devs + i);
-			if(err != noErr)
-				continue;
-			ret = YES;
-			break;
-		}
-	}
-	free(devs);
-	return ret;
-}
-
 - (void)setNewPredicate:(SapphirePredicate *)newPredicate
 {
 	[newPredicate retain];
@@ -595,7 +436,7 @@ BOOL setupAudioOutput(int sampleRate)
 	else if(row < dirCount + fileCount)
 	{
 		/*Play the file*/
-		currentPlayFile = [[metaData metaDataForFile:name] retain];
+		SapphireFileMetaData *currentPlayFile = [[metaData metaDataForFile:name] retain];
 		
 		NSString *path = [currentPlayFile path];
 		
@@ -691,35 +532,6 @@ BOOL setupAudioOutput(int sampleRate)
 			[download autorelease];
 		}
 		
-		/*AC3 passthrough*/
-		BOOL useAC3Passthrough = NO;
-		if([currentPlayFile updateMetaData])
-			[currentPlayFile writeMetaData];
-		if([settings useAC3Passthrough])
-		{
-			Float64 sampleRate = [currentPlayFile sampleRate];
-			UInt32 type = [currentPlayFile audioFormatID];
-			
-			if((type == 'ac-3' || type == 0x6D732000) && setupAudioOutput((int)sampleRate))
-				useAC3Passthrough = YES;
-		}
-		
-		Boolean temp;
-		BOOL passthrough = CFPreferencesGetAppBooleanValue(PASSTHROUGH_KEY, A52_DOMIAN, &temp);
-		BOOL soundsWereEnabled = NO;
-		if(useAC3Passthrough)
-		{
-			RUIPreferences *prefs = [RUIPreferences sharedFrontRowPreferences];
-			soundsWereEnabled = [prefs boolForKey:@"PlayFrontRowSounds"];
-			if(soundsWereEnabled)
-				[prefs setBool:NO forKey:@"PlayFrontRowSounds"];
-			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:1], A52_DOMIAN);
-		}
-		else
-			CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:0], A52_DOMIAN);
-		soundState = (passthrough ? SOUND_STATE_SOUND_PASSTHROUGH : 0) | (soundsWereEnabled ? SOUND_STATE_SOUND_ENABLED : 0);
-		CFPreferencesAppSynchronize(A52_DOMIAN);
-		
 		if ([currentPlayFile fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS)
 		{
 			BRDVDMediaAsset *asset = [[BRDVDMediaAsset alloc] initWithPath:path];
@@ -742,11 +554,8 @@ BOOL setupAudioOutput(int sampleRate)
 			[player setMedia:asset error:&error];
 			
 			/*and go*/
-			BRVideoPlayerController *controller = [BRVideoPlayerController alloc];
-			if([controller respondsToSelector:@selector(initWithScene:)])
-				controller = [controller initWithScene:[self scene]];
-			else
-				controller = [controller init];
+			SapphireVideoPlayerController *controller = [[SapphireVideoPlayerController alloc] initWithScene:[self scene]];
+			[controller setPlayFile:currentPlayFile];
 			[controller setAllowsResume:YES];
 			[controller setVideoPlayer:player];
 			[[self stack] pushController:controller];
