@@ -167,8 +167,6 @@ static BOOL setupAudioOutput(int sampleRate)
 	SapphireSettings *settings = [SapphireSettings sharedSettings];
 	BOOL useAC3Passthrough = NO;
 
-	if([currentPlayFile updateMetaData])
-		[currentPlayFile writeMetaData];
 	if([settings useAC3Passthrough])
 	{
 		Float64 sampleRate = [currentPlayFile sampleRate];

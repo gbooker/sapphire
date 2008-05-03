@@ -437,6 +437,8 @@ static BOOL is10Version = NO;
 	{
 		/*Play the file*/
 		SapphireFileMetaData *currentPlayFile = [[metaData metaDataForFile:name] retain];
+		if([currentPlayFile updateMetaData])
+			[currentPlayFile writeMetaData];
 		
 		NSString *path = [currentPlayFile path];
 		
