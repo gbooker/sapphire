@@ -30,12 +30,13 @@
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
 #define TVRAGE_EP_INFO @".//*[@class='b2']/*"
 #define TVRAGE_EP_TEXT @".//*[@class='b2']/text()"
-#define TVRAGE_SCREEN_CAP_XPATH @"//img[contains(@src, 'screencap')]"
+#define TVRAGE_SCREEN_CAP_XPATH @".//img[contains(@src, 'screencap')]"
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
 
 #define TRANSLATIONS_KEY		@"Translations"
 #define LINK_KEY				@"Link"
+#define IMG_URL					@"imgURL"
 
 /*Delegate class to download cover art*/
 @interface SapphireTVShowDataMenuDownloadDelegate : NSObject
@@ -127,29 +128,6 @@
 }
 
 /*!
- * @brief Fetches the screencap URL from a show's info URL
- *
- * @param epUrl The show's info URL
- * @return The screencap URL if it exists, nil otherwise
- */
-- (NSString *)getScreencapUrl:(NSString *)epUrl
-{
-	/*Get the HTML document*/
-	NSURL *url = [NSURL URLWithString:epUrl];
-	NSError *error = nil;
-	NSXMLDocument *document = [[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error];
-	
-	/*Search for a screencap*/
-	NSXMLElement *html = [document rootElement];
-	NSArray *caps = [html objectsForXQuery:TVRAGE_SCREEN_CAP_XPATH error:&error];
-	if([caps count])
-		/*Found one; return it*/
-		return [[(NSXMLElement *)[caps objectAtIndex:0] attributeForName:@"src"] stringValue];
-	/*None found*/
-	return nil;
-}
-
-/*!
  * @brief Add an episode's info into our cache dict
  *
  * @param showName The TV Show's name
@@ -160,9 +138,10 @@
  * @param eplink The episode's info URL
  * @param epNumber The absolute episode number
  * @param airDate The episode's air date
+ * @param imgURL The episode's screenshot URL
  * @param dict The cache dictionary
  */
-- (void)addEp:(NSString *)showName title:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID toDict:(NSMutableDictionary *)dict
+- (void)addEp:(NSString *)showName title:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID imgURL:(NSString *)imgURL toDict:(NSMutableDictionary *)dict
 {
 	/*Set the key by which to store this.  Either by season/ep or season/title*/
 	NSNumber *epNum = [NSNumber numberWithInt:ep];
@@ -202,6 +181,8 @@
 		[epDict setObject:[NSNumber numberWithInt:epNumber] forKey:META_ABSOLUTE_EP_NUMBER_KEY];
 	if(airDate != nil)
 		[epDict setObject:airDate forKey:META_SHOW_AIR_DATE];
+	if(imgURL != nil)
+		[epDict setObject:imgURL forKey:IMG_URL];
 }
 
 /*!
@@ -253,6 +234,7 @@
 		int epNumber = 0;
 		NSMutableString *summary = nil;
 		NSDate *airDate = nil;
+		NSString *imageURL = nil;
 		
 		/*Get the info pieces*/
 		NSArray *epInfos = [epNode objectsForXQuery:TVRAGE_EP_INFO error:&error];
@@ -312,6 +294,14 @@
 				else
 					summary = nil;
 			}
+			else if(imageURL == nil)
+			{
+				NSArray *images = [epInfo objectsForXQuery:TVRAGE_SCREEN_CAP_XPATH error:&error];
+				if([images count])
+				{
+					imageURL = [[(NSXMLElement *)[images objectAtIndex:0] attributeForName:@"src"] stringValue];
+				}
+			}
 		}
 		epInfos = [epNode objectsForXQuery:TVRAGE_EP_TEXT error:&error];
 		epInfoEnum = [epInfos objectEnumerator];
@@ -332,7 +322,7 @@
 			}
 		}
 		/*Add to cache*/
-		[self addEp:showName title:epTitle season:seasonNum epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName toDict:ret];
+		[self addEp:showName title:epTitle season:seasonNum epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName imgURL:imageURL toDict:ret];
 	}
 	return ret;
 }
@@ -620,19 +610,15 @@
 						
 	[[NSFileManager defaultManager] constructPath:previewArtPath];
 	/*Check for screen cap locally and on server*/
-	NSString *showInfoUrl = [info objectForKey:LINK_KEY];
-	NSString *image = nil;
+	NSString *imgURL = [info objectForKey:IMG_URL];
 	NSString *newPath = [previewArtPath stringByAppendingPathComponent:fileName];
 	NSString *imageDestination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
 	BOOL isDir = NO;
 	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
-	if(showInfoUrl && !imageExists)
-		/*Get the screen cap*/
-		image = [self getScreencapUrl:showInfoUrl];
-	if(image)
+	if(imgURL && !imageExists)
 	{
 		/*Download the screen cap*/
-		NSURL *imageURL = [NSURL URLWithString:image];
+		NSURL *imageURL = [NSURL URLWithString:imgURL];
 		NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
 		SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:imageDestination];
 		[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate];
