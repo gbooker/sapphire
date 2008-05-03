@@ -437,13 +437,14 @@
 				{
 
 					NSMutableArray *myGenres=[NSMutableArray array];
+					NSCharacterSet *seperators = [NSCharacterSet characterSetWithCharactersInString:@"/|"];
 					while(![trimmer isAtEnd])
 					{
 						NSString *aGenre=nil;
-						[trimmer scanUpToString:@"/" intoString:&aGenre];
+						[trimmer scanUpToCharactersFromSet:seperators intoString:&aGenre];
 						if(aGenre)
 						{
-							if([aGenre isEqualToString:@"/"])
+							if([aGenre rangeOfCharacterFromSet:seperators options:0].length == [aGenre length])
 								continue ;
 							else if([aGenre hasSuffix:@"more\n"])
 								aGenre=[aGenre substringToIndex:[aGenre length]-6];
