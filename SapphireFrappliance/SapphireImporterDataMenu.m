@@ -221,7 +221,7 @@
 	current = 0;
 	max = [importItems count];
 	if(!canceled)
-		importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+		importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:NO];
 }
 
 /*!
@@ -294,6 +294,8 @@
  */
 - (void)importNextItem:(NSTimer *)timer
 {
+	[importTimer invalidate];
+	importTimer = nil;
 	if([importItems count])
 	{
 		/*Update the display*/
@@ -325,8 +327,6 @@
 	/*Check for completion*/
 	if(current == max)
 	{
-		[importTimer invalidate];
-		importTimer = nil;
 		[metaCollection writeMetaData];
 		/*Update display*/
 		[self setButtonTitle:nil];
@@ -336,6 +336,10 @@
 		[self setCurrentFile:@""];
 		[self setCompletionText];
 		[SapphireFrontRowCompat renderScene:[self scene]];
+	}
+	else
+	{
+		importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:NO];
 	}
 }
 
@@ -359,8 +363,6 @@
 {
 	/*Kil lthe timer*/
 	suspended = YES;
-	[importTimer invalidate];
-	importTimer = nil;
 }
 
 - (void)resume
@@ -369,7 +371,7 @@
 	[importTimer invalidate];
 	/*Resume*/
 	suspended = NO;
-	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:YES];
+	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:NO];
 }
 
 - (oneway void)informComplete:(BOOL)fileUpdated
