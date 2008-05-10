@@ -461,7 +461,7 @@
 					}
 					genres = [[myGenres copy] autorelease];
 				}
-				else if([dataType hasPrefix:@"Plot Outline"])
+				else if([dataType hasPrefix:@"Plot:"])
 				{
 					[trimmer scanUpToString:@"more\n" intoString:&plot];
 				}
