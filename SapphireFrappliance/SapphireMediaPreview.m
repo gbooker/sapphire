@@ -533,7 +533,10 @@ static NSSet *coverArtExtentions = nil;
 	
 	/* Show / Hide perian info */
 	if(![[SapphireSettings sharedSettings] displayAudio])
+	{
 		[allMeta removeObjectForKey:AUDIO_DESC_LABEL_KEY];
+		[allMeta removeObjectForKey:SUBTITLE_LABEL_KEY];        
+	}
 	if(![[SapphireSettings sharedSettings] displayVideo])
 		[allMeta removeObjectForKey:VIDEO_DESC_LABEL_KEY];
 	

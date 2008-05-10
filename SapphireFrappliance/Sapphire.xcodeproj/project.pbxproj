@@ -68,6 +68,7 @@
 		F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */ = {isa = PBXBuildFile; fileRef = F56B77D60C3858B400E934AA /* DefaultPreview.png */; };
 		F585A9C80D74EA870043AB22 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */; };
 		F59B29D10D9E8C6E002D5DBD /* NSArray-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */; };
+		F5A262540DD624B900AFB1D6 /* SapphireVideoTSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A262530DD624B900AFB1D6 /* SapphireVideoTSParser.m */; };
 		F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */; };
 		F5B418650D0B28A200BDD361 /* main_helper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418640D0B28A200BDD361 /* main_helper.m */; };
 		F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5B4185F0D0B288700BDD361 /* ImportHelper */; };
@@ -284,6 +285,8 @@
 		F56B765C0C3837CE00E934AA /* SapphireShowChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireShowChooser.h; sourceTree = "<group>"; };
 		F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireShowChooser.m; sourceTree = "<group>"; };
 		F56B77D60C3858B400E934AA /* DefaultPreview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPreview.png; sourceTree = "<group>"; };
+		F5A262520DD624B900AFB1D6 /* SapphireVideoTSParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireVideoTSParser.h; sourceTree = "<group>"; };
+		F5A262530DD624B900AFB1D6 /* SapphireVideoTSParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireVideoTSParser.m; sourceTree = "<group>"; };
 		F5B418360D0B1EA100BDD361 /* SapphireImportHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireImportHelper.h; sourceTree = "<group>"; };
 		F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireImportHelper.m; sourceTree = "<group>"; };
 		F5B4185F0D0B288700BDD361 /* ImportHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ImportHelper; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -510,6 +513,8 @@
 				F523996E0C2DCC9100D5DA2E /* SapphirePredicates.m */,
 				F5B8DEE70C8F85BB00489829 /* SapphireTVDirectory.h */,
 				F5B8DEE80C8F85BB00489829 /* SapphireTVDirectory.m */,
+				F5A262520DD624B900AFB1D6 /* SapphireVideoTSParser.h */,
+				F5A262530DD624B900AFB1D6 /* SapphireVideoTSParser.m */,
 				F5C078C50CF1033C007C9A16 /* SapphireVirtualDirectory.h */,
 				F5C078C60CF1033C007C9A16 /* SapphireVirtualDirectory.m */,
 			);
@@ -842,6 +847,7 @@
 				F541CBF50D9C2D19002F9278 /* SapphireRadioSetting.m in Sources */,
 				F59B29D10D9E8C6E002D5DBD /* NSArray-Extensions.m in Sources */,
 				F53420560DC2F17F00498822 /* SapphireVideoPlayerController.m in Sources */,
+				F5A262540DD624B900AFB1D6 /* SapphireVideoTSParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

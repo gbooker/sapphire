@@ -27,6 +27,7 @@
 #import "SapphirePredicates.h"
 #import "SapphireMetaDataScanner.h"
 #import "SapphireImportHelper.h"
+#import "SapphireVideoTSParser.h"
 
 //Structure Specific Keys
 #define FILES_KEY					@"Files"
@@ -50,6 +51,7 @@
 #define SAMPLE_RATE_KEY				@"Sample Rate"
 #define VIDEO_DESC_KEY				@"Video Description"
 #define AUDIO_FORMAT_KEY			@"Audio Format"
+#define SUBTITLES_KEY				@"Subtitles"
 #define JOINED_FILE_KEY				@"Joined File"
 
 @implementation NSString (episodeSorting)
@@ -1499,6 +1501,7 @@ static NSArray *displayedMetaDataOrder = nil;
 		DURATION_KEY,
 		VIDEO_DESC_KEY,
 		AUDIO_DESC_KEY,
+		SUBTITLES_KEY,
 		nil];
 	displayedMetaData = [[NSSet alloc] initWithArray:displayedMetaDataOrder];
 	
@@ -1701,6 +1704,17 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 				} 
 			}
 		} //QTMovie
+		else if([file fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS)
+		{
+			SapphireVideoTsParser *dvd = [[SapphireVideoTsParser alloc] initWithPath:path];
+
+			[fileMeta setObject:[dvd videoFormatsString ] forKey:VIDEO_DESC_KEY];
+			[fileMeta setObject:[dvd audioFormatsString ] forKey:AUDIO_DESC_KEY];
+			[fileMeta setObject:[dvd subtitlesString    ] forKey:SUBTITLES_KEY ];
+			[fileMeta setObject:[dvd mainFeatureDuration] forKey:DURATION_KEY  ];
+
+			[dvd release];
+		} // VIDEO_TS
 		[file addFileData:fileMeta];
 	}
 	return updated ;
@@ -1995,6 +2009,7 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 	float size = [self size];
 	if(size == 0)
 		return @"-";
+
 	/*The letter for magnitude*/
 	char letter = ' ';
 	if(size >= 1024000)

@@ -70,6 +70,7 @@
 #define	META_MOVIE_IMDB_STATS_KEY		@"IMDB"
 #define AUDIO_DESC_LABEL_KEY			@"Audio"
 #define VIDEO_DESC_LABEL_KEY			@"Video"
+#define SUBTITLE_LABEL_KEY     			@"Subtitles"
 
 //Sapphire Virtual Directory Movie Folders
 #define VIRTUAL_DIR_ROOT_KEY			@"@MOVIES"
