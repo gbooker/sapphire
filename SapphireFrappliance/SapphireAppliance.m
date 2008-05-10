@@ -121,7 +121,15 @@
 
 - (id)applianceController
 {
-	return ( [[[SapphireApplianceController alloc] initWithScene: nil] autorelease] );
+	SapphireApplianceController *cont = nil;
+	@try {
+		cont = [[[SapphireApplianceController alloc] initWithScene: nil] autorelease];
+	}
+	@catch (NSException * e) {
+		[SapphireApplianceController logException:e];
+	}
+	
+	return cont;
 }
 
 - (id) applianceControllerWithScene: (id) scene
