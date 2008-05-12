@@ -463,7 +463,7 @@
 				}
 				else if([dataType hasPrefix:@"Plot:"])
 				{
-					[trimmer scanUpToString:@"more\n" intoString:&plot];
+					[trimmer scanUpToString:@"full summary" intoString:&plot];
 				}
 				else 
 					continue ;
