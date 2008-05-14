@@ -464,6 +464,10 @@
 				else if([dataType hasPrefix:@"Plot:"])
 				{
 					[trimmer scanUpToString:@"full summary" intoString:&plot];
+					NSMutableString *mutStr = [plot mutableCopy];
+					[mutStr replaceOccurrencesOfString:@" | add synopsis" withString:@"" options:0 range:NSMakeRange(0, [mutStr length])];
+					plot = [NSString stringWithString:mutStr];
+					[mutStr release];
 				}
 				else 
 					continue ;
