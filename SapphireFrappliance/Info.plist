@@ -19,18 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0b6 (SVN_REVISION)</string>
-	<key>FRApplianceIconHorizontalOffset</key>
-	<real>-0.055</real>
-	<key>FRApplianceIconReflectionOffset</key>
-	<real>-0.20999999999999999</real>
-	<key>FRAppliancePreferedOrderValue</key>
-	<real>0.0</real>
-	<key>FRRemoteAppliance</key>
-	<true/>
-	<key>NSPrincipalClass</key>
-	<string>SapphireAppliance</string>	
-	<!-- ATV2 -->
+	<string>1.0b6.1 (SVN_REVISION)</string>
 	<key>FRApplianceCategoryDescriptors</key>
 	<array>
 		<dict>
@@ -50,5 +39,15 @@
 			<real>6</real>
 		</dict>
 	</array>
+	<key>FRApplianceIconHorizontalOffset</key>
+	<real>-0.055</real>
+	<key>FRApplianceIconReflectionOffset</key>
+	<real>-0.20999999999999999</real>
+	<key>FRAppliancePreferedOrderValue</key>
+	<real>0.0</real>
+	<key>FRRemoteAppliance</key>
+	<true/>
+	<key>NSPrincipalClass</key>
+	<string>SapphireAppliance</string>
 </dict>
 </plist>
