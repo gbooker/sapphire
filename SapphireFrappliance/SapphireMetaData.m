@@ -1712,6 +1712,7 @@ BOOL updateMetaData(id <SapphireFileMetaDataProtocol> file)
 			[fileMeta setObject:[dvd audioFormatsString ] forKey:AUDIO_DESC_KEY];
 			[fileMeta setObject:[dvd subtitlesString    ] forKey:SUBTITLES_KEY ];
 			[fileMeta setObject:[dvd mainFeatureDuration] forKey:DURATION_KEY  ];
+			[fileMeta setObject:[dvd totalSize          ] forKey:SIZE_KEY      ];
 
 			[dvd release];
 		} // VIDEO_TS

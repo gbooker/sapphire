@@ -182,14 +182,16 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 	NSString  *ifoPath     = nil;
 
 	unsigned long long ifoSz = 0;
+	unsigned long long total = 0;
 
 	// The largest IFO file (not including VIDEO_TS.IFO) corresponds to the main feature
 	while( filePath = [enumerator nextObject] )
 	{
+		unsigned long long sz = [[[fm fileAttributesAtPath:[videotsPath stringByAppendingPathComponent:filePath] traverseLink:YES] valueForKey:NSFileSize] unsignedLongLongValue];
+		total += sz;
+
 		if( [[filePath lowercaseString] hasSuffix:@".ifo"] && [[filePath lastPathComponent] caseInsensitiveCompare:@"video_ts.ifo"] != NSOrderedSame )
 		{
-			unsigned long long sz = [[[fm fileAttributesAtPath:[videotsPath stringByAppendingPathComponent:filePath] traverseLink:YES] valueForKey:NSFileSize] unsignedLongLongValue];
-
 			if ( sz > ifoSz )
 			{
 				ifoPath = [videotsPath stringByAppendingPathComponent:filePath];
@@ -197,6 +199,8 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 			}
 		}
 	}
+
+	size = [NSNumber numberWithLongLong:total];
 
 	if( ifoPath != nil )
 		ifo = [NSFileHandle fileHandleForReadingAtPath:ifoPath];
@@ -401,6 +405,11 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 - (const NSNumber * const) mainFeatureDuration
 {
 	return [NSNumber numberWithLongLong:duration];
+}
+
+- (const NSNumber * const) totalSize
+{
+	return size;
 }
 
 @end

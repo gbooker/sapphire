@@ -25,6 +25,7 @@
 	const NSString *audio;
 	const NSString *subtitles;
 	long long       duration;
+	const NSNumber *size;
 }
 
 /*!
@@ -80,4 +81,12 @@
  * @return  Calculated DVD running time
  */
 - (const NSNumber * const) mainFeatureDuration;
+
+/*!
+ * @brief Return the size of a ripped DVD
+ *
+ * @return  Calculated DVD size
+ */
+- (const NSNumber * const) totalSize;
+
 @end
