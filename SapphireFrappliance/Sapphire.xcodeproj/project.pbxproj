@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		F5038FA30DE7AB4D0046C674 /* Create Installer */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F5038FAA0DE7AB7A0046C674 /* Build configuration list for PBXAggregateTarget "Create Installer" */;
+			buildPhases = (
+				F5038FA20DE7AB4D0046C674 /* ShellScript */,
+			);
+			dependencies = (
+				F5038FA70DE7AB600046C674 /* PBXTargetDependency */,
+			);
+			name = "Create Installer";
+			productName = "Create Installer";
+		};
 		F5B4186D0D0B29D800BDD361 /* Complete Sapphire */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = F5B418A20D0B2A2200BDD361 /* Build configuration list for PBXAggregateTarget "Complete Sapphire" */;
@@ -127,6 +139,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F5003FF80D19980A003FEA08;
 			remoteInfo = LeopardOnly;
+		};
+		F5038FA60DE7AB600046C674 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5B4186D0D0B29D800BDD361 /* Complete Sapphire */;
+			remoteInfo = "Complete Sapphire";
 		};
 		F56895E00D6CE30D00F9D9B0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -715,6 +734,7 @@
 				FE7810640C56F08A0037779D /* Make SVN Rev */,
 				F5B4185E0D0B288700BDD361 /* ImportHelper */,
 				F5003FF80D19980A003FEA08 /* LeopardOnly */,
+				F5038FA30DE7AB4D0046C674 /* Create Installer */,
 			);
 		};
 /* End PBXProject section */
@@ -789,6 +809,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		F5038FA20DE7AB4D0046C674 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "source scripts/createInstaller";
+		};
 		FE7810630C56F08A0037779D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -875,6 +908,11 @@
 			isa = PBXTargetDependency;
 			target = F5003FF80D19980A003FEA08 /* LeopardOnly */;
 			targetProxy = F50044110D19A242003FEA08 /* PBXContainerItemProxy */;
+		};
+		F5038FA70DE7AB600046C674 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5B4186D0D0B29D800BDD361 /* Complete Sapphire */;
+			targetProxy = F5038FA60DE7AB600046C674 /* PBXContainerItemProxy */;
 		};
 		F585A9C70D74EA810043AB22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1049,6 +1087,27 @@
 			};
 			name = Release;
 		};
+		F5038FA40DE7AB4D0046C674 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Create Installer";
+			};
+			name = Debug;
+		};
+		F5038FA50DE7AB4D0046C674 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Create Installer";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 		F5B418610D0B288800BDD361 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1156,6 +1215,15 @@
 			buildConfigurations = (
 				F5003FFB0D19980B003FEA08 /* Debug */,
 				F5003FFC0D19980B003FEA08 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5038FAA0DE7AB7A0046C674 /* Build configuration list for PBXAggregateTarget "Create Installer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5038FA40DE7AB4D0046C674 /* Debug */,
+				F5038FA50DE7AB4D0046C674 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
