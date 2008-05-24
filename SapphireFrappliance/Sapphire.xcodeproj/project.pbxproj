@@ -730,11 +730,11 @@
 			projectRoot = "";
 			targets = (
 				F5B4186D0D0B29D800BDD361 /* Complete Sapphire */,
+				F5038FA30DE7AB4D0046C674 /* Create Installer */,
 				8D5B49AC048680CD000E48DA /* Sapphire */,
 				FE7810640C56F08A0037779D /* Make SVN Rev */,
 				F5B4185E0D0B288700BDD361 /* ImportHelper */,
 				F5003FF80D19980A003FEA08 /* LeopardOnly */,
-				F5038FA30DE7AB4D0046C674 /* Create Installer */,
 			);
 		};
 /* End PBXProject section */
