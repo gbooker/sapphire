@@ -78,6 +78,7 @@ elif [ "$COMMAND" = "install" ]; then
 	
 	echo "Sapphire successfully installed"
 	echo
+	RESTART=1
 fi
 
 if [[ "$RESTART" = "1" && "$PREFIX" = "" ]]; then
@@ -89,7 +90,7 @@ if [[ "$RESTART" = "1" && "$PREFIX" = "" ]]; then
 		echo
 		echo "== Restarting $FINDER"
 		
-		kill `ps aux | grep $FINDERGREP | awk '{print $1}'`
+		kill `ps awx | grep "$FINDERGREP" | awk '{print $1}'`
 	fi
 fi
 
