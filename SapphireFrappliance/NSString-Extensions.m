@@ -24,7 +24,7 @@
 - (NSString *)URLEncode
 {
 	/*Create a new one using the CFURL function*/
-	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL, CFSTR("?=&+"), kCFStringEncodingUTF8);
+	NSString *result = (NSString *) CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)self, NULL, CFSTR("()?=&+"), kCFStringEncodingUTF8);
 	/*Return it*/
 	return [result autorelease];
 }

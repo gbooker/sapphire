@@ -554,9 +554,7 @@
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"_" withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"." withString:@" "];
 	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"-" withString:@" "];
-	searchStr = [searchStr stringByReplacingAllOccurancesOf:@"(" withString:@" "];
-	searchStr = [searchStr stringByReplacingAllOccurancesOf:@")" withString:@" "];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com/find?s=all&site=aka&q=%@", [searchStr URLEncode]]];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.imdb.com/find?s=tt&site=aka&q=%@", [searchStr URLEncode]]];
 	NSError * error = nil;
 	BOOL uniqueResult=NO ;
 	NSArray * results = nil;
