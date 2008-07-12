@@ -365,6 +365,15 @@
  * @return An array of call addresses if successful, nil otherwise
  */
 + (NSArray *)callStackReturnAddressesForException:(NSException *)exception;
+
+/*!
+ * @brief Get the sharedFrontRowPreferences object.
+ *
+ * On Apple TV < 2.1, the RUIPreferences class is used for this.  On 2.1, the class is renamed to BRPreferences.
+ *
+ * @return the preferences object
+ */
++ (RUIPreferences *)sharedFrontRowPreferences;
 @end
 
 static inline void SapphireLoadFramework(NSString *frameworkPath)

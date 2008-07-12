@@ -420,4 +420,15 @@ static BOOL usingTakeTwo = NO;
 	}
 	return [[exception userInfo] objectForKey:NSStackTraceKey];
 }
+
++ (RUIPreferences *)sharedFrontRowPreferences {
+  Class preferencesClass = NSClassFromString(@"RUIPreferences");
+  if(!preferencesClass) preferencesClass = NSClassFromString(@"BRPreferences");
+  
+  if(preferencesClass)
+    return [preferencesClass sharedFrontRowPreferences];
+  else
+    return nil;
+}
+
 @end
