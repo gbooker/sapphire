@@ -19,6 +19,7 @@
  */
 
 #import <AudioUnit/AudioUnit.h>
+#import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 #import "SapphireVideoPlayerController.h"
 #import "SapphireMetaData.h"
@@ -181,7 +182,7 @@ static BOOL setupAudioOutput(int sampleRate)
 	BOOL soundsWereEnabled = NO;
 	if(useAC3Passthrough)
 	{
-		RUIPreferences *prefs = [RUIPreferences sharedFrontRowPreferences];
+		RUIPreferences *prefs = [SapphireFrontRowCompat sharedFrontRowPreferences];
 		soundsWereEnabled = [prefs boolForKey:@"PlayFrontRowSounds"];
 		if(soundsWereEnabled)
 			[prefs setBool:NO forKey:@"PlayFrontRowSounds"];
@@ -206,7 +207,7 @@ static BOOL setupAudioOutput(int sampleRate)
 	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:((soundState & SOUND_STATE_SOUND_PASSTHROUGH)? 1 : 0)], A52_DOMIAN);
 	CFPreferencesAppSynchronize(A52_DOMIAN);
 	if(soundState & SOUND_STATE_SOUND_ENABLED)
-		[(RUIPreferences *)[RUIPreferences sharedFrontRowPreferences] setBool:YES forKey:@"PlayFrontRowSounds"];
+		[[SapphireFrontRowCompat sharedFrontRowPreferences] setBool:YES forKey:@"PlayFrontRowSounds"];
 	
 	/*resume time*/
 	BRVideoPlayer *player = [self player];
