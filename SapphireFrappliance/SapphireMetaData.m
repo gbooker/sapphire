@@ -1323,7 +1323,10 @@ static void makeParentDir(NSFileManager *manager, NSString *dir)
 	/*Check for a file which matches result*/
 	while((file = [fileEnum nextObject]) != nil)
 	{
-		[fileInv invokeWithTarget:[self metaDataForFile:file]];
+		SapphireFileMetaData *fileMeta = [self metaDataForFile:file];
+		if([[fileMeta joinedFile] length])
+			continue;
+		[fileInv invokeWithTarget:fileMeta];
 		BOOL thisResult = NO;
 		[fileInv getReturnValue:&thisResult];
 		if(thisResult == result)
