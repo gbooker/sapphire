@@ -459,6 +459,11 @@ static NSArray *predicates = nil;
 	[[self stack] pushController:controller];
 }
 
+- (id<BRMediaPreviewController>) previewControlForItem:(long)item
+{
+	return nil;
+}	
+
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor

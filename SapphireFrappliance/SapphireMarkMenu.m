@@ -464,6 +464,11 @@ static NSMutableArray *joinList;
 	[[self stack] popController];
 }
 
+- (id<BRMediaPreviewController>) previewControlForItem:(long)item
+{
+	return [self previewControllerForItem:item];
+}
+
 - (id<BRMediaPreviewController>) previewControllerForItem: (long) item
 {
     // If subclassing BRMediaMenuController, this function is called when the selection cursor
