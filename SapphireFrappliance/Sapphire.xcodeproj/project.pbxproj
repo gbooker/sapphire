@@ -144,7 +144,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F5B4186D0D0B29D800BDD361 /* Complete Sapphire */;
+			remoteGlobalIDString = F5B4186D0D0B29D800BDD361;
 			remoteInfo = "Complete Sapphire";
 		};
 		F56895E00D6CE30D00F9D9B0 /* PBXContainerItemProxy */ = {
@@ -263,7 +263,7 @@
 		38FAFC300C012A7800853CFE /* SapphireAppliance.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireAppliance.h; sourceTree = "<group>"; };
 		38FAFC310C012A7800853CFE /* SapphireBrowser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireBrowser.m; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Sapphire.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Sapphire.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F5003FF90D19980B003FEA08 /* LeopardOnly.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LeopardOnly.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F50040090D1998B4003FEA08 /* SapphireLeopardOnly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireLeopardOnly.h; sourceTree = "<group>"; };
 		F500400A0D1998B4003FEA08 /* SapphireLeopardOnly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLeopardOnly.m; sourceTree = "<group>"; };
