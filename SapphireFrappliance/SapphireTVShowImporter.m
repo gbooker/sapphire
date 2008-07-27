@@ -26,7 +26,7 @@
 #import "SapphireMovieChooser.h"
 
 /* TVRage XPATHS  */
-#define TVRAGE_SHOWNAME_XPATH @".//h3/text()"
+#define TVRAGE_SHOWNAME_XPATH @".//font[@size=2][@color=\"white\"]/b/text()"
 #define TVRAGE_EPLIST_XPATH @"//*[@class='b']"
 #define TVRAGE_EP_INFO @".//*[@class='b2']/*"
 #define TVRAGE_EP_TEXT @".//*[@class='b2']/text()"
