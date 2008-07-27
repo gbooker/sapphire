@@ -773,15 +773,17 @@
 			[dataMenu resume];
 		}
 	}
+
+	NSFileManager *fileAgent=[NSFileManager defaultManager];
+	NSString * coverart=[[SapphireMetaData collectionArtPath]stringByAppendingPathComponent:@"@MOVIES"];
+	[fileAgent constructPath:coverart];
+	coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
+	
 	if(selectedPoster && [dict objectForKey:IMP_POSTERS_KEY])
 	{
 		/* Lets move the selected poster to the corresponding Cover Art Directory */
-		NSFileManager *fileAgent=[NSFileManager defaultManager];
 		NSString * poster=[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Application Support/Sapphire/Poster_Buffer"];
 		poster=[poster stringByAppendingPathComponent:[selectedPoster lastPathComponent]];
-		NSString * coverart=[[SapphireMetaData collectionArtPath]stringByAppendingPathComponent:@"@MOVIES"];
-		[fileAgent constructPath:coverart];
-		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
 		coverart=[coverart stringByAppendingPathExtension:[poster pathExtension]];
 		if([fileAgent fileExistsAtPath:poster])/* See if we need to clean up */
 		{
@@ -816,15 +818,22 @@
 	else if(autoSelectPoster)
 	{
 		/* The poster chooser wasn't loaded - ATV 1.0 */
-		NSFileManager *fileAgent=[NSFileManager defaultManager];
-		NSString * coverart=[[SapphireMetaData collectionArtPath]stringByAppendingPathComponent:@"@MOVIES"];
-		[fileAgent constructPath:coverart];
 		NSArray * posterList=[NSArray arrayWithObject:autoSelectPoster];
-		coverart=[coverart stringByAppendingPathComponent:[fileName stringByDeletingPathExtension]];
 		coverart=[coverart stringByAppendingPathExtension:[autoSelectPoster pathExtension]];
 		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
 		[myDelegate downloadSingleMoviePoster] ;
 		[myDelegate autorelease];	
+	}
+	
+	/* If we have JPEG art and content is a ripped DVD we provide Preview.jpg coverart in the film folder,
+	 * To allow for updates the preview.jpg is not a copy, but instead a symbolic link to the cover
+	 * art in the Collection Art/@MOVIES folder */
+	if( ([[coverart pathExtension] caseInsensitiveCompare:@"jpg" ] == NSOrderedSame ||
+	     [[coverart pathExtension] caseInsensitiveCompare:@"jpeg"] == NSOrderedSame  ) &&
+	    [metaData fileContainerType] == FILE_CONTAINER_TYPE_VIDEO_TS )
+	{
+		/* This is non-critical code, just adding fluff, ignore returned value */
+		[fileAgent createSymbolicLinkAtPath:[[metaData path] stringByAppendingPathComponent:@"Preview.jpg"] pathContent:coverart];
 	}
 	
 	/*Import the info*/
