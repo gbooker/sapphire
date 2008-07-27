@@ -563,7 +563,7 @@
 	NSXMLElement *root = [document rootElement];	
 	NSString *resultTitle=[[[root objectsForXQuery:@"//title" error:&error]objectAtIndex:0] stringValue];
 	
-	if([resultTitle isEqualToString:@"IMDb Search"])/*Make sure we didn't get back a unique result */
+	if([resultTitle isEqualToString:@"IMDb Title Search"])/*Make sure we didn't get back a unique result */
 	{
 		results = [root objectsForXQuery:IMDB_SEARCH_XPATH error:&error];
 		ret = [NSMutableArray arrayWithCapacity:[results count]];
