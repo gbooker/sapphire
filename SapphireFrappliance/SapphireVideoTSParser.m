@@ -93,6 +93,9 @@ static const unsigned int VtsMax_Subpictures         = 32;
 
 /*!
  * @brief Given the two encoding characters of a language, get the display friendly version
+ *
+ * @return NSString translation of the two character ISO code, or nil if the character
+ * code results in an unspecified language
  */
 static const NSString *languageFromEncodedChars( const char firstChar, const char secondChar )
 {
@@ -291,20 +294,26 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 			if( vts_AudioIsCommentary( audioAttrs[idx] ) )
 				continue;
 
-			const NSMutableString * const audioText = [NSMutableString stringWithString:(NSString *)languageFromEncodedChars(vts_CommonFirstLanguageCode ( audioAttrs[idx] ),
-																															 vts_CommonSecondLanguageCode( audioAttrs[idx] ) )];
-			if( vts_AudioIsDTS( audioAttrs[idx] ) )
-				[audioText appendString:@" - DTS"];
+			const NSString * const lang = languageFromEncodedChars( vts_CommonFirstLanguageCode ( audioAttrs[idx] ),
+																    vts_CommonSecondLanguageCode( audioAttrs[idx] ) );
 
-			if( vts_AudioIsSurround( audioAttrs[idx] ) )
+			/* Check for unspecified audio */
+			if( lang != nil )
 			{
-				if ( vts_AudioSupportsDolbyDecoding( audioAttrs[idx] ) )
-					[audioText appendString:@"  Dolby Surround"];
-				else
-					[audioText appendString:@" Surround"];                
-			}
+				const NSMutableString * const audioText = [NSMutableString stringWithString:(NSString *)lang];
+				if( vts_AudioIsDTS( audioAttrs[idx] ) )
+					[audioText appendString:@" - DTS"];
 
-			[audioList addObject:audioText];
+				if( vts_AudioIsSurround( audioAttrs[idx] ) )
+				{
+					if ( vts_AudioSupportsDolbyDecoding( audioAttrs[idx] ) )
+						[audioText appendString:@"  Dolby Surround"];
+					else
+						[audioText appendString:@" Surround"];                
+				}
+
+				[audioList addObject:audioText];
+			}
 		}
 
 		audio = commaSeparatedStringFromCollection( audioList );
@@ -335,8 +344,12 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 		for( idx = 0; idx < numSubpictures; ++idx )
 		{
 			if( vts_SubpictureIsSubtitle( subpictureAttrs[idx] ) )
-				[subtitleList addObject:languageFromEncodedChars(vts_CommonFirstLanguageCode ( subpictureAttrs[idx] ),
-																 vts_CommonSecondLanguageCode( subpictureAttrs[idx] ) )];
+			{
+				const NSString * const lang = languageFromEncodedChars( vts_CommonFirstLanguageCode ( subpictureAttrs[idx] ),
+																	    vts_CommonSecondLanguageCode( subpictureAttrs[idx] ) );
+				if( lang != nil )
+					[subtitleList addObject:lang];
+			}
 		}
 
 		subtitles = commaSeparatedStringFromCollection( subtitleList );
