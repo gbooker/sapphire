@@ -612,7 +612,10 @@
 	/*Check for screen cap locally and on server*/
 	NSString *imgURL = [info objectForKey:IMG_URL];
 	NSString *newPath = [previewArtPath stringByAppendingPathComponent:fileName];
-	NSString *imageDestination = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
+	if( [metaData fileContainerType] != FILE_CONTAINER_TYPE_VIDEO_TS )
+		newPath = [newPath stringByDeletingPathExtension];
+	
+	NSString *imageDestination = [newPath stringByAppendingPathExtension:@"jpg"];
 	BOOL isDir = NO;
 	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
 	if(imgURL && !imageExists)

@@ -1558,9 +1558,13 @@ static NSArray *displayedMetaDataOrder = nil;
 - (NSString *)coverArtPath
 {
 	/*Find cover art for the current file in the "Cover Art" dir */
-	NSString *subPath = [[self path] stringByDeletingPathExtension];
+	NSString *subPath = [self path];
+	if([self fileContainerType] != FILE_CONTAINER_TYPE_VIDEO_TS)
+		subPath = [subPath stringByDeletingPathExtension];
+
 	NSString *fileName = [subPath lastPathComponent];
 	NSString * myArtPath=nil;
+
 	if([self fileClass]==FILE_CLASS_TV_SHOW)
 		myArtPath=[NSString stringWithFormat:@"%@/@TV/%@/%@/%@",
 															[SapphireMetaData collectionArtPath],
