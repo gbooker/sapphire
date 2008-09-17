@@ -350,22 +350,26 @@
 	movieTitle=[movieTitle substringToIndex:[movieTitle length]-1];
 	
 	/* Get the User Rating (IMDB) */
-	NSArray *ratingCandidates=[document objectsForXQuery:@"//b/string()" error:&error];
-	NSString *usrRating=[[document objectsForXQuery:@"//b/string()" error:&error] objectAtIndex:[ratingCandidates indexOfObject:@"User Rating:"]+1];
-	metaTrimmer=[NSScanner scannerWithString:usrRating];
-	[metaTrimmer scanUpToString:@"/" intoString:&usrRating];
-	
+	NSArray *ratingCandidates=[document objectsForXQuery:@"(//b | //h5)/string()" error:&error];
+	int ratingIndex = [ratingCandidates indexOfObject:@"User Rating:\n"];
+	NSString *usrRating=nil;
+	if(ratingIndex != NSNotFound)
+	{
+		usrRating = [ratingCandidates objectAtIndex:ratingIndex+1];
+		metaTrimmer=[NSScanner scannerWithString:usrRating];
+		[metaTrimmer scanUpToString:@"/" intoString:&usrRating];		
+	}
 	/* Check for IMDB top 250 */
 	NSNumber * top250=nil ;
 	NSArray *top250Candidate=[document objectsForXQuery:@"//div[@class='left']/a/string()" error:&error];
-
+	
 	if([top250Candidate count])
 	{
 		NSString *top250Str=[top250Candidate objectAtIndex:0];
 		if([top250Str hasPrefix:@"Top 250:"])
 			top250=[NSNumber numberWithInt:[[top250Str substringFromIndex:10] intValue]];
 	}
-		
+	
 	/* Get the release date */
 	NSArray *rawData=[document objectsForXQuery:IMDB_RESULT_INFO_XPATH error:&error];
 	NSDate * releaseDate=nil ;
@@ -382,7 +386,7 @@
 		while((result = [resultEnum nextObject]) != nil)
 		{
 			NSString *dataCandidate=[result stringValue];
-
+			
 			if([dataCandidate length])
 			{
 				NSString * dataType=nil;
@@ -392,21 +396,39 @@
 				{
 					[trimmer scanUpToString:@"(" intoString:&dataCandidate];
 					releaseDate=[NSDate dateWithNaturalLanguageString:dataCandidate];
-
+					
 				}
-				else if([dataType hasPrefix:@"Writers"])
+				else if([dataType hasPrefix:@"Writer"])
 				{
 					NSString *writersStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
-					NSMutableArray *mutWrit = [[writersStr componentsSeparatedByString:@"\n"] mutableCopy];
-					[mutWrit removeObject:@""];
-					writers = [[mutWrit copy] autorelease];
-					[mutWrit release];
+					NSMutableArray *mutDirs = [[writersStr componentsSeparatedByString:@"\n"] mutableCopy];
+					[mutDirs removeObject:@""];
+					int i, count = [mutDirs count];
+					for(i=0; i<count; i++)
+					{
+						NSString *tdirector;
+						NSScanner *typeTrimmer = [[NSScanner alloc] initWithString:[mutDirs objectAtIndex:i]];
+						[typeTrimmer scanUpToString:@" (" intoString:&tdirector];
+						[mutDirs replaceObjectAtIndex:i withObject:tdirector];
+						[typeTrimmer release];
+					}
+					writers = [[mutDirs copy] autorelease];
+					[mutDirs release];
 				}
 				else if([dataType hasPrefix:@"Director"])
 				{
 					NSString *directorsStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
 					NSMutableArray *mutDirs = [[directorsStr componentsSeparatedByString:@"\n"] mutableCopy];
 					[mutDirs removeObject:@""];
+					int i, count = [mutDirs count];
+					for(i=0; i<count; i++)
+					{
+						NSString *tdirector;
+						NSScanner *typeTrimmer = [[NSScanner alloc] initWithString:[mutDirs objectAtIndex:i]];
+						[typeTrimmer scanUpToString:@" (" intoString:&tdirector];
+						[mutDirs replaceObjectAtIndex:i withObject:tdirector];
+						[typeTrimmer release];
+					}
 					directors = [[mutDirs copy] autorelease];
 					[mutDirs release];
 				}
@@ -435,7 +457,7 @@
 				}
 				else if([dataType hasPrefix:@"Genre"])
 				{
-
+					
 					NSMutableArray *myGenres=[NSMutableArray array];
 					NSCharacterSet *seperators = [NSCharacterSet characterSetWithCharactersInString:@"/|"];
 					while(![trimmer isAtEnd])
@@ -475,7 +497,7 @@
 			else
 				continue ;
 		}
-
+		
 		
 	}
 	
@@ -504,11 +526,10 @@
 				else continue ;
 			}
 			else
-			continue ;
+				continue ;
 		}
 		completeCast=[[results copy] autorelease] ;
 	}
-	
 	
 	/* populate metadata to return */
 	[ret setObject:movieTitleLink forKey:META_MOVIE_IDENTIFIER_KEY];
