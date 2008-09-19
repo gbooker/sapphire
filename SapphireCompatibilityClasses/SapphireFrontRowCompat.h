@@ -382,20 +382,26 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 	{
 		NSString *compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireCompatClasses.framework"];
 		NSBundle *compat = [NSBundle bundleWithPath:compatPath];
-		[compat load];
+		if( ![compat load]){ 
+			@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
+		}
 		if([SapphireFrontRowCompat usingFrontRow])
 		{
 			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireLeopardCompatClasses.framework"];
 			compat = [NSBundle bundleWithPath:compatPath];
-			[compat load];
+			if( ![compat load]){ 
+				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireLeopardCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
+			}
 		}
-    // ATV2
-    if(NSClassFromString(@"BRMetadataPreviewController") == nil)
-    {
-      compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoCompatClasses.framework"];
-      compat = [NSBundle bundleWithPath:compatPath];
-      [compat load];
-    }
+		// ATV2
+		if(NSClassFromString(@"BRMetadataPreviewController") == nil)
+		{
+			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoCompatClasses.framework"];
+			compat = [NSBundle bundleWithPath:compatPath];
+			if( ![compat load]){ 
+				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireTakeTwoCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
+			}
+		}
 	}	
 }
 
