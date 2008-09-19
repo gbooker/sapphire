@@ -1,4 +1,4 @@
-PATH="$PATH:/opt/local/bin:/usr/local/bin:/usr/local/subversion/bin:/sw/bin"
+PATH="/opt/local/bin:/usr/local/bin:/usr/local/subversion/bin:/sw/bin:${PATH}"
 SVNREV=`svn info . | grep 'Revision' | awk '{print $2}'`
 mkdir -p `dirname $SCRIPT_OUTPUT_FILE_0`
 echo "#define SVN_REVISION $SVNREV" > $SCRIPT_OUTPUT_FILE_0
