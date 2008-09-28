@@ -688,9 +688,14 @@ static BOOL is10Version = NO;
 			{
 				row=[self rowForTitle:oldName];
 				if(row>=0)
+				{
 					[(BRListControl *)[self list] setSelection:row];
+				}
 				else
+				{
 					[(BRListControl *)[self list] setSelection:0];
+					[self updatePreviewController];
+				}
 			}
 			/*Force a reload on the mediaPreviewController*/
 			/* Not working in FrontRow */
