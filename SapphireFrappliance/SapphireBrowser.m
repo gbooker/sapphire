@@ -646,7 +646,7 @@ static BOOL is10Version = NO;
 
 - (BOOL)brEventAction:(BREvent *)event
 {
-	BREventPageUsageHash hashVal = [event pageUsageHash];
+	BREventPageUsageHash hashVal = (uint32_t)([event page] << 16 | [event usage]);
 	if ([(BRControllerStack *)[self stack] peekController] != self)
 		hashVal = 0;
 		
