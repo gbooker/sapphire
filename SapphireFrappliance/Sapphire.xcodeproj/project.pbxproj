@@ -78,6 +78,7 @@
 		F56B74D60C3753E300E934AA /* NSString-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B74D50C3753E300E934AA /* NSString-Extensions.m */; };
 		F56B765E0C3837CE00E934AA /* SapphireShowChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */; };
 		F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */ = {isa = PBXBuildFile; fileRef = F56B77D60C3858B400E934AA /* DefaultPreview.png */; };
+		F571B4DA0E96F79900B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F571B4BF0E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */; };
 		F585A9C80D74EA870043AB22 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */; };
 		F59B29D10D9E8C6E002D5DBD /* NSArray-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */; };
 		F5A262540DD624B900AFB1D6 /* SapphireVideoTSParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A262530DD624B900AFB1D6 /* SapphireVideoTSParser.m */; };
@@ -153,6 +154,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = DCA299CA0D64A3B30092E9BB;
 			remoteInfo = SapphireTakeTwoCompatClasses;
+		};
+		F571B4BE0E96F62C00B7FD9D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F571B4B90E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */;
+			remoteInfo = SapphireTakeTwoPointTwoCompatClasses;
+		};
+		F571B4D80E96F78E00B7FD9D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F571B4B80E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses */;
+			remoteInfo = SapphireTakeTwoPointTwoCompatClasses;
 		};
 		F585A9C60D74EA810043AB22 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -246,6 +261,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				F571B4DA0E96F79900B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework in CopyFiles */,
 				F5EBE70C0D4A796600042BA0 /* SapphireCompatClasses.framework in CopyFiles */,
 				F5EBE70D0D4A796600042BA0 /* SapphireLeopardCompatClasses.framework in CopyFiles */,
 				F585A9C80D74EA870043AB22 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */,
@@ -634,6 +650,7 @@
 				F5EBE6DD0D4A775400042BA0 /* SapphireCompatClasses.framework */,
 				F5EBE6DF0D4A775400042BA0 /* SapphireLeopardCompatClasses.framework */,
 				F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */,
+				F571B4BF0E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -669,6 +686,7 @@
 				F5EBE7070D4A795200042BA0 /* PBXTargetDependency */,
 				F5EBE7090D4A795200042BA0 /* PBXTargetDependency */,
 				F585A9C70D74EA810043AB22 /* PBXTargetDependency */,
+				F571B4D90E96F78E00B7FD9D /* PBXTargetDependency */,
 			);
 			name = Sapphire;
 			productInstallPath = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
@@ -745,6 +763,14 @@
 			fileType = wrapper.framework;
 			path = SapphireTakeTwoCompatClasses.framework;
 			remoteRef = F56895E00D6CE30D00F9D9B0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F571B4BF0E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = SapphireTakeTwoPointTwoCompatClasses.framework;
+			path = ../../../../build/Release/SapphireTakeTwoPointTwoCompatClasses.framework;
+			remoteRef = F571B4BE0E96F62C00B7FD9D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F5EBE6DD0D4A775400042BA0 /* SapphireCompatClasses.framework */ = {
@@ -913,6 +939,11 @@
 			isa = PBXTargetDependency;
 			target = F5B4186D0D0B29D800BDD361 /* Complete Sapphire */;
 			targetProxy = F5038FA60DE7AB600046C674 /* PBXContainerItemProxy */;
+		};
+		F571B4D90E96F78E00B7FD9D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SapphireTakeTwoPointTwoCompatClasses;
+			targetProxy = F571B4D80E96F78E00B7FD9D /* PBXContainerItemProxy */;
 		};
 		F585A9C70D74EA810043AB22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
