@@ -52,7 +52,7 @@
 	if ( cls == Nil )
 		return;
 	[[cls sharedInstance] enableFeatureNamed: [[NSBundle bundleForClass: self] bundleIdentifier]];
-	[[BRPreferences sharedFrontRowPreferences] setBool:YES forKey:@"AllowAllVideoToPlay"];  //Workaround 2.2.
+	[[SapphireFrontRowCompat sharedFrontRowPreferences] setBool:YES forKey:@"AllowAllVideoToPlay"];  //Workaround 2.2.
 }
 
 + (NSString *) className
