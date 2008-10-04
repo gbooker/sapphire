@@ -83,6 +83,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 static BOOL usingFrontRow = NO;
 static BOOL usingTakeTwo = NO;
+static BOOL usingTakeTwoDotTwo = NO;
 
 + (void)initialize
 {
@@ -91,6 +92,9 @@ static BOOL usingTakeTwo = NO;
   
   if(NSClassFromString(@"BRBaseAppliance") != nil)
     usingTakeTwo = YES;
+  
+  if(NSClassFromString(@"BRVideoPlayerController") == nil)
+    usingTakeTwoDotTwo = YES;
 }
 
 + (BOOL)usingFrontRow
@@ -101,6 +105,11 @@ static BOOL usingTakeTwo = NO;
 + (BOOL)usingTakeTwo
 {
   return usingTakeTwo;
+}
+
++ (BOOL)usingTakeTwoDotTwo
+{
+  return usingTakeTwoDotTwo;
 }
 
 + (id)imageAtPath:(NSString *)path

@@ -54,6 +54,13 @@
 + (BOOL)usingTakeTwo;
 
 /*!
+ * @brief Are we on ATV 2.2?
+ *
+ * @return YES if on 2.2, NO otherwise
+ */
++ (BOOL)usingTakeTwoDotTwo;
+
+/*!
  * @brief Load an image at a path
  *
  * This returns a CGImageRef or a BRImage, depending on platform.
