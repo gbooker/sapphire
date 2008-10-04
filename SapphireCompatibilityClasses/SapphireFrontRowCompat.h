@@ -402,6 +402,15 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireTakeTwoCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
 			}
 		}
+		//ATV2.2
+		if(NSClassFromString(@"BRVideoPlayerController") == nil)
+		{
+			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoPointTwoCompatClasses.framework"];
+			compat = [NSBundle bundleWithPath:compatPath];
+			if( ![compat load]){ 
+				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireTakeTwoPointTwoCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
+			}
+		}
 	}	
 }
 

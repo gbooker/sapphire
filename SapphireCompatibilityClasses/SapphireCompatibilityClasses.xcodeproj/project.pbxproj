@@ -36,6 +36,11 @@
 		F51BFD180D26BCEA00E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD140D26BCEA00E22363 /* Foundation.framework */; };
 		F51BFD220D26BD8900E22363 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */; };
 		F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFD540D26BEF900E22363 /* BackRowUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F571B4CF0E96F69A00B7FD9D /* BRVideoPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F571B4CD0E96F69A00B7FD9D /* BRVideoPlayerController.h */; };
+		F571B4D00E96F69A00B7FD9D /* BRVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F571B4CE0E96F69A00B7FD9D /* BRVideoPlayerController.m */; };
+		F571B6F40E96F81D00B7FD9D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD130D26BCEA00E22363 /* AppKit.framework */; };
+		F571B6F50E96F81D00B7FD9D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD140D26BCEA00E22363 /* Foundation.framework */; };
+		F571B6F60E96F81D00B7FD9D /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD100D26BCD200E22363 /* BackRow.framework */; };
 		F580E8740D31288400F2225A /* SapphireButtonControl.h in Headers */ = {isa = PBXBuildFile; fileRef = F580E8720D31288400F2225A /* SapphireButtonControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F580E8750D31288400F2225A /* SapphireButtonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F580E8730D31288400F2225A /* SapphireButtonControl.m */; };
 		F585A9DC0D74ED780043AB22 /* BRMusicNowPlayingController.h in Headers */ = {isa = PBXBuildFile; fileRef = F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */; };
@@ -80,6 +85,10 @@
 		F51BFD140D26BCEA00E22363 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		F51BFD210D26BD8900E22363 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		F51BFD540D26BEF900E22363 /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
+		F571B4B90E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SapphireTakeTwoPointTwoCompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F571B4BA0E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SapphireTakeTwoPointTwoCompatClasses-Info.plist"; sourceTree = "<group>"; };
+		F571B4CD0E96F69A00B7FD9D /* BRVideoPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRVideoPlayerController.h; sourceTree = "<group>"; };
+		F571B4CE0E96F69A00B7FD9D /* BRVideoPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRVideoPlayerController.m; sourceTree = "<group>"; };
 		F580E8720D31288400F2225A /* SapphireButtonControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireButtonControl.h; sourceTree = "<group>"; };
 		F580E8730D31288400F2225A /* SapphireButtonControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireButtonControl.m; sourceTree = "<group>"; };
 		F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMusicNowPlayingController.h; sourceTree = "<group>"; };
@@ -118,6 +127,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F571B4B70E96F62C00B7FD9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F571B6F40E96F81D00B7FD9D /* AppKit.framework in Frameworks */,
+				F571B6F50E96F81D00B7FD9D /* Foundation.framework in Frameworks */,
+				F571B6F60E96F81D00B7FD9D /* BackRow.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -128,6 +147,7 @@
 				F51BFD0F0D26BCBE00E22363 /* Frameworks */,
 				F51BFCD20D26BAED00E22363 /* Products */,
 				DCA299CB0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses-Info.plist */,
+				F571B4BA0E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +177,8 @@
 				DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */,
 				F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */,
 				F585A9DB0D74ED780043AB22 /* BRMusicNowPlayingController.m */,
+				F571B4CD0E96F69A00B7FD9D /* BRVideoPlayerController.h */,
+				F571B4CE0E96F69A00B7FD9D /* BRVideoPlayerController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -167,6 +189,7 @@
 				F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */,
 				F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */,
 				DCA299CA0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses.framework */,
+				F571B4B90E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,6 +238,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F51BFD0B0D26BC9900E22363 /* BRLayerController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F571B4B40E96F62C00B7FD9D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F571B4CF0E96F69A00B7FD9D /* BRVideoPlayerController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +307,24 @@
 			productReference = F51BFCF90D26BB4D00E22363 /* SapphireLeopardCompatClasses.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		F571B4B80E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F571B4C00E96F62C00B7FD9D /* Build configuration list for PBXNativeTarget "SapphireTakeTwoPointTwoCompatClasses" */;
+			buildPhases = (
+				F571B4B40E96F62C00B7FD9D /* Headers */,
+				F571B4B50E96F62C00B7FD9D /* Resources */,
+				F571B4B60E96F62C00B7FD9D /* Sources */,
+				F571B4B70E96F62C00B7FD9D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SapphireTakeTwoPointTwoCompatClasses;
+			productName = SapphireTakeTwoPointTwoCompatClasses;
+			productReference = F571B4B90E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -292,6 +341,7 @@
 				F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */,
 				F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */,
 				DCA299BD0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses */,
+				F571B4B80E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses */,
 			);
 		};
 /* End PBXProject section */
@@ -312,6 +362,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		F51BFCF50D26BB4D00E22363 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F571B4B50E96F62C00B7FD9D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -350,6 +407,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F51BFD0A0D26BC9900E22363 /* BRLayerController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F571B4B60E96F62C00B7FD9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F571B4D00E96F69A00B7FD9D /* BRVideoPlayerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,6 +638,70 @@
 			};
 			name = Release;
 		};
+		F571B4BB0E96F62C00B7FD9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "SapphireTakeTwoPointTwoCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireTakeTwoPointTwoCompatClasses;
+			};
+			name = Debug;
+		};
+		F571B4BC0E96F62C00B7FD9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "SapphireTakeTwoPointTwoCompatClasses-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = SapphireTakeTwoPointTwoCompatClasses;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -608,6 +737,15 @@
 			buildConfigurations = (
 				F51BFCFB0D26BB4E00E22363 /* Debug */,
 				F51BFCFC0D26BB4E00E22363 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F571B4C00E96F62C00B7FD9D /* Build configuration list for PBXNativeTarget "SapphireTakeTwoPointTwoCompatClasses" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F571B4BB0E96F62C00B7FD9D /* Debug */,
+				F571B4BC0E96F62C00B7FD9D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
