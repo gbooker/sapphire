@@ -634,7 +634,7 @@
 				else if(resultURL == nil || [resultTitleValue characterAtIndex:0] == 160)
 					continue;
 				/*Skip Video Game titles (VG) and TV Series (Either (TV) or (TV Series))*/
-				if([resultTitleValue rangeOfString:@"(VG)"].location != NSNotFound || [resultTitleValue rangeOfString:@"(TV"].location != NSNotFound )
+				if([resultTitleValue rangeOfString:@"(VG)"].location != NSNotFound || [resultTitleValue rangeOfString:@"(TV)"].location != NSNotFound || [resultTitleValue rangeOfString:@"(TV Series)"].location != NSNotFound )
 					continue ;
 				[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					[[result objectsForXQuery:IMDB_RESULT_NAME_XPATH error:&error] objectAtIndex:0], @"name",
