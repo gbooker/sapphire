@@ -364,6 +364,14 @@
 + (BRTextWithSpinnerController *)textWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene;
 
 /*!
+ * @brief Sets whether a BRWaitSpinnerControl should spin or not
+ *
+ * @param spinner The spinner
+ * @param spin YES if the spinner should spin, NO otherwise
+ */
++ (void)setSpinner:(BRWaitSpinnerControl *)spinner toSpin:(BOOL)spin;
+
+/*!
  * @brief Get the call stack addresses for an exception
  *
  * This function exists mostly because this method is different on Tiger and Leopard.  This is not a significant differece between the ATV and Frontrow

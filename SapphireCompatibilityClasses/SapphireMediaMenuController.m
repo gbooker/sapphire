@@ -181,6 +181,7 @@
 			if([self getSelection] == 0 && [event value] == 1)
 			{
 				[self setSelection:itemCount-1];
+				[self updatePreviewController];
 				return YES;
 			}
 			break;
@@ -189,6 +190,7 @@
 			if([self getSelection] == itemCount-1 && [event value] == 1)
 			{
 				[self setSelection:0];
+				[self updatePreviewController];
 				return YES;
 			}
 			break;

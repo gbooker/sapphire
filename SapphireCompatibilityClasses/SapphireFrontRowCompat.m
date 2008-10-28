@@ -79,6 +79,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (void)insertControl:(id)control atIndex:(long)index;
 @end
 
+@interface BRWaitSpinnerControl (compat)
+- (void)setSpins:(BOOL)spin;
+@end
+
 @implementation SapphireFrontRowCompat
 
 static BOOL usingFrontRow = NO;
@@ -417,6 +421,19 @@ static BOOL usingTakeTwoDotTwo = NO;
     return [[BRTextWithSpinnerController alloc] initWithTitle:title text:text isNetworkDependent:networkDependent];
   else
     return [[BRTextWithSpinnerController alloc] initWithScene:scene title:title text:text showBack:NO isNetworkDependent:NO];
+}
+
++ (void)setSpinner:(BRWaitSpinnerControl *)spinner toSpin:(BOOL)spin
+{
+	if([spinner respondsToSelector:@selector(setSpins:)])
+		[spinner setSpins:spin];
+	else if([spinner respondsToSelector:@selector(startSpinning)])
+	{
+		if(spin)
+			[spinner startSpinning];
+		else
+			[spinner stopSpinning];
+	}
 }
 
 + (NSArray *)callStackReturnAddressesForException:(NSException *)exception
