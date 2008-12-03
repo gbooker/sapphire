@@ -44,6 +44,8 @@
 	[self addControl: fileName];	
 	[[self list] setDatasource:self];
 	
+	[SapphireLayoutManager setCustomLayoutOnControl:self];
+	
 	return self;
 }
 
@@ -93,14 +95,9 @@
 	return searchStr;
 }
 
-- (void)willBePushed
-{
-	[super willBePushed];
-	[(BRListControl *)[self list] setSelection:1];
-}
-
 - (void)wasPushed
 {
+	[(BRListControl *)[self list] setSelection:1];
 	[self doMyLayout];
 	[super wasPushed];
 }

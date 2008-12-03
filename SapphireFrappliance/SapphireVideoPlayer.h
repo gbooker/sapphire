@@ -41,6 +41,7 @@ typedef enum{
 	int						padding[16];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/
 	double					skipTime;		/*!< @brief Time by which next skip should advance/reverse*/
 	SkipState				state;			/*!< @brief Current state we are in*/
+	BOOL					enabledChecked;	/*!< @brief YES if we checked to enable, NO otherwise*/
 	BOOL					enabled;		/*!< @brief YES if we are enabled, NO if we behave the same as the super class*/
 	NSTimer					*resetTimer;	/*!< @brief Timer to reset our state machine to default (not retained)*/
 	double					duration;		/*!< @brief Total length of the movie*/

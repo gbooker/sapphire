@@ -308,28 +308,12 @@ static SapphireSettings *sharedInstance = nil;
 	[self writeSettings];
 }
 
-- (void) willBePushed
-{
-    // We're about to be placed on screen, but we're not yet there
-    
-    // always call super
-    [super willBePushed];
-}
-
 - (void) wasPushed
 {
     // We've just been put on screen, the user can see this controller's content now
     
     // always call super
     [super wasPushed];
-}
-
-- (void) willBePopped
-{
-    // The user pressed Menu, but we've not been removed from the screen yet
-    
-    // always call super
-    [super willBePopped];
 }
 
 - (void) wasPopped
@@ -340,28 +324,12 @@ static SapphireSettings *sharedInstance = nil;
     [super wasPopped];
 }
 
-- (void) willBeBuried
-{
-    // The user just chose an option, and we will be taken off the screen
-    
-    // always call super
-    [super willBeBuried];
-}
-
 - (void) wasBuriedByPushingController: (BRLayerController *) controller
 {
     // The user chose an option and this controller is no longer on screen
     
     // always call super
     [super wasBuriedByPushingController: controller];
-}
-
-- (void) willBeExhumed
-{
-    // the user pressed Menu, but we've not been revealed yet
-    
-    // always call super
-    [super willBeExhumed];
 }
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller

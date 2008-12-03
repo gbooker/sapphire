@@ -32,6 +32,7 @@
 	NSMutableDictionary			*movieTranslations;		/*!< @brief The translation dictionary from filename to movie*/
 	NSString					*settingsPath;			/*!< @brief The persistent store of translations*/
 	SapphirePosterChooser		*posterChooser;			/*!< @brief The poster chooser (if exists) (not retained)*/
+	BRLayerController			*childController;		/*!< @brief The controller we push on top of us*/
 }
 
 /*!

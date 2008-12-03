@@ -28,7 +28,7 @@
  * The directory may not always be the parent of the metadata. In the case of virtual directories, the parent is a virtual directory while the metadata is the actual file located elsewhere.
  */
 @interface SapphireMediaPreview : BRMetadataPreviewController{
-	int		padding[16];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/	
+	int		padding[32];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/	
 	SapphireMetaData			*meta;			/*!< @brief The metadata to display in the preview*/
 	SapphireDirectoryMetaData	*dirMeta;		/*!< @brief The directory containing the metadata*/
 }

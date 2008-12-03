@@ -18,7 +18,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class SapphireFileMetaData;
+@class SapphireFileMetaData, SapphireVideoPlayer;
 
 /*!
  * @brief A subclass of BRVideoPlayerController for setting up AC3 passthrough and resume support
@@ -30,6 +30,15 @@
 	SapphireFileMetaData	*currentPlayFile;	/*!< @brief The file we are playing*/
 	int						soundState;			/*!< @brief Sound state before we played the current file*/
 }
+
+/*!
+ * @brief Creates the controller for a player
+ *
+ * @param scene The scene
+ * @param player The player
+ * @return the controller
+ */
+- (id)initWithScene:(BRRenderScene *)scene player:(SapphireVideoPlayer *)player;
 
 /*!
  * @brief Set the currently playing file metadata

@@ -140,7 +140,6 @@ static NSArray *predicates = nil;
 		while((key = [mappingEnum nextObject]) != nil)
 			[ret appendFormat:@"\n0x%X\t%@", [key pointerValue], [mapping objectForKey:key]];
 	}
-	NSLog(@"%@", ret);	
 }
 
 + (NSString *) rootMenuLabel
@@ -301,29 +300,13 @@ static NSArray *predicates = nil;
 		[names removeLastObject];
 }
 
-- (void) willBePushed
-{
-    // We're about to be placed on screen, but we're not yet there
-    [self recreateMenu];
-	[[self list] reload];
-    // always call super
-    [super willBePushed];
-}
-
 - (void) wasPushed
 {
     // We've just been put on screen, the user can see this controller's content now
-    
+    [self recreateMenu];
+	[[self list] reload];
     // always call super
     [super wasPushed];
-}
-
-- (void) willBePopped
-{
-    // The user pressed Menu, but we've not been removed from the screen yet
-    
-    // always call super
-    [super willBePopped];
 }
 
 - (void) wasPopped
@@ -334,14 +317,6 @@ static NSArray *predicates = nil;
     [super wasPopped];
 }
 
-- (void) willBeBuried
-{
-    // The user just chose an option, and we will be taken off the screen
-    
-    // always call super
-    [super willBeBuried];
-}
-
 - (void) wasBuriedByPushingController: (BRLayerController *) controller
 {
     // The user chose an option and this controller os no longer on screen
@@ -350,21 +325,14 @@ static NSArray *predicates = nil;
     [super wasBuriedByPushingController: controller];
 }
 
-- (void) willBeExhumed
-{
-    // the user pressed Menu, but we've not been revealed yet
-    
-    // always call super
-    [super willBeExhumed];
-	[self setMenuFromSettings];
-	[[self list] reload];
-	[SapphireFrontRowCompat renderScene:[self scene]];
-}
-
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
     // handle being revealed when the user presses Menu
     
+	[self setMenuFromSettings];
+	[[self list] reload];
+	[SapphireFrontRowCompat renderScene:[self scene]];
+
     // always call super
     [super wasExhumedByPoppingController: controller];
 }

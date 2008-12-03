@@ -60,6 +60,45 @@
 }
 @end
 
+typedef enum
+	{
+		kBRMediaPlayerStateStopped =		0,
+		kBRMediaPlayerStatePaused,
+		kBRMediaPlayerStateLoading,
+		kBRMediaPlayerStatePlaying,
+		kBRMediaPlayerStateFastForwardLevel1,
+		kBRMediaPlayerStateFastForwardLevel2,
+		kBRMediaPlayerStateFastForwardLevel3,
+		kBRMediaPlayerStateRewindLevel1,
+		kBRMediaPlayerStateRewindLevel2,
+		kBRMediaPlayerStateRewindLevel3,
+		kBRMediaPlayerStateSlowForwardLevel1,
+		kBRMediaPlayerStateSlowForwardLevel2,
+		kBRMediaPlayerStateSlowForwardLevel3,
+		kBRMediaPlayerStateSlowRewindLevel1,
+		kBRMediaPlayerStateSlowRewindLevel2,
+		kBRMediaPlayerStateSlowRewindLevel3,
+		
+		kBRMediaPlayerStateRewind = kBRMediaPlayerStateRewindLevel1,	// default
+		kBRMediaPlayerStateFastForward = kBRMediaPlayerStateFastForwardLevel1,	// default
+		
+		kBRMediaPlayerStateRESERVED	=		20,
+		
+		// Individual player subclasses may create their own states beyond the
+		// reserved states. For instance, the DVD player may want to create states
+		// for when it's in menus.
+		
+	} BRMediaPlayerState;
+
+@interface BRQTKitVideoPlayer (compat)
+-(BOOL)setState:(BRMediaPlayerState)state error:(NSError **)error;
+-(BOOL)setMedia:(BRBaseMediaAsset *)asset inTrackList:(NSArray *)tracklist error:(NSError **)error;
+-(BOOL)setMediaAtIndex:(long)index inTrackList:(NSArray *)tracklist error:(NSError **)error;
+-(double)duration;
+-(double)elapsedTime;
+@end
+
+
 #define LOW_SKIP_TIME 5.0f
 
 typedef enum {
@@ -106,13 +145,8 @@ typedef enum {
 	return NO;
 }
 
-- (BOOL)prerollMedia:(NSError * *)fp8
+- (void)checkIfCanEnable
 {
-	BOOL ret = [super prerollMedia:fp8];
-	
-	if(!ret)
-		return ret;
-	
 	/*Check to see if the movie has any chapters by default*/
 	Movie myMovie = [[self gimmieVideo] gimmieMovie];
 	
@@ -121,7 +155,34 @@ typedef enum {
 	
 	if(!hasChapters)
 		enabled = TRUE;
+	NSLog(@"Enabled is %d", enabled);
+}
 
+- (BOOL)prerollMedia:(NSError * *)fp8
+{
+	BOOL ret = [super prerollMedia:fp8];
+	
+	if(!ret)
+		return ret;
+	
+	[self checkIfCanEnable];
+
+	return ret;
+}
+
+-(BOOL)setState:(BRMediaPlayerState)playState error:(NSError **)error;
+{
+	BOOL ret = [super setState:playState error:error];
+	
+	if(!ret)
+		return ret;
+
+	if(!enabledChecked)
+	{
+		[self checkIfCanEnable];
+		enabledChecked = YES;
+	}
+	
 	return ret;
 }
 
@@ -259,6 +320,32 @@ typedef enum {
 		return [super _currentChapterMark];
 	
 	return [self getPreviousChapterMarkAndUpdate:NO];
+}
+
+- (BOOL)setMedia:(BRBaseMediaAsset *)asset error:(NSError **)error
+{
+	if([SapphireFrontRowCompat usingTakeTwoDotTwo])
+	{
+		if([[SapphireVideoPlayer superclass] instancesRespondToSelector:@selector(setMedia:inTrackList:error:)])
+			return [super setMedia:asset inTrackList:[NSArray arrayWithObject:asset] error:error];
+		else
+			return [super setMediaAtIndex:0 inTrackList:[NSArray arrayWithObject:asset] error:error];
+	}
+	return [super setMedia:asset error:error];
+}
+
+- (double)elapsedPlaybackTime
+{
+	if([[SapphireVideoPlayer superclass] instancesRespondToSelector:@selector(elapsedPlaybackTime)])
+		return [super elapsedPlaybackTime];
+	return [super elapsedTime];
+}
+
+- (double)trackDuration
+{
+	if([[SapphireVideoPlayer superclass] instancesRespondToSelector:@selector(trackDuration)])
+		return [super trackDuration];
+	return [super duration];
 }
 
 @end

@@ -24,10 +24,18 @@
  *
  * This class is designed to allow the custom settings of resume time as well as a custom image path.  It extends from BRSimpleMediaAsset, so it can be used whenever a URL based asset is needed.
  */
-@interface SapphireMedia : BRSimpleMediaAsset {
+@interface SapphireMedia : BRXMLMediaAsset {
 	unsigned int		resumeTime;		/*!< @brief The resume time to use, 0 to use super*/
 	NSString			*imagePath;		/*!< @brief The cover art path to use, nil to use super*/
 }
+
+/*!
+ * @brief Creates a media with a URL. Compatibility with old calling mechanism
+ *
+ * @param url The url to use for this media.
+ * @return The media
+ */
+- (id)initWithMediaURL:(NSURL *)url;
 
 /*!
  * @brief Set the resume time for the media

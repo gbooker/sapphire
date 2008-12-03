@@ -31,15 +31,23 @@
 #define SOUND_STATE_SOUND_ENABLED		1
 #define SOUND_STATE_SOUND_PASSTHROUGH	2
 
+@interface BRVideoPlayerController (compat)
+- (id)initWithPlayer:(SapphireVideoPlayer *)player;
+@end
+
+
 @implementation SapphireVideoPlayerController
 
-- (id)initWithScene:(BRRenderScene *)scene
+- (id)initWithScene:(BRRenderScene *)scene player:(SapphireVideoPlayer *)player;
 {
 	if([[BRVideoPlayerController class] instancesRespondToSelector:@selector(initWithScene:)])
 		self = [super initWithScene:scene];
+	else if([[BRVideoPlayerController class] instancesRespondToSelector:@selector(initWithPlayer:)])
+		self = [super initWithPlayer:player];
 	else
 		self = [super init];
 	
+	[self setVideoPlayer:player];
 	return self;
 }
 
@@ -200,9 +208,9 @@ static BOOL setupAudioOutput(int sampleRate)
 	[self enablePassthrough];
 }
 
-- (void)willBePopped
+- (void)wasPopped
 {
-	[super willBePopped];
+	[super wasPopped];
 	//Turn off the AC3 Passthrough hack
 	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:((soundState & SOUND_STATE_SOUND_PASSTHROUGH)? 1 : 0)], A52_DOMIAN);
 	CFPreferencesAppSynchronize(A52_DOMIAN);
@@ -213,6 +221,8 @@ static BOOL setupAudioOutput(int sampleRate)
 	BRVideoPlayer *player = [self player];
 	float elapsed = [player elapsedPlaybackTime];
 	float duration = [player trackDuration];
+	if(duration == 0.0f)
+		elapsed = duration = 1.0f;
 	if(elapsed / duration > 0.9f)
 		/*Mark as watched and reload info*/
 		[currentPlayFile setWatched:YES];

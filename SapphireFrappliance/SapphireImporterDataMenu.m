@@ -66,7 +66,9 @@
 	[self addControl: fileProgress] ;
 	[self addControl: currentFile] ;
 	[SapphireFrontRowCompat addSublayer:bar toControl:self];
-
+	
+	[SapphireLayoutManager setCustomLayoutOnControl:self];
+	
     return ( self );
 }
 
@@ -409,6 +411,16 @@
 	[self setListTitle:[importer initialText]];
 	[self setText:[importer informativeText]];
 	[self setButtonTitle:[importer buttonTitle]];
+}
+
+- (void)doMyLayout
+{
+	if(!layoutDone)
+	{
+		[self layoutFrame];
+		[self resetUIElements];
+		layoutDone = YES;
+	}
 }
 
 - (void)wasPushed

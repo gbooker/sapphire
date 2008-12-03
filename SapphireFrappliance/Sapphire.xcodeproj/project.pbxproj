@@ -159,14 +159,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = F571B4B90E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */;
+			remoteGlobalIDString = F571B4B90E96F62C00B7FD9D;
 			remoteInfo = SapphireTakeTwoPointTwoCompatClasses;
 		};
 		F571B4D80E96F78E00B7FD9D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = F571B4B80E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses */;
+			remoteGlobalIDString = F571B4B80E96F62C00B7FD9D;
 			remoteInfo = SapphireTakeTwoPointTwoCompatClasses;
 		};
 		F585A9C60D74EA810043AB22 /* PBXContainerItemProxy */ = {
@@ -768,8 +768,7 @@
 		F571B4BF0E96F62C00B7FD9D /* SapphireTakeTwoPointTwoCompatClasses.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			name = SapphireTakeTwoPointTwoCompatClasses.framework;
-			path = ../../../../build/Release/SapphireTakeTwoPointTwoCompatClasses.framework;
+			path = SapphireTakeTwoPointTwoCompatClasses.framework;
 			remoteRef = F571B4BE0E96F62C00B7FD9D /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

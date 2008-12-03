@@ -23,6 +23,19 @@
 
 @implementation SapphireMedia
 
+- (id)initWithMediaURL:(NSURL *)url
+{
+	//This is here to fix 2.2
+	self = [super initWithMediaProvider:nil];
+	NSString *urlString = [url absoluteString];
+	NSString *filename = [url path];
+	[self setObject:[filename lastPathComponent] forKey:@"id"];
+	[self setObject:[BRMediaType movie] forKey:@"mediaType"];
+	[self setObject:urlString forKey:@"mediaURL"];
+	
+	return self;
+}
+
 - (void)dealloc
 {
 	[imagePath release];

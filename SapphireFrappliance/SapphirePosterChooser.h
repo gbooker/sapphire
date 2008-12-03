@@ -19,6 +19,7 @@
  */
 
 #import <SapphireCompatClasses/SapphireMediaMenuController.h>
+#import <SapphireCompatClasses/SapphireLayoutManager.h>
 
 #define POSTER_CHOOSE_CANCEL		-1
 #define POSTER_CHOOSE_REFRESH		0
@@ -30,7 +31,7 @@
  *
  * This class provides a menu and maching icons to display posters for the user to choose.
  */
-@interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider> {
+@interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate> {
 	NSArray					*posters;		/*!< @brief The array of poster paths*/
 	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
 	NSString				*fileName;		/*!< @brief The movie filename*/

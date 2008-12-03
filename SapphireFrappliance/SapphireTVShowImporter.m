@@ -119,6 +119,7 @@
 	regfree(&letterMarking);
 	regfree(&seasonByEpisode);
 	regfree(&seasonEpisodeTriple);
+	[chooser release];
 	[super dealloc];
 }
 
@@ -531,14 +532,13 @@
 		/*Ask the user what show this is*/
 		NSArray *shows = [self searchResultsForSeries:searchStr];
 		/*Bring up the prompt*/
-		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
+		chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
 		[chooser setShows:shows];
 		[chooser setFileName:fileName];
 		[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
 		[chooser setSearchStr:searchStr];
 		/*And display prompt*/
 		[[dataMenu stack] pushController:chooser];
-		[chooser release];
 		return IMPORT_STATE_NEEDS_SUSPEND;
 	}
 	
@@ -594,7 +594,7 @@
 	{
 		/*Match on show title*/
 		NSString *showTitle = nil;
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet letterCharacterSet] intoString:nil];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:nil];
 		if([scanner scanUpToString:@"." intoString:&showTitle])
 			info = [self getInfo:show forSeason:season episodeTitle:showTitle];
 	}
@@ -662,11 +662,10 @@
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 	/*See if it was a show chooser*/
-	if(![controller isKindOfClass:[SapphireShowChooser class]])
+	if(chooser == nil)
 		return;
 	
 	/*Get the user's selection*/
-	SapphireShowChooser *chooser = (SapphireShowChooser *)controller;
 	int selection = [chooser selection];
 	if(selection == SHOW_CHOOSE_CANCEL)
 		/*They aborted, skip*/
@@ -685,6 +684,8 @@
 		[showTranslations setObject:[show objectForKey:@"link"] forKey:[[chooser searchStr] lowercaseString]];
 		[self writeSettings];
 	}
+	[chooser release];
+	chooser = nil;
 	/*We can resume now*/
 	[dataMenu resume];
 }

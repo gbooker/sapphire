@@ -19,6 +19,7 @@
  */
 
 #import <SapphireCompatClasses/SapphireCenteredMenuController.h>
+#import <SapphireCompatClasses/SapphireLayoutManager.h>
 
 #define SHOW_CHOOSE_CANCEL -2
 #define SHOW_CHOOSE_NOT_SHOW -1
@@ -28,7 +29,7 @@
  *
  * This class presents the user with a list of possible shows to match a file and asks the user to choose its name.
  */
-@interface SapphireShowChooser : SapphireCenteredMenuController {
+@interface SapphireShowChooser : SapphireCenteredMenuController <SapphireLayoutDelegate> {
 	NSArray			*shows;		/*!< @brief The list of possible shows*/
 	NSString		*searchStr;	/*!< @brief The string we searched for*/
 	int				selection;	/*!< @brief The user's selection*/

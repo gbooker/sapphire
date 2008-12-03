@@ -70,6 +70,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	
 	/* Setup posterMarch controls */
 	posterMarch = [SapphireFrontRowCompat newMarchingIconLayerWithScene:scene];
+	[SapphireLayoutManager setCustomLayoutOnControl:self];
 	
 	return self;
 }
@@ -99,8 +100,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (void) willBePushed
 {
     // We're about to be placed on screen, but we're not yet there
-    // add the icon march layer to the scene
-    [self showIconMarch];
     
     // always call super
     [super willBePushed];

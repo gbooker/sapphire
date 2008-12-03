@@ -168,79 +168,54 @@ static BOOL is10Version = NO;
 	return metaData;
 }
 
-- (void) willBePushed
-{
-    // We're about to be placed on screen, but we're not yet there
-    
-    // always call super
-    [super willBePushed];
-	/*Reload upon display*/
-	[metaData setDelegate:self];
-	[self setNewPredicate:[SapphireApplianceController predicate]];
-}
-
 - (void) wasPushed
 {
     // We've just been put on screen, the user can see this controller's content now
-    
+	/*Reload upon display*/
+	@try {
+		[metaData setDelegate:self];
+		[self setNewPredicate:[SapphireApplianceController predicate]];
+	}
+	@catch (NSException * e) {
+		[SapphireApplianceController logException:e];
+	}	
     // always call super
     [super wasPushed];
 	/*Get metadata when we can*/
 	[metaData resumeImport];
 }
 
-- (void) willBePopped
+- (void) wasPopped
 {
-    // The user pressed Menu, but we've not been removed from the screen yet
-    
+    // The user pressed Menu, removing us from the screen
     // always call super
-    [super willBePopped];
+
+    [super wasPopped];
 	/*Cancel everything we were doing*/
 	[metaData cancelImport];
 	cancelScan = YES;
 	[metaData setDelegate:nil];
 }
 
-- (void) wasPopped
-{
-    // The user pressed Menu, removing us from the screen
-    // always call super
-    [super wasPopped];
-}
-
-- (void) willBeBuried
-{
-    // The user just chose an option, and we will be taken off the screen
-    
-	/*Cancel everything we were doing*/
-	[metaData cancelImport];
-	cancelScan = YES;
-	// always call super
-    [super willBeBuried];
-}
-
 - (void) wasBuriedByPushingController: (BRLayerController *) controller
 {
     // The user chose an option and this controller is no longer on screen
-    
+
+	/*Cancel everything we were doing*/
+	[metaData cancelImport];
+	cancelScan = YES;
+
     // always call super
     [super wasBuriedByPushingController: controller];
-}
-
-- (void) willBeExhumed
-{
-    // the user pressed Menu, but we've not been revealed yet
-    
-	/*Reload our display*/
-	[self setNewPredicate:[SapphireApplianceController predicate]];
-    // always call super
-    [super willBeExhumed];
 }
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
     // handle being revealed when the user presses Menu
-    
+
+	/*Reload our display*/
+	[self setNewPredicate:[SapphireApplianceController predicate]];
+
     // always call super
     [super wasExhumedByPoppingController: controller];
 	/*Check to see if dir is empty*/
@@ -556,10 +531,9 @@ static BOOL is10Version = NO;
 			[player setMedia:asset error:&error];
 			
 			/*and go*/
-			SapphireVideoPlayerController *controller = [[SapphireVideoPlayerController alloc] initWithScene:[self scene]];
+			SapphireVideoPlayerController *controller = [[SapphireVideoPlayerController alloc] initWithScene:[self scene] player:player];
 			[controller setPlayFile:currentPlayFile];
 			[controller setAllowsResume:YES];
-			[controller setVideoPlayer:player];
 			[[self stack] pushController:controller];
 
 			[asset release];

@@ -21,6 +21,8 @@
 #import "SapphireImporterDataMenu.h"
 #include <regex.h>
 
+@class SapphireShowChooser;
+
 /*!
  * @brief The importer of TV data
  *
@@ -35,6 +37,7 @@
 	regex_t						letterMarking;			/*!< @brief Regex for matching S##E##*/
 	regex_t						seasonByEpisode;		/*!< @brief Regex for matching #x##*/
 	regex_t						seasonEpisodeTriple;	/*!< @brief Regex for matching ###*/
+	SapphireShowChooser			*chooser;				/*!< @brief The TV Show chooser*/
 }
 
 /*!

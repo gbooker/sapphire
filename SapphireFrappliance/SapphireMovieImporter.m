@@ -196,6 +196,7 @@
 {
 	[movieTranslations release];
 	[settingsPath release];
+	[childController release];
 	[super dealloc];
 }
 
@@ -728,6 +729,7 @@
 		[chooser setFileName:lookupName];		
 		[chooser setListTitle:BRLocalizedString(@"Select Movie Title", @"Prompt the user for title of movie")];
 		/*And display prompt*/
+		childController = [chooser retain];
 		[[dataMenu stack] pushController:chooser];
 		[chooser release];
 		return IMPORT_STATE_NEEDS_SUSPEND;
@@ -787,6 +789,7 @@
 				[posterChooser setFileName:lookupName];
 				[posterChooser setFile:(SapphireFileMetaData *)metaData];
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
+				childController = [posterChooser retain];
 				[[dataMenu stack] pushController:posterChooser];
 				[posterChooser release];
 				return IMPORT_STATE_NEEDS_SUSPEND;
@@ -895,10 +898,10 @@
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
 	/*See if it was a movie chooser*/
-	if([controller isKindOfClass:[SapphireMovieChooser class]])
+	if([childController isKindOfClass:[SapphireMovieChooser class]])
 	{
 		/*Get the user's selection*/
-		SapphireMovieChooser *chooser = (SapphireMovieChooser *)controller;
+		SapphireMovieChooser *chooser = (SapphireMovieChooser *)childController;
 		int selection = [chooser selection];
 		if(selection == MOVIE_CHOOSE_CANCEL)
 		{
@@ -931,7 +934,7 @@
 		/*We can resume now*/
 		[dataMenu resume];
 	}
-	else if([controller isKindOfClass:[SapphirePosterChooser class]])
+	else if([childController isKindOfClass:[SapphirePosterChooser class]])
 	{
 		int selectedPoster = [posterChooser selectedPoster];
 		if(selectedPoster == POSTER_CHOOSE_CANCEL)
@@ -957,6 +960,9 @@
 	}
 	else
 		return;
+	
+	[childController release];
+	childController = nil;
 }
 
 @end

@@ -19,6 +19,7 @@
  */
 
 #import <SapphireCompatClasses/SapphireCenteredMenuController.h>
+#import <SapphireCompatClasses/SapphireLayoutManager.h>
 
 #define MOVIE_CHOOSE_CANCEL		-2
 #define MOVIE_CHOOSE_NOT_MOVIE	-1
@@ -28,7 +29,7 @@
  *
  * This class presents the user with a list of possible movies to match a file and asks the user to choose its name.
  */
-@interface SapphireMovieChooser : SapphireCenteredMenuController {
+@interface SapphireMovieChooser : SapphireCenteredMenuController <SapphireLayoutDelegate> {
 	NSArray			*movies;		/*!< @brief The list of possible movies*/
 	NSString		*fileName;		/*!< @brief The filename of the current file*/
 	int				selection;		/*!< @brief The selection the user made*/
