@@ -88,17 +88,21 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 static BOOL usingFrontRow = NO;
 static BOOL usingTakeTwo = NO;
 static BOOL usingTakeTwoDotTwo = NO;
+static BOOL usingTakeTwoDotThree = NO;
 
 + (void)initialize
 {
 	if(NSClassFromString(@"BRAdornedMenuItemLayer") == nil)
 		usingFrontRow = YES;
-  
-  if(NSClassFromString(@"BRBaseAppliance") != nil)
-    usingTakeTwo = YES;
-  
-  if(NSClassFromString(@"BRVideoPlayerController") == nil)
-    usingTakeTwoDotTwo = YES;
+	
+	if(NSClassFromString(@"BRBaseAppliance") != nil)
+		usingTakeTwo = YES;
+	
+	if(NSClassFromString(@"BRVideoPlayerController") == nil)
+		usingTakeTwoDotTwo = YES;
+	
+	if([(Class)NSClassFromString(@"BRController") instancesRespondToSelector:@selector(wasExhumed)])
+		usingTakeTwoDotThree = YES;
 }
 
 + (BOOL)usingFrontRow
@@ -108,12 +112,17 @@ static BOOL usingTakeTwoDotTwo = NO;
 
 + (BOOL)usingTakeTwo
 {
-  return usingTakeTwo;
+	return usingTakeTwo;
 }
 
 + (BOOL)usingTakeTwoDotTwo
 {
-  return usingTakeTwoDotTwo;
+	return usingTakeTwoDotTwo;
+}
+
++ (BOOL)usingTakeTwoDotThree
+{
+	return usingTakeTwoDotThree;
 }
 
 + (id)imageAtPath:(NSString *)path

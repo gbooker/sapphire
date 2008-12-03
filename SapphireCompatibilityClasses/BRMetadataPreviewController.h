@@ -35,6 +35,7 @@
  * ATV2 doesn't have a BRMetadataPreviewController, but it has BRMetadataPreviewControl.  Use that one instead.
  */
 @interface BRMetadataPreviewController : BRMetadataPreviewControl {
+	int		padding[16];
 }
 
 @end

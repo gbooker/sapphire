@@ -20,7 +20,20 @@
 
 #import "BRVideoPlayerController.h"
 
+@interface BRMediaPlayerController (compat)
+-(void)setResumeMenuDisabled:(BOOL)yn;
+@end
+
 
 @implementation BRVideoPlayerController
+
+- (void)setAllowsResume:(BOOL)yn
+{
+	[super setResumeMenuDisabled:!yn];
+}
+
+- (void)setVideoPlayer:(id)fp8
+{
+}
 
 @end

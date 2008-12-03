@@ -23,7 +23,7 @@
  *
  * Frontrow has a completely different way of doing layouts.  The two methods for doing a layout of a list both call this method asking how to lay it out.  This allows a single location for the list layout to be done and work in both cases.
  */
-@protocol SapphireLayoutDelegate <NSObject>
+@protocol SapphireListLayoutDelegate <NSObject>
 /*!
  * @brief Get the rect of the list
  *
@@ -39,9 +39,9 @@
  *
  * Frontrow's classes do not have initWithScene since the render scene is completely different.  To work around this, Sapphire has a collection of classes which intercept initWithScene, and call the appropriate real function.  The scene method is also intercepted as well.
  *
- * This class also intercepts the layout of the list and calls itself to find the real layout of the list.  See SapphireLayoutDelegate.
+ * This class also intercepts the layout of the list and calls itself to find the real layout of the list.  See SapphireListLayoutDelegate.
  */
-@interface SapphireCenteredMenuController : BRCenteredMenuController <SapphireLayoutDelegate>{
+@interface SapphireCenteredMenuController : BRCenteredMenuController <SapphireListLayoutDelegate>{
 	int		padding[16];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/
 }
 

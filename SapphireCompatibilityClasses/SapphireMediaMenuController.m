@@ -28,10 +28,16 @@
 - (id)layoutManager;
 @end
 
+@interface BRLayerController (compat)
+- (void)wasBuried;
+- (void)wasExhumed;
+@end
+
+
 @interface SapphireCustomMediaLayout : NSObject
 {
-	id							realLayout;
-	id <SapphireLayoutDelegate>	delegate;
+	id								realLayout;
+	id <SapphireListLayoutDelegate>	delegate;
 }
 @end
 
@@ -45,7 +51,7 @@
 	return self;
 }
 
-- (void)setDelegate:(id <SapphireLayoutDelegate>)del
+- (void)setDelegate:(id <SapphireListLayoutDelegate>)del
 {
 	delegate = [del retain];
 }
@@ -197,4 +203,53 @@
 	}
 	return [super brEventAction:event];
 }
+
+- (void) wasPushed
+{
+    // We've just been put on screen, the user can see this controller's content now
+
+    // always call super
+    [super wasPushed];
+}
+
+- (void) wasPopped
+{
+    // The user pressed Menu, removing us from the screen
+    // always call super
+
+    [super wasPopped];
+}
+
+- (void)wasBuried
+{
+	[self wasBuriedByPushingController:nil];
+}
+
+- (void) wasBuriedByPushingController: (BRLayerController *) controller
+{
+    // The user chose an option and this controller is no longer on screen
+
+    // always call super
+	if([SapphireFrontRowCompat usingTakeTwoDotThree])
+		[super wasBuried];
+	else
+		[super wasBuriedByPushingController: controller];
+}
+
+- (void)wasExhumed
+{
+	[self wasExhumedByPoppingController:nil];
+}
+
+- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+{
+    // handle being revealed when the user presses Menu
+
+    // always call super
+	if([SapphireFrontRowCompat usingTakeTwoDotThree])
+		[super wasExhumed];
+	else
+		[super wasExhumedByPoppingController: controller];
+}
+
 @end

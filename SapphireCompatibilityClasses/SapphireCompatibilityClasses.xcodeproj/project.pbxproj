@@ -47,6 +47,8 @@
 		F580E8750D31288400F2225A /* SapphireButtonControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F580E8730D31288400F2225A /* SapphireButtonControl.m */; };
 		F585A9DC0D74ED780043AB22 /* BRMusicNowPlayingController.h in Headers */ = {isa = PBXBuildFile; fileRef = F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */; };
 		F585A9DD0D74ED780043AB22 /* BRMusicNowPlayingController.m in Sources */ = {isa = PBXBuildFile; fileRef = F585A9DB0D74ED780043AB22 /* BRMusicNowPlayingController.m */; };
+		F59FF2900EDB97680052012E /* SapphireLayoutManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F59FF28E0EDB97680052012E /* SapphireLayoutManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F59FF2910EDB97680052012E /* SapphireLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F59FF28F0EDB97680052012E /* SapphireLayoutManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		F580E8730D31288400F2225A /* SapphireButtonControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireButtonControl.m; sourceTree = "<group>"; };
 		F585A9DA0D74ED770043AB22 /* BRMusicNowPlayingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMusicNowPlayingController.h; sourceTree = "<group>"; };
 		F585A9DB0D74ED780043AB22 /* BRMusicNowPlayingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMusicNowPlayingController.m; sourceTree = "<group>"; };
+		F59FF28E0EDB97680052012E /* SapphireLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireLayoutManager.h; sourceTree = "<group>"; };
+		F59FF28F0EDB97680052012E /* SapphireLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLayoutManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +173,8 @@
 				F51BFCDC0D26BB3900E22363 /* SapphireFrontRowCompat.m */,
 				F51BFCDD0D26BB3900E22363 /* SapphireLayerController.h */,
 				F51BFCDE0D26BB3900E22363 /* SapphireLayerController.m */,
+				F59FF28E0EDB97680052012E /* SapphireLayoutManager.h */,
+				F59FF28F0EDB97680052012E /* SapphireLayoutManager.m */,
 				F51BFCDF0D26BB3900E22363 /* SapphireMediaMenuController.h */,
 				F51BFCE00D26BB3900E22363 /* SapphireMediaMenuController.m */,
 				F51BFCE10D26BB3900E22363 /* SapphireMenuController.h */,
@@ -236,6 +242,7 @@
 				F51BFCF10D26BB3900E22363 /* SapphireTextWithSpinnerController.h in Headers */,
 				F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */,
 				F580E8740D31288400F2225A /* SapphireButtonControl.h in Headers */,
+				F59FF2900EDB97680052012E /* SapphireLayoutManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +413,7 @@
 				F51BFCF00D26BB3900E22363 /* SapphireMenuController.m in Sources */,
 				F51BFCF20D26BB3900E22363 /* SapphireTextWithSpinnerController.m in Sources */,
 				F580E8750D31288400F2225A /* SapphireButtonControl.m in Sources */,
+				F59FF2910EDB97680052012E /* SapphireLayoutManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
