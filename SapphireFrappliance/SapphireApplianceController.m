@@ -140,6 +140,7 @@ static NSArray *predicates = nil;
 		while((key = [mappingEnum nextObject]) != nil)
 			[ret appendFormat:@"\n0x%X\t%@", [key pointerValue], [mapping objectForKey:key]];
 	}
+	NSLog(@"%@", ret);
 }
 
 + (NSString *) rootMenuLabel
@@ -300,32 +301,22 @@ static NSArray *predicates = nil;
 		[names removeLastObject];
 }
 
-- (void) wasPushed
+- (void)doInitialPush
 {
-    // We've just been put on screen, the user can see this controller's content now
-    [self recreateMenu];
-	[[self list] reload];
-    // always call super
-    [super wasPushed];
+	@try {
+		// We've just been put on screen, the user can see this controller's content now
+		[self recreateMenu];
+		[[self list] reload];		
+	}
+	@catch (NSException * e) {
+		[SapphireApplianceController logException:e];
+	}
+	@finally {
+		[super doInitialPush];
+	}
 }
 
-- (void) wasPopped
-{
-    // The user pressed Menu, removing us from the screen
-    
-    // always call super
-    [super wasPopped];
-}
-
-- (void) wasBuriedByPushingController: (BRLayerController *) controller
-{
-    // The user chose an option and this controller os no longer on screen
-    
-    // always call super
-    [super wasBuriedByPushingController: controller];
-}
-
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void)doInitialExhume
 {
     // handle being revealed when the user presses Menu
     
@@ -334,7 +325,7 @@ static NSArray *predicates = nil;
 	[SapphireFrontRowCompat renderScene:[self scene]];
 
     // always call super
-    [super wasExhumedByPoppingController: controller];
+    [super doInitialExhume];
 }
 
 - (long) itemCount

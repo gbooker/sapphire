@@ -94,9 +94,9 @@
 	return @"";
 }
 
-- (void) wasExhumedByPoppingController:(BRLayerController *) controller
+- (void) wasExhumed
 {
-	[importers makeObjectsPerformSelector:@selector(wasExhumedByPoppingController:) withObject:controller];
+	[importers makeObjectsPerformSelector:@selector(wasExhumed) withObject:nil];
 }
 
 @end

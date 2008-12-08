@@ -659,7 +659,7 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void) wasExhumed
 {
 	/*See if it was a show chooser*/
 	if(chooser == nil)

@@ -168,7 +168,7 @@ static BOOL is10Version = NO;
 	return metaData;
 }
 
-- (void) wasPushed
+- (void)doInitialPush
 {
     // We've just been put on screen, the user can see this controller's content now
 	/*Reload upon display*/
@@ -179,25 +179,26 @@ static BOOL is10Version = NO;
 	@catch (NSException * e) {
 		[SapphireApplianceController logException:e];
 	}	
-    // always call super
-    [super wasPushed];
+    [super doInitialPush];
+}
+
+- (void) wasPushed
+{
+	[super wasPushed];
 	/*Get metadata when we can*/
 	[metaData resumeImport];
 }
 
-- (void) wasPopped
+- (void)doInitialPop
 {
-    // The user pressed Menu, removing us from the screen
-    // always call super
-
-    [super wasPopped];
 	/*Cancel everything we were doing*/
 	[metaData cancelImport];
 	cancelScan = YES;
 	[metaData setDelegate:nil];
+	[super doInitialPop];
 }
 
-- (void) wasBuriedByPushingController: (BRLayerController *) controller
+- (void)doInitialBury
 {
     // The user chose an option and this controller is no longer on screen
 
@@ -206,18 +207,20 @@ static BOOL is10Version = NO;
 	cancelScan = YES;
 
     // always call super
-    [super wasBuriedByPushingController: controller];
+    [super doInitialBury];
 }
 
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void)doInitialExhume
 {
-    // handle being revealed when the user presses Menu
-
 	/*Reload our display*/
 	[self setNewPredicate:[SapphireApplianceController predicate]];
+	[super doInitialExhume];
+}
 
-    // always call super
-    [super wasExhumedByPoppingController: controller];
+- (void)wasExhumed
+{
+	// always call super
+	[super wasExhumed];
 	/*Check to see if dir is empty*/
 	if(fileCount + dirCount == 0)
 		[[self stack] popController];

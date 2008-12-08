@@ -219,7 +219,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return BRLocalizedString(@"Start Populating XML Data", @"Button");
 }
 
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void) wasExhumed
 {
 }
 

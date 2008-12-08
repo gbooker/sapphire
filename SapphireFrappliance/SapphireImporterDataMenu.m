@@ -437,10 +437,10 @@
 	[super wasPopped];
 }
 
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void)wasExhumed
 {
-	[importer wasExhumedByPoppingController:controller];
-	[super wasExhumedByPoppingController:controller];
+	[importer wasExhumed];
+	[super wasExhumed];
 }
 
 - (BOOL)brEventAction:(BREvent *)event{

@@ -72,7 +72,7 @@
 	return BRLocalizedString(@"Start Populating Data", @"Button");
 }
 
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
+- (void) wasExhumed
 {
 }
 @end

@@ -97,10 +97,8 @@ typedef enum{
  * @brief The data menu was exhumed
  *
  * Some importers present the user with other choices, so this lets the importer know that the "dialog" has completed.
- *
- * @param controller The Controller which was on top
  */
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller;
+- (void) wasExhumed;
 @end
 
 
