@@ -46,4 +46,34 @@
  * @param sel The list selection
  */
 - (void)setSelection:(int)sel;
+
+/*!
+ * @brief Begin of the push
+ *
+ * On the ATV < 2.3, this takes the place of willBePushed.  On ATV ≥ 2.3, this is the first part of wasPushed
+ */
+- (void)doInitialPush;
+
+/*!
+ * @brief Begin of the pop
+ *
+ * On the ATV < 2.3, this takes the place of willBePopped.  On ATV ≥ 2.3, this is the first part of wasPopped
+ */
+- (void)doInitialPop;
+
+/*!
+ * @brief Begin of the bury
+ *
+ * On the ATV < 2.3, this takes the place of willBeBuried.  On ATV ≥ 2.3, this is the first part of wasBuried
+ */
+- (void)doInitialBury;
+- (void)wasBuried;
+
+/*!
+ * @brief Begin of the exhume
+ *
+ * On the ATV < 2.3, this takes the place of willBeExhumed.  On ATV ≥ 2.3, this is the first part of wasExhumed
+ */
+- (void)doInitialExhume;
+- (void)wasExhumed;
 @end

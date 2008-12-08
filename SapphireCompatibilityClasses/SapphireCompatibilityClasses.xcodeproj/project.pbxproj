@@ -14,6 +14,7 @@
 		DCA299F50D64A4EF0092E9BB /* BRMetadataPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */; };
 		DCE6408F0E9DA53300D2AAED /* BRMusicPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = DCE6408D0E9DA53300D2AAED /* BRMusicPlayer.h */; };
 		DCE640900E9DA53300D2AAED /* BRMusicPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = DCE6408E0E9DA53300D2AAED /* BRMusicPlayer.m */; };
+		F511E0C50EECB0B50034C4AA /* SapphireStackControllerCompatFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = F511E0C40EECB0B50034C4AA /* SapphireStackControllerCompatFunctions.h */; };
 		F51BFCE50D26BB3900E22363 /* SapphireCenteredMenuController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F51BFCE60D26BB3900E22363 /* SapphireCenteredMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */; };
 		F51BFCE70D26BB3900E22363 /* SapphireDVDLoadingController.h in Headers */ = {isa = PBXBuildFile; fileRef = F51BFCD90D26BB3900E22363 /* SapphireDVDLoadingController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -68,6 +69,7 @@
 		DCA299F30D64A4EF0092E9BB /* BRMetadataPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMetadataPreviewController.m; sourceTree = "<group>"; };
 		DCE6408D0E9DA53300D2AAED /* BRMusicPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMusicPlayer.h; sourceTree = "<group>"; };
 		DCE6408E0E9DA53300D2AAED /* BRMusicPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRMusicPlayer.m; sourceTree = "<group>"; };
+		F511E0C40EECB0B50034C4AA /* SapphireStackControllerCompatFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireStackControllerCompatFunctions.h; sourceTree = "<group>"; };
 		F51BFCD10D26BAED00E22363 /* SapphireCompatClasses.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SapphireCompatClasses.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51BFCD70D26BB3900E22363 /* SapphireCenteredMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCenteredMenuController.h; sourceTree = "<group>"; };
 		F51BFCD80D26BB3900E22363 /* SapphireCenteredMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireCenteredMenuController.m; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				F571B4CE0E96F69A00B7FD9D /* BRVideoPlayerController.m */,
 				DCE6408D0E9DA53300D2AAED /* BRMusicPlayer.h */,
 				DCE6408E0E9DA53300D2AAED /* BRMusicPlayer.m */,
+				F511E0C40EECB0B50034C4AA /* SapphireStackControllerCompatFunctions.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 				F51BFD550D26BEF900E22363 /* BackRowUtils.h in Headers */,
 				F580E8740D31288400F2225A /* SapphireButtonControl.h in Headers */,
 				F59FF2900EDB97680052012E /* SapphireLayoutManager.h in Headers */,
+				F511E0C50EECB0B50034C4AA /* SapphireStackControllerCompatFunctions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

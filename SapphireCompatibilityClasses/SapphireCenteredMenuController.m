@@ -138,36 +138,6 @@
 	return YES;
 }
 
-- (void)wasBuried
-{
-	[self wasBuriedByPushingController:nil];
-}
-
-- (void) wasBuriedByPushingController: (BRLayerController *) controller
-{
-    // The user chose an option and this controller is no longer on screen
-	
-    // always call super
-	if([SapphireFrontRowCompat usingTakeTwoDotThree])
-		[super wasBuried];
-	else
-		[super wasBuriedByPushingController: controller];
-}
-
-- (void)wasExhumed
-{
-	[self wasExhumedByPoppingController:nil];
-}
-
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
-{
-    // handle being revealed when the user presses Menu
-	
-    // always call super
-	if([SapphireFrontRowCompat usingTakeTwoDotThree])
-		[super wasExhumed];
-	else
-		[super wasExhumedByPoppingController: controller];
-}
+#include "SapphireStackControllerCompatFunctions.h"
 
 @end
