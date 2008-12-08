@@ -100,6 +100,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (void) willBePushed
 {
     // We're about to be placed on screen, but we're not yet there
+	[self showIconMarch];
     
     // always call super
     [super willBePushed];
