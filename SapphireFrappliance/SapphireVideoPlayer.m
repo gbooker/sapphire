@@ -155,7 +155,6 @@ typedef enum {
 	
 	if(!hasChapters)
 		enabled = TRUE;
-	NSLog(@"Enabled is %d", enabled);
 }
 
 - (BOOL)prerollMedia:(NSError * *)fp8
