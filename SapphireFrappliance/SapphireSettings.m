@@ -308,38 +308,6 @@ static SapphireSettings *sharedInstance = nil;
 	[self writeSettings];
 }
 
-- (void) wasPushed
-{
-    // We've just been put on screen, the user can see this controller's content now
-    
-    // always call super
-    [super wasPushed];
-}
-
-- (void) wasPopped
-{
-    // The user pressed Menu, removing us from the screen
-    
-    // always call super
-    [super wasPopped];
-}
-
-- (void) wasBuriedByPushingController: (BRLayerController *) controller
-{
-    // The user chose an option and this controller is no longer on screen
-    
-    // always call super
-    [super wasBuriedByPushingController: controller];
-}
-
-- (void) wasExhumedByPoppingController: (BRLayerController *) controller
-{
-    // handle being revealed when the user presses Menu
-    
-    // always call super
-    [super wasExhumedByPoppingController: controller];
-}
-
 - (long) itemCount
 {
     // return the number of items in your menu list here
