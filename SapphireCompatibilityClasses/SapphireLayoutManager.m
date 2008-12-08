@@ -19,6 +19,7 @@
  */
 
 #import "SapphireLayoutManager.h"
+#import "SapphireFrontRowCompat.h"
 
 @interface BRLayerController (compat)
 - (void)setLayoutManager:(id)newLayout;
@@ -29,6 +30,9 @@
 
 + (id)setCustomLayoutOnControl:(BRLayerController <SapphireLayoutDelegate> *)control
 {
+	if(![SapphireFrontRowCompat usingTakeTwo])
+		return nil;
+	
 	SapphireLayoutManager *newLayout = [[SapphireLayoutManager alloc] initWithReal:[control layoutManager]];
 	[newLayout setDelegate:control];
 	[control setLayoutManager:newLayout];
