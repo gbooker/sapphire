@@ -97,6 +97,6 @@
 
 - (void) wasExhumedByPoppingController: (BRLayerController *) controller
 {
-	[self wasExhumed];
 	[super wasExhumedByPoppingController:controller];
+	[self wasExhumed];
 }
