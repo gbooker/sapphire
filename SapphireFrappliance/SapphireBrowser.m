@@ -223,7 +223,7 @@ static BOOL is10Version = NO;
 	[super wasExhumed];
 	/*Check to see if dir is empty*/
 	if(fileCount + dirCount == 0)
-		[[self stack] popController];
+		[[self stack] performSelector:@selector(popController) withObject:nil afterDelay:0.01];
 	else
 		/*Resume importing now that we are up again*/
 		[metaData resumeImport];
