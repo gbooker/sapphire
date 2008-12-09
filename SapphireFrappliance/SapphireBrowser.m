@@ -621,6 +621,8 @@ static BOOL is10Version = NO;
     return ( nil );
 }
 
+static NSDate *lastFilterChangeDate = nil;
+
 - (BOOL)brEventAction:(BREvent *)event
 {
 	BREventPageUsageHash hashVal = (uint32_t)([event page] << 16 | [event usage]);
@@ -656,28 +658,33 @@ static BOOL is10Version = NO;
 		}
 		case kBREventTapLeft:
 		{
-			NSString *oldName=nil;
-			if(row < [_names count])
-				oldName = [self titleForRow:row];
-			[self setNewPredicate:[SapphireApplianceController nextPredicate]];
-			/*Attempt to preserve the user's current highlighted selection*/
-			if(oldName)
+			if(![SapphireFrontRowCompat usingTakeTwoDotThree] || lastFilterChangeDate == nil || [lastFilterChangeDate timeIntervalSinceNow] < -0.4f)
 			{
-				row=[self rowForTitle:oldName];
-				if(row>=0)
+				[lastFilterChangeDate release];
+				lastFilterChangeDate = [[NSDate date] retain];
+				NSString *oldName=nil;
+				if(row < [_names count])
+					oldName = [self titleForRow:row];
+				[self setNewPredicate:[SapphireApplianceController nextPredicate]];
+				/*Attempt to preserve the user's current highlighted selection*/
+				if(oldName)
 				{
-					[(BRListControl *)[self list] setSelection:row];
+					row=[self rowForTitle:oldName];
+					if(row>=0)
+					{
+						[(BRListControl *)[self list] setSelection:row];
+					}
+					else
+					{
+						[(BRListControl *)[self list] setSelection:0];
+						[self updatePreviewController];
+					}
 				}
-				else
-				{
-					[(BRListControl *)[self list] setSelection:0];
-					[self updatePreviewController];
-				}
+				/*Force a reload on the mediaPreviewController*/
+				/* Not working in FrontRow */
+				[self wasPushed];
+				return YES;				
 			}
-			/*Force a reload on the mediaPreviewController*/
-			/* Not working in FrontRow */
-			[self wasPushed];
-			return YES;
 		}
 	}
 	return [super brEventAction:event];
