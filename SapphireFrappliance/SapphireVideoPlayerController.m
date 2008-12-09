@@ -208,9 +208,8 @@ static BOOL setupAudioOutput(int sampleRate)
 	[self enablePassthrough];
 }
 
-- (void)wasPopped
+- (void)teardownPlayback
 {
-	[super wasPopped];
 	//Turn off the AC3 Passthrough hack
 	CFPreferencesSetAppValue(PASSTHROUGH_KEY, (CFNumberRef)[NSNumber numberWithInt:((soundState & SOUND_STATE_SOUND_PASSTHROUGH)? 1 : 0)], A52_DOMIAN);
 	CFPreferencesAppSynchronize(A52_DOMIAN);
@@ -224,7 +223,7 @@ static BOOL setupAudioOutput(int sampleRate)
 	if(duration == 0.0f)
 		elapsed = duration = 1.0f;
 	if(elapsed / duration > 0.9f)
-		/*Mark as watched and reload info*/
+	/*Mark as watched and reload info*/
 		[currentPlayFile setWatched:YES];
 	
 	/*Get the resume time to save*/
@@ -233,6 +232,18 @@ static BOOL setupAudioOutput(int sampleRate)
 	else
 		[currentPlayFile setResumeTime:0];
 	[currentPlayFile writeMetaData];	 
+}
+
+- (void)willBePopped
+{
+	[super willBePopped];
+	[self teardownPlayback];
+}
+
+- (void)wasPopped
+{
+	[super wasPopped];
+	[self teardownPlayback];
 }
 
 @end
