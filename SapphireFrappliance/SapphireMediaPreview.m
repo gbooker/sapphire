@@ -466,10 +466,6 @@ static NSSet *coverArtExtentions = nil;
 - (void)_populateMetadata
 {
 	[super _populateMetadata];
-	/*See if it loaded anything*/
-	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count])
-		return;
-	
 	[self doPopulation];
 }
 
@@ -480,9 +476,8 @@ static NSSet *coverArtExtentions = nil;
 {
 	[super _updateMetadataLayer];
 	/*See if it loaded anything*/
-	if([[[self gimmieMetadataLayer] gimmieMetadataObjs] count] && ![SapphireFrontRowCompat usingFrontRow])
+	if(![SapphireFrontRowCompat usingFrontRow])
 		return;
-	
 	[self doPopulation];
 }
 
