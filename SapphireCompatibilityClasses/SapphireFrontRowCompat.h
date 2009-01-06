@@ -271,6 +271,15 @@
 + (NSSize)textControl:(BRTextControl *)text renderedSizeWithMaxSize:(NSSize)maxSize;
 
 /*!
+ * @brief Create a new text entry control
+ *
+ * Controllers are alloced differently in frontrow
+ *
+ * @param scene The scene, if exists.
+ */
++ (BRTextEntryControl *)newTextEntryControlWithScene:(BRRenderScene *)scene;
+
+/*!
  * @brief Create a new progress bar widget
  *
  * Widgets are alloced differently in frontrow

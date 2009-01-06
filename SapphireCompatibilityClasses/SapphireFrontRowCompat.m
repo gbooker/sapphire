@@ -346,6 +346,14 @@ static BOOL usingTakeTwoDotThree = NO;
 		return [[BRTextControl alloc] initWithScene:scene];
 }
 
++ (BRTextEntryControl *)newTextEntryControlWithScene:(BRRenderScene *)scene
+{
+	if(usingFrontRow)
+		return [[BRTextEntryControl alloc] init];
+	else
+		return [[BRTextEntryControl alloc] initWithScene:scene];
+}
+
 + (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene
 {
 	if(usingFrontRow)
