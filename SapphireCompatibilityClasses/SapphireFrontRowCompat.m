@@ -142,7 +142,7 @@ static BOOL usingTakeTwoDotThree = NO;
       CFRelease(sourceRef);
     }
     
-    return (id)imageRef;
+    return [(id)imageRef autorelease];
 	}
 }
 
@@ -157,7 +157,6 @@ static BOOL usingTakeTwoDotThree = NO;
     if(imageRef != NULL) {
       /*Create a texture*/
       ret = [BRBitmapTexture textureWithImage:imageRef context:[scene resourceContext] mipmap:YES];
-      CFRelease(imageRef);
     }
     
     return ret;
@@ -417,7 +416,7 @@ static BOOL usingTakeTwoDotThree = NO;
                                     withScene:scene];
 }
 
-+ (BROptionDialog *)optionDialogWithScene:(BRRenderScene *)scene {
++ (BROptionDialog *)newOptionDialogWithScene:(BRRenderScene *)scene {
   if(usingFrontRow)
     return [[BROptionDialog alloc] init];
   else
@@ -433,7 +432,7 @@ static BOOL usingTakeTwoDotThree = NO;
   }
 }
 
-+ (BRTextWithSpinnerController *)textWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene {
++ (BRTextWithSpinnerController *)newTextWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene {
   if(usingFrontRow)
     return [[BRTextWithSpinnerController alloc] initWithTitle:title text:text isNetworkDependent:networkDependent];
   else

@@ -354,7 +354,7 @@
  *
  * @param scene the scene
  */
-+ (BROptionDialog *)optionDialogWithScene:(BRRenderScene *)scene;
++ (BROptionDialog *)newOptionDialogWithScene:(BRRenderScene *)scene;
 
 /*!
  * @brief Set the primary info text on a BROptionDialog
@@ -377,7 +377,7 @@
  * @param networkDependent unknown
  * @param scene the scene
  */
-+ (BRTextWithSpinnerController *)textWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene;
++ (BRTextWithSpinnerController *)newTextWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene;
 
 /*!
  * @brief Sets whether a BRWaitSpinnerControl should spin or not
