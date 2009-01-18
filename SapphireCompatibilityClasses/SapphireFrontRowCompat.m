@@ -83,6 +83,11 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (void)setSpins:(BOOL)spin;
 @end
 
+@interface BRTextEntryControl (compat)
+- (id)initWithTextEntryStyle:(int)style;
+@end
+
+
 @implementation SapphireFrontRowCompat
 
 static BOOL usingFrontRow = NO;
@@ -348,7 +353,11 @@ static BOOL usingTakeTwoDotThree = NO;
 + (BRTextEntryControl *)newTextEntryControlWithScene:(BRRenderScene *)scene
 {
 	if(usingFrontRow)
-		return [[BRTextEntryControl alloc] init];
+	{
+		if(usingTakeTwoDotTwo)
+			return [[BRTextEntryControl alloc] initWithTextEntryStyle:1];
+		return [[BRTextEntryControl alloc] initWithTextEntryStyle:0];
+	}
 	else
 		return [[BRTextEntryControl alloc] initWithScene:scene];
 }
