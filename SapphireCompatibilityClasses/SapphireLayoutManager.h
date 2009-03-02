@@ -39,7 +39,7 @@
 @interface SapphireLayoutManager : NSObject
 {
 	id							realLayout;		/*!< @brief The layout manager the super wants to use*/
-	id <SapphireLayoutDelegate>	delegate;		/*!< @brief The delegate to do the rest of the layout*/
+	id <SapphireLayoutDelegate>	delegate;		/*!< @brief The delegate to do the rest of the layout (not retained)*/
 }
 
 /*!

@@ -24,7 +24,7 @@
 @interface SapphireWideCenteredLayout : NSObject
 {
 	id								realLayout;
-	id <SapphireListLayoutDelegate>	delegate;
+	id <SapphireListLayoutDelegate>	delegate;		//Not Retained
 }
 @end
 
@@ -52,13 +52,12 @@
 
 - (void)setDelegate:(id <SapphireListLayoutDelegate>)del
 {
-	delegate = [del retain];
+	delegate = del;
 }
 
 - (void) dealloc
 {
 	[realLayout release];
-	[delegate release];
 	[super dealloc];
 }
 
