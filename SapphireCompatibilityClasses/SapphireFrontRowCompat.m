@@ -168,6 +168,17 @@ static BOOL usingTakeTwoDotThree = NO;
   }
 }
 
++ (id)coverartAsImage: (CGImageRef)imageRef
+{
+	// Non-FR - return CGImageRef
+	if (!usingFrontRow)
+		return (id)imageRef;
+
+	// FR - return BRImage
+	Class cls = NSClassFromString(@"BRImage");
+	return (id)[cls imageWithCGImageRef:imageRef];
+}
+
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder
 {
 	if(usingFrontRow)

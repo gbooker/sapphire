@@ -87,6 +87,16 @@
 + (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene;
 
 /*!
+ * @brief Load an image from an Image Ref
+ *
+ * This returns a CGImageRef or a BRImage, depending on platform.
+ *
+ * @param[in]   imageRef  CGImageRef
+ * @return  BRImage on FrontRow of CGImageRef on ATV
+ */
++ (id)coverartAsImage: (CGImageRef)imageRef;
+
+/*!
  * @brief Get a menu text menu item
  *
  * Menu items are of different classes on the ATV and in frontrow.
