@@ -46,6 +46,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @interface BRThemeInfo (compat)
 - (id)selectedSettingImage;
 - (id)unplayedPodcastImage;
+- (id)unplayedVideoImage;
 - (id)returnToImage;
 @end
 
@@ -94,6 +95,7 @@ static BOOL usingFrontRow = NO;
 static BOOL usingTakeTwo = NO;
 static BOOL usingTakeTwoDotTwo = NO;
 static BOOL usingTakeTwoDotThree = NO;
+static BOOL usingTakeTwoDotFour = NO;
 
 + (void)initialize
 {
@@ -108,6 +110,9 @@ static BOOL usingTakeTwoDotThree = NO;
 	
 	if([(Class)NSClassFromString(@"BRController") instancesRespondToSelector:@selector(wasExhumed)])
 		usingTakeTwoDotThree = YES;
+  
+  if(NSClassFromString(@"BRPhotoImageProxy") != nil)
+    usingTakeTwoDotFour = YES;
 }
 
 + (BOOL)usingFrontRow
@@ -128,6 +133,11 @@ static BOOL usingTakeTwoDotThree = NO;
 + (BOOL)usingTakeTwoDotThree
 {
 	return usingTakeTwoDotThree;
+}
+
++ (BOOL)usingTakeTwoDotFour
+{
+  return usingTakeTwoDotFour;
 }
 
 + (id)imageAtPath:(NSString *)path
@@ -257,7 +267,9 @@ static BOOL usingTakeTwoDotThree = NO;
 
 + (id)unplayedPodcastImageForScene:(BRRenderScene *)scene
 {
-	if(usingFrontRow)
+  if(usingTakeTwoDotFour)
+    return [[BRThemeInfo sharedTheme] unplayedVideoImage];
+	else if(usingFrontRow)
 		return [[BRThemeInfo sharedTheme] unplayedPodcastImage];
 	else
 		return [[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:scene];

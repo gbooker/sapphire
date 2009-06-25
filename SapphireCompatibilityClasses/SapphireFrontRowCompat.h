@@ -68,6 +68,13 @@
 + (BOOL)usingTakeTwoDotThree;
 
 /*!
+ * @brief Are we on ATV 2.4?
+ *
+ * @return YES if on 2.4, NO otherwise
+ */
++ (BOOL)usingTakeTwoDotFour;
+
+/*!
  * @brief Load an image at a path
  *
  * This returns a CGImageRef or a BRImage, depending on platform.
