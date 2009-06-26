@@ -33,6 +33,9 @@
 - (void)wasExhumed;
 @end
 
+@interface BREvent (compat)
+- (unsigned int)originator;
+@end
 
 @interface SapphireCustomMediaLayout : NSObject
 {
@@ -174,32 +177,34 @@
 
 - (BOOL)brEventAction:(BREvent *)event
 {
-	BREventPageUsageHash hashVal = (uint32_t)([event page] << 16 | [event usage]);
-	if ([(BRControllerStack *)[self stack] peekController] != self)
-		hashVal = 0;
-	
-	int itemCount = [[(BRListControl *)[self list] datasource] itemCount];
-	switch (hashVal)
-	{	
-		case kBREventTapUp:
-		case kBREventHoldUp:
-			if([self getSelection] == 0 && [event value] == 1)
-			{
-				[self setSelection:itemCount-1];
-				[self updatePreviewController];
-				return YES;
-			}
-			break;
-		case kBREventTapDown:
-		case kBREventHoldDown:
-			if([self getSelection] == itemCount-1 && [event value] == 1)
-			{
-				[self setSelection:0];
-				[self updatePreviewController];
-				return YES;
-			}
-			break;
-	}
+  if(![SapphireFrontRowCompat usingTakeTwoDotFour] || [event originator] == 1) {
+    BREventPageUsageHash hashVal = (uint32_t)([event page] << 16 | [event usage]);
+    if ([(BRControllerStack *)[self stack] peekController] != self)
+      hashVal = 0;
+    
+    int itemCount = [[(BRListControl *)[self list] datasource] itemCount];
+    switch (hashVal)
+    {	
+      case kBREventTapUp:
+      case kBREventHoldUp:
+        if([self getSelection] == 0 && [event value] == 1)
+        {
+          [self setSelection:itemCount-1];
+          [self updatePreviewController];
+          return YES;
+        }
+        break;
+      case kBREventTapDown:
+      case kBREventHoldDown:
+        if([self getSelection] == itemCount-1 && [event value] == 1)
+        {
+          [self setSelection:0];
+          [self updatePreviewController];
+          return YES;
+        }
+        break;
+    }
+  }
 	return [super brEventAction:event];
 }
 
