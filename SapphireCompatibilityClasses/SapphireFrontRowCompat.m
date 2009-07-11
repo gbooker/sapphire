@@ -404,14 +404,14 @@ static BOOL usingTakeTwoDotFour = NO;
 }
 
 + (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene {
-  // 10.5
-  if(usingFrontRow && NSClassFromString(@"BRImageLayer") != nil) 
-    return [[BRImageLayer alloc] init];
-  // ATV2
-  else if(usingFrontRow)
-    return [[NSClassFromString(@"BRImageControl") alloc] init];
-  else
-    return [BRImageLayer layerWithScene:scene];
+	// 10.5
+	if(usingFrontRow && NSClassFromString(@"BRImageLayer") != nil) 
+		return [[BRImageLayer alloc] init];
+	// ATV2
+	else if(usingFrontRow)
+		return [[NSClassFromString(@"BRImageControl") alloc] init];
+	else
+		return [[BRImageLayer layerWithScene:scene] retain];
 }
 
 + (void)setImage:(id)image forLayer:(BRImageLayer *)layer {
