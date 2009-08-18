@@ -18,6 +18,32 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+// Gesture events have a dictionary defining the touch points and other info.
+typedef enum {
+	kBREventOriginatorRemote = 1,
+	kBREventOriginatorGesture = 3
+} BREventOriginator;
+
+typedef enum {
+	// for originator kBREventOriginatorRemote
+	kBREventRemoteActionMenu = 1,
+	kBREventRemoteActionMenuHold,
+	kBREventRemoteActionUp,
+	kBREventRemoteActionDown,
+	kBREventRemoteActionPlay,
+	kBREventRemoteActionLeft,
+	kBREventRemoteActionRight,
+
+	kBREventRemoteActionPlayHold = 20,
+
+	// Gestures, for originator kBREventOriginatorGesture
+	kBREventRemoteActionTap = 30,
+	kBREventRemoteActionSwipeLeft,
+	kBREventRemoteActionSwipeRight,
+	kBREventRemoteActionSwipeUp,
+	kBREventRemoteActionSwipeDown
+} BREventRemoteAction;
+
 /*!
  * @brief A compatibility category for frontrow
  *
@@ -403,6 +429,14 @@
  * @param spin YES if the spinner should spin, NO otherwise
  */
 + (void)setSpinner:(BRWaitSpinnerControl *)spinner toSpin:(BOOL)spin;
+
+/*!
+ * @brief Get the remoteAction in a compatable way
+ *
+ * @param event The event for which to fetch the remote action
+ * @return The remote action for the event
+ */
++ (BREventRemoteAction)remoteActionForEvent:(BREvent *)event;
 
 /*!
  * @brief Get the call stack addresses for an exception

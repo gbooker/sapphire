@@ -110,9 +110,9 @@ static BOOL usingTakeTwoDotFour = NO;
 	
 	if([(Class)NSClassFromString(@"BRController") instancesRespondToSelector:@selector(wasExhumed)])
 		usingTakeTwoDotThree = YES;
-  
-  if(NSClassFromString(@"BRPhotoImageProxy") != nil)
-    usingTakeTwoDotFour = YES;
+	
+	if(NSClassFromString(@"BRPhotoImageProxy") != nil)
+		usingTakeTwoDotFour = YES;
 }
 
 + (BOOL)usingFrontRow
@@ -481,6 +481,58 @@ static BOOL usingTakeTwoDotFour = NO;
 			[spinner startSpinning];
 		else
 			[spinner stopSpinning];
+	}
+}
+
++ (BREventRemoteAction)remoteActionForEvent:(BREvent *)event
+{
+	if(usingTakeTwoDotFour)
+		return [event remoteAction];
+	
+	BREventPageUsageHash hashVal = (uint32_t)([event page] << 16 | [event usage]);
+	switch (hashVal) {
+		case kBREventTapMenu:
+			return kBREventRemoteActionMenu;
+		case kBREventTapPlayPause:
+			return kBREventRemoteActionPlay;
+		case kBREventTapRight:
+			return kBREventRemoteActionRight;
+		case kBREventTapLeft:
+			return kBREventRemoteActionLeft;
+		case kBREventTapUp:
+		case kBREventHoldUp:
+			return kBREventRemoteActionUp;
+		case kBREventTapDown:
+		case kBREventHoldDown:
+			return kBREventRemoteActionDown;
+		case kBREventHoldMenu:
+			return kBREventRemoteActionMenuHold;
+		case kBREventHoldPlayPause:
+			return kBREventRemoteActionPlayHold;
+
+		//Unknowns:
+		case kBREventTapExit:
+		case kBREventHoldLeft:
+		case kBREventHoldRight:
+		case kBREventPlay:
+		case kBREventPause:
+		case kBREventFastForward:
+		case kBREventRewind:
+		case kBREventNextTrack:
+		case kBREventPreviousTrack:
+		case kBREventStop:
+		case kBREventEject:
+		case kBREventRandomPlay:
+		case kBREventVolumeUp:
+		case kBREventVolumeDown:
+		case kBREventPairRemote:
+		case kBREventUnpairRemote:
+		case kBREventLowBattery:
+		case kBREventSleepNow:
+		case kBREventSystemReset:
+		case kBREventBlackScreenRecovery:
+		default:
+			return 0;
 	}
 }
 
