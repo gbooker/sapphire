@@ -460,10 +460,29 @@ typedef enum {
 
 static inline void SapphireLoadFramework(NSString *frameworkPath)
 {
+	CFStringRef preferencesDomain = CFSTR("com.apple.frontrow.appliance.Sapphire.CompatClasses");
+	CFStringRef loadPathKey = CFSTR("loadPath");
+	CFPreferencesAppSynchronize(preferencesDomain);
+	CFPropertyListRef loadPathProperty = CFPreferencesCopyAppValue(loadPathKey, preferencesDomain);
+	CFStringRef loadPath = nil;
+	if(loadPathProperty != nil && CFGetTypeID(loadPathProperty) == CFStringGetTypeID())
+		loadPath = (CFStringRef)loadPathProperty;
+	
+	NSString *compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireCompatClasses.framework"];
+	NSBundle *compat = [NSBundle bundleWithPath:compatPath];
+	
 	if(NSClassFromString(@"SapphireFrontRowCompat") == nil)
 	{
-		NSString *compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireCompatClasses.framework"];
-		NSBundle *compat = [NSBundle bundleWithPath:compatPath];
+		if(loadPath != nil)
+		{
+			NSBundle *otherBundle = [NSBundle bundleWithPath:(NSString *)loadPath];
+			NSString *myVersion = [compat objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+			NSString *otherVersion = [otherBundle objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+			
+			if(otherVersion != nil && [myVersion compare:otherVersion] == NSOrderedAscending)
+				compat = otherBundle;
+		}
+		
 		if( ![compat load]){ 
 			@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
 		}
@@ -493,6 +512,28 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireTakeTwoPointTwoCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
 			}
 		}
-	}	
+	}
+	else
+	{
+		//Check to see if we are later and mark it in preferences
+		NSBundle *loadedBundle = [NSBundle bundleForClass:NSClassFromString(@"SapphireFrontRowCompat")];
+		NSString *loadedVersion = [loadedBundle objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+		NSString *myVersion = [compat objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+		
+		if([loadedVersion compare:myVersion] == NSOrderedAscending)
+		{
+			//Check the one in the prefs too
+			NSBundle *otherBundle = [NSBundle bundleWithPath:(NSString *)loadPath];
+			NSString *otherVersion = [otherBundle objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+			if(otherVersion == nil || [otherVersion compare:myVersion] == NSOrderedAscending)
+			{
+				CFPreferencesSetAppValue(loadPathKey, (CFStringRef)compatPath, preferencesDomain);
+				CFPreferencesAppSynchronize(preferencesDomain);
+				//Likely need to restart Finder here (delayed) or something because the next time around, the newer framework will be loaded.
+			}
+		}
+	}
+	if(loadPathProperty)
+		CFRelease(loadPathProperty);
 }
 

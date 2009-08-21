@@ -6,6 +6,20 @@
 	objectVersion = 42;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		F5958120103EE5FB000A187C /* Make SVN Rev */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F5958128103EE65A000A187C /* Build configuration list for PBXAggregateTarget "Make SVN Rev" */;
+			buildPhases = (
+				F595811F103EE5FB000A187C /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Make SVN Rev";
+			productName = "Make SVN Rev";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		DCA299C40D64A3B30092E9BB /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD100D26BCD200E22363 /* BackRow.framework */; };
 		DCA299C50D64A3B30092E9BB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F51BFD130D26BCEA00E22363 /* AppKit.framework */; };
@@ -59,6 +73,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F51BFCF80D26BB4D00E22363;
 			remoteInfo = SapphireLeopardCompatClasses;
+		};
+		F5958126103EE637000A187C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFCA70D26B86800E22363 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F5958120103EE5FB000A187C /* Make SVN Rev */;
+			remoteInfo = "Make SVN Rev";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -300,6 +321,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				F5958127103EE637000A187C /* PBXTargetDependency */,
 				F51BFCFF0D26BB8D00E22363 /* PBXTargetDependency */,
 			);
 			name = SapphireCompatClasses;
@@ -356,6 +378,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				F5958120103EE5FB000A187C /* Make SVN Rev */,
 				F51BFCD00D26BAED00E22363 /* SapphireCompatClasses */,
 				F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */,
 				DCA299BD0D64A3B30092E9BB /* SapphireTakeTwoCompatClasses */,
@@ -394,6 +417,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F595811F103EE5FB000A187C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.svn/dir-wcprops",
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/include/SVNRevision.h",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "source scripts/getSVNRevision.sh";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		DCA299C10D64A3B30092E9BB /* Sources */ = {
@@ -445,6 +486,11 @@
 			isa = PBXTargetDependency;
 			target = F51BFCF80D26BB4D00E22363 /* SapphireLeopardCompatClasses */;
 			targetProxy = F51BFCFE0D26BB8D00E22363 /* PBXContainerItemProxy */;
+		};
+		F5958127103EE637000A187C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F5958120103EE5FB000A187C /* Make SVN Rev */;
+			targetProxy = F5958126103EE637000A187C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -560,6 +606,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
 				INFOPLIST_FILE = "SapphireCompatClasses-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/SVNRevision.h";
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -588,6 +637,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Sapphire_Prefix.pch;
 				INFOPLIST_FILE = "SapphireCompatClasses-Info.plist";
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
+				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/SVNRevision.h";
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -722,6 +774,27 @@
 			};
 			name = Release;
 		};
+		F5958121103EE5FB000A187C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Make SVN Rev";
+			};
+			name = Debug;
+		};
+		F5958122103EE5FB000A187C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				PRODUCT_NAME = "Make SVN Rev";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -766,6 +839,15 @@
 			buildConfigurations = (
 				F571B4BB0E96F62C00B7FD9D /* Debug */,
 				F571B4BC0E96F62C00B7FD9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F5958128103EE65A000A187C /* Build configuration list for PBXAggregateTarget "Make SVN Rev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5958121103EE5FB000A187C /* Debug */,
+				F5958122103EE5FB000A187C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

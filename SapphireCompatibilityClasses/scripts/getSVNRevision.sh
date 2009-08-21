@@ -1,0 +1,5 @@
+PATH="/opt/local/bin:/usr/local/bin:/usr/local/subversion/bin:/sw/bin:$PATH"
+SVNREV="$(svnversion -n .)"
+mkdir -p "$(dirname "$SCRIPT_OUTPUT_FILE_0")"
+echo "#define SVN_REVISION $SVNREV" > "$SCRIPT_OUTPUT_FILE_0"
+echo "#define SVN_REVISION_C_STRING \"$SVNREV\"" >> "$SCRIPT_OUTPUT_FILE_0"
