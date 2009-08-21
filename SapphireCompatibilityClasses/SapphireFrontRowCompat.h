@@ -61,7 +61,7 @@ typedef enum {
 typedef enum {
 	SapphireFrontRowCompatATVVersionUnknown = 0,
 	SapphireFrontRowCompatATVVersion1 = 1,
-	SapphireFrontRowCompatATVVersionFrontrow,
+	SapphireFrontRowCompatATVVersionLeopardFrontrow,
 	SapphireFrontRowCompatATVVersion2,
 	SapphireFrontRowCompatATVVersion2Dot2,
 	SapphireFrontRowCompatATVVersion2Dot3,
@@ -82,6 +82,27 @@ typedef enum {
  * @return The ATV Version
  */
 + (SapphireFrontRowCompatATVVersion)atvVersion;
+
+/*!
+ * @brief Are we on a leopard machine?
+ *
+ * @return YES if on leopard, NO otherwise
+ */
++ (BOOL)usingLeopard;
+
+/*!
+ * @brief Are we on a type of ATV Take Two?
+ *
+ * @return YES if on take two, NO otherwise
+ */
++ (BOOL)usingATypeOfTakeTwo;
+
+/*!
+ * @brief Are we on leopard or a type of ATV Take Two?
+ *
+ * @return YES if on leopard or take 2, NO otherwise
+ */
++ (BOOL)usingLeopardOrATypeOfTakeTwo;
 
 /*!
  * @brief Load an image at a path
@@ -445,7 +466,7 @@ typedef enum {
 /*!
  * @brief Are we on frontrow?
  *
- * @return YES if on frotrow, NO otherwise
+ * @return YES if on frontrow, NO otherwise
  */
 + (BOOL)usingFrontRow DEPRECATED_ATTRIBUTE;
 
@@ -507,7 +528,7 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 		if( ![compat load]){ 
 			@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
 		}
-		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersionFrontrow)
+		if([SapphireFrontRowCompat usingLeopardOrATypeOfTakeTwo])
 		{
 			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireLeopardCompatClasses.framework"];
 			compat = [NSBundle bundleWithPath:compatPath];
@@ -516,7 +537,7 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 			}
 		}
 		// ATV2
-		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2)
+		if([SapphireFrontRowCompat usingATypeOfTakeTwo])
 		{
 			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoCompatClasses.framework"];
 			compat = [NSBundle bundleWithPath:compatPath];

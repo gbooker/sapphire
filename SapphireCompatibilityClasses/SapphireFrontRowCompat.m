@@ -92,14 +92,25 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @implementation SapphireFrontRowCompat
 
 static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVersionUnknown;
+static BOOL usingLeopard = NO;
+static BOOL usingATypeOfTakeTwo = NO;
+static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 
 + (void)initialize
 {
 	if(NSClassFromString(@"BRAdornedMenuItemLayer") == nil)
-		atvVersion = SapphireFrontRowCompatATVVersionFrontrow;
+	{
+		atvVersion = SapphireFrontRowCompatATVVersionLeopardFrontrow;
+		usingLeopard = YES;
+		usingLeopardOrATypeOfTakeTwo = YES;
+	}
 	
 	if(NSClassFromString(@"BRBaseAppliance") != nil)
+	{
 		atvVersion = SapphireFrontRowCompatATVVersion2;
+		usingLeopard = NO;
+		usingATypeOfTakeTwo = YES;
+	}
 	
 	if(NSClassFromString(@"BRVideoPlayerController") == nil)
 		atvVersion = SapphireFrontRowCompatATVVersion2Dot2;
@@ -116,9 +127,24 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 	return atvVersion;
 }
 
++ (BOOL)usingLeopard
+{
+	return usingLeopard;
+}
+
++ (BOOL)usingATypeOfTakeTwo
+{
+	return usingATypeOfTakeTwo;
+}
+
++ (BOOL)usingLeopardOrATypeOfTakeTwo
+{
+	return usingLeopardOrATypeOfTakeTwo;
+}
+
 + (BOOL)usingFrontRow
 {
-	return atvVersion >= SapphireFrontRowCompatATVVersionFrontrow;
+	return atvVersion >= SapphireFrontRowCompatATVVersionLeopardFrontrow;
 }
 
 + (BOOL)usingTakeTwo
@@ -143,7 +169,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (id)imageAtPath:(NSString *)path
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+	if(usingLeopardOrATypeOfTakeTwo) {
 		Class cls = NSClassFromString(@"BRImage");
 		return [cls imageWithPath:path];
 	} else {
@@ -164,7 +190,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+	if(usingLeopardOrATypeOfTakeTwo) {
 		return [self imageAtPath:path];
 	} else {
 		CGImageRef imageRef  = (CGImageRef)[self imageAtPath:path];
@@ -182,7 +208,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 + (id)coverartAsImage: (CGImageRef)imageRef
 {
 	// Non-FR - return CGImageRef
-	if (atvVersion < SapphireFrontRowCompatATVVersionFrontrow)
+	if (!usingLeopardOrATypeOfTakeTwo)
 		return (id)imageRef;
 	
 	// FR - return BRImage
@@ -192,7 +218,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 	{
 		if(folder)
 			return [NSClassFromString(@"BRTextMenuItemLayer") folderMenuItem];
@@ -210,7 +236,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)setTitle:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[menu setTitle:title];
 	else
 		[[menu textItem] setTitle:title];
@@ -218,21 +244,21 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)setTitle:(NSString *)title withAttributes:(NSDictionary *)attributes forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[menu setTitle:title withAttributes:attributes];
 	else
 		[[menu textItem] setTitle:title withAttributes:attributes];
 }
 
 + (NSString *)titleForMenu:(BRAdornedMenuItemLayer *)menu {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [menu title];
 	else
 		return [[menu textItem] title];
 }
 + (void)setRightJustifiedText:(NSString *)text forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[menu setRightJustifiedText:text];
 	else
 		[[menu textItem] setRightJustifiedText:text];
@@ -240,7 +266,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[menu setLeftIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 							   icon, @"BRMenuIconImageKey",
 							   nil]];
@@ -250,7 +276,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)setRightIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[menu setRightIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 								icon, @"BRMenuIconImageKey",
 								nil]];
@@ -260,7 +286,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (id)selectedSettingImageForScene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRThemeInfo sharedTheme] selectedSettingImage];
 	else
 		return [[BRThemeInfo sharedTheme] selectedSettingImageForScene:scene];
@@ -270,14 +296,14 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 {
 	if(atvVersion >= SapphireFrontRowCompatATVVersion2Dot4)
 		return [[BRThemeInfo sharedTheme] unplayedVideoImage];
-	else if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	else if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRThemeInfo sharedTheme] unplayedPodcastImage];
 	else
 		return [[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:scene];
 }
 
 + (id)returnToImageForScene:(BRRenderScene *)scene {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRThemeInfo sharedTheme] returnToImage];
 	else
 		return [[BRThemeInfo sharedTheme] returnToImageForScene:scene];
@@ -285,10 +311,10 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (NSRect)frameOfController:(id)controller
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersion2)
+	if(usingATypeOfTakeTwo)
 		// ATV2
 		return [controller frame];
-	else if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	else if(usingLeopard)
 		// 10.5
 		return [controller controllerFrame];
 	else
@@ -297,7 +323,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[control setText:text withAttributes:attributes];
 	else
 	{
@@ -309,7 +335,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (NSSize)textControl:(BRTextControl *)text renderedSizeWithMaxSize:(NSSize)maxSize
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersion2)
+	if(usingATypeOfTakeTwo)
 		return [text renderedSizeWithMaxSize:maxSize];
 	
 	[text setMaximumSize:maxSize];
@@ -318,7 +344,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)addDividerAtIndex:(int)index toList:(BRListControl *)list
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		[list addDividerAtIndex:index withLabel:@""];
 	else
 		[list addDividerAtIndex:index];
@@ -326,7 +352,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)addSublayer:(id)sub toControl:(id)controller
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+	if(usingLeopardOrATypeOfTakeTwo) {
 		// ATV2
 		if(NSClassFromString(@"BRPanel") == nil)
 			[controller addControl:sub];
@@ -339,7 +365,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 }
 
 + (void)insertSublayer:(id)sub toControl:(id)controller atIndex:(long)index {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+	if(usingLeopardOrATypeOfTakeTwo) {
 		// ATV2
 		if(NSClassFromString(@"BRPanel") == nil)
 			[controller insertControl:sub atIndex:index];
@@ -352,7 +378,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRHeaderControl *)newHeaderControlWithScene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRHeaderControl alloc] init];
 	else
 		return [[BRHeaderControl alloc] initWithScene:scene];
@@ -360,7 +386,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRButtonControl *)newButtonControlWithScene:(BRRenderScene *)scene  masterLayerSize:(NSSize)size;
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[SapphireButtonControl alloc] initWithMasterLayerSize:size];
 	else
 		return [[BRButtonControl alloc] initWithScene:scene masterLayerSize:size];
@@ -368,7 +394,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRTextControl *)newTextControlWithScene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRTextControl alloc] init];
 	else
 		return [[BRTextControl alloc] initWithScene:scene];
@@ -376,7 +402,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRTextEntryControl *)newTextEntryControlWithScene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 	{
 		if(atvVersion >= SapphireFrontRowCompatATVVersion2Dot2)
 			return [[BRTextEntryControl alloc] initWithTextEntryStyle:1];
@@ -388,7 +414,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRProgressBarWidget alloc] init];
 	else
 		return [[BRProgressBarWidget alloc] initWithScene:scene];
@@ -396,9 +422,9 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRMarchingIconLayer *)newMarchingIconLayerWithScene:(BRRenderScene *)scene
 {
-	if(atvVersion >= SapphireFrontRowCompatATVVersion2)
+	if(usingATypeOfTakeTwo)
 		return nil;
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRMarchingIconLayer alloc] init];
 	else
 		return [[BRMarchingIconLayer alloc] initWithScene:scene];
@@ -406,17 +432,17 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene {
 	// 10.5
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow && NSClassFromString(@"BRImageLayer") != nil) 
+	if(usingLeopardOrATypeOfTakeTwo && NSClassFromString(@"BRImageLayer") != nil) 
 		return [[BRImageLayer alloc] init];
 	// ATV2
-	else if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	else if(usingLeopardOrATypeOfTakeTwo)
 		return [[NSClassFromString(@"BRImageControl") alloc] init];
 	else
 		return [[BRImageLayer layerWithScene:scene] retain];
 }
 
 + (void)setImage:(id)image forLayer:(BRImageLayer *)layer {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		// this cast is not proper, it just makes a warning disappear.
 		[layer setImage:(CGImageRef)image];
 	else
@@ -431,12 +457,12 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 
 + (void)renderScene:(BRRenderScene *)scene
 {
-	if(atvVersion < SapphireFrontRowCompatATVVersionFrontrow)
+	if(!usingLeopardOrATypeOfTakeTwo)
 		[scene renderScene];
 }
 
 + (BRAlertController *)alertOfType:(int)type titled:(NSString *)title primaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText withScene:(BRRenderScene *)scene {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [BRAlertController alertOfType:type
 									   titled:title
 								  primaryText:primaryText
@@ -450,14 +476,14 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 }
 
 + (BROptionDialog *)newOptionDialogWithScene:(BRRenderScene *)scene {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BROptionDialog alloc] init];
 	else
 		return [[BROptionDialog alloc] initWithScene:scene];
 }
 
 + (void)setOptionDialogPrimaryInfoText:(NSString *)primaryInfoText withAttributes:(NSDictionary *)attributes optionDialog:(BROptionDialog *)dialog {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+	if(usingLeopardOrATypeOfTakeTwo) {
 		[dialog setPrimaryInfoText:primaryInfoText withAttributes:attributes];
 	} else {
 		[dialog setPrimaryInfoText:primaryInfoText];
@@ -466,7 +492,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 }
 
 + (BRTextWithSpinnerController *)newTextWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene {
-	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+	if(usingLeopardOrATypeOfTakeTwo)
 		return [[BRTextWithSpinnerController alloc] initWithTitle:title text:text isNetworkDependent:networkDependent];
 	else
 		return [[BRTextWithSpinnerController alloc] initWithScene:scene title:title text:text showBack:NO isNetworkDependent:NO];

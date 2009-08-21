@@ -30,7 +30,7 @@
 
 + (id)setCustomLayoutOnControl:(BRLayerController <SapphireLayoutDelegate> *)control
 {
-	if([SapphireFrontRowCompat atvVersion] < SapphireFrontRowCompatATVVersion2)
+	if(![SapphireFrontRowCompat usingATypeOfTakeTwo])
 		return nil;
 	
 	SapphireLayoutManager *newLayout = [[SapphireLayoutManager alloc] initWithReal:[control layoutManager]];
