@@ -41,7 +41,13 @@ typedef enum {
 	kBREventRemoteActionSwipeLeft,
 	kBREventRemoteActionSwipeRight,
 	kBREventRemoteActionSwipeUp,
-	kBREventRemoteActionSwipeDown
+	kBREventRemoteActionSwipeDown,
+	
+	// Custom remote actions for old remote actions
+	kBREventRemoteActionHoldLeft = 0xfeed0001,
+	kBREventRemoteActionHoldRight,
+	kBREventRemoteActionHoldUp,
+	kBREventRemoteActionHoldDown,
 } BREventRemoteAction;
 
 /*!

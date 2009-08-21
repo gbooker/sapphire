@@ -527,20 +527,24 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 		case kBREventTapLeft:
 			return kBREventRemoteActionLeft;
 		case kBREventTapUp:
-		case kBREventHoldUp:
 			return kBREventRemoteActionUp;
 		case kBREventTapDown:
-		case kBREventHoldDown:
 			return kBREventRemoteActionDown;
 		case kBREventHoldMenu:
 			return kBREventRemoteActionMenuHold;
 		case kBREventHoldPlayPause:
 			return kBREventRemoteActionPlayHold;
+		case kBREventHoldUp:
+			return kBREventRemoteActionHoldUp;
+		case kBREventHoldDown:
+			return kBREventRemoteActionHoldDown;
+		case kBREventHoldLeft:
+			return kBREventRemoteActionHoldLeft;
+		case kBREventHoldRight:
+			return kBREventRemoteActionHoldRight;
 			
 			//Unknowns:
 		case kBREventTapExit:
-		case kBREventHoldLeft:
-		case kBREventHoldRight:
 		case kBREventPlay:
 		case kBREventPause:
 		case kBREventFastForward:

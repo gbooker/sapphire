@@ -181,6 +181,7 @@
     switch (remoteAction)
     {	
 		case kBREventRemoteActionUp:
+		case kBREventRemoteActionHoldUp:
 			if([self getSelection] == 0 && [event value] == 1)
 			{
 				[self setSelection:itemCount-1];
@@ -189,6 +190,7 @@
 			}
 			break;
 		case kBREventRemoteActionDown:
+		case kBREventRemoteActionHoldDown:
 			if([self getSelection] == itemCount-1 && [event value] == 1)
 			{
 				[self setSelection:0];
