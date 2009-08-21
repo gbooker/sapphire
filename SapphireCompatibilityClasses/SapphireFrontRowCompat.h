@@ -58,6 +58,16 @@ typedef enum {
 + (BRRenderScene *)sharedInstance;
 @end
 
+typedef enum {
+	SapphireFrontRowCompatATVVersionUnknown = 0,
+	SapphireFrontRowCompatATVVersion1 = 1,
+	SapphireFrontRowCompatATVVersionFrontrow,
+	SapphireFrontRowCompatATVVersion2,
+	SapphireFrontRowCompatATVVersion2Dot2,
+	SapphireFrontRowCompatATVVersion2Dot3,
+	SapphireFrontRowCompatATVVersion2Dot4,
+} SapphireFrontRowCompatATVVersion;
+
 /*!
  * @brief A compatibility class for frontrow
  *
@@ -65,40 +75,13 @@ typedef enum {
  */
 @interface SapphireFrontRowCompat : NSObject {
 }
-/*!
- * @brief Are we on frontrow?
- *
- * @return YES if on frotrow, NO otherwise
- */
-+ (BOOL)usingFrontRow;
 
 /*!
- * @brief Are we on ATV Take Two?
+ * @brief Determine the ATV version
  *
- * @return YES if on take two, NO otherwise
+ * @return The ATV Version
  */
-+ (BOOL)usingTakeTwo;
-
-/*!
- * @brief Are we on ATV 2.2?
- *
- * @return YES if on 2.2, NO otherwise
- */
-+ (BOOL)usingTakeTwoDotTwo;
-
-/*!
- * @brief Are we on ATV 2.3?
- *
- * @return YES if on 2.3, NO otherwise
- */
-+ (BOOL)usingTakeTwoDotThree;
-
-/*!
- * @brief Are we on ATV 2.4?
- *
- * @return YES if on 2.4, NO otherwise
- */
-+ (BOOL)usingTakeTwoDotFour;
++ (SapphireFrontRowCompatATVVersion)atvVersion;
 
 /*!
  * @brief Load an image at a path
@@ -458,6 +441,44 @@ typedef enum {
 + (RUIPreferences *)sharedFrontRowPreferences;
 @end
 
+@interface SapphireFrontRowCompat (SapphireFrontRowCompatDeprecated)
+/*!
+ * @brief Are we on frontrow?
+ *
+ * @return YES if on frotrow, NO otherwise
+ */
++ (BOOL)usingFrontRow DEPRECATED_ATTRIBUTE;
+
+/*!
+ * @brief Are we on ATV Take Two?
+ *
+ * @return YES if on take two, NO otherwise
+ */
++ (BOOL)usingTakeTwo DEPRECATED_ATTRIBUTE;
+
+/*!
+ * @brief Are we on ATV 2.2?
+ *
+ * @return YES if on 2.2, NO otherwise
+ */
++ (BOOL)usingTakeTwoDotTwo DEPRECATED_ATTRIBUTE;
+
+/*!
+ * @brief Are we on ATV 2.3?
+ *
+ * @return YES if on 2.3, NO otherwise
+ */
++ (BOOL)usingTakeTwoDotThree DEPRECATED_ATTRIBUTE;
+
+/*!
+ * @brief Are we on ATV 2.4?
+ *
+ * @return YES if on 2.4, NO otherwise
+ */
++ (BOOL)usingTakeTwoDotFour DEPRECATED_ATTRIBUTE;
+@end
+
+
 static inline void SapphireLoadFramework(NSString *frameworkPath)
 {
 	CFStringRef preferencesDomain = CFSTR("com.apple.frontrow.appliance.Sapphire.CompatClasses");
@@ -486,7 +507,7 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 		if( ![compat load]){ 
 			@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
 		}
-		if([SapphireFrontRowCompat usingFrontRow])
+		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersionFrontrow)
 		{
 			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireLeopardCompatClasses.framework"];
 			compat = [NSBundle bundleWithPath:compatPath];
@@ -495,7 +516,7 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 			}
 		}
 		// ATV2
-		if(NSClassFromString(@"BRMetadataPreviewController") == nil)
+		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2)
 		{
 			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoCompatClasses.framework"];
 			compat = [NSBundle bundleWithPath:compatPath];
@@ -504,7 +525,7 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 			}
 		}
 		//ATV2.2
-		if(NSClassFromString(@"BRVideoPlayerController") == nil)
+		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2Dot2)
 		{
 			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeTwoPointTwoCompatClasses.framework"];
 			compat = [NSBundle bundleWithPath:compatPath];

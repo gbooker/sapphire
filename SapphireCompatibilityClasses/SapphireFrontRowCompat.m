@@ -91,99 +91,100 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 @implementation SapphireFrontRowCompat
 
-static BOOL usingFrontRow = NO;
-static BOOL usingTakeTwo = NO;
-static BOOL usingTakeTwoDotTwo = NO;
-static BOOL usingTakeTwoDotThree = NO;
-static BOOL usingTakeTwoDotFour = NO;
+static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVersionUnknown;
 
 + (void)initialize
 {
 	if(NSClassFromString(@"BRAdornedMenuItemLayer") == nil)
-		usingFrontRow = YES;
+		atvVersion = SapphireFrontRowCompatATVVersionFrontrow;
 	
 	if(NSClassFromString(@"BRBaseAppliance") != nil)
-		usingTakeTwo = YES;
+		atvVersion = SapphireFrontRowCompatATVVersion2;
 	
 	if(NSClassFromString(@"BRVideoPlayerController") == nil)
-		usingTakeTwoDotTwo = YES;
+		atvVersion = SapphireFrontRowCompatATVVersion2Dot2;
 	
 	if([(Class)NSClassFromString(@"BRController") instancesRespondToSelector:@selector(wasExhumed)])
-		usingTakeTwoDotThree = YES;
+		atvVersion = SapphireFrontRowCompatATVVersion2Dot3;
 	
 	if(NSClassFromString(@"BRPhotoImageProxy") != nil)
-		usingTakeTwoDotFour = YES;
+		atvVersion = SapphireFrontRowCompatATVVersion2Dot4;
+}
+
++ (SapphireFrontRowCompatATVVersion)atvVersion
+{
+	return atvVersion;
 }
 
 + (BOOL)usingFrontRow
 {
-	return usingFrontRow;
+	return atvVersion >= SapphireFrontRowCompatATVVersionFrontrow;
 }
 
 + (BOOL)usingTakeTwo
 {
-	return usingTakeTwo;
+	return atvVersion >= SapphireFrontRowCompatATVVersion2;
 }
 
 + (BOOL)usingTakeTwoDotTwo
 {
-	return usingTakeTwoDotTwo;
+	return atvVersion >= SapphireFrontRowCompatATVVersion2Dot2;
 }
 
 + (BOOL)usingTakeTwoDotThree
 {
-	return usingTakeTwoDotThree;
+	return atvVersion >= SapphireFrontRowCompatATVVersion2Dot3;
 }
 
 + (BOOL)usingTakeTwoDotFour
 {
-  return usingTakeTwoDotFour;
+	return atvVersion >= SapphireFrontRowCompatATVVersion2Dot4;
 }
 
 + (id)imageAtPath:(NSString *)path
 {
-  if(usingFrontRow) {
-    Class cls = NSClassFromString(@"BRImage");
-    return [cls imageWithPath:path];
-  } else {
-    // this returns a CGImageRef
-    NSURL             *url      = [NSURL fileURLWithPath:path];
-    CGImageRef        imageRef  = NULL;
-    CGImageSourceRef  sourceRef;
-    
-    sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
-    if(sourceRef) {
-      imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
-      CFRelease(sourceRef);
-    }
-    
-    return [(id)imageRef autorelease];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+		Class cls = NSClassFromString(@"BRImage");
+		return [cls imageWithPath:path];
+	} else {
+		// this returns a CGImageRef
+		NSURL             *url      = [NSURL fileURLWithPath:path];
+		CGImageRef        imageRef  = NULL;
+		CGImageSourceRef  sourceRef;
+		
+		sourceRef = CGImageSourceCreateWithURL((CFURLRef)url, NULL);
+		if(sourceRef) {
+			imageRef = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
+			CFRelease(sourceRef);
+		}
+		
+		return [(id)imageRef autorelease];
 	}
 }
 
 + (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene
 {
-  if(usingFrontRow) {
-    return [self imageAtPath:path];
-  } else {
-    CGImageRef imageRef  = (CGImageRef)[self imageAtPath:path];
-    BRTexture  *ret      = nil;
-    
-    if(imageRef != NULL) {
-      /*Create a texture*/
-      ret = [BRBitmapTexture textureWithImage:imageRef context:[scene resourceContext] mipmap:YES];
-    }
-    
-    return ret;
-  }
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+		return [self imageAtPath:path];
+	} else {
+		CGImageRef imageRef  = (CGImageRef)[self imageAtPath:path];
+		BRTexture  *ret      = nil;
+		
+		if(imageRef != NULL) {
+			/*Create a texture*/
+			ret = [BRBitmapTexture textureWithImage:imageRef context:[scene resourceContext] mipmap:YES];
+		}
+		
+		return ret;
+	}
 }
 
 + (id)coverartAsImage: (CGImageRef)imageRef
 {
 	// Non-FR - return CGImageRef
-	if (!usingFrontRow)
+	if (atvVersion < SapphireFrontRowCompatATVVersionFrontrow)
 		return (id)imageRef;
-
+	
 	// FR - return BRImage
 	Class cls = NSClassFromString(@"BRImage");
 	return (id)[cls imageWithCGImageRef:imageRef];
@@ -191,7 +192,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 	{
 		if(folder)
 			return [NSClassFromString(@"BRTextMenuItemLayer") folderMenuItem];
@@ -209,7 +210,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)setTitle:(NSString *)title forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		[menu setTitle:title];
 	else
 		[[menu textItem] setTitle:title];
@@ -217,21 +218,21 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)setTitle:(NSString *)title withAttributes:(NSDictionary *)attributes forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		[menu setTitle:title withAttributes:attributes];
 	else
 		[[menu textItem] setTitle:title withAttributes:attributes];
 }
 
 + (NSString *)titleForMenu:(BRAdornedMenuItemLayer *)menu {
-  if(usingFrontRow)
-    return [menu title];
-  else
-    return [[menu textItem] title];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		return [menu title];
+	else
+		return [[menu textItem] title];
 }
 + (void)setRightJustifiedText:(NSString *)text forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		[menu setRightJustifiedText:text];
 	else
 		[[menu textItem] setRightJustifiedText:text];
@@ -239,7 +240,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)setLeftIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		[menu setLeftIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 							   icon, @"BRMenuIconImageKey",
 							   nil]];
@@ -249,17 +250,17 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)setRightIcon:(BRTexture *)icon forMenu:(BRAdornedMenuItemLayer *)menu
 {
-	if(usingFrontRow)
-		 [menu setRightIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-								 icon, @"BRMenuIconImageKey",
-								 nil]];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		[menu setRightIconInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+								icon, @"BRMenuIconImageKey",
+								nil]];
 	else
 		[menu setRightIcon:icon];
 }
 
 + (id)selectedSettingImageForScene:(BRRenderScene *)scene
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[BRThemeInfo sharedTheme] selectedSettingImage];
 	else
 		return [[BRThemeInfo sharedTheme] selectedSettingImageForScene:scene];
@@ -267,27 +268,27 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (id)unplayedPodcastImageForScene:(BRRenderScene *)scene
 {
-  if(usingTakeTwoDotFour)
-    return [[BRThemeInfo sharedTheme] unplayedVideoImage];
-	else if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersion2Dot4)
+		return [[BRThemeInfo sharedTheme] unplayedVideoImage];
+	else if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[BRThemeInfo sharedTheme] unplayedPodcastImage];
 	else
 		return [[BRThemeInfo sharedTheme] unplayedPodcastImageForScene:scene];
 }
 
 + (id)returnToImageForScene:(BRRenderScene *)scene {
-  if(usingFrontRow)
-    return [[BRThemeInfo sharedTheme] returnToImage];
-  else
-    return [[BRThemeInfo sharedTheme] returnToImageForScene:scene];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		return [[BRThemeInfo sharedTheme] returnToImage];
+	else
+		return [[BRThemeInfo sharedTheme] returnToImageForScene:scene];
 }
 
 + (NSRect)frameOfController:(id)controller
 {
-	if(usingTakeTwo)
+	if(atvVersion >= SapphireFrontRowCompatATVVersion2)
 		// ATV2
 		return [controller frame];
-	else if(usingFrontRow)
+	else if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		// 10.5
 		return [controller controllerFrame];
 	else
@@ -296,7 +297,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)setText:(NSString *)text withAtrributes:(NSDictionary *)attributes forControl:(BRTextControl *)control
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		[control setText:text withAttributes:attributes];
 	else
 	{
@@ -308,7 +309,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (NSSize)textControl:(BRTextControl *)text renderedSizeWithMaxSize:(NSSize)maxSize
 {
-	if(usingTakeTwo)
+	if(atvVersion >= SapphireFrontRowCompatATVVersion2)
 		return [text renderedSizeWithMaxSize:maxSize];
 	
 	[text setMaximumSize:maxSize];
@@ -317,7 +318,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)addDividerAtIndex:(int)index toList:(BRListControl *)list
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		[list addDividerAtIndex:index withLabel:@""];
 	else
 		[list addDividerAtIndex:index];
@@ -325,33 +326,33 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (void)addSublayer:(id)sub toControl:(id)controller
 {
-	if(usingFrontRow) {
-    // ATV2
-    if(NSClassFromString(@"BRPanel") == nil)
-      [controller addControl:sub];
-    // 10.5
-    else
-      [[controller layer] addSublayer:sub];
-  }
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+		// ATV2
+		if(NSClassFromString(@"BRPanel") == nil)
+			[controller addControl:sub];
+		// 10.5
+		else
+			[[controller layer] addSublayer:sub];
+	}
 	else
 		[[controller masterLayer] addSublayer:sub];
 }
 
 + (void)insertSublayer:(id)sub toControl:(id)controller atIndex:(long)index {
-  if(usingFrontRow) {
-    // ATV2
-    if(NSClassFromString(@"BRPanel") == nil)
-      [controller insertControl:sub atIndex:index];
-    // 10.5
-    else
-      [[controller layer] insertSublayer:sub atIndex:index];
-  } else
-    [[controller masterLayer] insertSublayer:sub atIndex:index];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+		// ATV2
+		if(NSClassFromString(@"BRPanel") == nil)
+			[controller insertControl:sub atIndex:index];
+		// 10.5
+		else
+			[[controller layer] insertSublayer:sub atIndex:index];
+	} else
+		[[controller masterLayer] insertSublayer:sub atIndex:index];
 }
 
 + (BRHeaderControl *)newHeaderControlWithScene:(BRRenderScene *)scene
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[BRHeaderControl alloc] init];
 	else
 		return [[BRHeaderControl alloc] initWithScene:scene];
@@ -359,7 +360,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRButtonControl *)newButtonControlWithScene:(BRRenderScene *)scene  masterLayerSize:(NSSize)size;
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[SapphireButtonControl alloc] initWithMasterLayerSize:size];
 	else
 		return [[BRButtonControl alloc] initWithScene:scene masterLayerSize:size];
@@ -367,7 +368,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRTextControl *)newTextControlWithScene:(BRRenderScene *)scene
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[BRTextControl alloc] init];
 	else
 		return [[BRTextControl alloc] initWithScene:scene];
@@ -375,9 +376,9 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRTextEntryControl *)newTextEntryControlWithScene:(BRRenderScene *)scene
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 	{
-		if(usingTakeTwoDotTwo)
+		if(atvVersion >= SapphireFrontRowCompatATVVersion2Dot2)
 			return [[BRTextEntryControl alloc] initWithTextEntryStyle:1];
 		return [[BRTextEntryControl alloc] initWithTextEntryStyle:0];
 	}
@@ -387,7 +388,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene
 {
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[BRProgressBarWidget alloc] init];
 	else
 		return [[BRProgressBarWidget alloc] initWithScene:scene];
@@ -395,9 +396,9 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRMarchingIconLayer *)newMarchingIconLayerWithScene:(BRRenderScene *)scene
 {
-	if(usingTakeTwo)
+	if(atvVersion >= SapphireFrontRowCompatATVVersion2)
 		return nil;
-	if(usingFrontRow)
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[BRMarchingIconLayer alloc] init];
 	else
 		return [[BRMarchingIconLayer alloc] initWithScene:scene];
@@ -405,70 +406,70 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BRImageLayer *)newImageLayerWithScene:(BRRenderScene *)scene {
 	// 10.5
-	if(usingFrontRow && NSClassFromString(@"BRImageLayer") != nil) 
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow && NSClassFromString(@"BRImageLayer") != nil) 
 		return [[BRImageLayer alloc] init];
 	// ATV2
-	else if(usingFrontRow)
+	else if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
 		return [[NSClassFromString(@"BRImageControl") alloc] init];
 	else
 		return [[BRImageLayer layerWithScene:scene] retain];
 }
 
 + (void)setImage:(id)image forLayer:(BRImageLayer *)layer {
-  if(usingFrontRow)
-    // this cast is not proper, it just makes a warning disappear.
-    [layer setImage:(CGImageRef)image];
-  else
-    [layer setTexture:image];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		// this cast is not proper, it just makes a warning disappear.
+		[layer setImage:(CGImageRef)image];
+	else
+		[layer setTexture:image];
 }
 
 + (BRImageLayer *)newImageLayerWithImage:(id)image scene:(BRRenderScene *)scene {
-  BRImageLayer *result = [self newImageLayerWithScene:scene];
-  [self setImage:image forLayer:result];
-  return result;
+	BRImageLayer *result = [self newImageLayerWithScene:scene];
+	[self setImage:image forLayer:result];
+	return result;
 }
 
 + (void)renderScene:(BRRenderScene *)scene
 {
-	if(!usingFrontRow)
+	if(atvVersion < SapphireFrontRowCompatATVVersionFrontrow)
 		[scene renderScene];
 }
 
 + (BRAlertController *)alertOfType:(int)type titled:(NSString *)title primaryText:(NSString *)primaryText secondaryText:(NSString *)secondaryText withScene:(BRRenderScene *)scene {
-  if(usingFrontRow)
-    return [BRAlertController alertOfType:type
-                                   titled:title
-                              primaryText:primaryText
-                            secondaryText:secondaryText];
-  else
-    return [BRAlertController alertOfType:type
-                                   titled:title
-                              primaryText:primaryText
-                            secondaryText:secondaryText
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		return [BRAlertController alertOfType:type
+									   titled:title
+								  primaryText:primaryText
+								secondaryText:secondaryText];
+	else
+		return [BRAlertController alertOfType:type
+									   titled:title
+								  primaryText:primaryText
+								secondaryText:secondaryText
                                     withScene:scene];
 }
 
 + (BROptionDialog *)newOptionDialogWithScene:(BRRenderScene *)scene {
-  if(usingFrontRow)
-    return [[BROptionDialog alloc] init];
-  else
-    return [[BROptionDialog alloc] initWithScene:scene];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		return [[BROptionDialog alloc] init];
+	else
+		return [[BROptionDialog alloc] initWithScene:scene];
 }
 
 + (void)setOptionDialogPrimaryInfoText:(NSString *)primaryInfoText withAttributes:(NSDictionary *)attributes optionDialog:(BROptionDialog *)dialog {
-  if(usingFrontRow) {
-    [dialog setPrimaryInfoText:primaryInfoText withAttributes:attributes];
-  } else {
-    [dialog setPrimaryInfoText:primaryInfoText];
-    [dialog setPrimaryInfoTextAttributes:attributes];
-  }
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow) {
+		[dialog setPrimaryInfoText:primaryInfoText withAttributes:attributes];
+	} else {
+		[dialog setPrimaryInfoText:primaryInfoText];
+		[dialog setPrimaryInfoTextAttributes:attributes];
+	}
 }
 
 + (BRTextWithSpinnerController *)newTextWithSpinnerControllerTitled:(NSString *)title text:(NSString *)text isNetworkDependent:(BOOL)networkDependent scene:(BRRenderScene *)scene {
-  if(usingFrontRow)
-    return [[BRTextWithSpinnerController alloc] initWithTitle:title text:text isNetworkDependent:networkDependent];
-  else
-    return [[BRTextWithSpinnerController alloc] initWithScene:scene title:title text:text showBack:NO isNetworkDependent:NO];
+	if(atvVersion >= SapphireFrontRowCompatATVVersionFrontrow)
+		return [[BRTextWithSpinnerController alloc] initWithTitle:title text:text isNetworkDependent:networkDependent];
+	else
+		return [[BRTextWithSpinnerController alloc] initWithScene:scene title:title text:text showBack:NO isNetworkDependent:NO];
 }
 
 + (void)setSpinner:(BRWaitSpinnerControl *)spinner toSpin:(BOOL)spin
@@ -486,7 +487,7 @@ static BOOL usingTakeTwoDotFour = NO;
 
 + (BREventRemoteAction)remoteActionForEvent:(BREvent *)event
 {
-	if(usingTakeTwoDotFour)
+	if(atvVersion >= SapphireFrontRowCompatATVVersion2Dot4)
 		return [event remoteAction];
 	
 	BREventPageUsageHash hashVal = (uint32_t)([event page] << 16 | [event usage]);
@@ -509,8 +510,8 @@ static BOOL usingTakeTwoDotFour = NO;
 			return kBREventRemoteActionMenuHold;
 		case kBREventHoldPlayPause:
 			return kBREventRemoteActionPlayHold;
-
-		//Unknowns:
+			
+			//Unknowns:
 		case kBREventTapExit:
 		case kBREventHoldLeft:
 		case kBREventHoldRight:
@@ -548,13 +549,13 @@ static BOOL usingTakeTwoDotFour = NO;
 }
 
 + (RUIPreferences *)sharedFrontRowPreferences {
-  Class preferencesClass = NSClassFromString(@"RUIPreferences");
-  if(!preferencesClass) preferencesClass = NSClassFromString(@"BRPreferences");
-  
-  if(preferencesClass)
-    return [preferencesClass sharedFrontRowPreferences];
-  else
-    return nil;
+	Class preferencesClass = NSClassFromString(@"RUIPreferences");
+	if(!preferencesClass) preferencesClass = NSClassFromString(@"BRPreferences");
+	
+	if(preferencesClass)
+		return [preferencesClass sharedFrontRowPreferences];
+	else
+		return nil;
 }
 
 @end

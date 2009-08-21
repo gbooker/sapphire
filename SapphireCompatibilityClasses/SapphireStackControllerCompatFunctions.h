@@ -32,7 +32,7 @@
 /*All ATV*/
 - (void)wasPushed
 {
-	if([SapphireFrontRowCompat usingTakeTwoDotThree])
+	if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2Dot3)
 	/*ATV ≥2.3 doesn't call willBe... so we do it here*/
 		[self doInitialPush];
 	
@@ -45,7 +45,7 @@
 
 - (void)wasPopped
 {
-	if([SapphireFrontRowCompat usingTakeTwoDotThree])
+	if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2Dot3)
 		[self doInitialPop];
 	
     [super wasPopped];
@@ -63,7 +63,7 @@
 
 - (void)wasBuried
 {
-	if([SapphireFrontRowCompat usingTakeTwoDotThree])
+	if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2Dot3)
 	{
 		[self doInitialBury];
 		[super wasBuried];
@@ -88,7 +88,7 @@
 
 - (void)wasExhumed
 {
-	if([SapphireFrontRowCompat usingTakeTwoDotThree])
+	if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion2Dot3)
 	{
 		[self doInitialExhume];
 		[super wasExhumed];
