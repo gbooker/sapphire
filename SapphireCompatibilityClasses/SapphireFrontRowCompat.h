@@ -129,6 +129,15 @@ typedef enum {
  */
 + (id)imageAtPath:(NSString *)path scene:(BRRenderScene *)scene;
 
+/*
+ * @brief Load an image texture from data
+ *
+ * This returns a CGImageRef or a BRImage, depending on the platform.
+ *
+ * @return The BRImage on Front Row or CGImageRef on ATV from the data
+ */
++ (id)imageFromData:(NSData *)imageData;
+
 /*!
  * @brief Load an image from an Image Ref
  *

@@ -205,6 +205,24 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 	}
 }
 
++ (id)imageFromData:(NSData *)imageData
+{
+	if(usingLeopardOrATypeOfTakeTwo)
+	{
+		Class cls = NSClassFromString(@"BRImage");
+		return [cls imageWithData:imageData];
+	}
+	else
+	{
+		CGImageRef coverArt;
+		CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
+		if(source != NULL)
+			coverArt = CGImageSourceCreateImageAtIndex(source, 1, nil);
+		CFRelease(source);
+		return [(id)coverArt autorelease];
+	}
+}
+
 + (id)coverartAsImage: (CGImageRef)imageRef
 {
 	// Non-FR - return CGImageRef
