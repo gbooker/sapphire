@@ -48,6 +48,11 @@
 - (void)setSelection:(int)sel;
 
 /*!
+ * @brief Causes the preview controller to be redrawn
+ */
+- (void)resetPreviewController;
+
+/*!
  * @brief Begin of the push
  *
  * On the ATV < 2.3, this takes the place of willBePushed.  On ATV ≥ 2.3, this is the first part of wasPushed

@@ -28,6 +28,10 @@
 - (id)layoutManager;
 @end
 
+@interface BRMediaMenuController (compat)
+- (void)resetPreviewController;
+@end
+
 @interface BRLayerController (compat)
 - (void)wasBuried;
 - (void)wasExhumed;
@@ -171,6 +175,15 @@
 	[selInv invokeWithTarget:list];
 }
 
+- (void)resetPreviewController
+{
+	if([super respondsToSelector:@selector(resetPreviewController)])
+		[super resetPreviewController];
+	else
+		//Reset calls update, so we shouldn't if reset exists
+		[self updatePreviewController];
+}
+
 - (BOOL)brEventAction:(BREvent *)event
 {
 	BREventRemoteAction remoteAction = [SapphireFrontRowCompat remoteActionForEvent:event];
@@ -185,7 +198,7 @@
 			if([self getSelection] == 0 && [event value] == 1)
 			{
 				[self setSelection:itemCount-1];
-				[self updatePreviewController];
+				[self resetPreviewController];
 				return YES;
 			}
 			break;
@@ -194,14 +207,13 @@
 			if([self getSelection] == itemCount-1 && [event value] == 1)
 			{
 				[self setSelection:0];
-				[self updatePreviewController];
+				[self resetPreviewController];
 				return YES;
 			}
 			break;
     }
 	return [super brEventAction:event];
 }
-
 #include "SapphireStackControllerCompatFunctions.h"
 
 @end
