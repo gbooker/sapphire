@@ -177,7 +177,7 @@
 
 - (void)resetPreviewController
 {
-	if([super respondsToSelector:@selector(resetPreviewController)])
+	if([[SapphireMediaMenuController superclass] instancesRespondToSelector:@selector(resetPreviewController)])
 		[super resetPreviewController];
 	else
 		//Reset calls update, so we shouldn't if reset exists
