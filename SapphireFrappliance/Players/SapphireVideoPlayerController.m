@@ -253,15 +253,16 @@ void teardownPassthrough(int soundState)
 	float duration = [player trackDuration];
 	if(duration == 0.0f)
 		elapsed = duration = 1.0f;
-	if(elapsed / duration > 0.9f)
-	/*Mark as watched and reload info*/
-		[currentPlayFile setWatchedValue:YES];
-	
+
 	/*Get the resume time to save*/
 	if(elapsed < duration - 2)
 		[currentPlayFile setResumeTimeValue:elapsed];
 	else
-		[currentPlayFile setResumeTime:0];
+		[currentPlayFile setResumeTime:nil];
+	
+	if(elapsed / duration > 0.9f)
+	/*Mark as watched and reload info*/
+		[currentPlayFile setWatchedValue:YES];
 	[SapphireMetaDataSupport save:[currentPlayFile managedObjectContext]];
 }
 

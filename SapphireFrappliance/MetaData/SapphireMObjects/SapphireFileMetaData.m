@@ -1034,6 +1034,7 @@ static NSString *movingToPath = @"To";
 	super.watched = value_;
 	if(![oldValue isEqualToNumber:value_])
 	{
+		self.resumeTime = nil;
 		[self.parent clearPredicateCache];
 		[self.tvEpisode clearPredicateCache];
 		[self.movie clearPredicateCache];
