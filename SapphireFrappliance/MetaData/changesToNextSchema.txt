@@ -1,0 +1,10 @@
+Since changing the schema is a bit of a pain, here are the items to add to the next schema.
+
+Code is present but commented out with //AAA:
+Add movieSortTitle to XMLData
+Add an NSDictionary to every object to allow these changes to be made immediately and then made properties in the future.
+
+Ideas:
+Add watched/favorite keys to directories, movies, episodes, and virtual directories
+	change watched/favorite to use sets of strings, to accommodate multiple users.
+Add a date-added field to files so sorting by date-added can be done

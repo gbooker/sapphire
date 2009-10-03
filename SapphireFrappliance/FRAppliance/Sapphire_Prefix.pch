@@ -1,0 +1,6 @@
+//
+// Prefix header for all source files of the Sapphire target in the Sapphire project.
+//
+
+#include "../../SapphireCompatibilityClasses/Sapphire_Prefix.pch"
+#include "SapphireLogging.h"

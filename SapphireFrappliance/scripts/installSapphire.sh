@@ -16,6 +16,24 @@ ARCHIVE="Sapphire_$VERSION.zip"
 FINDER="Finder"
 FINDERGREP="[F]inder"
 
+if [ "$COMMAND" = "help" ]; then
+	echo "Usage $0 [action] [prefix]"
+	echo
+	echo "Install Sapphire $VERSION on the AppleTV or Leopard"
+	echo
+	echo "Where action is:"
+	echo "  install       Install Sapphire"
+	echo "  uninstall     Remove Sapphire"
+	echo "  help          Display this message"
+	echo "  license       Display the License File"
+	echo
+	echo "prefix is a root operation system to install.  If not specified, / is assumed"
+	exit 0
+elif [ "$COMMAND" = "license" ]; then
+	cat "LICENSE.txt"
+	exit 0
+fi
+
 #Root check
 if [ "$USER" != "root" ]; then
 	echo "This installer must be run with superuser privileges."
@@ -52,17 +70,6 @@ if [ "$COMMAND" = "uninstall" ]; then
 	echo "Sapphire successfully uninstalled"
 	echo
 	RESTART=1
-elif [ "$COMMAND" = "help" ]; then
-	echo "Usage $0 [action] [prefix]"
-	echo
-	echo "Install Sapphire $VERSION on the AppleTV or Leopard"
-	echo
-	echo "Where action is:"
-	echo "  install       Install Sapphire"
-	echo "  uninstall     Remove Sapphire"
-	echo "  help          Display this message"
-	echo
-	echo "prefix is a root operation system to install.  If not specified, / is assumed"
 elif [ "$COMMAND" = "install" ]; then
 	
 	#Trash old version
