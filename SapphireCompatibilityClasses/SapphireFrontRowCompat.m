@@ -214,7 +214,7 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 	}
 	else
 	{
-		CGImageRef coverArt;
+		CGImageRef coverArt = nil;
 		CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
 		if(source != NULL)
 			coverArt = CGImageSourceCreateImageAtIndex(source, 1, nil);
@@ -574,12 +574,13 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 		case kBREventRandomPlay:
 		case kBREventVolumeUp:
 		case kBREventVolumeDown:
+		/* Commented out due to it throwing warnings
 		case kBREventPairRemote:
 		case kBREventUnpairRemote:
 		case kBREventLowBattery:
 		case kBREventSleepNow:
 		case kBREventSystemReset:
-		case kBREventBlackScreenRecovery:
+		case kBREventBlackScreenRecovery:*/
 		default:
 			return 0;
 	}
