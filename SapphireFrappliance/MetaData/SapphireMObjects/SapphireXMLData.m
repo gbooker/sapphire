@@ -334,7 +334,7 @@
 		return;
 	
 	int ep = self.searchEpisodeValue;
-	int lastEp = self.lastEpisodeNumber;
+	int lastEp = self.lastEpisodeNumberValue;
 	if(lastEp == 0)
 		lastEp = ep;
 	NSString *title = self.title;
