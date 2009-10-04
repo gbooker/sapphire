@@ -3,6 +3,7 @@
 #import "_SapphireSubEpisode.h"
 
 @interface SapphireSubEpisode : _SapphireSubEpisode {}
++ (NSRange)subEpisodeRangeInEpisode:(SapphireEpisode *)ep;
 + (SapphireSubEpisode *)subEpisode:(int)subNum inEpisode:(SapphireEpisode *)ep;
 + (SapphireSubEpisode *)subEpisodeTitle:(NSString *)title inEpisode:(SapphireEpisode *)ep;
 + (SapphireSubEpisode *)createSubEpisode:(int)subNum inEpisode:(SapphireEpisode *)ep;

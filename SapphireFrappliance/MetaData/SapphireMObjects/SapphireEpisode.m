@@ -10,14 +10,15 @@
 
 @implementation SapphireEpisode
 
-+ (SapphireEpisode *)episode:(int)ep inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc
++ (SapphireEpisode *)episodeFrom:(int)ep to:(int)lastEp inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc
 {
 	SapphireSeason *tvseason = [SapphireSeason season:season forShow:show withPath:showPath inContext:moc];
 	NSEnumerator *epEnum = [tvseason.episodesSet objectEnumerator];
 	SapphireEpisode *tvep;
+	NSRange range = NSMakeRange(ep, lastEp);
 	while((tvep = [epEnum nextObject]) != nil)
 	{
-		if([SapphireSubEpisode subEpisode:ep inEpisode:tvep] != nil)
+		if(NSEqualRanges([SapphireSubEpisode subEpisodeRangeInEpisode:tvep], range))
 			return tvep;
 	}
 	
@@ -119,25 +120,40 @@
 		[self.subEpisodesSet setSet:[NSSet setWithObject:sub]];
 }
 
-+ (SapphireEpisode *)episodeWithDictionary:(NSDictionary *)dict inContext:(NSManagedObjectContext *)moc
++ (SapphireEpisode *)episodeWithDictionaries:(NSArray *)dictionaries inContext:(NSManagedObjectContext *)moc
 {
-	NSString *show = [dict objectForKey:META_SHOW_NAME_KEY];
-	int season = [[dict objectForKey:META_SEASON_NUMBER_KEY] intValue];
-	int ep = [[dict objectForKey:META_EPISODE_NUMBER_KEY] intValue];
+	NSDictionary *firstEpDict = [dictionaries objectAtIndex:0];
+	NSString *show = [firstEpDict objectForKey:META_SHOW_NAME_KEY];
+	int season = [[firstEpDict objectForKey:META_SEASON_NUMBER_KEY] intValue];
+	int ep = [[firstEpDict objectForKey:META_EPISODE_NUMBER_KEY] intValue];
 	
 	if(show == nil || season == 0)
 		return nil;
 	
-	NSString *showPath = [dict objectForKey:META_SHOW_IDENTIFIER_KEY];
+	NSDictionary *lastEpDict = [dictionaries lastObject];
+	int lastEp = [[firstEpDict objectForKey:META_EPISODE_2_NUMBER_KEY] intValue];
+	if([dictionaries count] > 1)
+		lastEp = [[lastEpDict objectForKey:META_EPISODE_NUMBER_KEY] intValue];
+	if(lastEp == 0)
+		lastEp = ep;
+	
+	NSString *showPath = [firstEpDict objectForKey:META_SHOW_IDENTIFIER_KEY];
 	SapphireEpisode *ret;
 	if(ep == 0)
 	{
-		NSString *title = [dict objectForKey:META_TITLE_KEY];
+		NSString *title = [firstEpDict objectForKey:META_TITLE_KEY];
 		ret = [SapphireEpisode episodeTitle:title inSeason:season forShow:show withPath:showPath inContext:moc];
 	}
 	else
-		ret = [SapphireEpisode episode:ep inSeason:season forShow:show withPath:showPath inContext:moc];
-	[ret insertDictionary:dict];
+		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show withPath:showPath inContext:moc];
+	[ret insertDictionary:firstEpDict];
+	if([dictionaries count] > 1)
+	{
+		NSEnumerator *otherEps = [dictionaries objectEnumerator];
+		NSDictionary *epDict = [otherEps nextObject]; //Skip first
+		while((epDict = [otherEps nextObject]) != nil)
+			[ret insertAdditionalEpisode:epDict];
+	}
 	return ret;
 }
 

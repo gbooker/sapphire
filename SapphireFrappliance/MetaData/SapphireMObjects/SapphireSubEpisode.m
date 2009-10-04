@@ -5,7 +5,25 @@
 
 @implementation SapphireSubEpisode
 
-+ (SapphireSubEpisode *)subEpisode:(int)subNum inEpisode:(SapphireEpisode *)ep;
++ (NSRange)subEpisodeRangeInEpisode:(SapphireEpisode *)ep
+{
+	NSEnumerator *subEpEnum = [ep.subEpisodesSet objectEnumerator];
+	SapphireSubEpisode *subep;
+	int max = 0;
+	int min = INT_MAX;
+	while((subep = [subEpEnum nextObject]) != nil)
+	{
+		int epNumber = [subep.episodeNumber intValue];
+		if(epNumber > max)
+			max = epNumber;
+		if(epNumber < min)
+			min = epNumber;
+	}
+	
+	return NSMakeRange(min, max);
+}
+
++ (SapphireSubEpisode *)subEpisode:(int)subNum inEpisode:(SapphireEpisode *)ep
 {
 	NSEnumerator *subEpEnum = [ep.subEpisodesSet objectEnumerator];
 	SapphireSubEpisode *subep;

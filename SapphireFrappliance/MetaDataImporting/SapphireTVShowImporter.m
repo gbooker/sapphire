@@ -666,9 +666,8 @@
 	
 	/*Import the info*/
 	[info removeObjectForKey:LINK_KEY];
-	SapphireEpisode *episode = [SapphireEpisode episodeWithDictionary:info inContext:moc];
-	if(info2 != nil)
-		[episode insertAdditionalEpisode:info2];
+	NSMutableArray *dictionaries = [NSMutableArray arrayWithObjects:info, info2, nil];
+	SapphireEpisode *episode = [SapphireEpisode episodeWithDictionaries:dictionaries inContext:moc];
 	[metaData setTvEpisode:episode];
 	[tran setTvShow:[episode tvShow]];
 	

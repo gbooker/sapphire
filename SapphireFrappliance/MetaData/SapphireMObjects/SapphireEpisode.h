@@ -5,9 +5,9 @@
 @interface SapphireEpisode : _SapphireEpisode {
 	NSArray			*sortedSubEpisodes;
 }
-+ (SapphireEpisode *)episode:(int)ep inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc;
++ (SapphireEpisode *)episodeFrom:(int)ep to:(int)lastEp inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc;
 + (SapphireEpisode *)episodeTitle:(NSString *)title inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc;
-+ (SapphireEpisode *)episodeWithDictionary:(NSDictionary *)dict inContext:(NSManagedObjectContext *)moc;
++ (SapphireEpisode *)episodeWithDictionaries:(NSArray *)dictionaries inContext:(NSManagedObjectContext *)moc;
 + (void)upgradeV1EpisodesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup;
 
 - (int)episodeNumberValue;

@@ -224,7 +224,7 @@ static NSSet *secondaryFiles;
 	value = [dict objectForKey:@"TVRage Source"];
 	if(value != nil)
 	{
-		SapphireEpisode *ep = [SapphireEpisode episodeWithDictionary:(NSDictionary *)value inContext:[self managedObjectContext]];
+		SapphireEpisode *ep = [SapphireEpisode episodeWithDictionaries:[NSArray arrayWithObject:value] inContext:[self managedObjectContext]];
 		self.tvEpisode = ep;
 		if(ep != nil)
 		{

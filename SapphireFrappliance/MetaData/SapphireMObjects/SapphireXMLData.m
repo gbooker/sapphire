@@ -334,12 +334,15 @@
 		return;
 	
 	int ep = self.searchEpisodeValue;
+	int lastEp = self.lastEpisodeNumber;
+	if(lastEp == 0)
+		lastEp = ep;
 	NSString *title = self.title;
 	
 	SapphireEpisode *ret;
 	if(ep != 0)
 	{
-		ret = [SapphireEpisode episode:ep inSeason:season forShow:show withPath:nil inContext:[self managedObjectContext]];
+		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show withPath:nil inContext:[self managedObjectContext]];
 	}
 	else if(title != nil)
 	{

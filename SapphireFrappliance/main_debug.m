@@ -258,6 +258,18 @@ int main(int argc, char *argv[])
 		[import release];
 	}
 #endif
+#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
+#ifdef TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
+	{
+		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E01-E02.avi" inContext:moc];
+		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] initWithContext:moc];
+		[import importMetaData:file path:[file path]];
+		
+		file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E02.avi" inContext:moc];
+		[import importMetaData:file path:[file path]];
+		[import release];
+	}
+#endif
 	
 	[moc release];
 	[pool release];
