@@ -319,7 +319,7 @@ static NSString *movingPath = nil;
 					[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_MOVIE], MARK_COMMAND,
 					nil]];
 		}
-		if([fileMeta fileClass] != FILE_CLASS_UNKNOWN)
+		if([fileMeta importTypeValue] != 0)
 		{
 			[marks addObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
@@ -327,6 +327,9 @@ static NSString *movingPath = nil;
 					BRLocalizedString(@"Tells Sapphire to remove all metadata for this file.", @"Mark file to delete metadata description"), MARK_DESCRIPTION,
 					[NSNumber numberWithInt:COMMAND_MARK_TO_DELETE_METADATA], MARK_COMMAND,
 					nil]];
+		}
+		if([fileMeta fileClass] != FILE_CLASS_UNKNOWN)
+		{
 			[marks addObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
 					BRLocalizedString(@"        Reset Import Decisions", @"Mark a file to reset import decisions"), MARK_NAME,
