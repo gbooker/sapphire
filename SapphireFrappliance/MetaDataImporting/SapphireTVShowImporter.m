@@ -296,7 +296,7 @@
 				summary = [NSString stringWithString:mutSummary];
 				[mutSummary release];
 				
-				if([summary length] > 3 && [[summary substringFromIndex:3] isEqualToString:@"No Summary (Add Here)"])
+				if([summary hasSuffix:@"No Summary (Add Here)"])
 					summary = nil;
 				if(![summary length])
 					summary = nil;
