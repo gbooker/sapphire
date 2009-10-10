@@ -430,6 +430,196 @@ static BOOL is10Version = NO;
 	[self reloadDirectoryContents];
 }
 
+- (void)anonymousReportFile:(SapphireFileMetaData *)currentPlayFile withPath:(NSString *)path
+{
+	NSMutableString *reqData = [NSMutableString string];
+	NSMutableArray *reqComp = [NSMutableArray array];
+	NSMutableURLRequest *request=nil;
+	NSString *ext=nil;
+	int fileClass=-1;
+	
+	if(path != nil)
+	{
+		[reqComp addObject:[NSString stringWithFormat:@"path=%@", [[path lastPathComponent]lowercaseString]]];
+		ext=[[path pathExtension]lowercaseString] ;
+	}
+	
+	if([currentPlayFile fileClassValue] == FILE_CLASS_TV_SHOW)
+	{
+		SapphireEpisode *episode = [currentPlayFile tvEpisode];
+		fileClass=1;
+		request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
+		int ep = [episode episodeNumberValue];
+		int season = [[episode season] seasonNumberValue];
+		SapphireTVShow *show = [episode tvShow];
+		NSString *showID = [show showPath];
+		NSString *showName= [show name];
+		
+		if(season != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
+		if(ep != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
+		if(showName != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
+		if(showID != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
+	}
+	else if([currentPlayFile fileClassValue] == FILE_CLASS_MOVIE)
+	{
+		fileClass=2;
+		request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/movie.php"]];
+		SapphireMovie *movie = [currentPlayFile movie];
+		NSString *movieTitle=[movie title];
+		int movieID=[movie imdbNumberValue];
+		NSDate * releaseDate=[movie releaseDate];
+		if(movieTitle != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"title=%@", movieTitle]];
+		if(releaseDate != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"year=%@", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
+		if(movieID != 0)
+			[reqComp addObject:[NSString stringWithFormat:@"movieid=%d", movieID]];
+	}
+	else
+	{
+		request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/ext.php"]];
+		//The fileClass is never used in these cases later
+		//				if([currentPlayFile fileClassValue] == FILE_CLASS_UNKNOWN)
+		//					 fileClass=0;
+		//				if([currentPlayFile fileClassValue] == FILE_CLASS_AUDIO)
+		//					 fileClass=3;
+		if([currentPlayFile fileClassValue] == FILE_CLASS_OTHER)
+			fileClass=5;
+		else
+			fileClass=99;
+	}
+	
+	if(ext!=0)
+	{
+		[reqComp addObject:[NSString stringWithFormat:@"filetype=%d",fileClass]];
+		[reqComp addObject:[NSString stringWithFormat:@"extension=%@", ext]];
+		if([SapphireFrontRowCompat usingATypeOfTakeTwo])
+			[reqComp addObject:[NSString stringWithFormat:@"ckey=ATVT2-%@-%d",ext,fileClass]];
+		else if([SapphireFrontRowCompat usingLeopard])
+			[reqComp addObject:[NSString stringWithFormat:@"ckey=FRONTROW-%@-%d",ext,fileClass]];
+		else
+			[reqComp addObject:[NSString stringWithFormat:@"ckey=ATV-%@-%d",ext,fileClass]];
+	}
+	
+	int count = [reqComp count];
+	int i;
+	for(i=0; i<count-1; i++)
+	{
+		[reqData appendFormat:@"%@&", [reqComp objectAtIndex:i]];
+	}
+	if(count)
+		[reqData appendFormat:@"%@", [reqComp objectAtIndex:i]];
+	
+	NSData *postData = [reqData dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+	
+	[request setHTTPMethod:@"POST"];
+	[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+	[request setHTTPBody:postData];
+	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+	/*Trigger the req*/
+	NSURLDownload *download = [[NSURLDownload alloc] initWithRequest:request delegate:nil];
+	[download autorelease];
+}
+
+- (void)playFile:(SapphireFileMetaData *)currentPlayFile
+{
+	NSString *path = [currentPlayFile path];
+	if(![[NSFileManager defaultManager] fileExistsAtPath:path])
+	{
+		NSString *errorTitle = BRLocalizedString(@"File Not Present", @"File Not Present title");
+		NSString *errorString = [NSString stringWithFormat:BRLocalizedString(@"The File %@ is not present.  Either a drive is not mounted or your metadata has not been imported recently", @"File not present error string"), path];
+		SapphireErrorDisplayController *display = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:errorTitle longError:errorString];
+		[[self stack] pushController:display];
+		[display release];
+		return;
+	}
+	if([currentPlayFile updateMetaData])
+		[SapphireMetaDataSupport save:[currentPlayFile managedObjectContext]];
+	
+	
+	/*Anonymous reporting*/
+	SapphireSettings *settings = [SapphireSettings sharedSettings];
+	if(![settings disableAnonymousReporting])
+	{
+		[self anonymousReportFile:currentPlayFile withPath:path];
+	}
+	
+	if([currentPlayFile fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS && path != nil)
+	{
+		if([SapphireFrontRowCompat usingLeopard])
+		{
+			BRDVDMediaAsset *asset = [[BRDVDMediaAsset alloc] initWithPath:path];
+			SapphireDVDLoadingController *controller = [[SapphireDVDLoadingController alloc] initWithScene:[self scene] forAsset:asset];
+			[asset release];
+			[[self stack] pushController:controller];
+			[controller release];
+		}
+		else
+		{
+			SapphireErrorDisplayController *controller = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Playback Error", @"") longError:BRLocalizedString(@"DVD Playback is not supported on the AppleTV", @"Error message saying DVD on ATV not supported")];
+			[[self stack] pushController:controller];
+			[controller release];
+		}
+	}
+	else if([[NSFileManager defaultManager] acceptFilePath:path] && [currentPlayFile hasVideoValue])
+	{
+		/*Video*/
+		/*Set the asset resume time*/
+		NSURL *url = [NSURL fileURLWithPath:path];
+		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
+		[asset setResumeTime:[currentPlayFile resumeTimeValue]];
+		
+		/*Get the player*/
+		SapphireVideoPlayer *player = [[SapphireVideoPlayer alloc] init];
+		NSError *error = nil;
+		[player setMedia:asset error:&error];
+		
+		/*and go*/
+		SapphireVideoPlayerController *controller = [[SapphireVideoPlayerController alloc] initWithScene:[self scene] player:player];
+		[controller setPlayFile:currentPlayFile];
+		[controller setAllowsResume:YES];
+		[[self stack] pushController:controller];
+		
+		[asset release];
+		[player release];
+		[controller release];
+	}
+	else if(path != nil)
+	{
+		/*Audio*/
+		/*Set the asset*/
+		NSURL *url = [NSURL fileURLWithPath:path];
+		SapphireAudioMedia *asset  =[[SapphireAudioMedia alloc] initWithMediaURL:url];
+		[asset setResumeTime:[currentPlayFile resumeTimeValue]];
+		[asset setFileMetaData:currentPlayFile];
+		
+		SapphireAudioPlayer *player = [[SapphireAudioPlayer alloc] init];
+		/*and go*/
+		BRMusicNowPlayingController *controller;
+		if([SapphireFrontRowCompat usingLeopardOrATypeOfTakeTwo])
+			controller = [[SapphireAudioNowPlayingController alloc] initWithPlayer:player];
+		else
+		{
+			controller = [[BRMusicNowPlayingController alloc] initWithScene:[self scene]];
+			[controller setPlayer:player];
+		}
+		NSError *error = nil;
+		[player setMedia:asset inTracklist:[NSArray arrayWithObject:asset] error:&error];
+		[player play];
+		[SapphireApplianceController setMusicNowPlayingController:controller];
+		[[self stack] pushController:controller];
+		
+		[asset release];
+		[player release];
+		[controller release];
+	}
+}
+
 - (void) itemSelected: (long) row
 {
     // This is called when the user presses play/pause on a list item
@@ -458,188 +648,7 @@ static BOOL is10Version = NO;
 		/*First stop any music*/
 		[SapphireApplianceController setMusicNowPlayingController:nil];
 		/*Play the file*/
-		SapphireFileMetaData *currentPlayFile = [metaData metaDataForFile:name];
-		NSString *path = [currentPlayFile path];
-		if(![[NSFileManager defaultManager] fileExistsAtPath:path])
-		{
-			NSString *errorTitle = BRLocalizedString(@"File Not Present", @"File Not Present title");
-			NSString *errorString = [NSString stringWithFormat:BRLocalizedString(@"The File %@ is not present.  Either a drive is not mounted or your metadata has not been imported recently", @"File not present error string"), path];
-			SapphireErrorDisplayController *display = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:errorTitle longError:errorString];
-			[[self stack] pushController:display];
-			[display release];
-			return;
-		}
-		if([currentPlayFile updateMetaData])
-			[SapphireMetaDataSupport save:[currentPlayFile managedObjectContext]];
-		
-		
-		/*Anonymous reporting*/
-		SapphireSettings *settings = [SapphireSettings sharedSettings];
-		if(![settings disableAnonymousReporting])
-		{
-			NSMutableString *reqData = [NSMutableString string];
-			NSMutableArray *reqComp = [NSMutableArray array];
-			NSMutableURLRequest *request=nil;
-			NSString *ext=nil;
-			int fileClass=-1;
-			
-			if(path != nil)
-			{
-				[reqComp addObject:[NSString stringWithFormat:@"path=%@", [[path lastPathComponent]lowercaseString]]];
-				ext=[[path pathExtension]lowercaseString] ;
-			}
-			
-			if([currentPlayFile fileClassValue] == FILE_CLASS_TV_SHOW)
-			{
-				SapphireEpisode *episode = [currentPlayFile tvEpisode];
-				fileClass=1;
-				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/show.php"]];
-				int ep = [episode episodeNumberValue];
-				int season = [[episode season] seasonNumberValue];
-				SapphireTVShow *show = [episode tvShow];
-				NSString *showID = [show showPath];
-				NSString *showName= [show name];
-				 
-				if(season != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"season=%d", season]];
-				if(ep != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
-				if(showName != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
-				if(showID != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
-			}
-			else if([currentPlayFile fileClassValue] == FILE_CLASS_MOVIE)
-			{
-				fileClass=2;
-				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/movie.php"]];
-				SapphireMovie *movie = [currentPlayFile movie];
-				NSString *movieTitle=[movie title];
-				int movieID=[movie imdbNumberValue];
-				NSDate * releaseDate=[movie releaseDate];
- 				if(movieTitle != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"title=%@", movieTitle]];
-				if(releaseDate != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"year=%@", [releaseDate descriptionWithCalendarFormat:@"%Y" timeZone:nil locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]]]];
-				if(movieID != 0)
-					[reqComp addObject:[NSString stringWithFormat:@"movieid=%d", movieID]];
-			}
-			else
-			{
-				request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/ext.php"]];
-				//The fileClass is never used in these cases later
-//				if([currentPlayFile fileClassValue] == FILE_CLASS_UNKNOWN)
-//					 fileClass=0;
-//				if([currentPlayFile fileClassValue] == FILE_CLASS_AUDIO)
-//					 fileClass=3;
-				if([currentPlayFile fileClassValue] == FILE_CLASS_OTHER)
-					fileClass=5;
-				else
-					fileClass=99;
-			}
-			
-			if(ext!=0)
-			{
-				[reqComp addObject:[NSString stringWithFormat:@"filetype=%d",fileClass]];
-				[reqComp addObject:[NSString stringWithFormat:@"extension=%@", ext]];
-				if([SapphireFrontRowCompat usingATypeOfTakeTwo])
-					[reqComp addObject:[NSString stringWithFormat:@"ckey=ATVT2-%@-%d",ext,fileClass]];
-				else if([SapphireFrontRowCompat usingLeopard])
-					[reqComp addObject:[NSString stringWithFormat:@"ckey=FRONTROW-%@-%d",ext,fileClass]];
-				else
-					[reqComp addObject:[NSString stringWithFormat:@"ckey=ATV-%@-%d",ext,fileClass]];
-			}
-			
-			int count = [reqComp count];
-			int i;
-			for(i=0; i<count-1; i++)
-			{
-				[reqData appendFormat:@"%@&", [reqComp objectAtIndex:i]];
-			}
-			if(count)
-				[reqData appendFormat:@"%@", [reqComp objectAtIndex:i]];
-			
-			NSData *postData = [reqData dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-			
-			[request setHTTPMethod:@"POST"];
-			[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
-			[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-			[request setHTTPBody:postData];
-			[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
-			/*Trigger the req*/
-			NSURLDownload *download = [[NSURLDownload alloc] initWithRequest:request delegate:nil];
-			[download autorelease];
-		}
-		
-		if([currentPlayFile fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS && path != nil)
-		{
-			if([SapphireFrontRowCompat usingLeopard])
-			{
-				BRDVDMediaAsset *asset = [[BRDVDMediaAsset alloc] initWithPath:path];
-				SapphireDVDLoadingController *controller = [[SapphireDVDLoadingController alloc] initWithScene:[self scene] forAsset:asset];
-				[asset release];
-				[[self stack] pushController:controller];
-				[controller release];
-			}
-			else
-			{
-				SapphireErrorDisplayController *controller = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Playback Error", @"") longError:BRLocalizedString(@"DVD Playback is not supported on the AppleTV", @"Error message saying DVD on ATV not supported")];
-				[[self stack] pushController:controller];
-				[controller release];
-			}
-		}
-		else if([[NSFileManager defaultManager] acceptFilePath:path] && [currentPlayFile hasVideoValue])
-		{
-			/*Video*/
-			/*Set the asset resume time*/
-			NSURL *url = [NSURL fileURLWithPath:path];
-			SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
-			[asset setResumeTime:[currentPlayFile resumeTimeValue]];
-			
-			/*Get the player*/
-			SapphireVideoPlayer *player = [[SapphireVideoPlayer alloc] init];
-			NSError *error = nil;
-			[player setMedia:asset error:&error];
-			
-			/*and go*/
-			SapphireVideoPlayerController *controller = [[SapphireVideoPlayerController alloc] initWithScene:[self scene] player:player];
-			[controller setPlayFile:currentPlayFile];
-			[controller setAllowsResume:YES];
-			[[self stack] pushController:controller];
-
-			[asset release];
-			[player release];
-			[controller release];
-		}
-		else if(path != nil)
-		{
-			/*Audio*/
-			/*Set the asset*/
-			NSURL *url = [NSURL fileURLWithPath:path];
-			SapphireAudioMedia *asset  =[[SapphireAudioMedia alloc] initWithMediaURL:url];
-			[asset setResumeTime:[currentPlayFile resumeTimeValue]];
-			[asset setFileMetaData:currentPlayFile];
-			
-			SapphireAudioPlayer *player = [[SapphireAudioPlayer alloc] init];
-			/*and go*/
-			BRMusicNowPlayingController *controller;
-			if([SapphireFrontRowCompat usingLeopardOrATypeOfTakeTwo])
-				controller = [[SapphireAudioNowPlayingController alloc] initWithPlayer:player];
-			else
-			{
-				controller = [[BRMusicNowPlayingController alloc] initWithScene:[self scene]];
-				[controller setPlayer:player];
-			}
-			NSError *error = nil;
-			[player setMedia:asset inTracklist:[NSArray arrayWithObject:asset] error:&error];
-			[player play];
-			[SapphireApplianceController setMusicNowPlayingController:controller];
-			[[self stack] pushController:controller];
-			
-			[asset release];
-			[player release];
-			[controller release];
-		}
+		[self playFile:[metaData metaDataForFile:name]];
 	}
 	else
 	{
