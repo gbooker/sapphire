@@ -669,7 +669,20 @@
 	NSMutableArray *dictionaries = [NSMutableArray arrayWithObjects:info, info2, nil];
 	SapphireEpisode *episode = [SapphireEpisode episodeWithDictionaries:dictionaries inContext:moc];
 	[metaData setTvEpisode:episode];
-	[tran setTvShow:[episode tvShow]];
+	
+	/*Finish Translations*/
+	SapphireTVShow *tvShow = [episode tvShow];
+	if(tvShow != nil)
+	{
+		[tran setTvShow:tvShow];
+		NSString *showName = [[tvShow name] lowercaseString];
+		SapphireTVTranslation *nameTran = [SapphireTVTranslation tvTranslationForName:showName inContext:moc];
+		if(nameTran == nil)
+		{
+			nameTran = [SapphireTVTranslation createTVTranslationForName:showName withPath:[tran showPath] inContext:moc];
+			[nameTran setTvShow:tvShow];
+		}
+	}
 	
 	/*We imported something*/
 	return IMPORT_STATE_UPDATED;
