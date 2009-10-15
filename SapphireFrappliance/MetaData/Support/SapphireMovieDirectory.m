@@ -26,7 +26,8 @@
 #import "CoreDataSupportFunctions.h"
 #import "SapphireBasicDirectoryFunctionsImports.h"
 #import "SapphireFileSorter.h"
-
+#import "SapphireMovieVirtualDirectoryImporter.h"
+#import "SapphireMovieVirtualDirectory.h"
 #import "SapphireMovie.h"
 #import "SapphireCast.h"
 #import "SapphireDirector.h"
@@ -88,7 +89,8 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 		return self;
 	
 	moc = [context retain];
-
+	
+	/*Define the static virtual directories*/
 	NSPredicate *allPred = [NSPredicate predicateWithFormat:@"movie != nil"];
 	SapphireFilteredFileDirectory *all = [[SapphireFilteredFileDirectory alloc] initWithPredicate:allPred Context:moc];
 	SapphireEntityDirectory *cast = [[SapphireEntityDirectory alloc] initWithEntityFetch:castEntityFetch inContext:moc];
@@ -98,24 +100,25 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	SapphireFilteredFileDirectory *top250 = [[SapphireFilteredFileDirectory alloc] initWithPredicate:top250Pred Context:moc];
 	NSPredicate *oscarPred = [NSPredicate predicateWithFormat:@"movie.oscarsWon != 0"];
 	SapphireFilteredFileDirectory *oscar = [[SapphireFilteredFileDirectory alloc] initWithPredicate:oscarPred Context:moc];
+
+	originalSubDirs = [[NSArray alloc] initWithObjects:
+					   all,
+					   cast,
+					   director,
+					   genre,
+					   top250,
+					   oscar,
+					   nil];
 	
-	subDirs = [[NSArray alloc] initWithObjects:
-			   all,
-			   cast,
-			   director,
-			   genre,
-			   top250,
-			   oscar,
-			   nil];
-	names = [[NSArray alloc] initWithObjects:
-			   BRLocalizedString( @"All Movies", @"Select all movies" ),
-			   BRLocalizedString( @"By Cast", @"Select movies based on cast members" ),
-			   BRLocalizedString( @"By Director", @"Select movies based on director" ),
-			   BRLocalizedString( @"By Genre", @"Select movies based on genre" ),
-			   BRLocalizedString( @"IMDB Top 250", @"Show movies in IMDb Top 250 only" ),
-			   BRLocalizedString( @"Academy Award Winning", @"Show Oscar winning movies only" ),
-			   nil];
-	
+	originalNames = [[NSArray alloc] initWithObjects:
+					 BRLocalizedString( @"All Movies", @"Select all movies" ),
+					 BRLocalizedString( @"By Cast", @"Select movies based on cast members" ),
+					 BRLocalizedString( @"By Director", @"Select movies based on director" ),
+					 BRLocalizedString( @"By Genre", @"Select movies based on genre" ),
+					 BRLocalizedString( @"IMDB Top 250", @"Show movies in IMDb Top 250 only" ),
+					 BRLocalizedString( @"Academy Award Winning", @"Show Oscar winning movies only" ),
+					 nil];
+					 
 	SapphireFileSorter *titleSort = [SapphireMovieTitleSorter sharedInstance];
 	SapphireFileSorter *imdbRankSort = [SapphireMovieIMDBTop250RankSorter sharedInstance];
 	SapphireFileSorter *awardSort = [SapphireMovieAcademyAwardSorter sharedInstance];
@@ -123,7 +126,10 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	SapphireFileSorter *imdbRatingSort = [SapphireMovieIMDBRatingSorter sharedInstance];
 	
 	NSString *moviePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
+	vdImport = [[SapphireMovieVirtualDirectoryImporter alloc] initWithPath:[applicationSupportDir() stringByAppendingPathComponent:@"virtualDirs.xml"]];
+	defaultSorters = [[NSArray alloc] initWithObjects:titleSort, dateSort, imdbRatingSort, nil];
 	
+	/*Finish the static directory setup*/
 	[all setPath:VIRTUAL_DIR_ALL_PATH];
 	[all setCoverArtPath:moviePath];
 	[all setFileSorters:[NSArray arrayWithObjects:titleSort, dateSort, imdbRatingSort, nil]];
@@ -156,8 +162,13 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 
 - (void) dealloc
 {
+	[originalSubDirs release];
+	[originalNames release];
 	[subDirs release];
 	[names release];
+	[virtualDirs release];
+	[defaultSorters release];
+	[vdImport release];
 	Basic_Directory_Function_Deallocs
 	[super dealloc];
 }
@@ -208,6 +219,33 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 
 - (void)reloadDirectoryContents
 {
+	/*Import any defined movie virtual directories*/
+	NSArray *newVirtualDirs = [vdImport virtualDirectories];
+	if(![virtualDirs isEqualToArray:newVirtualDirs])
+	{
+		[virtualDirs release];
+		[names release];
+		[subDirs release];
+		virtualDirs = [newVirtualDirs retain];
+		names = [originalNames mutableCopy];
+		subDirs = [originalSubDirs mutableCopy];
+		
+		NSString *moviePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
+		NSEnumerator *mvdEnum = [newVirtualDirs objectEnumerator];
+		SapphireMovieVirtualDirectory *virtualDir;
+		while((virtualDir = [mvdEnum nextObject]) != nil)
+		{
+			SapphireFilteredFileDirectory *custom = [[SapphireFilteredFileDirectory alloc] initWithPredicate:[virtualDir predicate] Context:moc];
+			[subDirs addObject:custom];
+			[names addObject:BRLocalizedString([virtualDir title], [virtualDir description])];
+			[custom setPath:[[VIRTUAL_DIR_ROOT_PATH stringByAppendingString:@"/"] stringByAppendingString:[virtualDir description]]];
+			[custom setCoverArtPath:moviePath]; // Change this to be part of the XML?
+			[custom setFileSorters:defaultSorters];
+			NSLog(@"Added %@, %@: %@", [names lastObject], [virtualDir predicate],[subDirs lastObject]);
+			[custom release];
+		}
+	}
+	
 	[subDirs makeObjectsPerformSelector:@selector(setFilterPredicate:) withObject:filterPredicate];
 	[delegate directoryContentsChanged];
 }

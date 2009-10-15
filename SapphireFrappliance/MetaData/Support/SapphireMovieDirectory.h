@@ -21,6 +21,8 @@
 #import "SapphireDirectory.h"
 #import "SapphireBasicDirectoryFunctionsDefines.h"
 
+@class SapphireMovieVirtualDirectoryImporter;
+
 /*!
  * @brief The base movies virtual directory
  *
@@ -28,8 +30,13 @@
  */
 @interface SapphireMovieDirectory : NSObject <SapphireDirectory> {
 	NSManagedObjectContext			*moc;				/*!< @brief The context*/
-	NSArray							*subDirs;			/*!< @brief The sub-directory objects*/
-	NSArray							*names;				/*!< @brief The sub-directory names*/
+	NSArray							*originalSubDirs;	/*!< @brief The static sub-directory objects*/
+	NSArray							*originalNames;		/*!< @brief The static sub-directory names*/
+	NSMutableArray					*subDirs;			/*!< @brief The sub-directory objects*/
+	NSMutableArray					*names;				/*!< @brief The sub-directory names*/
+	NSArray							*virtualDirs;		/*!< @brief The virtual directories last imported*/
+	NSArray							*defaultSorters;	/*!< @brief The list of default file sorters*/
+	SapphireMovieVirtualDirectoryImporter	*vdImport;	/*!< @brief The virtial directory importer*/
 	Basic_Directory_Function_Instance_Variables
 }
 

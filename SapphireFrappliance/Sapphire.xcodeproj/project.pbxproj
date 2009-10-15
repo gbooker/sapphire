@@ -53,6 +53,8 @@
 		38FAF9B60C0129E400853CFE /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
 		38FAFC320C012A7800853CFE /* SapphireAppliance.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */; };
 		38FAFC330C012A7800853CFE /* SapphireBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 38FAFC310C012A7800853CFE /* SapphireBrowser.m */; };
+		5941C04710786EB2004C887B /* SapphireMovieVirtualDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5941C03A10786DD5004C887B /* SapphireMovieVirtualDirectory.m */; };
+		5941C04810786ECA004C887B /* SapphireMovieVirtualDirectoryImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5941C03C10786DD5004C887B /* SapphireMovieVirtualDirectoryImporter.m */; };
 		805420AA0F94FA7E002D2DBF /* NSImage-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 805420A90F94FA7E002D2DBF /* NSImage-Extensions.m */; };
 		8D5B49B0048680CD000E48DA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		F500400B0D1998B4003FEA08 /* SapphireLeopardOnly.h in Headers */ = {isa = PBXBuildFile; fileRef = F50040090D1998B4003FEA08 /* SapphireLeopardOnly.h */; };
@@ -360,6 +362,10 @@
 		38FAFC2F0C012A7800853CFE /* SapphireAppliance.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireAppliance.m; sourceTree = "<group>"; };
 		38FAFC300C012A7800853CFE /* SapphireAppliance.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SapphireAppliance.h; sourceTree = "<group>"; };
 		38FAFC310C012A7800853CFE /* SapphireBrowser.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SapphireBrowser.m; sourceTree = "<group>"; };
+		5941C03910786DD5004C887B /* SapphireMovieVirtualDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMovieVirtualDirectory.h; sourceTree = "<group>"; };
+		5941C03A10786DD5004C887B /* SapphireMovieVirtualDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMovieVirtualDirectory.m; sourceTree = "<group>"; };
+		5941C03B10786DD5004C887B /* SapphireMovieVirtualDirectoryImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMovieVirtualDirectoryImporter.h; sourceTree = "<group>"; };
+		5941C03C10786DD5004C887B /* SapphireMovieVirtualDirectoryImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMovieVirtualDirectoryImporter.m; sourceTree = "<group>"; };
 		805420A80F94FA7E002D2DBF /* NSImage-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage-Extensions.h"; sourceTree = "<group>"; };
 		805420A90F94FA7E002D2DBF /* NSImage-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage-Extensions.m"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Sapphire.frappliance */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Sapphire.frappliance; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -993,6 +999,10 @@
 		F5C55E9E0DE90F0D00661563 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				5941C03910786DD5004C887B /* SapphireMovieVirtualDirectory.h */,
+				5941C03A10786DD5004C887B /* SapphireMovieVirtualDirectory.m */,
+				5941C03B10786DD5004C887B /* SapphireMovieVirtualDirectoryImporter.h */,
+				5941C03C10786DD5004C887B /* SapphireMovieVirtualDirectoryImporter.m */,
 				F5C55EC20DE90F3900661563 /* CoreDataSupportFunctions.h */,
 				F5C55EC30DE90F3900661563 /* CoreDataSupportFunctions.m */,
 				F5C55EC50DE90F7000661563 /* SapphireBasicDirectoryFunctions.h */,
@@ -1381,6 +1391,8 @@
 				F52E4EAA0F43B53F00AC6C52 /* SapphireConfirmPrompt.m in Sources */,
 				805420AA0F94FA7E002D2DBF /* NSImage-Extensions.m in Sources */,
 				F5505DC71040864D0064D392 /* SapphireAudioNowPlayingController.m in Sources */,
+				5941C04710786EB2004C887B /* SapphireMovieVirtualDirectory.m in Sources */,
+				5941C04810786ECA004C887B /* SapphireMovieVirtualDirectoryImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

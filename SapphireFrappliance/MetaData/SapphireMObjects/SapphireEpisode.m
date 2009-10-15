@@ -150,7 +150,8 @@
 	if([dictionaries count] > 1)
 	{
 		NSEnumerator *otherEps = [dictionaries objectEnumerator];
-		NSDictionary *epDict = [otherEps nextObject]; //Skip first
+		NSDictionary *epDict = nil;
+		[otherEps nextObject]; //Skip first
 		while((epDict = [otherEps nextObject]) != nil)
 			[ret insertAdditionalEpisode:epDict];
 	}

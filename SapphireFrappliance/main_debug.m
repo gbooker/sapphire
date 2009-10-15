@@ -42,6 +42,7 @@
 #import "SapphireCast.h"
 #import "SapphireDirector.h"
 #import "SapphireXMLData.h"
+#import "SapphireMovieDirectory.h"
 
 void overrideApplicationSupportdir(NSString *override);
 
@@ -258,7 +259,7 @@ int main(int argc, char *argv[])
 		[import release];
 	}
 #endif
-#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
+//#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 #ifdef TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E01-E02.avi" inContext:moc];
@@ -268,6 +269,15 @@ int main(int argc, char *argv[])
 		file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E02.avi" inContext:moc];
 		[import importMetaData:file path:[file path]];
 		[import release];
+	}
+#endif
+#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
+#ifdef TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
+	{
+		SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithContext:moc];
+		[movieDir reloadDirectoryContents];
+		[movieDir reloadDirectoryContents];
+		[movieDir release];
 	}
 #endif
 	
