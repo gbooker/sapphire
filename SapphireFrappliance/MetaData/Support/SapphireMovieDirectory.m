@@ -241,7 +241,6 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 			[custom setPath:[[VIRTUAL_DIR_ROOT_PATH stringByAppendingString:@"/"] stringByAppendingString:[virtualDir description]]];
 			[custom setCoverArtPath:moviePath]; // Change this to be part of the XML?
 			[custom setFileSorters:defaultSorters];
-			NSLog(@"Added %@, %@: %@", [names lastObject], [virtualDir predicate],[subDirs lastObject]);
 			[custom release];
 		}
 	}
