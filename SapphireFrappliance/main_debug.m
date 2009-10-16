@@ -138,6 +138,15 @@ int main(int argc, char *argv[])
 	
 	NSManagedObjectContext *moc = [SapphireApplianceController newManagedObjectContextForFile:storeFile withOptions:nil];
 	[SapphireMetaDataSupport setMainContext:moc];
+	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
+	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
+	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithContext:moc];
+	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithContext:moc];
+	SapphireAllImporter *allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
+	[xmlImpr release];
+	[fileImp release];
+	[tvImp release];
+	[movImp release];
 	
 	//Debug code goes here:
 //#define LISTING_MOVIES
@@ -190,16 +199,6 @@ int main(int argc, char *argv[])
 		NSString *path = @"/Users/gbooker/Movies/Little Einsteins.avi";
 		SapphireFileMetaData *meta = [SapphireFileMetaData fileWithPath:path inContext:moc];
 		[meta clearMetaData];
-		SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
-		SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-		SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithContext:moc];
-		SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithContext:moc];
-		SapphireAllImporter *allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
-		[xmlImpr release];
-		[fileImp release];
-		[tvImp release];
-		[movImp release];
-		
 		[allImporter importMetaData:meta path:[meta path]];
 		
 		NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
@@ -271,7 +270,7 @@ int main(int argc, char *argv[])
 		[import release];
 	}
 #endif
-#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
+//#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 #ifdef TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 	{
 		SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithContext:moc];
@@ -280,6 +279,14 @@ int main(int argc, char *argv[])
 		[movieDir release];
 	}
 #endif
+#define TESTING_TV_IMPORT_THROUGH_XML
+#ifdef TESTING_TV_IMPORT_THROUGH_XML
+	{
+		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/life on mars.avi" inContext:moc];
+		[allImporter importMetaData:file path:[file path]];
+	}
+#endif
+	[allImporter release];
 	
 	[moc release];
 	[pool release];

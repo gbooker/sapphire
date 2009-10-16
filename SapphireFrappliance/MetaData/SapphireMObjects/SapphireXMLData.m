@@ -127,8 +127,8 @@
 		self.searchIMDBNumber = searchVal;
 		
 	NSString *strVal = [dict objectForKey:META_SHOW_NAME_KEY];
-	if(searchVal != nil)
-		self.searchShowName = (NSString *)strVal;
+	if(strVal != nil)
+		self.searchShowName = strVal;
 	
 	
 	NSArray *arrVal = [dict objectForKey:META_MOVIE_CAST_KEY];
