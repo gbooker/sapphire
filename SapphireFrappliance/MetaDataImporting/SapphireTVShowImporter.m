@@ -91,6 +91,7 @@
  
 @interface SapphireTVShowImporter (private)
 - (void)writeSettings;
+- (ImportState)doRealImportMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path;
 @end
 
 @implementation SapphireTVShowImporter
@@ -117,6 +118,7 @@
 {
 	[moc release];
 	[showInfo release];
+	[showInfoClearTimer invalidate];
 	regfree(&letterMarking);
 	regfree(&seasonByEpisode);
 	regfree(&seasonEpisodeTriple);
@@ -461,6 +463,13 @@
 	return [self getInfo:show forSeason:season key:[epTitle lowercaseString]];
 }
 
+- (void)clearCache
+{
+	[showInfoClearTimer invalidate];
+	[showInfo removeAllObjects];
+	showInfoClearTimer = nil;
+}
+
 /*!
  * @brief Write our setings out
  */
@@ -471,6 +480,15 @@
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
+{
+	[showInfoClearTimer invalidate];
+	showInfoClearTimer = nil;
+	ImportState ret = [self doRealImportMetaData:metaData path:path];
+	showInfoClearTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(clearCache) userInfo:nil repeats:NO];
+	return ret;
+}
+
+- (ImportState)doRealImportMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
 	currentData = metaData;
 	/*Check to see if it is already imported*/
