@@ -82,7 +82,7 @@
 {
 	if(stat == nil)
 		stat = @"";
-	[SapphireFrontRowCompat setText:stat withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:status];
+	[SapphireFrontRowCompat setText:stat withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:status];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	NSSize progressSize = [SapphireFrontRowCompat textControl:status renderedSizeWithMaxSize:NSMakeSize(master.size.width, master.size.height * 0.3f)];

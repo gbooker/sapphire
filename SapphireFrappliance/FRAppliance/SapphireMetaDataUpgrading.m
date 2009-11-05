@@ -79,7 +79,7 @@
 {
 	if(file == nil)
 		file = @"";
-	[SapphireFrontRowCompat setText:file withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:status];
+	[SapphireFrontRowCompat setText:file withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:status];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	NSSize progressSize = [SapphireFrontRowCompat textControl:status renderedSizeWithMaxSize:NSMakeSize(master.size.width, master.size.height * 0.3f)];

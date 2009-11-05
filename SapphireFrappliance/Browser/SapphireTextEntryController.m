@@ -44,12 +44,12 @@
 		return nil;
 	
 	title = [SapphireFrontRowCompat newTextControlWithScene:scene];
-	[SapphireFrontRowCompat setText:titleText withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:title];
+	[SapphireFrontRowCompat setText:titleText withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:title];
 	[self addControl:title];
 
 	textEntry = [SapphireFrontRowCompat newTextEntryControlWithScene:scene];
 	[textEntry setInitialText:defaultText];
-	[textEntry setTextEntryCompleteDelegate:self];
+	[SapphireFrontRowCompat setDelegate:self forTextEntry:textEntry];
 	
 	entryComplete = [completetion retain];
 	[entryComplete retainArguments];

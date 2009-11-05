@@ -38,7 +38,7 @@
 	[self setListTitle:errorString];
 	
 	text = [SapphireFrontRowCompat newTextControlWithScene:scene];
-	[SapphireFrontRowCompat setText:longError withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:text];
+	[SapphireFrontRowCompat setText:longError withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:text];
 	[self addControl:text];
 	[self layoutFrame];
 	

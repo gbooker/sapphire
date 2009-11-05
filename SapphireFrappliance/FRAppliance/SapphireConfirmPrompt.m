@@ -35,7 +35,7 @@
 	subText = [sub retain];
 	
 	subtitle = [SapphireFrontRowCompat newTextControlWithScene:scene];
-	[SapphireFrontRowCompat setText:sub withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:subtitle];
+	[SapphireFrontRowCompat setText:sub withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:subtitle];
 		
 	[[self list] setDatasource:self];
 
@@ -56,7 +56,7 @@
 
 - (void)setText:(NSString *)theText
 {
-	[SapphireFrontRowCompat setText:theText withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:subtitle];
+	[SapphireFrontRowCompat setText:theText withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:subtitle];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	NSSize txtSize = [SapphireFrontRowCompat textControl:subtitle renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];

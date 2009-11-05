@@ -268,14 +268,14 @@ void teardownPassthrough(int soundState)
 
 - (void)willBePopped
 {
-	[super willBePopped];
 	[self teardownPlayback];
+	[super willBePopped];
 }
 
 - (void)wasPopped
 {
-	[super wasPopped];
 	[self teardownPlayback];
+	[super wasPopped];
 }
 
 @end

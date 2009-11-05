@@ -63,7 +63,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	
 	/* Set a control to display the fileName */
 	fileInfoText = [SapphireFrontRowCompat newTextControlWithScene:scene];
-	[SapphireFrontRowCompat setText:@"No File" withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+	[SapphireFrontRowCompat setText:@"No File" withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;

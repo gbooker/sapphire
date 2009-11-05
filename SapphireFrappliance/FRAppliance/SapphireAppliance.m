@@ -100,6 +100,8 @@
 			className = @"RUIDVDAppliance";
 		}
 	}
+	if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion3)
+		className = @"MOVAppliance";
 	return ( className );
 }
 
@@ -197,6 +199,17 @@ static SapphireApplianceController *mainCont = nil;
 
 -(id)identifierForContentAlias:(id)fp8 {
 	return @"mounts";
+}
+
+-(id)controllerForIdentifier:(id)ident args:(id)args
+{
+	return [self controllerForIdentifier:ident];
+}
+
+- (id)previewControlForIdentifier:(id)ident
+{
+#warning NEED THIS!
+	return nil;
 }
 
 -(id)controllerForIdentifier:(id)ident

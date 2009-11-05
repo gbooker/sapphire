@@ -83,6 +83,7 @@
 		F535C7440DF2353900716DA9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F535C7420DF2353900716DA9 /* CoreData.framework */; };
 		F541CBF50D9C2D19002F9278 /* SapphireRadioSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = F541CBF40D9C2D19002F9278 /* SapphireRadioSetting.m */; };
 		F544602A0E030D5100311C03 /* SapphireDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F54460290E030D5100311C03 /* SapphireDirectory.m */; };
+		F54A38ED109F43C600DCC808 /* SapphireTakeThreeCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F54A38E8109F43A600DCC808 /* SapphireTakeThreeCompatClasses.framework */; };
 		F54A5FFA0E07089500F9827C /* SapphireFileSorter.m in Sources */ = {isa = PBXBuildFile; fileRef = F54A5FF90E07089500F9827C /* SapphireFileSorter.m */; };
 		F54A60CC0E0860A200F9827C /* SapphireDisplayMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F54A60CB0E0860A200F9827C /* SapphireDisplayMenu.m */; };
 		F5505DC71040864D0064D392 /* SapphireAudioNowPlayingController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5505DC61040864D0064D392 /* SapphireAudioNowPlayingController.m */; };
@@ -224,6 +225,20 @@
 			remoteGlobalIDString = F5B4186D0D0B29D800BDD361;
 			remoteInfo = "Complete Sapphire";
 		};
+		F54A38E7109F43A600DCC808 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F54A377C109F420000DCC808;
+			remoteInfo = SapphireTakeThreeCompatClasses;
+		};
+		F54A38EB109F43B900DCC808 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F54A377B109F420000DCC808;
+			remoteInfo = SapphireTakeThreeCompatClasses;
+		};
 		F56895E00D6CE30D00F9D9B0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
@@ -345,10 +360,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F59FEEFD0ED85FEF0052012E /* SapphireTakeTwoPointTwoCompatClasses.framework in CopyFiles */,
 				F532ED820E45426800DBEE13 /* SapphireCompatClasses.framework in CopyFiles */,
 				F532ED830E45426800DBEE13 /* SapphireLeopardCompatClasses.framework in CopyFiles */,
 				F532ED840E45426800DBEE13 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */,
+				F59FEEFD0ED85FEF0052012E /* SapphireTakeTwoPointTwoCompatClasses.framework in CopyFiles */,
+				F54A38ED109F43C600DCC808 /* SapphireTakeThreeCompatClasses.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1037,6 +1053,7 @@
 				F5EBE6DF0D4A775400042BA0 /* SapphireLeopardCompatClasses.framework */,
 				F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */,
 				F582AADB0EBAA7820096B9B4 /* SapphireTakeTwoPointTwoCompatClasses.framework */,
+				F54A38E8109F43A600DCC808 /* SapphireTakeThreeCompatClasses.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1073,6 +1090,7 @@
 				F5EBE7090D4A795200042BA0 /* PBXTargetDependency */,
 				F585A9C70D74EA810043AB22 /* PBXTargetDependency */,
 				F59FEEFC0ED85FE50052012E /* PBXTargetDependency */,
+				F54A38EC109F43B900DCC808 /* PBXTargetDependency */,
 			);
 			name = Sapphire;
 			productInstallPath = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
@@ -1187,6 +1205,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F54A38E8109F43A600DCC808 /* SapphireTakeThreeCompatClasses.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SapphireTakeThreeCompatClasses.framework;
+			remoteRef = F54A38E7109F43A600DCC808 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F56895E10D6CE30D00F9D9B0 /* SapphireTakeTwoCompatClasses.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1446,6 +1471,11 @@
 			isa = PBXTargetDependency;
 			target = F5B4186D0D0B29D800BDD361 /* Complete Sapphire */;
 			targetProxy = F532EC470E44FBC900DBEE13 /* PBXContainerItemProxy */;
+		};
+		F54A38EC109F43B900DCC808 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SapphireTakeThreeCompatClasses;
+			targetProxy = F54A38EB109F43B900DCC808 /* PBXContainerItemProxy */;
 		};
 		F585A9C70D74EA810043AB22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -38,7 +38,7 @@
 	
 	/* Set a control to display the fileName */
 	fileName = [SapphireFrontRowCompat newTextControlWithScene:scene];
-	[SapphireFrontRowCompat setText:@"File:" withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileName];
+	[SapphireFrontRowCompat setText:@"File:" withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileName];
 	
 	[self doMyLayout];
 	[self addControl: fileName];	
@@ -87,7 +87,7 @@
 
 - (void)setFileName:(NSString*)choosingForFileName
 {
-	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileName];
+	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileName];
 }
 
 - (NSString *)searchStr
