@@ -32,6 +32,8 @@
 {
 	if(![SapphireFrontRowCompat usingATypeOfTakeTwo])
 		return nil;
+	if(![control respondsToSelector:@selector(layoutManager)])
+		return nil;
 	
 	SapphireLayoutManager *newLayout = [[SapphireLayoutManager alloc] initWithReal:[control layoutManager]];
 	[newLayout setDelegate:control];

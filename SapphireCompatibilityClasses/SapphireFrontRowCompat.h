@@ -72,6 +72,7 @@ typedef enum {
 	SapphireFrontRowCompatATVVersion2Dot2,
 	SapphireFrontRowCompatATVVersion2Dot3,
 	SapphireFrontRowCompatATVVersion2Dot4,
+	SapphireFrontRowCompatATVVersion3,
 } SapphireFrontRowCompatATVVersion;
 
 /*!
@@ -147,6 +148,13 @@ typedef enum {
  * @return  BRImage on FrontRow of CGImageRef on ATV
  */
 + (id)coverartAsImage: (CGImageRef)imageRef;
+
+/*!
+ * @brief Get paragraph text attributes
+ *
+ * @return paragraph text attributes
+ */
++ (NSDictionary *)paragraphTextAttributes;
 
 /*!
  * @brief Get a menu text menu item
@@ -340,6 +348,16 @@ typedef enum {
  * @param scene The scene, if exists.
  */
 + (BRTextEntryControl *)newTextEntryControlWithScene:(BRRenderScene *)scene;
+
+/*!
+ * @brief Sets the text entry's delegate
+ *
+ * ATV 3 has a different method of setting the delegate
+ *
+ * @param delegate The new delegate
+ * @param entry The text entry control
+ */
++ (void)setDelegate:(id)delegate forTextEntry:(BRTextEntryControl *)entry;
 
 /*!
  * @brief Create a new progress bar widget
@@ -567,6 +585,15 @@ static inline void SapphireLoadFramework(NSString *frameworkPath)
 			compat = [NSBundle bundleWithPath:compatPath];
 			if( ![compat load]){ 
 				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireTakeTwoPointTwoCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
+			}
+		}
+		//ATV3
+		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersion3)
+		{
+			compatPath = [frameworkPath stringByAppendingPathComponent:@"SapphireTakeThreeCompatClasses.framework"];
+			compat = [NSBundle bundleWithPath:compatPath];
+			if( ![compat load]){ 
+				@throw [NSException exceptionWithName:@"FileNotFoundException" reason:[NSString stringWithFormat:@"SapphireTakeThreeCompatClasses could not be loaded from path %@", compatPath] userInfo:nil];
 			}
 		}
 	}

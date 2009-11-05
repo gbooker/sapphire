@@ -1,9 +1,9 @@
 /*
- * SapphireLayerController.m
+ * BRVideoPlayerController.h
  * Sapphire
  *
- * Created by Graham Booker on Oct. 29, 2007.
- * Copyright 2007 Sapphire Development Team and/or www.nanopi.net
+ * Created by Graham Booker on Nov 2, 2009.
+ * Copyright 2008 Sapphire Development Team and/or www.nanopi.net
  * All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -18,31 +18,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SapphireLayerController.h"
-#import "SapphireFrontRowCompat.h"
 
-@implementation SapphireLayerController
+#import <Backrow/BRMenuController.h>
 
-- (id)initWithScene:(BRRenderScene *)scene
-{
-	if([[BRPostedAlertController class] instancesRespondToSelector:@selector(initWithScene:)])
-		self = [super initWithScene:scene];
-	else
-		self = [super init];
-	
-	[self setControls:[NSArray array]];
-	
-	return self;
-}
+/*!
+ * @brief Provide a BRCenteredMenuController for ATV 3
+ *
+ * ATV3 doesn't have a BRCenteredMenuController, but it has BRMenuController with a centered layout.  Use that one instead.
+ */
 
-- (BRRenderScene *)scene
-{
-	if([[BRPostedAlertController class] instancesRespondToSelector:@selector(scene)])
-		return [super scene];
-	
-	if(NSClassFromString(@"BRRenderScene") != nil)
-		return [BRRenderScene sharedInstance];
-	return nil;
+@interface BRCenteredMenuController : BRMenuController {
 }
 
 @end

@@ -36,7 +36,9 @@
 	if([[BRMenuController class] instancesRespondToSelector:@selector(scene)])
 		return [super scene];
 	
-	return [BRRenderScene sharedInstance];
+	if(NSClassFromString(@"BRRenderScene") != nil)
+		return [BRRenderScene sharedInstance];
+	return nil;
 }
 
 /*Just because so many classes use self as the list data source*/

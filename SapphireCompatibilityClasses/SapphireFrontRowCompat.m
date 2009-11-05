@@ -22,6 +22,17 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #import "SapphireButtonControl.h"
 
+//Take 3 Remote Actions
+enum {
+	kBREventRemoteActionTake3TouchBegin = 29,
+	kBREventRemoteActionTake3TouchMove,
+	kBREventRemoteActionTake3TouchEnd,
+	kBREventRemoteActionTake3SwipeLeft,
+	kBREventRemoteActionTake3SwipeRight,
+	kBREventRemoteActionTake3SwipeUp,
+	kBREventRemoteActionTake3SwipeDown,
+};
+
 /*Yes, this is the wrong class, but otherwise gcc gripes about BRImage class not existing; this removes warnings so no harm*/
 @interface SapphireFrontRowCompat (compat)
 + (id)imageWithPath:(NSString *)path;
@@ -86,6 +97,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 @interface BRTextEntryControl (compat)
 - (id)initWithTextEntryStyle:(int)style;
+- (void)setTextFieldDelegate:(id)delegate; /*ATV 3.0*/
 @end
 
 
@@ -95,6 +107,7 @@ static SapphireFrontRowCompatATVVersion atvVersion = SapphireFrontRowCompatATVVe
 static BOOL usingLeopard = NO;
 static BOOL usingATypeOfTakeTwo = NO;
 static BOOL usingLeopardOrATypeOfTakeTwo = NO;
+static BOOL usingATypeOfTakeThree = NO;
 
 + (void)initialize
 {
@@ -120,6 +133,12 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 	
 	if(NSClassFromString(@"BRPhotoImageProxy") != nil)
 		atvVersion = SapphireFrontRowCompatATVVersion2Dot4;
+	
+	if(NSClassFromString(@"BRFullscreenRenderTarget") != nil)
+	{	
+		atvVersion = SapphireFrontRowCompatATVVersion3;
+		usingATypeOfTakeThree = YES;
+	}
 }
 
 + (SapphireFrontRowCompatATVVersion)atvVersion
@@ -232,6 +251,29 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 	// FR - return BRImage
 	Class cls = NSClassFromString(@"BRImage");
 	return (id)[cls imageWithCGImageRef:imageRef];
+}
+
++ (NSDictionary *)paragraphTextAttributes
+{
+	if(!usingATypeOfTakeThree)
+		return [[BRThemeInfo sharedTheme] paragraphTextAttributes];
+	else
+	{
+		NSMutableDictionary *myDict = [NSMutableDictionary dictionary];
+		
+		BRThemeInfo *theInfo = [[BRThemeInfo sharedTheme] settingsItemSmallTextAttributes];
+		id colorObject = [theInfo valueForKey:@"NSColor"];
+		[myDict setValue:[NSNumber numberWithInt:21] forKey:@"BRFontLines"];
+		[myDict setValue:[NSNumber numberWithInt:0] forKey:@"BRTextAlignmentKey"];
+		
+		id sizeObject = [theInfo valueForKey:@"BRFontPointSize"];
+		id fontObject = [theInfo valueForKey:@"BRFontName"];
+		[myDict setValue:sizeObject forKey:@"BRFontPointSize"];
+		[myDict setValue:fontObject forKey:@"BRFontName"];
+		
+		[myDict setValue:colorObject forKey:@"NSColor"];
+		return myDict;
+	}
 }
 
 + (BRAdornedMenuItemLayer *)textMenuItemForScene:(BRRenderScene *)scene folder:(BOOL)folder
@@ -430,6 +472,14 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 		return [[BRTextEntryControl alloc] initWithScene:scene];
 }
 
++ (void)setDelegate:(id)delegate forTextEntry:(BRTextEntryControl *)entry
+{
+	if(usingATypeOfTakeThree)
+		[entry setTextFieldDelegate:delegate];
+	else
+		[entry setTextEntryCompleteDelegate:delegate];
+}
+
 + (BRProgressBarWidget *)newProgressBarWidgetWithScene:(BRRenderScene *)scene
 {
 	if(usingLeopardOrATypeOfTakeTwo)
@@ -531,6 +581,22 @@ static BOOL usingLeopardOrATypeOfTakeTwo = NO;
 
 + (BREventRemoteAction)remoteActionForEvent:(BREvent *)event
 {
+	if(atvVersion >= SapphireFrontRowCompatATVVersion3)
+	{
+		BREventRemoteAction action = [event remoteAction];
+		switch (action) {
+			case kBREventRemoteActionTake3TouchEnd:
+			case kBREventRemoteActionTake3SwipeLeft:
+			case kBREventRemoteActionTake3SwipeRight:
+			case kBREventRemoteActionTake3SwipeUp:
+			case kBREventRemoteActionTake3SwipeDown:
+				return action - 1;
+				break;
+			default:
+				return action;
+				break;
+		}
+	}
 	if(atvVersion >= SapphireFrontRowCompatATVVersion2Dot4)
 		return [event remoteAction];
 	

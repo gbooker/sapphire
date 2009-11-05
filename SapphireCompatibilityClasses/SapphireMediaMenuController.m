@@ -92,14 +92,18 @@
 
 - (id)initWithScene:(BRRenderScene *)scene
 {
-	if([[BRMediaMenuController class] instancesRespondToSelector:@selector(initWithScene:)])
+	Class mediaMenuControllerClass = [BRMediaMenuController class];
+	if([mediaMenuControllerClass instancesRespondToSelector:@selector(initWithScene:)])
 		return [super initWithScene:scene];
 	
 	self = [super init];
-	SapphireCustomMediaLayout *newLayout = [[SapphireCustomMediaLayout alloc] initWithReal:[self layoutManager]];
-	[newLayout setDelegate:self];
-	[self setLayoutManager:newLayout];
-	[newLayout release];
+	if([mediaMenuControllerClass instancesRespondToSelector:@selector(layoutManager)])
+	{
+		SapphireCustomMediaLayout *newLayout = [[SapphireCustomMediaLayout alloc] initWithReal:[self layoutManager]];
+		[newLayout setDelegate:self];
+		[self setLayoutManager:newLayout];
+		[newLayout release];
+	}
 	return self;
 }
 
@@ -108,7 +112,9 @@
 	if([[BRMediaMenuController class] instancesRespondToSelector:@selector(scene)])
 		return [super scene];
 	
-	return [BRRenderScene sharedInstance];
+	if(NSClassFromString(@"BRRenderScene") != nil)
+		return [BRRenderScene sharedInstance];
+	return nil;
 }
 
 - (NSRect)listRectWithSize:(NSRect)listFrame inMaster:(NSRect)master

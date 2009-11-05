@@ -88,14 +88,18 @@
 
 - (id)initWithScene:(BRRenderScene *)scene
 {
-	if([[BRCenteredMenuController class] instancesRespondToSelector:@selector(initWithScene:)])
+	Class centeredMenuClass = [BRCenteredMenuController class];
+	if([centeredMenuClass instancesRespondToSelector:@selector(initWithScene:)])
 		return [super initWithScene:scene];
 	
 	self = [super init];
-	SapphireWideCenteredLayout *newLayout = [[SapphireWideCenteredLayout alloc] initWithReal:[self layoutManager]];
-	[newLayout setDelegate:self];
-	[self setLayoutManager:newLayout];
-	[newLayout release];
+	if([centeredMenuClass instancesRespondToSelector:@selector(layoutManager)])
+	{
+		SapphireWideCenteredLayout *newLayout = [[SapphireWideCenteredLayout alloc] initWithReal:[self layoutManager]];
+		[newLayout setDelegate:self];
+		[self setLayoutManager:newLayout];
+		[newLayout release];
+	}
 	return self;
 }
 
@@ -104,7 +108,9 @@
 	if([[BRCenteredMenuController class] instancesRespondToSelector:@selector(scene)])
 		return [super scene];
 	
-	return [BRRenderScene sharedInstance];
+	if(NSClassFromString(@"BRRenderScene") != nil)
+		return [BRRenderScene sharedInstance];
+	return nil;
 }
 
 - (NSRect)listRectWithSize:(NSRect)listFrame inMaster:(NSRect)master

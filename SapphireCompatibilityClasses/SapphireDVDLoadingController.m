@@ -40,7 +40,9 @@
 	if([[BRDVDLoadingController class] instancesRespondToSelector:@selector(scene)])
 		return [super scene];
 	
-	return [BRRenderScene sharedInstance];
+	if(NSClassFromString(@"BRRenderScene") != nil)
+		return [BRRenderScene sharedInstance];
+	return nil;
 }
 
 @end
