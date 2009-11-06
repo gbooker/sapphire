@@ -165,9 +165,7 @@
 	BRListControl *listLayer = [self gimmieList];
 	
 	NSRect listFrame = [listLayer frame];
-size.width, listFrame.size.height);
 	listFrame = [self listRectWithSize:listFrame inMaster:master];
-listFrame.size.height);
 	[listLayer setFrame:listFrame];
 	[self doMyLayout];
 }
