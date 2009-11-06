@@ -28,12 +28,18 @@
 
 @interface BRLayerController (compat)
 - (void)setLayoutManager:(id)layoutManager;
+- (void)layoutSubcontrols;
 @end
 
 
 @interface SapphireTextEntryController (private)
 - (void)layoutFrame;
 @end
+
+@interface BRTextEntryControl (compat)
+-(NSSize)preferredFrameSize;
+@end
+
 
 @implementation SapphireTextEntryController
 
@@ -82,7 +88,12 @@
 	[super dealloc];
 }
 
+NSString *stringOfRect(NSRect rect)
+{
+	return [NSString stringWithFormat:@"origin:%fx%f size:%fx%f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height];
+}
 
+//ATV 1.1
 - (void)layoutFrame
 {
 #warning These need to be tuned for 1.1, but since I do not have 1.1 here, I cannot test them.
@@ -98,8 +109,29 @@
 	frame = master;
 	frame.size.height = frame.size.height * 2.0f / 3.0f;
 	
+	[textEntry setFrame:frame];
+	NSLog(@"Setting frame to %@", stringOfRect(frame));
+	[textEntry setFrame:frame];
+}
+
+//ATV 3
+- (void)layoutSubcontrols
+{
+	[super layoutSubcontrols];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	NSSize txtSize = [SapphireFrontRowCompat textControl:title renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 1.0f/3.0f)];
 	
-	NSLog(@"Setting frame to %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+	NSRect frame;
+	frame.origin.x = (master.size.width - txtSize.width) * 0.5f;
+	frame.origin.y = (master.size.height * 1.0f / 3.0f - txtSize.height) * 0.5f + master.size.height * 2.0f/3.0f + master.origin.y;
+	frame.size = txtSize;
+	[title setFrame:frame];
+	
+	frame = master;
+	frame.size = [textEntry preferredFrameSize];
+	frame.origin.x = (master.size.width - frame.size.width) * 0.5f;
+	frame.origin.y = (master.size.height * 2.0f / 3.0f - frame.size.height) * 0.5f;
+
 	[textEntry setFrame:frame];
 }
 
@@ -110,7 +142,7 @@
 
 - (void)textDidEndEditing:(id)sender
 {
-	NSString *str = [textEntry stringValue];
+	NSString *str = [sender stringValue];
 	[entryComplete setArgument:&str atIndex:2];
 	[entryComplete invoke];
 	
