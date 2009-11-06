@@ -20,12 +20,32 @@
 
 #import "SapphireCenteredMenuController.h"
 #import "SapphireFrontRowCompat.h"
+#import <objc/objc-class.h>
+
+/*These interfaces are to access variables not available*/
+@interface BRMenuController (privateFunctions)
+- (BRListControl *)gimmieList;
+@end
+
+@implementation BRMenuController (privateFunctions)
+- (BRListControl *)gimmieList
+{
+	Class myClass = [self class];
+	Ivar ret = class_getInstanceVariable(myClass, "_list");
+	
+	return *(BRListControl * *)(((char *)self)+ret->ivar_offset);
+}
+@end
 
 @interface SapphireWideCenteredLayout : NSObject
 {
 	id								realLayout;
 	id <SapphireListLayoutDelegate>	delegate;		//Not Retained
 }
+@end
+
+@interface BRCenteredMenuController (compat)
+- (void)layoutSubcontrols;
 @end
 
 @interface BRLayerController (compat)
@@ -103,6 +123,10 @@
 	return self;
 }
 
+- (void)doMyLayout
+{
+}
+
 - (BRRenderScene *)scene
 {
 	if([[BRCenteredMenuController class] instancesRespondToSelector:@selector(scene)])
@@ -130,6 +154,22 @@
 	NSRect listFrame = [[_listControl layer] frame];
 	listFrame = [self listRectWithSize:listFrame inMaster:master];
 	[[_listControl layer] setFrame:listFrame];
+}
+
+//ATV 3
+- (void)layoutSubcontrols
+{
+	//Shrink the list frame to make room for displaying the filename
+	[super layoutSubcontrols];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	BRListControl *listLayer = [self gimmieList];
+	
+	NSRect listFrame = [listLayer frame];
+size.width, listFrame.size.height);
+	listFrame = [self listRectWithSize:listFrame inMaster:master];
+listFrame.size.height);
+	[listLayer setFrame:listFrame];
+	[self doMyLayout];
 }
 
 /*Just because so many classes use self as the list data source*/
