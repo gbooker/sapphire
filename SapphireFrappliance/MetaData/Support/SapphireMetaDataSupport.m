@@ -310,7 +310,6 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	
 	if(writeTimer != nil)
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Rescheduled write");
-	[writeTimer invalidate];
 	writeTimer = nil;
 	NSError *error = nil;
 	locked = NO;
@@ -347,7 +346,6 @@ NSString *searchCoverArtExtForPath(NSString *path)
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Updated objects is %@", [context updatedObjects]);
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Deleted objects is %@", [context deletedObjects]);
 		interval *= 2;
-		[writeTimer invalidate];
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Rescheduling write to occurr in %f seconds", interval);
 		
 		@try {

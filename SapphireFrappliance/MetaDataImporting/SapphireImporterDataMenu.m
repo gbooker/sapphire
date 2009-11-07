@@ -387,7 +387,6 @@
 {
 	@try
 	{
-		[importTimer invalidate];
 		importTimer = nil;
 
 		if([importItems count])

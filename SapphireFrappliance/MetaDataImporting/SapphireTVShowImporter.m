@@ -203,8 +203,15 @@
 	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
 	/*Get the season's html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@/episode_guide/%d", seriesName, season]];
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
 	NSError *error = nil;
-	NSXMLDocument *document = [[[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error] autorelease];
+	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+	if(error != nil)
+	{
+		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to load URL %@ with error: %@", url, error);
+		return nil;
+	}
+	NSXMLDocument *document = [[[NSXMLDocument alloc] initWithData:documentData options:NSXMLDocumentTidyHTML error:&error] autorelease];
 	/* Dump XML document to disk (Dev Only) */
 /*	NSString *documentPath =[applicationSupportDir() stringByAppendingPathComponent:@"XML"];
 	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@%@.xml",documentPath,seriesName] atomically:YES] ;*/
@@ -212,6 +219,7 @@
 	if(error != nil && ![[error domain] isEqualToString:@"NSXMLParserErrorDomain"])
 	{
 		/*Error fetching data; return nil*/
+		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to parse data with error %@", error);
 		return nil;
 	}
 	NSString *showName= nil;
@@ -465,9 +473,8 @@
 
 - (void)clearCache
 {
-	[showInfoClearTimer invalidate];
-	[showInfo removeAllObjects];
 	showInfoClearTimer = nil;
+	[showInfo removeAllObjects];
 }
 
 /*!
