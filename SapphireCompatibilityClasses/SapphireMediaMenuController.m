@@ -20,6 +20,22 @@
 
 #import "SapphireMediaMenuController.h"
 #import "SapphireFrontRowCompat.h"
+#import <objc/objc-class.h>
+
+/*These interfaces are to access variables not available*/
+@interface BRMediaMenuController (privateFunctions)
+- (BRListControl *)gimmieList;
+@end
+
+@implementation BRMediaMenuController (privateFunctions)
+- (BRListControl *)gimmieList
+{
+	Class myClass = [self class];
+	Ivar ret = class_getInstanceVariable(myClass, "_list");
+	
+	return *(BRListControl * *)(((char *)self)+ret->ivar_offset);
+}
+@end
 
 @interface SapphireMediaMenuController (compat)
 - (id)firstSublayerNamed:(NSString *)name;
@@ -30,6 +46,7 @@
 
 @interface BRMediaMenuController (compat)
 - (void)resetPreviewController;
+- (void)layoutSubcontrols;
 @end
 
 @interface BRLayerController (compat)
@@ -107,6 +124,10 @@
 	return self;
 }
 
+- (void)doMyLayout
+{
+}
+
 - (BRRenderScene *)scene
 {
 	if([[BRMediaMenuController class] instancesRespondToSelector:@selector(scene)])
@@ -130,6 +151,20 @@
 	NSRect listFrame = [[_listControl layer] frame];
 	listFrame = [self listRectWithSize:listFrame inMaster:master];
 	[[_listControl layer] setFrame:listFrame];
+}
+
+//ATV 3
+- (void)layoutSubcontrols
+{
+	//Shrink the list frame to make room for displaying the filename
+	[super layoutSubcontrols];
+	NSRect master = [SapphireFrontRowCompat frameOfController:self];
+	BRListControl *listLayer = [self gimmieList];
+	
+	NSRect listFrame = [listLayer frame];
+	listFrame = [self listRectWithSize:listFrame inMaster:master];
+	[listLayer setFrame:listFrame];
+	[self doMyLayout];
 }
 
 /*Just because so many classes use self as the list data source*/
