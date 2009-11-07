@@ -340,6 +340,52 @@ static NSSet *secondaryFiles;
 	return NO;
 }
 
+- (BOOL)needsImporting
+{
+	NSFileManager *fm = [NSFileManager defaultManager];
+	
+	if(self.joinedToFile != nil)
+		return NO;
+
+	if([self needsUpdating])
+		return YES;
+	
+	//Check XML
+	BOOL xmlPathIsDir = NO;
+	NSString *xmlFilePath=[[self.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
+	SapphireXMLData *xml = self.xmlData;
+	NSDictionary *xmlProps = [fm fileAttributesAtPath:xmlFilePath traverseLink:YES];
+	
+	if(xmlProps == nil && xml != nil)
+		//XML file is gone, but we still reference it
+		return YES;
+
+	int modTime = [[xmlProps objectForKey:NSFileModificationDate] timeIntervalSince1970];
+	if(modTime != [self importedTimeFromSource:IMPORT_TYPE_XML_MASK])
+		//XML modification time does not match our last import
+		return YES;
+	
+	//Match improrts, but exclude xml and file b/c they are tracked through other means
+	int match = IMPORT_TYPE_ALL_MASK & ~IMPORT_TYPE_FILE_MASK & ~IMPORT_TYPE_XML_MASK;
+	switch (self.fileClassValue) {
+		case FILE_CLASS_TV_SHOW:
+			match &= ~IMPORT_TYPE_MOVIE_MASK;
+			break;
+		case FILE_CLASS_MOVIE:
+			match &= ~IMPORT_TYPE_TVSHOW_MASK;
+			break;
+		default:
+			break;
+	}
+	
+	int completed = self.importTypeValue & match;
+	BOOL ret = (match != completed);
+	if(ret)
+		NSLog(@"Going to import %@ because a file of class %d %d != %d", self.path, self.fileClassValue, match, completed);
+	
+	return ret;
+}
+
 - (oneway void)addFileData:(bycopy NSDictionary *)fileMeta
 {
 	self.audioDescription = [fileMeta objectForKey:META_FILE_AUDIO_DESC_KEY];

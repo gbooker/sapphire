@@ -397,7 +397,7 @@ NSComparisonResult dirAndLinkPathCompare(id dir1, id dir2, void *context)
 			else
 			{
 				[files removeObjectForKey:name];
-				if([subFile needsUpdating])
+				if([subFile needsImporting])
 					[importArray addObject:subFile];				
 			}
 			if([fm hasVIDEO_TS:filePath])

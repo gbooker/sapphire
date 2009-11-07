@@ -108,6 +108,15 @@ typedef enum {
 - (BOOL) needsUpdating;
 
 /*!
+ * @brief See if the file needs some sort of importing
+ *
+ * This function determins that a file needs some sort of importing.  This import could either be a file, XML, TV, or Movie import.
+ *
+ * @return YES if the file should have an importer run, NO otherwise
+ */
+- (BOOL)needsImporting;
+
+/*!
  * @brief Update any files that need to be updated
  *
  * This function determines that a file needs to be updated if its modification time does not match the time remembered in the persistent store.

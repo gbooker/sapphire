@@ -542,7 +542,10 @@
 	
 	/*See if we found a match*/
 	if(index == NSNotFound)
+	{	
+		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
 		return IMPORT_STATE_NOT_UPDATED;
+	}
 	
 	/*Get the show title*/
 	NSString *searchStr = [fileName substringToIndex:index];
@@ -611,7 +614,10 @@
 
 	/*No season, no info*/
 	if(season == 0)
+	{	
+		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
 		return IMPORT_STATE_NOT_UPDATED;
+	}
 	
 	int otherEp = 0;
 	if(secondEp != -1)
