@@ -244,9 +244,9 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	fileName=[choosingForFileName retain];
 	if(movieTitle)
-		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 	else
-		[SapphireFrontRowCompat setText:fileName withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+		[SapphireFrontRowCompat setText:fileName withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 }
 
 - (void)setFile:(SapphireFileMetaData *)aMeta;
@@ -264,9 +264,9 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	movieTitle = [theMovieTitle retain];
 	if(fileName)
-		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+		[SapphireFrontRowCompat setText:[NSString stringWithFormat:@"%@ (%@)",movieTitle,fileName] withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 	else
-		[SapphireFrontRowCompat setText:movieTitle withAtrributes:[[BRThemeInfo sharedTheme] paragraphTextAttributes] forControl:fileInfoText];
+		[SapphireFrontRowCompat setText:movieTitle withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 	
 	NSRect master = [SapphireFrontRowCompat frameOfController:self];
 	NSSize txtSize = [SapphireFrontRowCompat textControl:fileInfoText renderedSizeWithMaxSize:NSMakeSize(master.size.width * 2.0f/3.0f, master.size.height * 0.4f)];
