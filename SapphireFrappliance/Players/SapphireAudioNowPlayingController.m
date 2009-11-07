@@ -100,7 +100,8 @@
 	nowPlayingControl = [[BRMusicNowPlayingControl control] retain];
 	[self addControl:nowPlayingControl];
 	
-	[self setLayoutManager:self];
+	if([[BRLayerController class] instancesRespondToSelector:@selector(layoutManager)])
+		[self setLayoutManager:self];
 	
 	return self;
 }
@@ -171,6 +172,12 @@
 }
 
 - (void)layoutSublayersOfLayer:(id)layer
+{
+	[self layoutSublayers];
+}
+
+//ATV 3
+- (void)layoutSubcontrols
 {
 	[self layoutSublayers];
 }
