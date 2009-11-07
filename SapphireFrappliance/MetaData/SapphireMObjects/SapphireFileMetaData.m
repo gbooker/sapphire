@@ -351,7 +351,6 @@ static NSSet *secondaryFiles;
 		return YES;
 	
 	//Check XML
-	BOOL xmlPathIsDir = NO;
 	NSString *xmlFilePath=[[self.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
 	SapphireXMLData *xml = self.xmlData;
 	NSDictionary *xmlProps = [fm fileAttributesAtPath:xmlFilePath traverseLink:YES];

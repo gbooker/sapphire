@@ -24,6 +24,7 @@
 #import "SapphireFileMetaData.h"
 #import "SapphireVideoPlayerController.h"
 #import <QTKit/QTKit.h>
+#import "NSManagedObject-Extensions.h"
 
 #define SKIP_INTERVAL 0.5
 #define SKIP_ACCELL 0.5 * SKIP_INTERVAL
