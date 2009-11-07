@@ -33,6 +33,14 @@
 -(BOOL)setMediaAtIndex:(long)index inTrackList:(id)trackList error:(NSError **)error;
 @end
 
+//Stolen from ATVFiles
+typedef enum {
+	BRMusicPlayerStateStopped = 0,
+	BRMusicPlayerStatePaused = 1,
+	BRMusicPlayerStatePlaying = 3,
+	BRMusicPlayerStateSeekingForward = 4,
+	BRMusicPlayerStateSeekingBack = 7
+} BRMusicPlayerState;
 
 @interface SapphireAudioPlayer (private)
 - (void)setState:(int)newState;
@@ -41,6 +49,7 @@
 - (void)doSkip:(NSTimer *)timer;
 - (void)stopSkip;
 - (void)updateUI:(NSTimer *)Timer;
+- (void)setPlayerState:(BRMusicPlayerState)newState;
 @end
 
 @implementation SapphireAudioPlayer
@@ -148,49 +157,75 @@
 
 -(void)setState:(int)newState error:(NSError **)error
 {
-	NSLog(@"I was told to go into state %d", newState);
+	[self setPlayerState:newState];
 }
 
 - (void)setState:(int)newState
 {
+	[self setPlayerState:newState];
+}
+
+- (void)setPlayerState:(BRMusicPlayerState)newState
+{
 	state = newState;
+	switch (state) {
+		case BRMusicPlayerStatePlaying:
+		{
+			id media = [self media];
+			[[NSNotificationCenter defaultCenter] postNotificationName:kBRMediaPlayerCurrentAssetChanged object:media];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPCurrentAssetChanged" object:media];
+			[self stopSkip];
+			updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateUI:) userInfo:nil repeats:YES];
+			[movie play];
+			break;
+		}
+		case BRMusicPlayerStatePaused:
+			[self stopSkip];
+			[self stopUITimer];
+			[movie stop];
+			break;
+		case BRMusicPlayerStateStopped:
+			[self stopSkip];
+			[self stopUITimer];
+			[movie stop];
+			SapphireFileMetaData *file = [(SapphireAudioMedia *)[self media] fileMetaData];
+			float elapsed = [self elapsedPlaybackTime];
+			float duration = [self trackDuration];
+			if(elapsed >= duration)
+				[file setWatchedValue:YES];
+			else
+				[file setResumeTimeValue:elapsed];
+			teardownPassthrough(soundState);
+			break;
+		case BRMusicPlayerStateSeekingBack:
+			[self setSkipTimer];
+			skipSpeed = -1;
+			break;
+		case BRMusicPlayerStateSeekingForward:
+			[self setSkipTimer];
+			skipSpeed = 1;
+			break;
+		default:
+			NSLog(@"I was told to go into state %d", newState);
+			break;
+	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPStateChanged" object:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:kBRMediaPlayerStateChanged object:self];
 }
 
 - (void)play
 {
-	id media = [self media];
-	[[NSNotificationCenter defaultCenter] postNotificationName:kBRMediaPlayerCurrentAssetChanged object:media];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPCurrentAssetChanged" object:media];
-	[self stopSkip];
-	updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateUI:) userInfo:nil repeats:YES];
-	[self setState:3];
-	[movie play];
+	[self setPlayerState:BRMusicPlayerStatePlaying];
 }
 
 - (void)pause
 {
-	[self stopSkip];
-	[self stopUITimer];
-	[self setState:1];
-	[movie stop];
+	[self setPlayerState:BRMusicPlayerStatePaused];
 }
 
 - (void)stop
 {
-	[self stopSkip];
-	[self stopUITimer];
-	[self setState:0];
-	[movie stop];
-	SapphireFileMetaData *file = [(SapphireAudioMedia *)[self media] fileMetaData];
-	float elapsed = [self elapsedPlaybackTime];
-	float duration = [self trackDuration];
-	if(elapsed >= duration)
-		[file setWatchedValue:YES];
-	else
-		[file setResumeTimeValue:elapsed];
-	teardownPassthrough(soundState);
+	[self setPlayerState:BRMusicPlayerStateStopped];
 }
 
 - (void)stopUITimer
@@ -201,14 +236,12 @@
 
 - (void)pressAndHoldLeftArrow
 {
-	[self setSkipTimer];
-	skipSpeed = -1;
+	[self setPlayerState:BRMusicPlayerStateSeekingBack];
 }
 
 - (void)pressAndHoldRightArrow
 {
-	[self setSkipTimer];
-	skipSpeed = 1;
+	[self setPlayerState:BRMusicPlayerStateSeekingForward];
 }
 
 - (void)setSkipTimer
