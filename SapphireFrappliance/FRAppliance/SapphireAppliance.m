@@ -206,6 +206,11 @@ static SapphireApplianceController *mainCont = nil;
 	return [self controllerForIdentifier:ident];
 }
 
+- (void)refreshPreviewControlDataForIdentifier:(id)ident
+{
+#warning likely need this too
+}
+
 - (id)previewControlForIdentifier:(id)ident
 {
 #warning NEED THIS!
