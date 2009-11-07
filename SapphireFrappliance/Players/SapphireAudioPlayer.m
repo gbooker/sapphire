@@ -175,6 +175,7 @@ typedef enum {
 			[[NSNotificationCenter defaultCenter] postNotificationName:kBRMediaPlayerCurrentAssetChanged object:media];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"BRMPCurrentAssetChanged" object:media];
 			[self stopSkip];
+			[self stopUITimer];
 			updateTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateUI:) userInfo:nil repeats:YES];
 			[movie play];
 			break;
@@ -189,12 +190,20 @@ typedef enum {
 			[self stopUITimer];
 			[movie stop];
 			SapphireFileMetaData *file = [(SapphireAudioMedia *)[self media] fileMetaData];
-			float elapsed = [self elapsedPlaybackTime];
-			float duration = [self trackDuration];
-			if(elapsed >= duration)
-				[file setWatchedValue:YES];
-			else
-				[file setResumeTimeValue:elapsed];
+			if(![file objectHasBeenDeleted])
+			{
+				float elapsed = [self elapsedPlaybackTime];
+				float duration = [self trackDuration];
+				/*Get the resume time to save*/
+				if(elapsed < duration - 2)
+					[file setResumeTimeValue:elapsed];
+				else
+					[file setResumeTime:nil];
+				
+				if(elapsed / duration > 0.9f)
+				/*Mark as watched and reload info*/
+					[file setWatchedValue:YES];
+			}
 			teardownPassthrough(soundState);
 			break;
 		case BRMusicPlayerStateSeekingBack:
