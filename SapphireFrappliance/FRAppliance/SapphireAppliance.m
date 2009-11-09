@@ -55,6 +55,12 @@
 -(void)setShouldDisplayOnStartup:(BOOL)shouldDisplayOnStartup;
 @end
 
+//Really BRImage
+@interface NSObject (private)
+- (id)downsampledImageForMaxSize:(NSSize )size;
+@end
+
+
 @implementation SapphireAppliance
 
 + (void) initialize
@@ -208,13 +214,16 @@ static SapphireApplianceController *mainCont = nil;
 
 - (void)refreshPreviewControlDataForIdentifier:(id)ident
 {
-#warning likely need this too
+	//Likely need to do something here with more advanced preview controllers
 }
 
 - (id)previewControlForIdentifier:(id)ident
 {
-#warning NEED THIS!
-	return nil;
+	id preview = [[NSClassFromString(@"BRMainMenuImageControl") alloc] init];
+	NSString *imagePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"DefaultPreview" ofType:@"png"];
+	id image = [SapphireFrontRowCompat imageAtPath:imagePath];
+	[preview setImage:[image downsampledImageForMaxSize:NSMakeSize(300, 300)]];
+	return [preview autorelease];
 }
 
 -(id)controllerForIdentifier:(id)ident
