@@ -379,9 +379,6 @@ static NSSet *secondaryFiles;
 	
 	int completed = self.importTypeValue & match;
 	BOOL ret = (match != completed);
-	if(ret)
-		NSLog(@"Going to import %@ because a file of class %d %d != %d", self.path, self.fileClassValue, match, completed);
-	
 	return ret;
 }
 
