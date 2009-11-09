@@ -30,6 +30,8 @@
 #import "SapphireEpisode.h"
 #import "SapphireSettings.h"
 #import "NSImage-Extensions.h"
+#import "SapphireTVShow.h"
+#import "NSXMLDocument-Extensions.h"
 
 
 /* TVRage XPATHS  */
@@ -40,6 +42,9 @@
 #define TVRAGE_SCREEN_CAP_XPATH @".//img[contains(@src, 'screencap')]"
 #define TVRAGE_SEARCH_XPATH @"//*[@class='b1']/a"
 #define TVRAGE_UNKNOWN_XPATH @"//*[contains(text(), 'Unknown Page')]"
+#define TVRAGE_SHOW_FULL_DESC_XPATH @"//div[@id='sft_1']//text()"
+#define TVRAGE_SHOW_RAW_DESC_XPATH @"//tr[@id='iconn1']/td/table/tr/td//text()"
+#define TVRAGE_SHOW_IMG_XPATH @"//img[contains(@src, 'shows')]"
 
 #define TRANSLATIONS_KEY		@"Translations"
 #define LINK_KEY				@"Link"
@@ -190,6 +195,65 @@
 		[epDict setObject:imgURL forKey:IMG_URL];
 }
 
+- (NSMutableDictionary *)getMetaForSeries:(NSString *)seriesName
+{
+	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
+	/*Get the season's html*/
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@", seriesName]];
+	NSError *error = nil;
+	NSXMLDocument *document = [NSXMLDocument tidyDocumentWithURL:url error:&error];
+	if(document == nil)
+		return nil;
+	/*Get the series info*/
+	if(error != nil && ![[error domain] isEqualToString:@"NSXMLParserErrorDomain"])
+	{
+		/*Error fetching data; return nil*/
+		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to parse data with error %@", error);
+		return nil;
+	}
+	
+	NSXMLElement *html = [document rootElement];
+	
+	NSArray *summaryArray = [html objectsForXQuery:TVRAGE_SHOW_FULL_DESC_XPATH error:&error];
+	if([summaryArray count])
+	{	
+		NSString *summary = [summaryArray componentsJoinedByString:@""];
+		if([summary hasSuffix:@"[-] Hide Full Summary\n"])
+			summary = [summary substringToIndex:[summary length] - 23];
+		[ret setObject:summary forKey:META_DESCRIPTION_KEY];
+		
+	}
+	else
+	{
+		summaryArray = [html objectsForXQuery:TVRAGE_SHOW_RAW_DESC_XPATH error:&error];
+		NSMutableArray *mutSums = [summaryArray mutableCopy];
+		if([[[mutSums lastObject] stringValue] hasPrefix:@"This Show Has"])
+			[mutSums removeLastObject];
+		NSString *summary = [mutSums componentsJoinedByString:@""];
+		[mutSums release];
+		NSMutableString *mutSummary = [summary mutableCopy];
+		NSCharacterSet *nonWhiteChars = [[NSCharacterSet characterSetWithCharactersInString:[NSString stringWithFormat:@"\n %C", 160]] invertedSet];
+		NSRange range = [mutSummary rangeOfCharacterFromSet:nonWhiteChars];
+		NSRange replaceRange = NSMakeRange(0, range.location);
+		if(range.location != 0)
+			[mutSummary replaceCharactersInRange:replaceRange withString:@""];
+		range = [mutSummary rangeOfCharacterFromSet:nonWhiteChars options:NSBackwardsSearch];
+		int endOfRange = range.location + range.length;
+		replaceRange = NSMakeRange(endOfRange, [mutSummary length] - endOfRange);
+		if(endOfRange != [mutSummary length])
+			[mutSummary replaceCharactersInRange:replaceRange withString:@""];
+		[mutSummary replaceOccurrencesOfString:@"\n\n" withString:@"\n" options:0 range:NSMakeRange(0, [mutSummary length])];
+		[ret setObject:mutSummary forKey:META_DESCRIPTION_KEY];
+		[mutSummary release];
+	}
+	
+	NSArray *imgArray = [html objectsForXQuery:TVRAGE_SHOW_IMG_XPATH error:&error];
+	if([imgArray count])
+		[ret setObject:[[(NSXMLElement *)[imgArray objectAtIndex:0] attributeForName:@"src"] stringValue] forKey:IMG_URL];
+	
+	return ret;
+}
+
 /*!
  * @brief Fetch information about a season of a show
  *
@@ -203,15 +267,10 @@
 	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
 	/*Get the season's html*/
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@/episode_guide/%d", seriesName, season]];
-	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
 	NSError *error = nil;
-	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
-	if(error != nil)
-	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to load URL %@ with error: %@", url, error);
+	NSXMLDocument *document = [NSXMLDocument tidyDocumentWithURL:url error:&error];
+	if(document == nil)
 		return nil;
-	}
-	NSXMLDocument *document = [[[NSXMLDocument alloc] initWithData:documentData options:NSXMLDocumentTidyHTML error:&error] autorelease];
 	/* Dump XML document to disk (Dev Only) */
 /*	NSString *documentPath =[applicationSupportDir() stringByAppendingPathComponent:@"XML"];
 	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@%@.xml",documentPath,seriesName] atomically:YES] ;*/
@@ -500,7 +559,8 @@
 	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
-		return IMPORT_STATE_NOT_UPDATED;
+		;//return IMPORT_STATE_NOT_UPDATED;
+#warning FIX THIS BEFORE COMMIT
 	id controller = [[dataMenu stack] peekController];
 	/* Check to see if we are waiting on the user to select a movie title */
 	if(controller != nil && ![controller isKindOfClass:[SapphireImporterDataMenu class]])
@@ -664,8 +724,9 @@
 		
 	/* Lets process the cover art directory structure */
 	NSString * previewArtPath = [NSFileManager previewArtPathForTV:[info objectForKey:META_SHOW_NAME_KEY] season:[[info objectForKey:META_SEASON_NUMBER_KEY] intValue]];
-						
-	[[NSFileManager defaultManager] constructPath:previewArtPath];
+	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	[fm constructPath:previewArtPath];
 	/*Check for screen cap locally and on server*/
 	NSString *imgURL = [info objectForKey:IMG_URL];
 	NSString *newPath = nil;
@@ -675,7 +736,7 @@
 		newPath = [previewArtPath stringByAppendingPathComponent:[info objectForKey:META_TITLE_KEY]];
 	NSString *imageDestination = [newPath stringByAppendingPathExtension:@"jpg"];
 	BOOL isDir = NO;
-	BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
+	BOOL imageExists = [fm fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
 	if(imgURL && !imageExists)
 	{
 		/*Download the screen cap*/
@@ -712,6 +773,28 @@
 		{
 			nameTran = [SapphireTVTranslation createTVTranslationForName:showName withPath:[tran showPath] inContext:moc];
 			[nameTran setTvShow:tvShow];
+		}
+	}
+	
+	/*Check for series info*/
+	NSString *showCoverArtPath = [[previewArtPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover.jpg"];
+	imageExists = [fm fileExistsAtPath:showCoverArtPath isDirectory:&isDir] && !isDir;
+	if(![tvShow.showDescription length] || !imageExists)
+	{
+		NSDictionary *showDict = [self getMetaForSeries:[tran showPath]];
+		NSString *summary = [showDict objectForKey:META_DESCRIPTION_KEY];
+		if([summary length])
+			tvShow.showDescription = summary;
+		
+		imgURL = [showDict objectForKey:IMG_URL];
+		if([imgURL length] && !imageExists)
+		{
+			/*Download the screen cap*/
+			NSURL *imageURL = [NSURL URLWithString:imgURL];
+			NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
+			SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:showCoverArtPath];
+			[[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate] autorelease];
+			[myDelegate release];
 		}
 	}
 	

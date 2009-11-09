@@ -108,6 +108,7 @@
 		F5A2D70B0F1282CD00144F7C /* Sapphire.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F5A2D70A0F1282CD00144F7C /* Sapphire.xcdatamodeld */; };
 		F5A2D7820F12996A00144F7C /* SapphireErrorDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A2D7720F12972600144F7C /* SapphireErrorDisplayController.m */; };
 		F5A2D8730F12CFEF00144F7C /* BackRow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38FAF9B50C0129E400853CFE /* BackRow.framework */; };
+		F5A9A89510A7A69600BA95CD /* NSXMLDocument-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A9A89410A7A69600BA95CD /* NSXMLDocument-Extensions.m */; };
 		F5B418380D0B1EA100BDD361 /* SapphireImportHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */; };
 		F5B418650D0B28A200BDD361 /* main_helper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B418640D0B28A200BDD361 /* main_helper.m */; };
 		F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5B4185F0D0B288700BDD361 /* ImportHelper */; };
@@ -458,6 +459,8 @@
 		F5A2D70C0F1282CD00144F7C /* SapphireV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SapphireV2.xcdatamodel; sourceTree = "<group>"; };
 		F5A2D7710F12972600144F7C /* SapphireErrorDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireErrorDisplayController.h; sourceTree = "<group>"; };
 		F5A2D7720F12972600144F7C /* SapphireErrorDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireErrorDisplayController.m; sourceTree = "<group>"; };
+		F5A9A89310A7A69600BA95CD /* NSXMLDocument-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSXMLDocument-Extensions.h"; sourceTree = "<group>"; };
+		F5A9A89410A7A69600BA95CD /* NSXMLDocument-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSXMLDocument-Extensions.m"; sourceTree = "<group>"; };
 		F5B418360D0B1EA100BDD361 /* SapphireImportHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireImportHelper.h; sourceTree = "<group>"; };
 		F5B418370D0B1EA100BDD361 /* SapphireImportHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireImportHelper.m; sourceTree = "<group>"; };
 		F5B4185F0D0B288700BDD361 /* ImportHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ImportHelper; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -860,6 +863,8 @@
 				F571B7AD0E9C360500B7FD9D /* NSManagedObject-Extensions.m */,
 				F56B74D40C3753E300E934AA /* NSString-Extensions.h */,
 				F56B74D50C3753E300E934AA /* NSString-Extensions.m */,
+				F5A9A89310A7A69600BA95CD /* NSXMLDocument-Extensions.h */,
+				F5A9A89410A7A69600BA95CD /* NSXMLDocument-Extensions.m */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1418,6 +1423,7 @@
 				F5505DC71040864D0064D392 /* SapphireAudioNowPlayingController.m in Sources */,
 				5941C04710786EB2004C887B /* SapphireMovieVirtualDirectory.m in Sources */,
 				5941C04810786ECA004C887B /* SapphireMovieVirtualDirectoryImporter.m in Sources */,
+				F5A9A89510A7A69600BA95CD /* NSXMLDocument-Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
