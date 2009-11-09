@@ -235,12 +235,12 @@
 		NSCharacterSet *nonWhiteChars = [[NSCharacterSet characterSetWithCharactersInString:[NSString stringWithFormat:@"\n %C", 160]] invertedSet];
 		NSRange range = [mutSummary rangeOfCharacterFromSet:nonWhiteChars];
 		NSRange replaceRange = NSMakeRange(0, range.location);
-		if(range.location != 0)
+		if(range.location != 0 && range.location != NSNotFound)
 			[mutSummary replaceCharactersInRange:replaceRange withString:@""];
 		range = [mutSummary rangeOfCharacterFromSet:nonWhiteChars options:NSBackwardsSearch];
 		int endOfRange = range.location + range.length;
 		replaceRange = NSMakeRange(endOfRange, [mutSummary length] - endOfRange);
-		if(endOfRange != [mutSummary length])
+		if(endOfRange != [mutSummary length] && range.location != NSNotFound)
 			[mutSummary replaceCharactersInRange:replaceRange withString:@""];
 		[mutSummary replaceOccurrencesOfString:@"\n\n" withString:@"\n" options:0 range:NSMakeRange(0, [mutSummary length])];
 		[ret setObject:mutSummary forKey:META_DESCRIPTION_KEY];
@@ -559,8 +559,7 @@
 	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
-		;//return IMPORT_STATE_NOT_UPDATED;
-#warning FIX THIS BEFORE COMMIT
+		return IMPORT_STATE_NOT_UPDATED;
 	id controller = [[dataMenu stack] peekController];
 	/* Check to see if we are waiting on the user to select a movie title */
 	if(controller != nil && ![controller isKindOfClass:[SapphireImporterDataMenu class]])
