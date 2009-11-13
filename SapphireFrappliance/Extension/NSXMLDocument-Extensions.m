@@ -36,6 +36,30 @@
 	
 	NSStringEncoding responseEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)[response textEncodingName]));
 	NSString *documentString = [[NSString alloc] initWithData:documentData encoding:responseEncoding];
+	if(documentString == nil)
+	{
+		//Most likely this is UTF-8 and some moron doesn't understand that the meta tags need to follow the same encoding.
+		NSMutableData *mutData = [documentData mutableCopy];
+		int length = [mutData length];
+		const char *bytes = [mutData bytes];
+		const char *location;
+		while((location = strnstr(bytes, "<meta", length)) != NULL)
+		{
+			int offset = location - bytes;
+			const char *end = strnstr(location, ">", length-offset);
+			if(end != NULL)
+			{
+				int replaceLength = end-location+2;
+				[mutData replaceBytesInRange:NSMakeRange(offset, replaceLength) withBytes:"" length:0];
+				bytes = [mutData bytes];
+				length = [mutData length];
+			}
+			else
+				break;
+		}
+		documentString = [[NSString alloc] initWithData:mutData encoding:responseEncoding];
+		[mutData release];
+	}
 	
 	NSXMLDocument *ret = [[[NSXMLDocument alloc] initWithXMLString:documentString options:NSXMLDocumentTidyHTML error:error] autorelease];
 	[documentString release];
