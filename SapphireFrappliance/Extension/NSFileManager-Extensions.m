@@ -119,8 +119,7 @@ static NSSet *allExtensions = nil;
 	if([name isEqualToString:@"Cover Art"])
 		return NO;
 	
-	path = [path stringByResolvingSymlinksInPath];
-	return ([self isDirectory:path] || [self hasVIDEO_TS:path] || [allExtensions containsObject:[path pathExtension]]);
+	return ([allExtensions containsObject:[path pathExtension]] || [self isDirectory:path]);
 }
 
 + (NSString *)previewArtPathForTV:(NSString *)show season:(unsigned int)seasonNum
