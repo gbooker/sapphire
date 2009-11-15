@@ -28,7 +28,7 @@
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
 	NSURLResponse *response = nil;
 	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
-	if(*error != nil)
+	if(error != nil && *error != nil)
 	{
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to load URL %@ with error: %@", url, *error);
 		return nil;
