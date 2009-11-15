@@ -26,8 +26,8 @@
 #import "CoreDataSupportFunctions.h"
 #import "SapphireBasicDirectoryFunctionsImports.h"
 #import "SapphireFileSorter.h"
-#import "SapphireMovieVirtualDirectoryImporter.h"
-#import "SapphireMovieVirtualDirectory.h"
+#import "SapphireCustomVirtualDirectoryImporter.h"
+#import "SapphireCustomVirtualDirectory.h"
 #import "SapphireMovie.h"
 #import "SapphireCast.h"
 #import "SapphireDirector.h"
@@ -126,7 +126,7 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	SapphireFileSorter *imdbRatingSort = [SapphireMovieIMDBRatingSorter sharedInstance];
 	
 	NSString *moviePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
-	vdImport = [[SapphireMovieVirtualDirectoryImporter alloc] initWithPath:[applicationSupportDir() stringByAppendingPathComponent:@"virtualDirs.xml"]];
+	vdImport = [[SapphireCustomVirtualDirectoryImporter alloc] initWithPath:[applicationSupportDir() stringByAppendingPathComponent:@"virtualDirs.xml"]];
 	defaultSorters = [[NSArray alloc] initWithObjects:titleSort, dateSort, imdbRatingSort, nil];
 	
 	/*Finish the static directory setup*/
@@ -220,7 +220,7 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 - (void)reloadDirectoryContents
 {
 	/*Import any defined movie virtual directories*/
-	NSArray *newVirtualDirs = [vdImport virtualDirectories];
+	NSArray *newVirtualDirs = [vdImport movieVirtualDirectories];
 	if(![virtualDirs isEqualToArray:newVirtualDirs])
 	{
 		[virtualDirs release];
@@ -232,7 +232,7 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 		
 		NSString *moviePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
 		NSEnumerator *mvdEnum = [newVirtualDirs objectEnumerator];
-		SapphireMovieVirtualDirectory *virtualDir;
+		SapphireCustomVirtualDirectory *virtualDir;
 		while((virtualDir = [mvdEnum nextObject]) != nil)
 		{
 			SapphireFilteredFileDirectory *custom = [[SapphireFilteredFileDirectory alloc] initWithPredicate:[virtualDir predicate] Context:moc];

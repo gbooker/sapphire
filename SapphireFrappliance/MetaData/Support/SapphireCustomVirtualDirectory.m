@@ -1,5 +1,5 @@
 /*
- * SapphireMovieVirtualDirectory.m
+ * SapphireCustomVirtualDirectory.m
  * Sapphire
  *
  * Created by mjacobsen on Oct. 2, 2009.
@@ -18,9 +18,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SapphireMovieVirtualDirectory.h"
+#import "SapphireCustomVirtualDirectory.h"
 
-@implementation SapphireMovieVirtualDirectory
+@implementation SapphireCustomVirtualDirectory
 
 - (void) dealloc
 {
@@ -32,9 +32,9 @@
 
 - (BOOL)isEqual:(id)object
 {
-	if([object isKindOfClass:[SapphireMovieVirtualDirectory class]])
+	if([object isKindOfClass:[SapphireCustomVirtualDirectory class]])
 	{
-		SapphireMovieVirtualDirectory *other = (SapphireMovieVirtualDirectory *)object;
+		SapphireCustomVirtualDirectory *other = (SapphireCustomVirtualDirectory *)object;
 		
 		if(![other->title isEqualToString:title])
 			return NO;

@@ -1,5 +1,5 @@
 /*
- * SapphireMovieVirtualDirectoryImporter.h
+ * SapphireCustomVirtualDirectory.h
  * Sapphire
  *
  * Created by mjacobsen on Oct. 2, 2009.
@@ -18,23 +18,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+
 /*!
- * @brief The importer of movie virtual directory data
+ * @brief The simple object to hold movie virtual directory data
  *
- * This class is a for importing xml movie virtual directory data.  It will read in data stored in XML files for defining custom movie virtual directories.
+ * This class is a value object for holding imported xml movie virtual directory data.
  */
-@interface SapphireMovieVirtualDirectoryImporter : NSObject {
-	NSDictionary	*elementCommands;
-	NSString		*path;
+@interface SapphireCustomVirtualDirectory : NSObject {
+	NSString *title;
+	NSString *description;
+	NSPredicate *predicate;
 }
-
-- (NSArray *)virtualDirectories;
-- (NSPredicate *)predicateWithElement:(NSXMLElement *)elem;
-- (NSPredicate *)allPredicateWithElement:(NSXMLElement *)elem;
-- (NSPredicate *)anyPredicateWithElement:(NSXMLElement *)elem;
-- (NSPredicate *)notPredicateWithElement:(NSXMLElement *)elem;
-- (NSMutableArray *)predicateArrayWithElement:(NSXMLElement *)elem;
-- (BOOL)isRegexMatch:(NSXMLElement *)elem;
-- (BOOL)isCaseSensitiveMatch:(NSXMLElement *)elem;
-
+- (NSString *)title;
+- (NSString *)description;
+- (NSPredicate *)predicate;
+- (void)setTitle:(NSString*)v;
+- (void)setDescription:(NSString*)v;
+- (void)setPredicate:(NSPredicate*)v;
 @end
+
