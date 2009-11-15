@@ -107,10 +107,10 @@ static BOOL is10Version = NO;
 	BOOL isTake2 = [SapphireFrontRowCompat usingATypeOfTakeTwo];
 	BOOL isReallyFrontrow = [SapphireFrontRowCompat usingLeopard];
 	NSString *oldName=nil;
-	int row = [self getSelection];
+	int oldRow = [self getSelection];
 	
-	if(row < [_names count])
-		oldName = [[_names objectAtIndex:row] retain];
+	if(oldRow < [_names count] && oldRow > 0)
+		oldName = [[_names objectAtIndex:oldRow] retain];
 
 	/*Flush our cache*/
 	[_names removeAllObjects];
@@ -162,15 +162,18 @@ static BOOL is10Version = NO;
 	/*Attempt to preserve the user's current highlighted selection*/
 	if(oldName)
 	{
-		row = [_names indexOfObject:oldName];
-		if(row != NSNotFound)
-			[(BRListControl *)[self list] setSelection:row];
-		else if(fileCount != 0)
-			[(BRListControl *)[self list] setSelection:dirCount];
-		else
-			[(BRListControl *)[self list] setSelection:0];
+		int row = [_names indexOfObject:oldName];
+		if(row == NSNotFound)
+			row = oldRow;
+		if(row >= [_names count])
+			row--;
+		[(BRListControl *)[self list] setSelection:row];
 		[oldName release];
 	}
+	else if(fileCount != 0)
+		[(BRListControl *)[self list] setSelection:dirCount];
+	else
+		[(BRListControl *)[self list] setSelection:0];
 	/*Draw*/
 	[self resetPreviewController];
 	[SapphireFrontRowCompat renderScene:[self scene]];
