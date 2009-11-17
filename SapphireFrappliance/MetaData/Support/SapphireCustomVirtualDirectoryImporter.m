@@ -72,12 +72,12 @@
 
 //TVShow specifice attributes
 #define TV_SHOW_SEASON_ELEM				@"season"
-#define TV_SHOW_SHOW_ELEM				@"showTitle"
+#define TV_SHOW_SHOW_ELEM				@"showtitle"
 #define TV_SHOW_EPISODE_ELEM			@"episode"
-#define TV_SHOW_ABS_EPISODE_ELEM		@"episodeNumber"
+#define TV_SHOW_ABS_EPISODE_ELEM		@"episodenumber"
 #define TV_SHOW_EPISODE_TITLE_ELEM		@"title"
 #define TV_SHOW_EPISODE_DESC_ELEM		@"description"
-#define TV_SHOW_AIR_DATE_ELEM			@"airDate"
+#define TV_SHOW_AIR_DATE_ELEM			@"airdate"
 
 typedef enum {
 	CommandTypeFormatElementString,
@@ -170,10 +170,10 @@ typedef enum {
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"tvEpisode.tvShow.name"], TV_SHOW_SHOW_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"ANY tvEpisode.subEpisodes.episodeTitle"], TV_SHOW_EPISODE_TITLE_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"ANY tvEpisode.subEpisodes.episodeDescription"], TV_SHOW_EPISODE_DESC_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"tvEpisode.season.seasonNumber"], TV_SHOW_SEASON_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"ANY tvEpisode.subEpisodes.episodeNumber"], TV_SHOW_EPISODE_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"ANY tvEpisode.subEpisodes.episodeNumber"], TV_SHOW_ABS_EPISODE_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatNSDateValue formatString:@"ANY tvEpisode.subEpisodes.airDate"], TV_SHOW_AIR_DATE_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"tvEpisode.season.seasonNumber == %d"], TV_SHOW_SEASON_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"ANY tvEpisode.subEpisodes.episodeNumber == %d"], TV_SHOW_EPISODE_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"ANY tvEpisode.subEpisodes.episodeNumber == %d"], TV_SHOW_ABS_EPISODE_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatNSDateValue formatString:@"ANY tvEpisode.subEpisodes.airDate >= %@"], TV_SHOW_AIR_DATE_ELEM,
 										nil];
 		
 		NSMutableDictionary *additionalCommands = [commonCommands mutableCopy];
@@ -220,7 +220,7 @@ typedef enum {
 	if (matchPred != nil)
 	{
 		matchPred = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:basePredicate, matchPred, nil]];
-		SapphireLog(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_INFO, @"Creating virtual directory with filter: %@", matchPred);
+		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_INFO, @"Creating virtual directory with filter: %@", matchPred);
 		[virtualDir setPredicate:matchPred];
 	}
 	else
@@ -234,7 +234,7 @@ typedef enum {
 - (void)readVirtualDirectories;
 {
 	/*Check for XML file*/
-	SapphireLog(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_DETAIL, @"Looking for file: %@", path);
+	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Looking for file: %@", path);
 	NSFileManager *fm = [NSFileManager defaultManager];
 	BOOL xmlPathIsDir = NO;
 	if(![fm fileExistsAtPath:path isDirectory:&xmlPathIsDir] || xmlPathIsDir)

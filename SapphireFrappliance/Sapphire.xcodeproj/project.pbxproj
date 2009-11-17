@@ -62,6 +62,7 @@
 		F50040100D1998FA003FEA08 /* SapphireLeopardFileEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = F500400E0D1998FA003FEA08 /* SapphireLeopardFileEvents.h */; };
 		F50040110D1998FA003FEA08 /* SapphireLeopardFileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */; };
 		F50044160D19A268003FEA08 /* LeopardOnly.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5003FF90D19980B003FEA08 /* LeopardOnly.framework */; };
+		F506593110B22EC800D0F1FE /* SapphireTVDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F506593010B22EC800D0F1FE /* SapphireTVDirectory.m */; };
 		F51BFC1B0D26ACAD00E22363 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A19480C3170870022918E /* AppKit.framework */; };
 		F51BFC1C0D26ACAD00E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
 		F51BFEFF0C8CB85D00709A5E /* SapphireCollectionSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFEFE0C8CB85D00709A5E /* SapphireCollectionSettings.m */; };
@@ -392,6 +393,8 @@
 		F500400A0D1998B4003FEA08 /* SapphireLeopardOnly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLeopardOnly.m; sourceTree = "<group>"; };
 		F500400E0D1998FA003FEA08 /* SapphireLeopardFileEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireLeopardFileEvents.h; sourceTree = "<group>"; };
 		F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLeopardFileEvents.m; sourceTree = "<group>"; };
+		F506592F10B22EC800D0F1FE /* SapphireTVDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTVDirectory.h; sourceTree = "<group>"; };
+		F506593010B22EC800D0F1FE /* SapphireTVDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTVDirectory.m; sourceTree = "<group>"; };
 		F5185B400D1344D700712020 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SapphireCompatibilityClasses.xcodeproj; path = ../SapphireCompatibilityClasses/SapphireCompatibilityClasses.xcodeproj; sourceTree = "<group>"; };
 		F51BFEFD0C8CB85D00709A5E /* SapphireCollectionSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCollectionSettings.h; sourceTree = "<group>"; };
@@ -1047,6 +1050,8 @@
 				F5294AAC0DECB4D7004F8F4F /* SapphireMovieDirectory.m */,
 				F5C55ECC0DE90F7000661563 /* SapphireObjectDirectory.h */,
 				F5C55ECD0DE90F7000661563 /* SapphireObjectDirectory.m */,
+				F506592F10B22EC800D0F1FE /* SapphireTVDirectory.h */,
+				F506593010B22EC800D0F1FE /* SapphireTVDirectory.m */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1424,6 +1429,7 @@
 				5941C04710786EB2004C887B /* SapphireCustomVirtualDirectory.m in Sources */,
 				5941C04810786ECA004C887B /* SapphireCustomVirtualDirectoryImporter.m in Sources */,
 				F5A9A89510A7A69600BA95CD /* NSXMLDocument-Extensions.m in Sources */,
+				F506593110B22EC800D0F1FE /* SapphireTVDirectory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

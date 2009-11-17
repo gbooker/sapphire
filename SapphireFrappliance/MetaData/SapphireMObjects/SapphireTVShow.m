@@ -69,6 +69,11 @@ static NSArray *allowedSorts = nil;
 	}
 }
 
++ (NSArray *)sortMethods
+{
+	return allowedSorts;
+}
+
 - (NSComparisonResult)compare:(SapphireTVShow *)other
 {
 	return [self.name nameCompare:other.name];

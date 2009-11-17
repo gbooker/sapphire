@@ -21,8 +21,6 @@
 #import "SapphireDirectory.h"
 #import "SapphireBasicDirectoryFunctionsDefines.h"
 
-@class SapphireMovieVirtualDirectoryImporter;
-
 /*!
  * @brief The base movies virtual directory
  *
@@ -36,7 +34,6 @@
 	NSMutableArray					*names;				/*!< @brief The sub-directory names*/
 	NSArray							*virtualDirs;		/*!< @brief The virtual directories last imported*/
 	NSArray							*defaultSorters;	/*!< @brief The list of default file sorters*/
-	SapphireMovieVirtualDirectoryImporter	*vdImport;	/*!< @brief The virtial directory importer*/
 	Basic_Directory_Function_Instance_Variables
 }
 

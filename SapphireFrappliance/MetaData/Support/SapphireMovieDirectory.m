@@ -126,7 +126,6 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	SapphireFileSorter *imdbRatingSort = [SapphireMovieIMDBRatingSorter sharedInstance];
 	
 	NSString *moviePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
-	vdImport = [[SapphireCustomVirtualDirectoryImporter alloc] initWithPath:[applicationSupportDir() stringByAppendingPathComponent:@"virtualDirs.xml"]];
 	defaultSorters = [[NSArray alloc] initWithObjects:titleSort, dateSort, imdbRatingSort, nil];
 	
 	/*Finish the static directory setup*/
@@ -168,7 +167,6 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	[names release];
 	[virtualDirs release];
 	[defaultSorters release];
-	[vdImport release];
 	Basic_Directory_Function_Deallocs
 	[super dealloc];
 }
@@ -220,7 +218,7 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 - (void)reloadDirectoryContents
 {
 	/*Import any defined movie virtual directories*/
-	NSArray *newVirtualDirs = [vdImport movieVirtualDirectories];
+	NSArray *newVirtualDirs = [[SapphireApplianceController customVirtualDirectoryImporter] movieVirtualDirectories];
 	if(![virtualDirs isEqualToArray:newVirtualDirs])
 	{
 		[virtualDirs release];
@@ -237,7 +235,7 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 		{
 			SapphireFilteredFileDirectory *custom = [[SapphireFilteredFileDirectory alloc] initWithPredicate:[virtualDir predicate] Context:moc];
 			[subDirs addObject:custom];
-			[names addObject:BRLocalizedString([virtualDir title], [virtualDir description])];
+			[names addObject:[virtualDir title]];
 			[custom setPath:[[VIRTUAL_DIR_ROOT_PATH stringByAppendingString:@"/"] stringByAppendingString:[virtualDir description]]];
 			[custom setCoverArtPath:moviePath]; // Change this to be part of the XML?
 			[custom setFileSorters:defaultSorters];

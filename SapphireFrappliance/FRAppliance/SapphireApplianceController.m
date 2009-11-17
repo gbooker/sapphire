@@ -26,12 +26,9 @@
 
 #import "SapphireBrowser.h"
 #import "SapphireDirectoryMetaData.h"
-#import "SapphireFileMetaData.h"
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"
 #import "SapphireCollectionDirectory.h"
-#import "CoreDataSupportFunctions.h"
-#import "SapphireEpisode.h"
 
 #import "SapphireImporterDataMenu.h"
 #import "SapphireXMLFileDataImporter.h"
@@ -42,11 +39,12 @@
 #import "SapphireImportHelper.h"
 #import "SapphireMetaDataSupport.h"
 #import "SapphireEntityDirectory.h"
-#import "SapphireTVShow.h"
 #import "SapphireMovieDirectory.h"
 #import "SapphireMarkMenu.h"
 #import "SapphireDisplayMenu.h"
 #import "SapphireAudioNowPlayingController.h"
+#import "SapphireTVDirectory.h"
+#import "SapphireCustomVirtualDirectoryImporter.h"
 
 #import "NSFileManager-Extensions.h"
 
@@ -247,6 +245,14 @@ BRMusicNowPlayingController *musicController = nil;
 	return musicController;
 }
 
++ (SapphireCustomVirtualDirectoryImporter *)customVirtualDirectoryImporter
+{
+	static SapphireCustomVirtualDirectoryImporter *customVirtualDirectoryImporter = nil;
+	if(customVirtualDirectoryImporter == nil)
+		customVirtualDirectoryImporter = [[SapphireCustomVirtualDirectoryImporter alloc] initWithPath:[applicationSupportDir() stringByAppendingPathComponent:@"virtualDirs.xml"]];
+	return customVirtualDirectoryImporter;
+}
+
 + (void)logException:(NSException *)e
 {
 	NSMutableString *ret = [NSMutableString stringWithFormat:@"Exception: %@ %@\n", [e name], [e reason]];
@@ -367,6 +373,7 @@ BRMusicNowPlayingController *musicController = nil;
 	
 	SapphireSetLogLevel(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_ERROR);
 	SapphireSetLogLevel(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG);
+	SapphireSetLogLevel(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_INFO);
 	
 	distributed = [[SapphireDistributedMessagesReceiver alloc] initWithController:self];
 	
@@ -430,34 +437,10 @@ BRMusicNowPlayingController *musicController = nil;
 	[self setMenuFromSettings];
 }
 
-NSArray *showEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredicate)
-{
-	NSPredicate *showPred = nil;
-	if(filterPredicate != nil)
-	{
-		NSPredicate *fetchPredicate = [NSPredicate predicateWithFormat:@"tvEpisode != nil"];
-		NSPredicate *finalPred;
-		if(filterPredicate == nil)
-			finalPred = fetchPredicate;
-		else
-			finalPred = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, fetchPredicate, nil]];
-		NSArray *files = doFetchRequest(SapphireFileMetaDataName, moc, finalPred);
-		
-		NSSet *epIds = [NSSet setWithArray:[files valueForKeyPath:@"tvEpisode.objectID"]];
-		NSPredicate *epPred = [NSPredicate predicateWithFormat:@"SELF IN %@", epIds];
-		NSArray *episodes = doFetchRequest(SapphireEpisodeName, moc, epPred);
-		
-		NSSet *showIds = [NSSet setWithArray:[episodes valueForKeyPath:@"tvShow.objectID"]];
-		showPred = [NSPredicate predicateWithFormat:@"SELF IN %@", showIds];
-	}
-	return doFetchRequest(SapphireTVShowName, moc, showPred);
-}
-
 - (SapphireBrowser *)tvBrowser
 {
 	BRTexture *predicateGem = [SapphireApplianceController gemForPredicate:[SapphireApplianceController predicate]];
-	SapphireEntityDirectory *tvDir = [[SapphireEntityDirectory alloc] initWithEntityFetch:showEntityFetch inContext:moc];
-	[tvDir setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"tvEpisode != nil"]];
+	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithContext:moc];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
 	[tvDir release];
 	[tvBrowser setListTitle:BRLocalizedString(@" TV Shows", nil)];

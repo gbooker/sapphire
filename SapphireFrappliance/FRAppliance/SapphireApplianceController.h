@@ -22,7 +22,7 @@
 
 #define DISTRIBUTED_MESSAGES_PORT 15473
 
-@class SapphireSettings, SapphireTheme, SapphireLeopardOnly, SapphireImporterDataMenu, SapphireBrowser, SapphireDistributedMessagesReceiver;
+@class SapphireSettings, SapphireTheme, SapphireLeopardOnly, SapphireImporterDataMenu, SapphireBrowser, SapphireDistributedMessagesReceiver, SapphireCustomVirtualDirectoryImporter;
 
 extern NSString *SAPPHIRE_MANAGED_OBJECT_CONTEXT_CLOSING;
 
@@ -138,6 +138,13 @@ NSString *applicationSupportDir(void);
  * @return The current music controller
  */
 + (BRMusicNowPlayingController *)musicNowPlayingController;
+
+/*!
+ * @brief Gets the current custom virtual directory importer
+ *
+ * @return The current custom virtual directory importer
+ */
++ (SapphireCustomVirtualDirectoryImporter *)customVirtualDirectoryImporter;
 
 /*!
  * @brief Log an exception to the console
