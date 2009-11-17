@@ -64,10 +64,11 @@
 - (void)doMyLayout
 {
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
-	frame.origin.y += frame.size.height * 5.0f / 12.0f;
-	frame.origin.x = frame.size.width * 5.0f / 12.0f;
-	frame.size.width = frame.size.height = frame.size.height / 6.0f;
-	[spinner setFrame:frame] ;
+	NSRect newFrame;
+	newFrame.size.width = newFrame.size.height = frame.size.height / 6.0f;
+	newFrame.origin.y += (frame.size.height - newFrame.size.height) / 2.0f;
+	newFrame.origin.x = (frame.size.width - newFrame.size.width) / 2.0f;
+	[spinner setFrame:newFrame] ;
 }
 
 - (void) dealloc
