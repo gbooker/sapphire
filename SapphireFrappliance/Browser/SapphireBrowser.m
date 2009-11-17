@@ -714,6 +714,7 @@ static BOOL is10Version = NO;
 	switch (remoteAction)
 	{
 		case kBREventRemoteActionRight:
+		case kBREventRemoteActionSwipeRight:
 		{
 			id meta = nil;
 			if(row >= [_names count])
@@ -736,6 +737,7 @@ static BOOL is10Version = NO;
 			return YES;
 		}
 		case kBREventRemoteActionLeft:
+		case kBREventRemoteActionSwipeLeft:
 		{
 			id controller = [[SapphireDisplayMenu alloc] initWithScene:[self scene] directory:metaData];
 			[(SapphireDisplayMenu *)controller setListTitle:[self listTitle]];
