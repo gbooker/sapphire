@@ -258,9 +258,9 @@
 	int season = [[self season] seasonNumberValue];
 	int ep = [self episodeNumberValue];
 	if(season != 0)
-		[dict setObject:[[self season] seasonNumber] forKey:BRLocalizedString(@"Season", @"Season in metadata display")];
+		[dict setObject:[NSString stringWithFormat:@"%@ - %d", [[self tvShow] name], season] forKey:BRLocalizedString(@"Season", @"Season in metadata display")];
 	if(ep != 0)
-		[dict setObject:[NSNumber numberWithInt:ep] forKey:BRLocalizedString(@"Episode", @"Episode in metadata display")];
+		[dict setObject:[NSString stringWithFormat:@"%@ - %d", [[self tvShow] name], ep] forKey:BRLocalizedString(@"Episode", @"Episode in metadata display")];
 	if(ep != 0 && season != 0)
 	{
 		int lastEp = [self lastEpisodeNumberValue];
