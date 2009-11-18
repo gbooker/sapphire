@@ -35,12 +35,4 @@
 
 - (NSArray *)movieVirtualDirectories;
 - (NSArray *)tvShowVirtualDirectories;
-- (NSPredicate *)predicateWithElement:(NSXMLElement *)elem;
-- (NSPredicate *)allPredicateWithElement:(NSXMLElement *)elem;
-- (NSPredicate *)anyPredicateWithElement:(NSXMLElement *)elem;
-- (NSPredicate *)notPredicateWithElement:(NSXMLElement *)elem;
-- (NSMutableArray *)predicateArrayWithElement:(NSXMLElement *)elem;
-- (BOOL)isRegexMatch:(NSXMLElement *)elem;
-- (BOOL)isCaseSensitiveMatch:(NSXMLElement *)elem;
-
 @end

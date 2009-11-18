@@ -35,6 +35,12 @@
 #define ELEM_TYPE_ATTRIB				@"type"
 #define ELEM_TYPE_ATTRIB_CASE_SENSITIVE @"s"
 #define ELEM_TYPE_ATTRIB_REGEX			@"regex"
+#define ELEM_VALUE_ATTRIB				@"value"
+#define ELEM_VALUE_ATTRIB_GREATER		@"greater"
+#define ELEM_VALUE_ATTRIB_EQUAL			@"equal"
+#define ELEM_VALUE_ATTRIB_LESS			@"less"
+#define ELEM_VALUE_ATTRIB_GREATER_E		@"greaterequal"
+#define ELEM_VALUE_ATTRIB_LESS_E		@"lessequal"
 
 //Containers for matches
 #define ALL_ELEM						@"all"
@@ -92,29 +98,48 @@ typedef enum {
 	CommandTypeNotWrapper,
 } CommandType;
 
+typedef enum {
+	ValueCompareTypeNone,
+	ValueCompareTypeGreater,
+	ValueCompareTypeLess,
+	ValueCompareTypeGreaterEqual,
+	ValueCompareTypeLessEqual,
+	ValueCompareTypeEqual,
+} ValueCompareType;
+
 @interface SapphireCommandWrapper : NSObject
 {
-	CommandType		commandType;
-	NSString		*formatString;
+	CommandType			commandType;
+	ValueCompareType	compareType;
+	NSString			*formatString;
 }
++ (id)commandWithType:(CommandType)type defaultValueCompare:(ValueCompareType)compare formatString:(NSString *)format;
 + (id)commandWithType:(CommandType)type formatString:(NSString *)format;
-- (id)initWithType:(CommandType)type formatString:(NSString *)format;
+- (id)initWithType:(CommandType)type defaultValueCompare:(ValueCompareType)compare formatString:(NSString *)format;
 - (CommandType)commandType;
+- (ValueCompareType)defaultValueCompareType;
 - (NSString *)formatString;
 @end
 
 @implementation SapphireCommandWrapper
 
++ (id)commandWithType:(CommandType)type defaultValueCompare:(ValueCompareType)compare formatString:(NSString *)format
+{
+	return [[[SapphireCommandWrapper alloc] initWithType:type defaultValueCompare:compare formatString:format] autorelease];
+}
+
 + (id)commandWithType:(CommandType)type formatString:(NSString *)format
 {
-	return [[[SapphireCommandWrapper alloc] initWithType:type formatString:format] autorelease];
+	return [[[SapphireCommandWrapper alloc] initWithType:type defaultValueCompare:ValueCompareTypeNone formatString:format] autorelease];
 }
-- (id)initWithType:(CommandType)type formatString:(NSString *)format;
+
+- (id)initWithType:(CommandType)type defaultValueCompare:(ValueCompareType)compare formatString:(NSString *)format;
 {
 	self = [super init];
 	if (self != nil) {
 		commandType = type;
 		formatString = [format retain];
+		compareType = compare;
 	}
 	return self;
 }
@@ -130,6 +155,11 @@ typedef enum {
 	return commandType;
 }
 
+- (ValueCompareType)defaultValueCompareType
+{
+	return compareType;
+}
+
 - (NSString *)formatString
 {
 	return formatString;
@@ -137,6 +167,16 @@ typedef enum {
 
 @end
 
+@interface SapphireCustomVirtualDirectoryImporter (private)
+- (NSPredicate *)predicateWithElement:(NSXMLElement *)elem;
+- (NSPredicate *)allPredicateWithElement:(NSXMLElement *)elem;
+- (NSPredicate *)anyPredicateWithElement:(NSXMLElement *)elem;
+- (NSPredicate *)notPredicateWithElement:(NSXMLElement *)elem;
+- (NSMutableArray *)predicateArrayWithElement:(NSXMLElement *)elem;
+- (ValueCompareType)valueCompareTypeInElement:(NSXMLElement *)elem;
+- (BOOL)isRegexMatch:(NSXMLElement *)elem;
+- (BOOL)isCaseSensitiveMatch:(NSXMLElement *)elem;
+@end
 
 @implementation SapphireCustomVirtualDirectoryImporter
 
@@ -149,7 +189,7 @@ typedef enum {
 										[SapphireCommandWrapper commandWithType:CommandTypeAnyWrapper formatString:nil], ANY_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeNotWrapper formatString:nil], NOT_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatBoolValue formatString:@"watched"], WATCHED_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatFloatValueTimes60 formatString:@"duration >= %f"], DURATION_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatFloatValueTimes60 defaultValueCompare:ValueCompareTypeGreaterEqual formatString:@"duration"], DURATION_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"videoDescription"], VIDEO_DESCRIPTION_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"audioDescription"], AUDIO_DESCRIPTION_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"subtitlesDescription"], SUBTITLES_ELEM,
@@ -162,18 +202,18 @@ typedef enum {
 										   [SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"ANY movie.genres.name"], MOVIE_GENRE_ELEM,
 										   [SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"ANY movie.directors.name"], MOVIE_DIRECTOR_ELEM,
 										   [SapphireCommandWrapper commandWithType:CommandTypeFormatBoolValue formatString:@"movie.oscarsWon"], MOVIE_WON_OSCARS_ELEM,
-										   [SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"movie.imdbTop250Ranking > 0 && movie.imdbTop250Ranking <= %f"], MOVIE_IMDB_TOP_250_ELEM,
-										   [SapphireCommandWrapper commandWithType:CommandTypeFormatFloatValue formatString:@"movie.imdbRating >= %f"], MOVIE_IMDB_USER_RATING_ELEM,
-										   [SapphireCommandWrapper commandWithType:CommandTypeFormatNSDateValue formatString:@"movie.releaseDate >= %@"], MOVIE_RELEASE_DATE_ELEM,
+										   [SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue defaultValueCompare:ValueCompareTypeLessEqual formatString:@"movie.imdbTop250Ranking > 0 && movie.imdbTop250Ranking"], MOVIE_IMDB_TOP_250_ELEM,
+										   [SapphireCommandWrapper commandWithType:CommandTypeFormatFloatValue defaultValueCompare:ValueCompareTypeGreaterEqual formatString:@"movie.imdbRating"], MOVIE_IMDB_USER_RATING_ELEM,
+										   [SapphireCommandWrapper commandWithType:CommandTypeFormatNSDateValue defaultValueCompare:ValueCompareTypeGreaterEqual formatString:@"movie.releaseDate"], MOVIE_RELEASE_DATE_ELEM,
 										   nil];
 		NSDictionary *epOnlyCommands = [[NSDictionary alloc] initWithObjectsAndKeys:
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"tvEpisode.tvShow.name"], TV_SHOW_SHOW_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"ANY tvEpisode.subEpisodes.episodeTitle"], TV_SHOW_EPISODE_TITLE_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"ANY tvEpisode.subEpisodes.episodeDescription"], TV_SHOW_EPISODE_DESC_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"tvEpisode.season.seasonNumber == %d"], TV_SHOW_SEASON_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"ANY tvEpisode.subEpisodes.episodeNumber == %d"], TV_SHOW_EPISODE_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue formatString:@"ANY tvEpisode.subEpisodes.episodeNumber == %d"], TV_SHOW_ABS_EPISODE_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatNSDateValue formatString:@"ANY tvEpisode.subEpisodes.airDate >= %@"], TV_SHOW_AIR_DATE_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue defaultValueCompare:ValueCompareTypeEqual formatString:@"tvEpisode.season.seasonNumber"], TV_SHOW_SEASON_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue defaultValueCompare:ValueCompareTypeEqual formatString:@"ANY tvEpisode.subEpisodes.episodeNumber"], TV_SHOW_EPISODE_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatIntValue defaultValueCompare:ValueCompareTypeEqual formatString:@"ANY tvEpisode.subEpisodes.episodeNumber"], TV_SHOW_ABS_EPISODE_ELEM,
+										[SapphireCommandWrapper commandWithType:CommandTypeFormatNSDateValue defaultValueCompare:ValueCompareTypeGreaterEqual formatString:@"ANY tvEpisode.subEpisodes.airDate"], TV_SHOW_AIR_DATE_ELEM,
 										nil];
 		
 		NSMutableDictionary *additionalCommands = [commonCommands mutableCopy];
@@ -315,13 +355,53 @@ typedef enum {
 	return tvShowVirtualDirectories;
 }
 
+- (NSString *)compareStringForType:(ValueCompareType)compareType
+{
+	switch (compareType) {
+		case ValueCompareTypeLess:
+			return @"<";
+		case ValueCompareTypeLessEqual:
+			return @"<=";
+		case ValueCompareTypeEqual:
+			return @"==";
+		case ValueCompareTypeGreater:
+			return @">";
+		case ValueCompareTypeGreaterEqual:
+			return @">=";
+	}
+	return nil;
+}
+
+- (NSString *)formatStringForCommand:(SapphireCommandWrapper *)command element:(NSXMLElement *)elem
+{
+	ValueCompareType compareType = [self valueCompareTypeInElement:elem];
+	if(compareType == ValueCompareTypeNone)
+		compareType = [command defaultValueCompareType];
+	NSString *compareStr = [self compareStringForType:compareType];
+
+	switch ([command commandType]) {
+		case CommandTypeFormatIntValue:
+			return [NSString stringWithFormat:@"%@ %@ %%d", [command formatString], compareStr];
+			break;
+		case CommandTypeFormatFloatValue:
+		case CommandTypeFormatFloatValueTimes60:
+			return [NSString stringWithFormat:@"%@ %@ %%f", [command formatString], compareStr];
+			break;
+		case CommandTypeFormatNSDateValue:
+			return [NSString stringWithFormat:@"%@ %@ %%@", [command formatString], compareStr];
+	}
+	return nil;
+}
+
 - (NSPredicate *)predicateWithElement:(NSXMLElement *)elem
 {
 	NSString *key = [[elem name] lowercaseString];
 	SapphireCommandWrapper *command = [elementCommands objectForKey:key];
 	if(command != nil)
 	{
-		switch ([command commandType]) {
+		CommandType commandType = [command commandType];
+		NSString *formatStr = [self formatStringForCommand:command element:elem];
+		switch (commandType) {
 			case CommandTypeFormatElementString:
 			{
 				NSString *predFormat = nil;
@@ -341,13 +421,13 @@ typedef enum {
 				return [NSPredicate predicateWithFormat:[command formatString]];
 				break;
 			case CommandTypeFormatIntValue:
-				return [NSPredicate predicateWithFormat:[command formatString], [[elem stringValue] intValue]];
+				return [NSPredicate predicateWithFormat:formatStr, [[elem stringValue] intValue]];
 				break;
 			case CommandTypeFormatFloatValue:
-				return [NSPredicate predicateWithFormat:[command formatString], [[elem stringValue] floatValue]];
+				return [NSPredicate predicateWithFormat:formatStr, [[elem stringValue] floatValue]];
 				break;
 			case CommandTypeFormatFloatValueTimes60:
-				return [NSPredicate predicateWithFormat:[command formatString], [[elem stringValue] floatValue] * 60];
+				return [NSPredicate predicateWithFormat:formatStr, [[elem stringValue] floatValue]];
 				break;
 			case CommandTypeFormatBoolValue:
 				if([[elem stringValue] intValue])
@@ -355,7 +435,7 @@ typedef enum {
 				return [NSPredicate predicateWithFormat:@"%K == 0", [command formatString]];
 				break;
 			case CommandTypeFormatNSDateValue:
-				return [NSPredicate predicateWithFormat:[command formatString], [NSDate dateWithNaturalLanguageString:[elem stringValue]]];
+				return [NSPredicate predicateWithFormat:formatStr, [NSDate dateWithNaturalLanguageString:[elem stringValue]]];
 				break;
 			case CommandTypeAnyWrapper:
 				return [self anyPredicateWithElement:elem];
@@ -423,6 +503,25 @@ typedef enum {
 		}
 	}
 	return preds;	
+}
+
+- (ValueCompareType)valueCompareTypeInElement:(NSXMLElement *)elem
+{
+	NSString *type = [[elem attributeForName:ELEM_VALUE_ATTRIB] stringValue];
+	if(type != nil)
+	{
+		if([type caseInsensitiveCompare:ELEM_VALUE_ATTRIB_GREATER] == NSOrderedSame)
+			return ValueCompareTypeGreater;
+		if([type caseInsensitiveCompare:ELEM_VALUE_ATTRIB_LESS] == NSOrderedSame)
+			return ValueCompareTypeLess;
+		if([type caseInsensitiveCompare:ELEM_VALUE_ATTRIB_GREATER_E] == NSOrderedSame)
+			return ValueCompareTypeGreaterEqual;
+		if([type caseInsensitiveCompare:ELEM_VALUE_ATTRIB_LESS_E] == NSOrderedSame)
+			return ValueCompareTypeLessEqual;
+		if([type caseInsensitiveCompare:ELEM_VALUE_ATTRIB_EQUAL] == NSOrderedSame)
+			return ValueCompareTypeEqual;
+	}
+	return ValueCompareTypeNone;
 }
 
 - (BOOL)isRegexMatch:(NSXMLElement *)elem 
