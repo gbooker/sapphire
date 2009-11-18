@@ -98,6 +98,9 @@ if [[ "$RESTART" = "1" && "$PREFIX" = "" ]]; then
 		echo "== Restarting $FINDER"
 		
 		kill `ps awx | grep "$FINDERGREP" | awk '{print $1}'`
+		if [[ "$FINDER" = "Finder" ]]; then
+			open /System/Library/CoreServices/Finder.app
+		fi
 	fi
 fi
 
