@@ -113,7 +113,7 @@
 	showInfo = [NSMutableDictionary new];
 	
 	/*Initialize the regexes*/
-	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+(-E?[0-9]+)?", REG_EXTENDED | REG_ICASE);
+	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+([-E]+[0-9]+)?", REG_EXTENDED | REG_ICASE);
 	regcomp(&seasonByEpisode, "[\\. -]?[0-9]+x[S0-9]+(-[0-9]+)?", REG_EXTENDED | REG_ICASE);
 	regcomp(&seasonEpisodeTriple, "[\\. -][0-9]{1,3}[S0-9]{2}[\\. -]", REG_EXTENDED | REG_ICASE);	
 	return self;
