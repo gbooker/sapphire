@@ -45,7 +45,7 @@
 #define	IMDB_RESULT_NAME_XPATH			@"normalize-space(string())"
 #define IMDB_RESULT_TITLE_YEAR_XPATH	@"//div[@id='tn15title']/h1/string()"
 #define IMDB_RESULT_INFO_XPATH	@"//div[@class='info']"
-#define IMDB_RESTULT_CAST_NAMES_XPATH	@"//div[@class='info']/table/tr/td/a"
+#define IMDB_RESTULT_CAST_NAMES_XPATH	@"//table[@class='cast']/tr/td/a"
 /* IMP XPATHS */
 #define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
 #define IMP_LINK_REDIRECT_XPATH				@"//head/meta/@content/string()"
@@ -472,9 +472,14 @@
 					NSXMLElement *child;
 					while((child = [childEnum nextObject]) != nil)
 					{
-						if([child kind] == NSXMLTextKind)
+						if([[child name] isEqualToString:@"div"])
 						{
-							plot = [child stringValue];
+							NSArray *plotChildren = [child children];
+							NSXMLElement *potentialPlot = nil;
+							if([plotChildren count])
+								potentialPlot = [plotChildren objectAtIndex:0];
+							if([potentialPlot kind] == NSXMLTextKind)
+								plot = [potentialPlot stringValue];
 							break;
 						}
 					}
