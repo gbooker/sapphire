@@ -31,6 +31,8 @@
 #import "NSManagedObject-Extensions.h"
 #import "SapphireFileSymLink.h"
 
+#define updateFreq 0.05
+
 @interface BRLayerController (compatounth)
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
 @end
@@ -95,6 +97,8 @@
 	[importer release];
 	[buttonTitle release];
 	[allItems release];
+	[updateTimer invalidate];
+	[currentFilename release];
 	[super dealloc];
 }
 
@@ -147,12 +151,7 @@
 	[fileProgress setFrame:frame];
 }
 
-/*!
- * @brief Sets the display of the current file being processed
- *
- * @param theCurrentFile The current file being proccessed
- */
-- (void)setCurrentFile:(NSString *)theCurrentFile
+- (void)realSetCurrentFile:(NSString *)theCurrentFile
 {
 	[SapphireFrontRowCompat setText:theCurrentFile withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:currentFile];
 	
@@ -164,6 +163,25 @@
 	frame.origin.y = (master.size.height * 0.09f) + master.origin.y;
 	frame.size = currentFileSize;
 	[currentFile setFrame:frame];
+}
+
+- (void)updateDisplayOfCurrentFile
+{
+	updateTimer = nil;
+	[self realSetCurrentFile:currentFilename];
+}
+
+/*!
+ * @brief Sets the display of the current file being processed
+ *
+ * @param theCurrentFile The current file being proccessed
+ */
+- (void)setCurrentFile:(NSString *)theCurrentFile
+{
+	[currentFilename release];
+	currentFilename = [theCurrentFile retain];
+	if(updateTimer == nil)
+		updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateFreq target:self selector:@selector(updateDisplayOfCurrentFile) userInfo:nil repeats:NO];
 }
 
 /*!
@@ -338,14 +356,15 @@
 	[self setText:[importer completionText]];
 }
 
-- (void)updateDisplay
+- (void)realUpdateDisplay
 {
+	updateTimer = nil;
 	/*Check for completion*/
 	if(current == max)
 	{
 		[self setListTitle:BRLocalizedString(@"Import Complete", @"The import is complete")];
 		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Updated %0.0f Entries.", @"Import complete format with number updated"), updated]];
-		[self setCurrentFile:@""];
+		[self realSetCurrentFile:@""];
 		[self setCompletionText];
 		[bar setPercentage:100.0f];
 		[self setButtonTitle:nil];
@@ -366,16 +385,22 @@
 		{
 			SapphireFileMetaData *fileMeta = [importItems objectAtIndex:0];
 			NSString * fileName=[[fileMeta path] lastPathComponent] ;
-			[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Fetching For: %@", "Current TV Show import process format, filename"),fileName]];		
+			[self realSetCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Fetching For: %@", "Current TV Show import process format, filename"),fileName]];		
 		}
 		else
 		{
-			[self setCurrentFile:BRLocalizedString(@"Waiting for background import to complete", @"The import is complete, just waiting on background processes")];
+			[self realSetCurrentFile:BRLocalizedString(@"Waiting for background import to complete", @"The import is complete, just waiting on background processes")];
 		}
 		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Finished Processing: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 		[bar setPercentage:current/max * 100.0f];
 	}
 	[SapphireFrontRowCompat renderScene:[self scene]];		
+}
+
+- (void)updateDisplay
+{
+	if(updateTimer == nil)
+		updateTimer = [NSTimer scheduledTimerWithTimeInterval:updateFreq target:self selector:@selector(realUpdateDisplay) userInfo:nil repeats:NO];
 }
 
 /*!
@@ -481,7 +506,7 @@
 - (void)resetUIElements
 {
 	[self setFileProgress:@" "];
-	[self setCurrentFile:@" "] ;
+	[self realSetCurrentFile:@" "] ;
 	[bar setPercentage:0.0f];
 	action = @selector(import);
 	[self setListTitle:[importer initialText]];

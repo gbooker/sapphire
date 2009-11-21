@@ -132,6 +132,8 @@ typedef enum{
 	SEL								action;					/*!< @brief The action selector when the button is hit*/
 	NSString						*buttonTitle;			/*!< @brief The fake button title*/
 	BOOL							layoutDone;				/*!< @brief YES if layout already done, NO otherwise*/
+	NSTimer							*updateTimer;			/*!< @brief Timer to aggregate updates to reduce CPU usage*/
+	NSString						*currentFilename;		/*!< @brief The current file to display*/
 }
 /*!
  * @brief Creates a new Importer Data Menu
