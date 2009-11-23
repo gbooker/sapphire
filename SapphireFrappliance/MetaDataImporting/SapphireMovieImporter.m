@@ -402,6 +402,7 @@
 					NSString *directorsStr = [[trimmer string] substringFromIndex:[trimmer scanLocation]+1];
 					NSMutableArray *mutDirs = [[directorsStr componentsSeparatedByString:@"\n"] mutableCopy];
 					[mutDirs removeObject:@""];
+					[mutDirs removeObject:@"more"];
 					int i, count = [mutDirs count];
 					for(i=0; i<count; i++)
 					{
