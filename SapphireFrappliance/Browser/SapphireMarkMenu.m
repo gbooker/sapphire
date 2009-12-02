@@ -106,12 +106,12 @@ static NSString *movingPath = nil;
 		marks = [[NSMutableArray alloc] initWithObjects:
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				BRLocalizedString(@"Rename this Directory", @"Rename a directory"), MARK_NAME,
-				BRLocalizedString(@"Edit the name for this directory", @""), MARK_DESCRIPTION,
+				BRLocalizedString(@"Edit the name for this directory", @"Renaming a directory description"), MARK_DESCRIPTION,
 				[NSNumber numberWithInt:COMMAND_RENAME], MARK_COMMAND,
 				nil],
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				BRLocalizedString(@"Rename all Files to Pretty Name", @"Rename all files to a pretty name"), MARK_NAME,
-				BRLocalizedString(@"Rename all files to a pretty name for those which a pretty name exists", @""), MARK_DESCRIPTION,
+				BRLocalizedString(@"Rename all files to a pretty name for those which a pretty name exists", @"Rename all files to a pretty name description"), MARK_DESCRIPTION,
 				[NSNumber numberWithInt:COMMAND_RENAME_TO_PRETTY], MARK_COMMAND,
 				nil],
 			[NSDictionary dictionaryWithObjectsAndKeys:
@@ -164,7 +164,7 @@ static NSString *movingPath = nil;
 				[marks replaceObjectAtIndex:0 withObject:
 					[NSDictionary dictionaryWithObjectsAndKeys:
 						BRLocalizedString(@"Rename this Collection", @"Rename a collection"), MARK_NAME,
-						BRLocalizedString(@"Edit the display name for this collection", @""), MARK_DESCRIPTION,
+						BRLocalizedString(@"Edit the display name for this collection", @"Rename a collection description"), MARK_DESCRIPTION,
 						[NSNumber numberWithInt:COMMAND_RENAME], MARK_COMMAND,
 						nil]];
 			}
@@ -212,13 +212,13 @@ static NSString *movingPath = nil;
 				[marks addObject:
 					[NSDictionary dictionaryWithObjectsAndKeys:
 						BRLocalizedString(@"Move Directory", @"Marks this directory to be moved"), MARK_NAME,
-						BRLocalizedString(@"Move this directory.  Select destination later.", @""), MARK_DESCRIPTION,
+						BRLocalizedString(@"Move this directory.  Select destination later.", @"Marks this directory to be moved description"), MARK_DESCRIPTION,
 						[NSNumber numberWithInt:COMMAND_CUT_PATH], MARK_COMMAND,
 						nil]];
 				[marks addObject:
 					[NSDictionary dictionaryWithObjectsAndKeys:
 						BRLocalizedString(@"Delete Directory", @"Marks this directory to be deleted"), MARK_NAME,
-						BRLocalizedString(@"Deletes this directory and its contents", @""), MARK_DESCRIPTION,
+						BRLocalizedString(@"Deletes this directory and its contents", @"Marks this directory to be deleted description"), MARK_DESCRIPTION,
 						[NSNumber numberWithInt:COMMAND_DELETE_PATH], MARK_COMMAND,
 						nil]];
 			}
@@ -290,8 +290,8 @@ static NSString *movingPath = nil;
 		{
 			[marks insertObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
-					BRLocalizedString(@"Rename to Pretty Name", @""), MARK_NAME,
-					[NSString stringWithFormat:BRLocalizedString(@"Rename to \"%@\"", @"Parameter is new name"), prettyName], MARK_DESCRIPTION,
+					BRLocalizedString(@"Rename to Pretty Name", @"Renaming to a pretty name menu title"), MARK_NAME,
+					[NSString stringWithFormat:BRLocalizedString(@"Rename to \"%@\"", @"Renaming to a pretty name menu title; Parameter is new name"), prettyName], MARK_DESCRIPTION,
 					[NSNumber numberWithInt:COMMAND_RENAME_TO_PRETTY], MARK_COMMAND,
 					nil]
 				atIndex:1];
@@ -376,13 +376,13 @@ static NSString *movingPath = nil;
 		[marks addObject:
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				BRLocalizedString(@"Move File", @"Marks this file to be moved"), MARK_NAME,
-				BRLocalizedString(@"Move this file.  Select destination later.", @""), MARK_DESCRIPTION,
+				BRLocalizedString(@"Move this file.  Select destination later.", @"Moving a file description"), MARK_DESCRIPTION,
 				[NSNumber numberWithInt:COMMAND_CUT_PATH], MARK_COMMAND,
 				nil]];
 		[marks addObject:
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				BRLocalizedString(@"Delete File", @"Marks this file to be deleted"), MARK_NAME,
-				BRLocalizedString(@"Deletes this file", @""), MARK_DESCRIPTION,
+				BRLocalizedString(@"Deletes this file", @"Deleting a fie description"), MARK_DESCRIPTION,
 				[NSNumber numberWithInt:COMMAND_DELETE_PATH], MARK_COMMAND,
 				nil]];
 		// Allow cover art change for all formats except for DVD, .mkv, and .flv
@@ -392,7 +392,7 @@ static NSString *movingPath = nil;
 			[marks addObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
 					BRLocalizedString(@"Change artwork", @"Change artwork"), MARK_NAME,
-					BRLocalizedString(@"Select artwork using images from the file", @""), MARK_DESCRIPTION,
+					BRLocalizedString(@"Select artwork using images from the file", @"Changing artwork description"), MARK_DESCRIPTION,
 					[NSNumber numberWithInt:COMMAND_CHANGE_ARTWORK], MARK_COMMAND,
 					nil]];
 		}
@@ -498,7 +498,7 @@ static NSString *movingPath = nil;
 			}
 			else
 			{
-				SapphireErrorDisplayController *errorDisplay = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Read Error", @"") longError:[error localizedDescription]];
+				SapphireErrorDisplayController *errorDisplay = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Read Error", @"Short error indicating an error while reading a file in a join") longError:[error localizedDescription]];
 				[resultingMovie release];
 				[current release];
 				return [errorDisplay autorelease];
@@ -512,7 +512,7 @@ static NSString *movingPath = nil;
 		[finalFile setFavoriteValue:isFav];
 		if(![resultingMovie writeToFile:savePath withAttributes:[NSDictionary dictionary]])
 		{
-			errorDisplay = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Save Error", @"") longError:BRLocalizedString(@"Save Error", @"")];
+			errorDisplay = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Save Error", @"Short error indicating an error while saving a file in a join") longError:BRLocalizedString(@"Save Error", @"Short error indicating an error while saving a file in a join")];
 		}
 		[resultingMovie release];
 		[joinList removeAllObjects];
@@ -636,7 +636,7 @@ static NSString *movingPath = nil;
 			case COMMAND_RENAME:
 				if([dirMeta isKindOfClass:[SapphireDirectoryMetaData class]])
 				{
-					NSString *title = [NSString stringWithFormat:BRLocalizedString(@"Rename %@", @"Rename a collection, argument is path"), [dirMeta path]];
+					NSString *title = [NSString stringWithFormat:BRLocalizedString(@"Rename %@", @"Rename a file, directory, or collection, argument is path"), [dirMeta path]];
 					NSInvocation *invoke;
 					NSString *oldName;
 					if(collection == nil)
@@ -685,7 +685,7 @@ static NSString *movingPath = nil;
 				[invoke setTarget:self];
 				[invoke setArgument:&dirMeta atIndex:2];
 				
-				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invokation:invoke];
+				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"Delete Directory Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invokation:invoke];
 				
 				replaceController = [confirm autorelease];
 			}
@@ -729,7 +729,7 @@ static NSString *movingPath = nil;
 				[invoke setSelector:@selector(doJoin:)];
 				[invoke setTarget:self];
 				
-				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:BRLocalizedString(@"Joining Files", @"") invokation:invoke];
+				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:BRLocalizedString(@"Joining Files", @"Title for wait display while joining files") invokation:invoke];
 				[invoke setArgument:&wait atIndex:2];
 				
 				replaceController = [wait autorelease];
@@ -737,7 +737,7 @@ static NSString *movingPath = nil;
 				break;
 			case COMMAND_RENAME:
 			{
-				NSString *title = [NSString stringWithFormat:BRLocalizedString(@"Rename %@", @"Rename a file, argument is path"), [fileMeta path]];
+				NSString *title = [NSString stringWithFormat:BRLocalizedString(@"Rename %@", @"Rename a file, directory, or collection, argument is path"), [fileMeta path]];
 				NSString *oldName = [[[fileMeta path] lastPathComponent] stringByDeletingPathExtension];
 				
 				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[fileMeta methodSignatureForSelector:@selector(rename:)]];
@@ -751,7 +751,7 @@ static NSString *movingPath = nil;
 			{
 				NSString *error = [fileMeta renameToPrettyName];
 				if(error != nil)
-					replaceController = [[[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"") longError:error] autorelease];
+					replaceController = [[[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"Short message indicating error condition") longError:error] autorelease];
 			}
 			case COMMAND_CUT_PATH:
 				[movingPath release];
@@ -764,7 +764,7 @@ static NSString *movingPath = nil;
 				[invoke setTarget:self];
 				[invoke setArgument:&fileMeta atIndex:2];
 				
-				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete File?", @"") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[fileMeta path] lastPathComponent]] invokation:invoke];
+				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete File?", @"Delete File Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[fileMeta path] lastPathComponent]] invokation:invoke];
 				
 				replaceController = [confirm autorelease];
 			}
@@ -801,7 +801,7 @@ static NSString *movingPath = nil;
 		errorString = [NSString stringWithFormat:BRLocalizedString(@"%@ Seems to be missing", @"Could not find file; parameter is moving file"), [movingPath lastPathComponent]];
 	if(errorString != nil)
 	{
-		SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Moving Error", @"") longError:errorString];
+		SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Moving Error", @"Short error indicating an error while moving a file") longError:errorString];
 		return [error autorelease];
 	}
 	else
@@ -821,7 +821,7 @@ static NSString *movingPath = nil;
 		if(!success)
 		{
 			NSString *errorString = [NSString stringWithFormat:BRLocalizedString(@"Could not delete %@.  Is the filesystem read-only?", @"Unknown error renaming file/directory; parameter is name"), [[meta path] lastPathComponent]];
-			SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Delete Error", @"") longError:errorString];
+			SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Delete Error", @"Short error indicating an error while deleting a file") longError:errorString];
 			return [error autorelease];
 		}
 		[moc deleteObject:meta];

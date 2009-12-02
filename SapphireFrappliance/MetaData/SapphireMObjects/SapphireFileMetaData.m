@@ -797,7 +797,7 @@ static NSString *movingToPath = @"To";
 {
 	int componentCount = [[newFilename pathComponents] count];
 	if(componentCount != 1)
-		return BRLocalizedString(@"A File name should not contain any '/' characters", @"");
+		return BRLocalizedString(@"A File name should not contain any '/' characters", @"Error indicating that filenames cannot contain / characters");
 	NSString *oldPath = [self path];
 	newFilename = [newFilename stringByAppendingPathExtension:[oldPath pathExtension]];
 	NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newFilename];
@@ -847,7 +847,7 @@ static NSString *movingToPath = @"To";
 	NSString *prettyName = [self prettyName];
 	if(prettyName == nil)
 	{
-		return BRLocalizedString(@"No pretty name to construct", @"");
+		return BRLocalizedString(@"No pretty name to construct", @"Error indicating there is no pretty name for this file");
 	}
 	
 	NSMutableString *mutStr = [prettyName mutableCopy];

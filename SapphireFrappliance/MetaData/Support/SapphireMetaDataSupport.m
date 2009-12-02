@@ -486,7 +486,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 			newDir = [SapphireDirectoryMetaData createDirectoryWithPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Movies"] parent:nil inContext:context];
 			[newDir insertDictionary:dict withDefer:defer andDisplay:display];
 		}
-		[display setCurrentFile:BRLocalizedString(@"Upgrading Joined Files", @"")];
+		[display setCurrentFile:BRLocalizedString(@"Upgrading Joined Files", @"Upgrade progress indicator stating Sapphire is upgrading joined files")];
 		NSDictionary *joinDict = [defer objectForKey:@"Join"];
 		if(joinDict != nil)
 		{
@@ -503,7 +503,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 			}			
 		}
 		
-		[display setCurrentFile:BRLocalizedString(@"Upgrading Collection Prefs", @"")];
+		[display setCurrentFile:BRLocalizedString(@"Upgrading Collection Prefs", @"Upgrade progress indicator stating Sapphire is upgrading collections preferences")];
 		NSDictionary *options = [dict objectForKey:@"Options"];
 		NSMutableSet *collections = [NSMutableSet set];
 		NSArray *custom = [options objectForKey:@"Directories"];
@@ -537,7 +537,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	if([[NSFileManager defaultManager] fileExistsAtPath:currentImportPlist])//import movie translations
 	{
 		NSLog(@"Upgrading %@", currentImportPlist);
-		[display setCurrentFile:BRLocalizedString(@"Upgrading Movie Translations", @"")];
+		[display setCurrentFile:BRLocalizedString(@"Upgrading Movie Translations", @"Upgrade progress indicator stating Sapphire is upgrading movie translations")];
 		NSDictionary *movieTranslations = [NSDictionary dictionaryWithContentsOfFile:currentImportPlist];
 		NSDictionary *translations = [movieTranslations objectForKey:MOVIE_TRAN_TRANSLATIONS_KEY];
 		NSEnumerator *movieEnum = [translations keyEnumerator];
@@ -578,7 +578,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	if([[NSFileManager defaultManager] fileExistsAtPath:currentImportPlist])//import tvshow translations
 	{
 		NSLog(@"Upgrading %@", currentImportPlist);
-		[display setCurrentFile:BRLocalizedString(@"Upgrading TV Translations", @"")];
+		[display setCurrentFile:BRLocalizedString(@"Upgrading TV Translations", @"Upgrade progress indicator stating Sapphire is upgrading TV Translations")];
 		NSDictionary *tvTranslations = [NSDictionary dictionaryWithContentsOfFile:currentImportPlist];
 		NSDictionary *translations = [tvTranslations objectForKey:@"Translations"];
 		NSEnumerator *tvEnum = [translations keyEnumerator];

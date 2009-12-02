@@ -150,7 +150,7 @@ NSString *stringOfRect(NSRect rect)
 	[entryComplete getReturnValue:&errorString];
 	if(errorString != nil)
 	{
-		SapphireErrorDisplayController *display = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"") longError:errorString];
+		SapphireErrorDisplayController *display = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"Short message indicating error condition") longError:errorString];
 		[[self stack] pushController:display];
 		[display autorelease];
 	}

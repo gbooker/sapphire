@@ -182,7 +182,7 @@ static SapphireApplianceController *mainCont = nil;
 	if([SapphireApplianceController upgradeNeeded])
 	{
 		categories = [NSArray arrayWithObject:
-					  [BRApplianceCategory categoryWithName:BRLocalizedString(@"Upgrade Metadata", @"") identifier:UPGRADE_IDENTIFIER preferredOrder:1]];
+					  [BRApplianceCategory categoryWithName:BRLocalizedString(@"Upgrade Metadata", @"Upgrade menu item") identifier:UPGRADE_IDENTIFIER preferredOrder:1]];
 	}
 	else
 	{

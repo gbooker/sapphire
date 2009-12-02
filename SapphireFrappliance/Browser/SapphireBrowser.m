@@ -564,7 +564,7 @@ static BOOL is10Version = NO;
 		}
 		else
 		{
-			SapphireErrorDisplayController *controller = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Playback Error", @"") longError:BRLocalizedString(@"DVD Playback is not supported on the AppleTV", @"Error message saying DVD on ATV not supported")];
+			SapphireErrorDisplayController *controller = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Playback Error", @"Short error indicating an error while playing a file") longError:BRLocalizedString(@"DVD Playback is not supported on the AppleTV", @"Error message saying DVD on ATV not supported")];
 			[[self stack] pushController:controller];
 			[controller release];
 		}

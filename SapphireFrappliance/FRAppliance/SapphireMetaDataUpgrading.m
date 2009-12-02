@@ -31,7 +31,7 @@
 	if(self == nil)
 		return self;
 
-	[self setListTitle:BRLocalizedString(@"Upgrading Metadata", @"")];
+	[self setListTitle:BRLocalizedString(@"Upgrading Metadata", @"Menu title indicating Sapphire is upgrading metadata")];
 	
 	status = [SapphireFrontRowCompat newTextControlWithScene:scene];
 	if([BRWaitSpinnerControl instancesRespondToSelector:@selector(initWithScene:)])
@@ -155,7 +155,7 @@
 		[SapphireMetaDataSupport setMainContext:moc];
 		[SapphireMetaDataSupport save:moc];
 		[SapphireMetaDataSupport setMainContext:nil];
-		[self setCurrentFile:BRLocalizedString(@"Upgrading Complete; Press Menu to Go Back", @"")];
+		[self setCurrentFile:BRLocalizedString(@"Upgrading Complete; Press Menu to Go Back", @"Upgrade progress indicator stating Sapphire is done upgrading and user should press menu")];
 		
 	}
 	@catch (NSException * e) {

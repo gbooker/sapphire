@@ -357,7 +357,7 @@ BRMusicNowPlayingController *musicController = nil;
 	[SapphireCollectionDirectory collectionAtPath:@"/" mount:YES skip:YES hidden:YES manual:NO inContext:moc];
 	
 	settings								= [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[applicationSupportDir() stringByAppendingPathComponent:@"settings.plist"] context:moc];
-	[self setListTitle:						BRLocalizedString(@"Main Menu", @"")];
+	[self setListTitle:						BRLocalizedString(@"Main Menu", @"Main Menu title")];
 	[settings setListTitle:					BRLocalizedString(@" Settings", @"Settings Menu Item")] ;
 	[settings setListIcon:					[theme gem:GEAR_GEM_KEY]];
 	[[self list] setDatasource:self];
@@ -411,12 +411,12 @@ BRMusicNowPlayingController *musicController = nil;
 		
 		SapphireBrowser *tvBrowser = [self tvBrowser];
 		[tvBrowser setKillMusic:NO];
-		[mutableMasterNames addObject:BRLocalizedString(@"  TV Shows", nil)];
+		[mutableMasterNames addObject:BRLocalizedString(@"  TV Shows", @"Movies Menu Item")];
 		[mutableMasterControllers addObject:tvBrowser];
 		
 		SapphireBrowser *movieBrowser = [self movieBrowser];
 		[movieBrowser setKillMusic:NO];
-		[mutableMasterNames addObject:BRLocalizedString(@"  Movies", nil)];
+		[mutableMasterNames addObject:BRLocalizedString(@"  Movies", @"Movies Menu Item")];
 		[mutableMasterControllers addObject:movieBrowser];
 		
 		[mutableMasterNames addObjectsFromArray:[NSArray arrayWithObjects:
@@ -442,7 +442,7 @@ BRMusicNowPlayingController *musicController = nil;
 	SapphireTVDirectory *tvDir = [[SapphireTVDirectory alloc] initWithContext:moc];
 	SapphireBrowser *tvBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:tvDir];
 	[tvDir release];
-	[tvBrowser setListTitle:BRLocalizedString(@" TV Shows", nil)];
+	[tvBrowser setListTitle:BRLocalizedString(@" TV Shows", @"Movies Menu Title")];
 	[tvBrowser setListIcon:predicateGem];
 	[tvBrowser setKillMusic:YES];
 	return [tvBrowser autorelease];
@@ -454,7 +454,7 @@ BRMusicNowPlayingController *musicController = nil;
 	SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithContext:moc];
 	SapphireBrowser *movieBrowser = [[SapphireBrowser alloc] initWithScene:[self scene] metaData:movieDir];
 	[movieDir release];
-	[movieBrowser setListTitle:BRLocalizedString(@" Movies", nil)];
+	[movieBrowser setListTitle:BRLocalizedString(@" Movies", @"Movies Menu Title")];
 	[movieBrowser setListIcon:predicateGem];
 	[movieBrowser setKillMusic:YES];
 	return [movieBrowser autorelease];	
@@ -462,7 +462,7 @@ BRMusicNowPlayingController *musicController = nil;
 
 - (void)setToMountsOnly
 {
-	[self setListTitle:BRLocalizedString(@"Collections", @"")];
+	[self setListTitle:BRLocalizedString(@"Collections", @"Title For Collection Menu")];
 	mountsOnly = YES;
 }
 

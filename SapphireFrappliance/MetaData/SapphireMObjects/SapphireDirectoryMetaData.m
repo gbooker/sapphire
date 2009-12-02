@@ -836,7 +836,7 @@ static NSString *movingToPath = @"To";
 {
 	int componentCount = [[newName pathComponents] count];
 	if(componentCount != 1)
-		return BRLocalizedString(@"A Directory name should not contain any '/' characters", @"");
+		return BRLocalizedString(@"A Directory name should not contain any '/' characters", @"Error indicating that filenames cannot contain / characters");
 	NSString *oldPath = [self path];
 	NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newName];
 	return [self moveToPath:newPath pathForMoveError:newName inDir:nil];
