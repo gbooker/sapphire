@@ -30,8 +30,6 @@
 	if(self == nil)
 		return nil;
 	
-	xmlFileCount=0;
-	
 	return self;
 }
 
