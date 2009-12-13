@@ -141,8 +141,9 @@ typedef enum {
  *
  * @param file The file to import
  * @param inform The informer to inform of completion
+ * @return YES if the import is not backgrounded, NO otherwise
  */
-- (void)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
+- (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 
 /*!
  * @brief Import all data

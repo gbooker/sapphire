@@ -95,20 +95,17 @@
 @end
  
 @interface SapphireTVShowImporter (private)
-- (void)writeSettings;
 - (ImportState)doRealImportMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path;
 @end
 
 @implementation SapphireTVShowImporter
 
-- (id) initWithContext:(NSManagedObjectContext *)context
+- (id)init
 {
 	self = [super init];
 	if(!self)
 		return nil;
 	
-	/*Get the settings*/
-	moc = [context retain];
 	/*Cached show info*/
 	showInfo = [NSMutableDictionary new];
 	
@@ -121,13 +118,11 @@
 
 - (void)dealloc
 {
-	[moc release];
 	[showInfo release];
 	[showInfoClearTimer invalidate];
 	regfree(&letterMarking);
 	regfree(&seasonByEpisode);
 	regfree(&seasonEpisodeTriple);
-	[chooser release];
 	[super dealloc];
 }
 
@@ -539,10 +534,9 @@
 /*!
  * @brief Write our setings out
  */
-- (void)writeSettings
+- (void)writeSettingsForContext:(NSManagedObjectContext *)moc
 {
-	NSError *error = nil;
-	[moc save:&error];
+	[SapphireMetaDataSupport save:moc];
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
@@ -556,7 +550,6 @@
 
 - (ImportState)doRealImportMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
-	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
 		return IMPORT_STATE_NOT_UPDATED;
@@ -613,6 +606,7 @@
 		searchStr = searchShowName;
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"%@ matched regex; checking show name %@", fileName, searchStr);
 	/*Check to see if we know this title*/
+	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:[searchStr lowercaseString] inContext:moc];
 	if([tran showPath] == nil)
 	{
@@ -637,13 +631,13 @@
 		else
 		{
 			/*Bring up the prompt*/
-			chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
+			SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
 			[chooser setShows:shows];
 			[chooser setFileName:fileName];
 			[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
 			[chooser setSearchStr:searchStr];
 			/*And display prompt*/
-			[[dataMenu stack] pushController:chooser];
+			[dataMenu displayChooser:chooser forImporter:self withContext:metaData];
 			return IMPORT_STATE_NEEDS_SUSPEND;
 		}
 	}
@@ -821,11 +815,13 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void)wasExhumed
+- (void)exhumedChooser:(BRLayerController *)aChooser withContext:(id)context;
 {
-	/*See if it was a show chooser*/
-	if(chooser == nil)
+	if(![aChooser isKindOfClass:[SapphireShowChooser class]])
 		return;
+	SapphireShowChooser *chooser = (SapphireShowChooser *)aChooser;
+	
+	SapphireFileMetaData *currentData = (SapphireFileMetaData *)context;
 	
 	/*Get the user's selection*/
 	int selection = [chooser selection];
@@ -843,11 +839,10 @@
 	{
 		/*They selected a show, save the translation and write it*/
 		NSDictionary *show = [[chooser shows] objectAtIndex:selection];
+		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		[SapphireTVTranslation createTVTranslationForName:[[chooser searchStr] lowercaseString] withPath:[show objectForKey:LINK_KEY] inContext:moc];
-		[self writeSettings];
+		[self writeSettingsForContext:moc];
 	}
-	[chooser release];
-	chooser = nil;
 	/*We can resume now*/
 	[dataMenu resume];
 }

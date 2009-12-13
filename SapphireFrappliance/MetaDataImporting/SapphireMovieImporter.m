@@ -58,11 +58,11 @@
 {
 	NSString *destination;
 	NSSet *requestList ;
-	NSMutableArray *delegates ;
-	long downloadsLeft ;
-	id delegate;
+	NSMutableArray *delegates;
+	long downloadsLeft;
+	SapphirePosterChooser *posterChooser;
 }
-- (id)initWithRequest:(NSSet*)reqList withDestination:(NSString *)dest delegate:(id)aDelegate;
+- (id)initWithRequest:(NSSet*)reqList withDestination:(NSString *)dest chooser:(SapphirePosterChooser *)chooser;
 - (void) downloadDidFinish: (NSURLDownload *) download;
 - (void)downloadMoviePosters ;
 -(void)downloadSingleMoviePoster;
@@ -79,7 +79,7 @@
  * @param reqList The list of url requests to try
  * @param dest The path to save the file
  */
-- (id)initWithRequest:(NSSet*)reqList withDestination:(NSString *)dest delegate:(id)aDelegate;
+- (id)initWithRequest:(NSSet*)reqList withDestination:(NSString *)dest chooser:(SapphirePosterChooser *)chooser
 {
 	self = [super init];
 	if(!self)
@@ -88,7 +88,7 @@
 	destination = [dest retain];
 	requestList = [reqList retain];
 	downloadsLeft=[requestList count];
-	delegate = aDelegate;
+	posterChooser = chooser;
 	return self;	
 }
 
@@ -139,34 +139,24 @@
 - (void) downloadDidFinish: (NSURLDownload *) download
 {
 	downloadsLeft--;
-	if([delegate respondsToSelector:@selector(downloadCompleted:atIndex:)])
-		[delegate downloadCompleted:download atIndex:[delegates indexOfObject:download]];
+	[posterChooser reloadPoster:[delegates indexOfObject:download]];
 }
 
 @end
 
-@interface SapphireMovieImporter (private)
-- (void)writeSettings;
-@end
-
 @implementation SapphireMovieImporter
 
-- (id) initWithContext:(NSManagedObjectContext *)context
+- (id) init
 {
 	self = [super init];
 	if(!self)
 		return nil;
-	
-	/*Get the settings*/
-	moc = [context retain];
 	
 	return self;
 }
 
 - (void)dealloc
 {
-	[moc release];
-	[childController release];
 	[super dealloc];
 }
 
@@ -216,7 +206,7 @@
  * @param posterPageLink The Movie's IMP Poster link extention
  * @return An array of canidate poster images
  */
-- (NSSet *)getPosterLinks:(NSString *)posterPageLink
+- (NSSet *)getPosterLinks:(NSString *)posterPageLink inContext:(NSManagedObjectContext *)moc
 {
 	NSError *error = nil ;
 	NSURL * url=[NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",posterPageLink]] ;
@@ -280,27 +270,14 @@
 	return [ret autorelease];
 }
 
-- (void)downloadPosterCandidates:(NSSet *)posterCandidates
+- (void)downloadPosterCandidates:(NSSet *)posterCandidates forChooser:(SapphirePosterChooser *)chooser
 {
 	/* download all posters to the scratch folder */
 	NSString *posterBuffer = [applicationSupportDir() stringByAppendingPathComponent:@"Poster_Buffer"];
 	[[NSFileManager defaultManager] constructPath:posterBuffer];
-	SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterCandidates withDestination:posterBuffer delegate:self];
+	SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterCandidates withDestination:posterBuffer chooser:chooser];
 	[myDelegate downloadMoviePosters] ;
 	[myDelegate autorelease];
-}
-
-/*!
- * @brief A download completed
- *
- * @param download The download which completed
- * @param index The index of this poster
- */
-- (void)downloadCompleted:(NSURLDownload *)download atIndex:(int)index;
-{
-	id controller = [[dataMenu stack] peekController];
-	if([controller isKindOfClass:[SapphirePosterChooser class]])
-		[posterChooser reloadPoster:index];
 }
 
 /*!
@@ -666,16 +643,6 @@
 	return nil ;
 }
 
-
-/*!
-* @brief Write our setings out
- */
-- (void)writeSettings
-{
-	NSError *error = nil;
-	[moc save:&error];
-}
-
 /*!
 * @brief verify file extention of a file
  *
@@ -695,7 +662,6 @@
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
-	currentData = metaData;
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_MOVIE_MASK)
 		return IMPORT_STATE_NOT_UPDATED;
@@ -723,6 +689,7 @@
 	/*Check to see if we know this movie*/
 	NSString *movieTranslationString = [[lookupName lowercaseString] stringByDeletingPathExtension];
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie %@", movieTranslationString);
+	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:movieTranslationString inContext:moc];
 	int searchIMDBNumber = [metaData searchIMDBNumber];
 	if(searchIMDBNumber > 0)
@@ -739,7 +706,7 @@
 		if(movies==nil)
 		{
 			/* We tried to import but found nothing - mark this file to be skipped on future imports */
-			[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
+			[metaData didImportType:IMPORT_TYPE_MOVIE_MASK];
 			[metaData setFileClassValue:FILE_CLASS_OTHER];
 			return IMPORT_STATE_UPDATED;
 		}
@@ -757,8 +724,7 @@
 			[chooser setFileName:lookupName];		
 			[chooser setListTitle:BRLocalizedString(@"Select Movie Title", @"Prompt the user for title of movie")];
 			/*And display prompt*/
-			childController = [chooser retain];
-			[[dataMenu stack] pushController:chooser];
+			[dataMenu displayChooser:chooser forImporter:self withContext:metaData];
 			[chooser release];
 			return IMPORT_STATE_NEEDS_SUSPEND;
 			//Data will be ready for access on the next call
@@ -784,13 +750,13 @@
 			{
 				[tran setIMPLink:posterPath];
 				/*We got a posterPath, get the posterLinks */
-				posters = [self getPosterLinks:posterPath];
+				posters = [self getPosterLinks:posterPath inContext:moc];
 				if(posters != nil)
 				{
 					/* Add the poster links */
 					NSMutableSet *posterSet = [tran postersSet];
 					[posterSet setSet:posters];
-					[self writeSettings];
+					[SapphireMetaDataSupport save:moc];
 				}
 				/* Add another method via chooser incase IMDB doesn't have an IMP link */
 			}
@@ -798,7 +764,7 @@
 		}
 		if([posters count])
 		{
-			posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
+			SapphirePosterChooser *posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
 			if(![posterChooser okayToDisplay] || [[SapphireSettings sharedSettings] autoSelection])
 			{
 				/* Auto Select the first poster */
@@ -807,13 +773,12 @@
 			}
 			else
 			{
-				[self downloadPosterCandidates:posters];
+				[self downloadPosterCandidates:posters forChooser:posterChooser];
 				[posterChooser setPosters:[[tran orderedPosters] valueForKey:@"link"]];
 				[posterChooser setFileName:lookupName];
 				[posterChooser setFile:(SapphireFileMetaData *)metaData];
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
-				childController = [posterChooser retain];
-				[[dataMenu stack] pushController:posterChooser];
+				[dataMenu displayChooser:posterChooser forImporter:self withContext:metaData];
 				[posterChooser release];
 				return IMPORT_STATE_NEEDS_SUSPEND;
 			}
@@ -856,7 +821,7 @@
 			/* We have seen this file before, but in a different location */
 			/* - OR - the coverart has been deleted */
 			NSSet *posterList = [NSSet setWithObject:selectedPoster];
-			SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
+			SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart chooser:nil];
 			[myDelegate downloadSingleMoviePoster] ;
 			[myDelegate autorelease];
 		}
@@ -866,7 +831,7 @@
 		/* The poster chooser wasn't loaded - ATV 1.0 */
 		NSSet *posterList = [NSSet setWithObject:autoSelectPoster];
 		coverart = [coverart stringByAppendingPathExtension:[[autoSelectPoster link] pathExtension]];
-		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart delegate:self];
+		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart chooser:nil];
 		[myDelegate downloadSingleMoviePoster] ;
 		[myDelegate autorelease];	
 	}
@@ -927,14 +892,16 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void)wasExhumed
+- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
 	/*See if it was a movie chooser*/
-	if([childController isKindOfClass:[SapphireMovieChooser class]])
+	if([chooser isKindOfClass:[SapphireMovieChooser class]])
 	{
 		/*Get the user's selection*/
-		SapphireMovieChooser *chooser = (SapphireMovieChooser *)childController;
-		int selection = [chooser selection];
+		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
+		SapphireFileMetaData *currentData = (SapphireFileMetaData *)context;
+		NSManagedObjectContext *moc = [currentData managedObjectContext];
+		int selection = [movieChooser selection];
 		if(selection == MOVIE_CHOOSE_CANCEL)
 		{
 			/*They aborted, skip*/
@@ -950,18 +917,21 @@
 		else
 		{
 			/*They selected a movie title, save the translation and write it*/
-			NSDictionary *movie = [[chooser movies] objectAtIndex:selection];
-			NSString *filename = [[[chooser fileName] lowercaseString] stringByDeletingPathExtension];
+			NSDictionary *movie = [[movieChooser movies] objectAtIndex:selection];
+			NSString *filename = [[[movieChooser fileName] lowercaseString] stringByDeletingPathExtension];
 			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:filename inContext:moc];
 			/* Add IMDB Key */
 			[tran setIMDBLink:[movie objectForKey:MOVIE_TRAN_IMDB_LINK_KEY]];
 		}
-		[self writeSettings];
+		[SapphireMetaDataSupport save:moc];
 		/*We can resume now*/
 		[dataMenu resume];
 	}
-	else if([childController isKindOfClass:[SapphirePosterChooser class]])
+	else if([chooser isKindOfClass:[SapphirePosterChooser class]])
 	{
+		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
+		SapphireFileMetaData *currentData = (SapphireFileMetaData *)context;
+		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		int selectedPoster = [posterChooser selectedPoster];
 		if(selectedPoster == POSTER_CHOOSE_CANCEL)
 			/*They aborted, skip*/
@@ -973,15 +943,12 @@
 			[tran setSelectedPosterIndexValue:selectedPoster];
 		}
 		posterChooser = nil;
-		[self writeSettings];
+		[SapphireMetaDataSupport save:moc];
 		/*We can resume now*/
 		[dataMenu resume];
 	}
 	else
 		return;
-	
-	[childController release];
-	childController = nil;
 }
 
 @end

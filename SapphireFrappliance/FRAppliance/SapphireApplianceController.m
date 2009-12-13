@@ -470,8 +470,8 @@ BRMusicNowPlayingController *musicController = nil;
 {
 	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithContext:moc];
-	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithContext:moc];
+	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] init];
+	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] init];
 	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
 	[xmlImpr release];
 	[fileImp release];

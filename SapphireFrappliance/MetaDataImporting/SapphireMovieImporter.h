@@ -28,10 +28,6 @@
  */
 @interface SapphireMovieImporter : NSObject <SapphireImporter>{
 	SapphireImporterDataMenu	*dataMenu;				/*!< @brief The UI for the import (not retained)*/
-	SapphireFileMetaData		*currentData;			/*!< @brief The metadata currently being imported(not retained)*/
-	NSManagedObjectContext		*moc;					/*!< @brief The context of translations*/
-	SapphirePosterChooser		*posterChooser;			/*!< @brief The poster chooser (if exists) (not retained)*/
-	BRLayerController			*childController;		/*!< @brief The controller we push on top of us*/
 }
 
 /*!
@@ -42,6 +38,6 @@
  * @context The context
  * @return The movie importer
  */
-- (id) initWithContext:(NSManagedObjectContext *)context;
+- (id)init;
 
 @end

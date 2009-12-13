@@ -269,7 +269,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	return BRLocalizedString(@"Start Populating XML Data", @"Button");
 }
 
-- (void)wasExhumed
+- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
 }
 

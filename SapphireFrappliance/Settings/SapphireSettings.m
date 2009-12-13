@@ -521,7 +521,7 @@ typedef enum {
 		}
 		case COMMAND_IMPORT_TV_DATA:
 		{
-			SapphireTVShowImporter *importer = [[SapphireTVShowImporter alloc] initWithContext:moc];
+			SapphireTVShowImporter *importer = [[SapphireTVShowImporter alloc] init];
 			SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] context:moc importer:importer];
 			[[self stack] pushController:menu];
 			[menu release];
@@ -530,7 +530,7 @@ typedef enum {
 		}
 		case COMMAND_IMPORT_MOVIE_DATA:
 		{
-			SapphireMovieImporter *importer = [[SapphireMovieImporter alloc] initWithContext:moc];
+			SapphireMovieImporter *importer = [[SapphireMovieImporter alloc] init];
 			SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] context:moc importer:importer];
 			[[self stack] pushController:menu];
 			[menu release];

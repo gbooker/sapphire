@@ -94,9 +94,8 @@
 	return @"";
 }
 
-- (void)wasExhumed
+- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
-	[importers makeObjectsPerformSelector:@selector(wasExhumed) withObject:nil];
 }
 
 @end

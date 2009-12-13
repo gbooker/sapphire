@@ -97,8 +97,11 @@ typedef enum{
  * @brief The data menu was exhumed
  *
  * Some importers present the user with other choices, so this lets the importer know that the "dialog" has completed.
+ *
+ * @param chooser The chooser which was exhumed
+ * @param context The context for this choice
  */
-- (void)wasExhumed;
+- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context;
 @end
 
 
@@ -134,6 +137,7 @@ typedef enum{
 	BOOL							layoutDone;				/*!< @brief YES if layout already done, NO otherwise*/
 	NSTimer							*updateTimer;			/*!< @brief Timer to aggregate updates to reduce CPU usage*/
 	NSString						*currentFilename;		/*!< @brief The current file to display*/
+	NSMutableArray					*choosers;				/*!< @brief The array of choosers to display*/
 }
 /*!
  * @brief Creates a new Importer Data Menu
@@ -143,6 +147,15 @@ typedef enum{
  * @return The Menu
  */
 - (id) initWithScene: (BRRenderScene *) scene context:(NSManagedObjectContext *)context  importer:(id <SapphireImporter>)import;
+
+/*!
+ * @brief Displays a chooser and calls the importers callback when done
+ *
+ * @param chooser The chooser to display
+ * @param importer The importer wanting to display a chooser
+ * @param context The context item for the chooser
+ */
+- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
 @end
 
 /*!

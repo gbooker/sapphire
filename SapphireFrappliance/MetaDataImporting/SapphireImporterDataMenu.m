@@ -33,6 +33,59 @@
 
 #define updateFreq 0.05
 
+@interface SapphireImportChooserQueueItem : NSObject
+{
+	BRLayerController		*chooser;
+	id <SapphireImporter>	importer;
+	id						context;
+}
+- (id)initWithChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
+- (BRLayerController *)chooser;
+- (id <SapphireImporter>)importer;
+- (id)context;
+@end
+
+@implementation SapphireImportChooserQueueItem
+
+- (id)initWithChooser:(BRLayerController *)aChooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)aContext
+{
+	self = [super init];
+	if(!self)
+		return self;
+	
+	chooser = [aChooser retain];
+	importer = [aImporter retain];
+	context = [aContext retain];
+	
+	return self;
+}
+
+- (void) dealloc
+{
+	[chooser release];
+	[importer release];
+	[context release];
+	[super dealloc];
+}
+
+- (BRLayerController *)chooser
+{
+	return chooser;
+}
+
+- (id <SapphireImporter>)importer
+{
+	return importer;
+}
+
+- (id)context
+{
+	return context;
+}
+
+@end
+
+
 @interface BRLayerController (compatounth)
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
 @end
@@ -49,14 +102,17 @@
 @implementation SapphireImporterDataMenu
 - (id) initWithScene: (BRRenderScene *) scene context:(NSManagedObjectContext *)context  importer:(id <SapphireImporter>)import;
 {
-	if ( [super initWithScene: scene] == nil )
-		return ( nil );
+	self = [super initWithScene:scene];
+	if(self == nil)
+		return self;
+	
 	moc = [context retain];
 	importer = [import retain];
 	[importer setImporterDataMenu:self];
 	importItems = [[NSMutableArray alloc] init];
 	allItems = nil;
 	skipSet = nil;
+	choosers = [[NSMutableArray alloc] init];
 	/*Setup the Header Control with default contents*/
 	[self setListTitle:BRLocalizedString(@"Populate Show Data", @"Do a file metadata import")];
 
@@ -79,7 +135,7 @@
 	
 	[SapphireLayoutManager setCustomLayoutOnControl:self];
 	
-    return ( self );
+    return self;
 }
 
 - (void) dealloc
@@ -99,6 +155,7 @@
 	[allItems release];
 	[updateTimer invalidate];
 	[currentFilename release];
+	[choosers release];
 	[super dealloc];
 }
 
@@ -500,6 +557,13 @@
 	current++;
 }
 
+- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)context
+{
+	SapphireImportChooserQueueItem *queueItem = [[SapphireImportChooserQueueItem alloc] initWithChooser:chooser forImporter:aImporter withContext:context];
+	[choosers addObject:queueItem];
+	[[self stack] pushController:chooser];
+}
+
 /*!
  * @brief Reset the UI after an import completion or cancel
  */
@@ -540,7 +604,9 @@
 
 - (void)wasExhumed
 {
-	[importer wasExhumed];
+	SapphireImportChooserQueueItem *queueItem = [choosers objectAtIndex:0];
+	[[queueItem importer] exhumedChooser:[queueItem chooser] withContext:[queueItem context]];
+	[choosers removeObjectAtIndex:0];
 	[super wasExhumed];
 }
 

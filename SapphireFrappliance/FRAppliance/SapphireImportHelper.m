@@ -69,8 +69,9 @@ static SapphireImportHelper *shared = nil;
 {
 }
 
-- (void)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
+- (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
+	return YES;
 }
 
 - (void)importAllData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
@@ -94,8 +95,8 @@ static SapphireImportHelper *shared = nil;
 	moc = [context retain];
 	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithContext:moc];
-	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithContext:moc];
+	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] init];
+	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] init];
 	allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
 	[xmlImpr release];
 	[fileImp release];
@@ -113,9 +114,10 @@ static SapphireImportHelper *shared = nil;
 	[super dealloc];
 }
 
-- (void)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
+- (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
 	updateMetaData(file);
+	return YES;
 }
 
 - (void)startChild
@@ -317,12 +319,13 @@ static SapphireImportHelper *shared = nil;
 	[client startQueue];
 }
 
-- (void)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
+- (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
 	SapphireImportFile *item = [[SapphireImportFile alloc] initWithPath:[file path] informer:inform  type:IMPORT_TYPE_FILE_DATA];
 	[queue addObject:item];
 	[item release];
 	[self itemAdded];
+	return NO;
 }
 
 - (void)importAllData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;

@@ -70,9 +70,9 @@
 	return BRLocalizedString(@"Start Populating Data", @"Button");
 }
 
-- (void)wasExhumed
+- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
-	[super wasExhumed];
+	[super exhumedChooser:chooser withContext:context];
 }
 
 @end

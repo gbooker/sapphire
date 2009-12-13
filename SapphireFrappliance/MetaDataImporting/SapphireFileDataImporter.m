@@ -48,8 +48,10 @@
 	/*Import file if necessary*/
 	if([metaData needsUpdating])
 	{
-		[[SapphireImportHelper sharedHelperForContext:[metaData managedObjectContext]] importFileData:metaData inform:dataMenu];
-		return IMPORT_STATE_BACKGROUND;
+		if([[SapphireImportHelper sharedHelperForContext:[metaData managedObjectContext]] importFileData:metaData inform:dataMenu])
+			return IMPORT_STATE_UPDATED;
+		else
+			return IMPORT_STATE_BACKGROUND;
 	}
 	/*Return whether we imported or not*/
 	return IMPORT_STATE_NOT_UPDATED;
@@ -75,7 +77,7 @@
 	return BRLocalizedString(@"Start Populating Data", @"Button");
 }
 
-- (void)wasExhumed
+- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
 }
 @end

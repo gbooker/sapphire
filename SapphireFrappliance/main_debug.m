@@ -140,8 +140,8 @@ int main(int argc, char *argv[])
 	[SapphireMetaDataSupport setMainContext:moc];
 	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] initWithContext:moc];
-	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] initWithContext:moc];
+	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] init];
+	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] init];
 	SapphireAllImporter *allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
 	[xmlImpr release];
 	[fileImp release];
@@ -244,7 +244,7 @@ int main(int argc, char *argv[])
 #ifdef TESTING_MOVIE_IMPORT
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/MovieTests/FIFTH_ELEMENT.mov" inContext:moc];
-		SapphireMovieImporter *import = [[SapphireMovieImporter alloc] initWithContext:moc];
+		SapphireMovieImporter *import = [[SapphireMovieImporter alloc] init];
 		[import importMetaData:file path:[file path]];
 		[import release];
 	}
@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
 #ifdef TESTING_TV_SHOW_IMPORT
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Doctor Who (2005) S03ES1 Voyage of the Damned.avi" inContext:moc];
-		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] initWithContext:moc];
+		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
 		[import importMetaData:file path:[file path]];
 		[import release];
 	}
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
 #ifdef TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E01-E02.avi" inContext:moc];
-		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] initWithContext:moc];
+		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
 		[import importMetaData:file path:[file path]];
 		
 		file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E02.avi" inContext:moc];
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
 //#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 #ifdef TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 	{
-		SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] initWithContext:moc];
+		SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] init];
 		[movieDir reloadDirectoryContents];
 		[movieDir reloadDirectoryContents];
 		[movieDir release];
