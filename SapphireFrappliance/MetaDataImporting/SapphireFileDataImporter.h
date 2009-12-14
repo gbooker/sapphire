@@ -26,8 +26,8 @@
  *
  * This class is a subclass of SapphireMultipleImporter for importing file data.  It will read in data from the file, such as size, length, and codecs.
  */
-@interface SapphireFileDataImporter : NSObject <SapphireImporter>
+@interface SapphireFileDataImporter : NSObject <SapphireImporter, SapphireImporterBackgroundProtocol>
 {
-	SapphireImporterDataMenu	*dataMenu;		/*!< @brief The UI for the import (not retained)*/
+	id <SapphireImporterDelegate>	delegate;		/*!< @brief The delegate for the import (not retained)*/
 }
 @end 

@@ -27,7 +27,6 @@
  * This class is a for importing xml file data.  It will read in data stored in XML files with the file.
  */
 @interface SapphireXMLFileDataImporter : NSObject <SapphireImporter> {
-	SapphireImporterDataMenu	*dataMenu;		/*!< @brief The UI for the import (not retained)*/
 }
 
 @end

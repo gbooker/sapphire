@@ -92,16 +92,6 @@ static NSDictionary *xmlMultiAttributes = nil;
 						  @"Directors",			DIRECTORS_XML_QUERY,nil];
 }
 
-- (void) dealloc
-{
-	[super dealloc];
-}
-
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
-{
-	dataMenu = theDataMenu;
-}
-
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
 	NSFileManager *fm = [NSFileManager defaultManager];
@@ -113,10 +103,10 @@ static NSDictionary *xmlMultiAttributes = nil;
 	if(![fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] || xmlPathIsDir)
 	{
 		if(xml == nil)
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		
 		[[xml managedObjectContext] deleteObject:xml];
-		return IMPORT_STATE_UPDATED;
+		return ImportStateUpdated;
 	}
 
 	/*Check modification date on XML file*/
@@ -126,7 +116,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	long modTime = sb.st_mtimespec.tv_sec;
 	long oldTime = [metaData importedTimeFromSource:IMPORT_TYPE_XML_MASK];
 	if(oldTime == modTime)
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 
 	/*Read the XML document*/
 	NSURL *url = [NSURL fileURLWithPath:xmlFilePath];
@@ -135,7 +125,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	NSXMLDocument *document = [[[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyXML error:&error] autorelease];
 	NSXMLElement *root = [document rootElement];
 	if(!root)
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 	
 	NSString *type = [[root attributeForName:@"type"] stringValue];
 	FileClass fclass = FILE_CLASS_UNKNOWN;
@@ -246,7 +236,17 @@ static NSDictionary *xmlMultiAttributes = nil;
 	}
 	[xml insertDictionary:newMetaData];
 	xml.modified = [NSDate dateWithTimeIntervalSince1970:modTime];
-	return IMPORT_STATE_UPDATED;
+	return ImportStateUpdated;
+}
+
+- (void)setDelegate:(id <SapphireImporterDelegate>)delegate
+{
+	//No backgrounding here, so we don't need to tell the delegate anything
+}
+
+- (void)cancelImports
+{
+	//No backgrounding here, so nothing to do
 }
 
 - (NSString *)completionText

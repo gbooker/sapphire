@@ -670,7 +670,7 @@ NSComparisonResult dirAndLinkPathCompare(id dir1, id dir2, void *context)
 		importing = 0;
 }
 
-- (oneway void)informComplete:(BOOL)updated
+- (oneway void)informComplete:(BOOL)updated onPath:(NSString *)path
 {
 	[self performSelectorOnMainThread:@selector(realInformComplete) withObject:nil waitUntilDone:NO];
 }

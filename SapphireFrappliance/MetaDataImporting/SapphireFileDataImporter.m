@@ -24,23 +24,9 @@
 
 @implementation SapphireFileDataImporter
 
-- (id)init
+- (void)setDelegate:(id <SapphireImporterDelegate>)aDelegate
 {
-	self = [super init];
-	if(self == nil)
-		return nil;
-	
-	return self;
-}
-
-- (void) dealloc
-{
-	[super dealloc];
-}
-
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
-{
-	dataMenu = theDataMenu;
+	delegate = aDelegate;
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
@@ -48,13 +34,19 @@
 	/*Import file if necessary*/
 	if([metaData needsUpdating])
 	{
-		if([[SapphireImportHelper sharedHelperForContext:[metaData managedObjectContext]] importFileData:metaData inform:dataMenu])
-			return IMPORT_STATE_UPDATED;
+		if([[SapphireImportHelper sharedHelperForContext:[metaData managedObjectContext]] importFileData:metaData inform:self])
+			return ImportStateUpdated;
 		else
-			return IMPORT_STATE_BACKGROUND;
+			return ImportStateBackground;
 	}
 	/*Return whether we imported or not*/
-	return IMPORT_STATE_NOT_UPDATED;
+	return ImportStateNotUpdated;
+}
+
+- (void)cancelImports
+{
+	//XXX  The context here is nil.  We know it'll be alloced before here by the above
+	[[SapphireImportHelper sharedHelperForContext:nil] removeObjectsWithInform:self];
 }
 
 - (NSString *)completionText
@@ -79,5 +71,21 @@
 
 - (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
+}
+
+- (void)realInformComplete:(NSArray *)status
+{
+	NSString *path = [status objectAtIndex:1];
+	NSNumber *fileUpdated = [status objectAtIndex:0];
+	ImportState state = ImportStateNotUpdated;
+	if([fileUpdated boolValue])
+		state = ImportStateUpdated;
+	[delegate backgroundImporter:self completedImportOnPath:path withState:state];
+}
+
+- (oneway void)informComplete:(BOOL)fileUpdated onPath:(NSString *)path
+{
+	NSArray *status = [NSArray arrayWithObjects:[NSNumber numberWithBool:fileUpdated], path, nil];
+	[self performSelectorOnMainThread:@selector(realInformComplete:) withObject:status waitUntilDone:NO];
 }
 @end

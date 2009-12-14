@@ -85,6 +85,29 @@
 
 @end
 
+@implementation SapphireImportStateData
+
+- (id)initWithFile:(SapphireFileMetaData *)aFile atPath:(NSString *)aPath
+{
+	self = [super init];
+	if(!self)
+		return self;
+	
+	file = [aFile retain];
+	path = [aPath retain];
+	
+	return self;
+}
+
+- (void) dealloc
+{
+	[file release];
+	[path release];
+	[super dealloc];
+}
+
+@end
+
 
 @interface BRLayerController (compatounth)
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
@@ -108,7 +131,7 @@
 	
 	moc = [context retain];
 	importer = [import retain];
-	[importer setImporterDataMenu:self];
+	[importer setDelegate:self];
 	importItems = [[NSMutableArray alloc] init];
 	allItems = nil;
 	skipSet = nil;
@@ -149,7 +172,7 @@
 	[skipSet release];
 	[importItems release];
 	[importTimer invalidate];
-	[importer setImporterDataMenu:nil];
+	[importer setDelegate:nil];
 	[importer release];
 	[buttonTitle release];
 	[allItems release];
@@ -380,15 +403,15 @@
 		ImportState result = [importer importMetaData:file path:[meta path]];
 		switch(result)
 		{
-			case IMPORT_STATE_UPDATED:
+			case ImportStateUpdated:
 				ret = YES;
 				SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Updated %@", [file path]);
 				break;
-			case IMPORT_STATE_NEEDS_SUSPEND:
+			case ImportStateSuspend:
 				[self pause];
 				ret = NO;
 				break;
-			case IMPORT_STATE_BACKGROUND:
+			case ImportStateBackground:
 				[self itemImportBackgrounded];
 				ret = NO;
 				break;
@@ -510,7 +533,7 @@
 	[importTimer invalidate];
 	importTimer = nil;
 	[importItems removeAllObjects];
-	[[SapphireImportHelper sharedHelperForContext:moc] removeObjectsWithInform:self];
+	[importer cancelImports];
 	/*Reset the display and write data*/
 	[self resetUIElements];
 	[SapphireMetaDataSupport save:moc];
@@ -518,30 +541,17 @@
 
 - (void)pause
 {
-	/*Kil lthe timer*/
+	/*Kill the timer*/
 	suspended = YES;
 }
 
-- (void)resume
+- (void)resumeWithPath:(NSString *)path
 {
 	/*Sanity checks*/
 	[importTimer invalidate];
 	/*Resume*/
 	suspended = NO;
 	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:NO];
-}
-
-- (void)realInformComplete:(NSNumber *)fileUpdated
-{
-	if([fileUpdated boolValue])
-		updated++;
-	current++;
-	[self updateDisplay];
-}
-
-- (oneway void)informComplete:(BOOL)fileUpdated
-{
-	[self performSelectorOnMainThread:@selector(realInformComplete:) withObject:[NSNumber numberWithBool:fileUpdated] waitUntilDone:NO];
 }
 
 - (void)itemImportBackgrounded
@@ -555,6 +565,33 @@
 	if([importItems count])
 		[importItems removeObjectAtIndex:0];
 	current++;
+}
+
+- (void)backgroundImporter:(id <SapphireImporter>)aImporter completedImportOnPath:(NSString *)path withState:(ImportState)state
+{
+	if(state == ImportStateUpdated)
+		updated++;
+
+	if(suspended && [[[importItems objectAtIndex:0] path] isEqualToString:path])
+	{
+		/*Remove the next item from the queue*/
+		if([importItems count])
+			[importItems removeObjectAtIndex:0];
+
+		[self resumeWithPath:path];
+	}
+	current++;
+	[self updateDisplay];
+}
+
+- (BOOL)canDisplayChooser
+{
+	return YES;
+}
+
+- (id)chooserScene
+{
+	return [self scene];
 }
 
 - (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)context

@@ -99,7 +99,7 @@ extern NSString *VIRTUAL_DIR_OSCAR_PATH;
  *
  * This is for use with distributed objects
  */
-- (oneway void)informComplete:(BOOL)updated;
+- (oneway void)informComplete:(BOOL)updated onPath:(NSString *)path;
 @end
 
 @protocol SapphireMetaDataProtocol;

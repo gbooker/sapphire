@@ -126,9 +126,14 @@
 	[super dealloc];
 }
 
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
+- (void)setDelegate:(id <SapphireImporterDelegate>)aDelegate
 {
-	dataMenu = theDataMenu;
+	delegate = aDelegate;
+}
+
+- (void)cancelImports
+{
+	//No background imports so nothing to do
 }
 
 /*!
@@ -552,14 +557,7 @@
 {
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
-		return IMPORT_STATE_NOT_UPDATED;
-	id controller = [[dataMenu stack] peekController];
-	/* Check to see if we are waiting on the user to select a movie title */
-	if(controller != nil && ![controller isKindOfClass:[SapphireImporterDataMenu class]])
-	{
-		/* Another chooser is on the screen - delay further processing */
-		return IMPORT_STATE_NOT_UPDATED;
-	}
+		return ImportStateNotUpdated;
 //	NSArray *pathComponents = [path pathComponents];
 	NSString *fileName = [path lastPathComponent];
 	
@@ -596,7 +594,7 @@
 	if(index == NSNotFound)
 	{	
 		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 	}
 	
 	/*Get the show title*/
@@ -611,14 +609,14 @@
 	if([tran showPath] == nil)
 	{
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Conducting search");
-		if(dataMenu == nil)
+		if(![delegate canDisplayChooser])
 			/*There is no data menu, background import. So we can't ask user, skip*/
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		/*Ask the user what show this is*/
 		NSArray *shows = [self searchResultsForSeries:searchStr];
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Found shows %@", shows);
 		if(shows == nil)
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		
 		if([[SapphireSettings sharedSettings] autoSelection])
 		{
@@ -631,14 +629,17 @@
 		else
 		{
 			/*Bring up the prompt*/
-			SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[dataMenu scene]];
+			SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[delegate chooserScene]];
 			[chooser setShows:shows];
 			[chooser setFileName:fileName];
 			[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
 			[chooser setSearchStr:searchStr];
+			SapphireImportStateData *state = [[SapphireImportStateData alloc] initWithFile:metaData atPath:path];
 			/*And display prompt*/
-			[dataMenu displayChooser:chooser forImporter:self withContext:metaData];
-			return IMPORT_STATE_NEEDS_SUSPEND;
+			[delegate displayChooser:chooser forImporter:self withContext:state];
+			[chooser release];
+			[state release];
+			return ImportStateSuspend;
 		}
 	}
 	
@@ -669,7 +670,7 @@
 	if(season == 0)
 	{	
 		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 	}
 	
 	int otherEp = 0;
@@ -705,12 +706,12 @@
 	}
 	/*No info, well, no info, so we didn't import*/
 	if(info == nil)
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 	if(![info count])
 	{
 		/*Our search was successful, but there's no tv episode data, so it doesn't try to import again.*/
 		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 	}
 	
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Import info is %@", info);
@@ -792,7 +793,7 @@
 	}
 	
 	/*We imported something*/
-	return IMPORT_STATE_UPDATED;
+	return ImportStateUpdated;
 }
 
 - (NSString *)completionText
@@ -821,13 +822,15 @@
 		return;
 	SapphireShowChooser *chooser = (SapphireShowChooser *)aChooser;
 	
-	SapphireFileMetaData *currentData = (SapphireFileMetaData *)context;
+	SapphireImportStateData *state = (SapphireImportStateData *)context;
+	SapphireFileMetaData *currentData = state->file;
+	NSString *path = state->path;
 	
 	/*Get the user's selection*/
 	int selection = [chooser selection];
 	if(selection == SHOW_CHOOSE_CANCEL)
 		/*They aborted, skip*/
-		[dataMenu skipNextItem];
+		[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUserSkipped];
 	else if(selection == SHOW_CHOOSE_NOT_SHOW)
 	{
 		/*They said it is not a show, so put in empty data so they are not asked again*/
@@ -844,7 +847,7 @@
 		[self writeSettingsForContext:moc];
 	}
 	/*We can resume now*/
-	[dataMenu resume];
+	[delegate resumeWithPath:path];
 }
 
 @end

@@ -146,23 +146,14 @@
 
 @implementation SapphireMovieImporter
 
-- (id) init
+- (void)setDelegate:(id <SapphireImporterDelegate>)aDelegate
 {
-	self = [super init];
-	if(!self)
-		return nil;
-	
-	return self;
+	delegate = aDelegate;
 }
 
-- (void)dealloc
+- (void)cancelImports
 {
-	[super dealloc];
-}
-
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
-{
-	dataMenu = theDataMenu;
+	//No background imports so nothing to do
 }
 
 /*!
@@ -664,17 +655,10 @@
 {
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_MOVIE_MASK)
-		return IMPORT_STATE_NOT_UPDATED;
-	id controller = [[dataMenu stack] peekController];
-	/* Check to see if we are waiting on the user to select a show title */
-	if(controller != nil && ![controller isKindOfClass:[SapphireImporterDataMenu class]])
-	{
-		/* Another chooser is on the screen - delay further processing */
-		return IMPORT_STATE_NOT_UPDATED;
-	}
+		return ImportStateNotUpdated;
 	/*Get path*/
 	if(![self isMovieCandidate:metaData])
-		return IMPORT_STATE_NOT_UPDATED;
+		return ImportStateNotUpdated;
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Going to movie import %@", path);
 	NSString *fileName = [path lastPathComponent];
 	/*choose between file or directory name for lookup */
@@ -696,9 +680,9 @@
 		[tran setIMDBLink:[NSString stringWithFormat:@"/title/tt%d", searchIMDBNumber]];
 	if([tran IMDBLink] == nil)
 	{
-		if(dataMenu == nil)
+		if(![delegate canDisplayChooser])
 		/*There is no data menu, background import. So we can't ask user, skip*/
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		/*Ask the user what movie this is*/
 		NSArray *movies = [self searchResultsForMovie:lookupName];
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Found results: %@", movies);
@@ -708,7 +692,7 @@
 			/* We tried to import but found nothing - mark this file to be skipped on future imports */
 			[metaData didImportType:IMPORT_TYPE_MOVIE_MASK];
 			[metaData setFileClassValue:FILE_CLASS_OTHER];
-			return IMPORT_STATE_UPDATED;
+			return ImportStateUpdated;
 		}
 		if([[SapphireSettings sharedSettings] autoSelection])
 		{
@@ -719,14 +703,16 @@
 		else
 		{
 			/*Bring up the prompt*/
-			SapphireMovieChooser *chooser = [[SapphireMovieChooser alloc] initWithScene:[dataMenu scene]];
+			SapphireMovieChooser *chooser = [[SapphireMovieChooser alloc] initWithScene:[delegate chooserScene]];
 			[chooser setMovies:movies];
 			[chooser setFileName:lookupName];		
 			[chooser setListTitle:BRLocalizedString(@"Select Movie Title", @"Prompt the user for title of movie")];
+			SapphireImportStateData *state = [[SapphireImportStateData alloc] initWithFile:metaData atPath:path];
 			/*And display prompt*/
-			[dataMenu displayChooser:chooser forImporter:self withContext:metaData];
+			[delegate displayChooser:chooser forImporter:self withContext:state];
 			[chooser release];
-			return IMPORT_STATE_NEEDS_SUSPEND;
+			[state release];
+			return ImportStateSuspend;
 			//Data will be ready for access on the next call
 		}
 	}
@@ -735,11 +721,10 @@
 	SapphireMoviePoster *autoSelectPoster = nil;
 	if(!selectedPoster)
 	{
-		if(dataMenu == nil)
+		if(![delegate canDisplayChooser])
 		/*There is no data menu, background import. So we can't ask user, skip*/
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		/* Posters will be downloaded, let the user choose one */
-		[SapphireFrontRowCompat renderScene:[dataMenu scene]];
 		NSSet *posters = [tran postersSet];
 		if(![posters count])
 		{
@@ -764,7 +749,7 @@
 		}
 		if([posters count])
 		{
-			SapphirePosterChooser *posterChooser=[[SapphirePosterChooser alloc] initWithScene:[dataMenu scene]];
+			SapphirePosterChooser *posterChooser=[[SapphirePosterChooser alloc] initWithScene:[delegate chooserScene]];
 			if(![posterChooser okayToDisplay] || [[SapphireSettings sharedSettings] autoSelection])
 			{
 				/* Auto Select the first poster */
@@ -778,11 +763,12 @@
 				[posterChooser setFileName:lookupName];
 				[posterChooser setFile:(SapphireFileMetaData *)metaData];
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
-				[dataMenu displayChooser:posterChooser forImporter:self withContext:metaData];
+				SapphireImportStateData *state = [[SapphireImportStateData alloc] initWithFile:metaData atPath:path];
+				[delegate displayChooser:posterChooser forImporter:self withContext:state];
 				[posterChooser release];
-				return IMPORT_STATE_NEEDS_SUSPEND;
+				[state release];
+				return ImportStateSuspend;
 			}
-			[dataMenu resume];
 		}
 	}
 	NSFileManager *fileAgent=[NSFileManager defaultManager];
@@ -857,18 +843,18 @@
 		movieDataLink = [tran IMDBLink];
 		infoIMDB = [self getMetaForMovie:movieDataLink withPath:path];
 		if(!infoIMDB)
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		movie = [SapphireMovie movieWithDictionary:infoIMDB inContext:moc];
 		if(movie == nil)
 		{
 			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to import movie for %@", path);
-			return IMPORT_STATE_NOT_UPDATED;
+			return ImportStateNotUpdated;
 		}
 		[tran setMovie:movie];
 	}
 	[metaData setMovie:movie];
 	/*We imported something*/
-	return IMPORT_STATE_UPDATED;
+	return ImportStateUpdated;
 }
 
 
@@ -899,13 +885,15 @@
 	{
 		/*Get the user's selection*/
 		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
-		SapphireFileMetaData *currentData = (SapphireFileMetaData *)context;
+		SapphireImportStateData *state = (SapphireImportStateData *)context;
+		SapphireFileMetaData *currentData = state->file;
+		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		int selection = [movieChooser selection];
 		if(selection == MOVIE_CHOOSE_CANCEL)
 		{
 			/*They aborted, skip*/
-			[dataMenu skipNextItem];
+			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUpdated];
 		}
 		else if(selection == MOVIE_CHOOSE_NOT_MOVIE)
 		{
@@ -925,17 +913,19 @@
 		}
 		[SapphireMetaDataSupport save:moc];
 		/*We can resume now*/
-		[dataMenu resume];
+		[delegate resumeWithPath:path];
 	}
 	else if([chooser isKindOfClass:[SapphirePosterChooser class]])
 	{
 		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
-		SapphireFileMetaData *currentData = (SapphireFileMetaData *)context;
+		SapphireImportStateData *state = (SapphireImportStateData *)context;
+		SapphireFileMetaData *currentData = state->file;
+		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		int selectedPoster = [posterChooser selectedPoster];
 		if(selectedPoster == POSTER_CHOOSE_CANCEL)
 			/*They aborted, skip*/
-			[dataMenu skipNextItem];
+			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUpdated];
 		else
 		{
 			NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
@@ -945,7 +935,7 @@
 		posterChooser = nil;
 		[SapphireMetaDataSupport save:moc];
 		/*We can resume now*/
-		[dataMenu resume];
+		[delegate resumeWithPath:path];
 	}
 	else
 		return;

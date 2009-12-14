@@ -23,16 +23,6 @@
 
 @implementation SapphireAllImporter
 
-- (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
-{
-	return [super importMetaData:metaData path:path];
-}
-
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
-{
-	[super setImporterDataMenu:theDataMenu];
-}
-
 - (NSString *)completionText
 {
 	return BRLocalizedString(@"All available metadata has been imported", @"The group metadata import complete");
@@ -51,11 +41,6 @@
 - (NSString *)buttonTitle
 {
 	return BRLocalizedString(@"Start Importing Data", @"Button");
-}
-
-- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
-{
-	[super exhumedChooser:chooser withContext:context];
 }
 
 @end

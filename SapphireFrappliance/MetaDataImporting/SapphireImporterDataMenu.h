@@ -23,15 +23,17 @@
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
 
 @class SapphireImporterDataMenu, SapphireFileMetaData;
+@protocol SapphireImporterDelegate;
 
 /*!
  * @brief Status of an import
  */
 typedef enum{
-	IMPORT_STATE_NOT_UPDATED,		/*!< @brief The data was not updated*/
-	IMPORT_STATE_UPDATED,			/*!< @brief The data was updated*/
-	IMPORT_STATE_NEEDS_SUSPEND,		/*!< @brief The data update has been suspended; run it again later*/
-	IMPORT_STATE_BACKGROUND,		/*!< @brief The data was backgrounded*/
+	ImportStateNotUpdated,		/*!< @brief The data was not updated*/
+	ImportStateUpdated,			/*!< @brief The data was updated*/
+	ImportStateSuspend,			/*!< @brief The data update has been suspended pending UI*/
+	ImportStateBackground,		/*!< @brief The data was backgrounded*/
+	ImportStateUserSkipped,		/*!< @brief The user asked to skip import*/
 } ImportState;
 
 /*!
@@ -51,13 +53,18 @@ typedef enum{
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path;
 
 /*!
- * @brief Sets the importer's data menu
+ * @brief Sets the importer's delegate
  *
- * This is the text to display under the title, stating that the importer is done.
+ * This is the delegate for the importer, mostly telling it when import is complete
  *
- * @param theDataMenu The importer's menu
+ * @param delegate The delegate for the importer
  */
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu;
+- (void)setDelegate:(id <SapphireImporterDelegate>)delegate;
+
+/*!
+ * @brief Cancel all pending imports
+ */
+- (void)cancelImports;
 
 /*!
  * @brief The completion text to display
@@ -104,13 +111,67 @@ typedef enum{
 - (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context;
 @end
 
+@protocol SapphireImporterDelegate <NSObject>
+
+/*!
+ * @brief Tells the delegate the importer completed a background import
+ *
+ * @param importer The importer which completed import
+ * @param path The path on which the importer completed
+ * @param state The final state of the import
+ */
+- (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state;
+
+/*!
+ * @brief Resume the import process
+ *
+ * @param The path at which the importer ran
+ */
+- (void)resumeWithPath:(NSString *)path;
+
+/*!
+ * @brief States whether a chooser can be displayed
+ *
+ * @return YES if a chooser can be displayed, NO otherwise
+ */
+- (BOOL)canDisplayChooser;
+
+/*!
+ * @brief The scene to use for the chooser
+ *
+ * @return The scene to use for the chooser
+ */
+- (id)chooserScene;
+
+/*!
+ * @brief Displays a chooser and calls the importers callback when done
+ *
+ * @param chooser The chooser to display
+ * @param importer The importer wanting to display a chooser
+ * @param context The context item for the chooser
+ */
+- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
+
+@end
+
+@interface SapphireImportStateData : NSObject
+{
+@public
+	SapphireFileMetaData	*file;
+	NSString				*path;
+}
+
+- (id)initWithFile:(SapphireFileMetaData *)file atPath:(NSString *)path;
+@end
+
+
 
 /*!
  * @brief The importer UI
  *
  * This class creates the importer UI.  It handles all the user interaction and passes commands on to its subordinates.
  */
-@interface SapphireImporterDataMenu : SapphireCenteredMenuController <SapphireMetaDataScannerDelegate, SapphireImporterBackgroundProtocol, SapphireLayoutDelegate>
+@interface SapphireImporterDataMenu : SapphireCenteredMenuController <SapphireMetaDataScannerDelegate, SapphireLayoutDelegate, SapphireImporterDelegate>
 {
 	BRTextControl					*text;					/*!< @brief The informative text*/
 	BRTextControl					*fileProgress;			/*!< @brief The progress text*/
@@ -148,30 +209,4 @@ typedef enum{
  */
 - (id) initWithScene: (BRRenderScene *) scene context:(NSManagedObjectContext *)context  importer:(id <SapphireImporter>)import;
 
-/*!
- * @brief Displays a chooser and calls the importers callback when done
- *
- * @param chooser The chooser to display
- * @param importer The importer wanting to display a chooser
- * @param context The context item for the chooser
- */
-- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
-@end
-
-/*!
- * @brief The importer UI protected API
- *
- * This category is for use by the SapphireImporter objects to control the overal import process.  It has the ability to pause, resume, and skip an item.
- */
-@interface SapphireImporterDataMenu (protectedAccess)
-
-/*!
- * @brief Resume the import process
- */
-- (void)resume;
-
-/*!
- * @brief Skip the next item in the queue
- */
-- (void)skipNextItem;
 @end

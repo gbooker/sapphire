@@ -20,6 +20,38 @@
 
 #import "SapphireMultipleImporter.h"
 
+@interface SapphireMultipleImporterState : NSObject
+{
+@public
+	int						completedMask;
+	int						nextImportIndex;
+	BOOL					updated;
+	SapphireFileMetaData	*file;
+}
+- (id)initWithFile:(SapphireFileMetaData *)file;
+@end
+
+@implementation SapphireMultipleImporterState
+
+- (id)initWithFile:(SapphireFileMetaData *)aFile
+{
+	self = [super init];
+	if(!self)
+		return self;
+	
+	file = [aFile retain];
+	
+	return self;
+}
+
+- (void) dealloc
+{
+	[file release];
+	[super dealloc];
+}
+
+@end
+
 
 @implementation SapphireMultipleImporter
 
@@ -30,48 +62,68 @@
 		return nil;
 	
 	importers = [importerList retain];
-	importIndex = 0;
+	[importerList makeObjectsPerformSelector:@selector(setDelegate:) withObject:self];
+	pendingImports = [[NSMutableDictionary alloc] init];
 	
 	return self;
 }
 
 - (void) dealloc
 {
+	[importers makeObjectsPerformSelector:@selector(setDelegate:) withObject:nil];
 	[importers release];
+	[pendingImports release];
 	[super dealloc];
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
-	ImportState ret = resumedState;
 	int count = [importers count];
-	for(;importIndex < count; importIndex++)
+	SapphireMultipleImporterState *state = [pendingImports objectForKey:path];
+	if(state == nil)
+	{
+		state = [[SapphireMultipleImporterState alloc] init];
+		[pendingImports setObject:state forKey:path];
+		[state release];		
+	}
+	ImportState ret = ImportStateNotUpdated;
+	int importIndex;
+	for(importIndex = state->nextImportIndex;importIndex < count; importIndex++)
 	{
 		id <SapphireImporter> importer = [importers objectAtIndex:importIndex];
 		ImportState result = [importer importMetaData:metaData path:path];
 		switch(result)
 		{
-			case IMPORT_STATE_NEEDS_SUSPEND:
-				resumedState = ret;
+			case ImportStateSuspend:
+				state->nextImportIndex = importIndex;
 				return result;
-			case IMPORT_STATE_BACKGROUND:
+			case ImportStateBackground:
 				ret = result;
 				break;
-			case IMPORT_STATE_UPDATED:
-				if(ret != IMPORT_STATE_BACKGROUND)
+			case ImportStateUpdated:
+				if(ret != ImportStateBackground)
 					ret = result;
-				break;
+				state->updated = YES;
+			case ImportStateNotUpdated:
+				state->completedMask |= 1 << importIndex;
 		}
 	}
 	
-	importIndex = 0;
-	resumedState = IMPORT_STATE_NOT_UPDATED;
+	if(state->completedMask == (1 << count) -1)
+		[pendingImports removeObjectForKey:path];
+	else
+		state->nextImportIndex = count;
 	return ret;
 }
 
-- (void)setImporterDataMenu:(SapphireImporterDataMenu *)theDataMenu
+- (void)setDelegate:(id <SapphireImporterDelegate>)aDelegate
 {
-	[importers makeObjectsPerformSelector:@selector(setImporterDataMenu:) withObject:theDataMenu];
+	delegate = aDelegate;
+}
+
+- (void)cancelImports
+{
+	[importers makeObjectsPerformSelector:@selector(cancelImports)];
 }
 
 - (NSString *)completionText
@@ -97,5 +149,55 @@
 - (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
 {
 }
+
+- (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)status
+{
+	SapphireMultipleImporterState *state = [pendingImports objectForKey:path];
+	if(!state)
+		//Don't know what to do with you!
+		return;
+	
+	int index = [importers indexOfObject:importer];
+	if(index == NSNotFound)
+		//Don't know what to do with you!
+		return;
+	
+	state->completedMask |= 1 << index;
+	if(status == ImportStateUpdated)
+		state->updated = YES;
+	
+	if(state->nextImportIndex == index)
+	{
+		[self importMetaData:state->file path:path];
+	}
+	if(state->completedMask == (1 << [importers count]) - 1)
+	{	
+		if(state->updated)
+			status = ImportStateUpdated;
+		[delegate backgroundImporter:self completedImportOnPath:path withState:status];
+		[pendingImports removeObjectForKey:path];
+	}
+}
+
+- (void)resumeWithPath:(NSString *)path
+{
+	[delegate resumeWithPath:path];
+}
+
+- (BOOL)canDisplayChooser
+{
+	return [delegate canDisplayChooser];
+}
+
+- (id)chooserScene
+{
+	return [delegate chooserScene];
+}
+
+- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
+{
+	[delegate displayChooser:chooser forImporter:importer withContext:context];
+}
+
 
 @end

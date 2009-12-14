@@ -53,7 +53,7 @@ static SapphireImportHelper *shared = nil;
 
 + (SapphireImportHelper *)sharedHelperForContext:(NSManagedObjectContext *)moc
 {
-	if(shared == nil)
+	if(shared == nil && moc != nil)
 		shared = [[SapphireImportHelperServer alloc] initWithContext:moc];
 
 	return shared;
@@ -168,7 +168,7 @@ static SapphireImportHelper *shared = nil;
 			if(type == IMPORT_TYPE_FILE_DATA)
 				ret = updateMetaData(file);
 			else
-				ret = ([allImporter importMetaData:file path:[file path]] == IMPORT_STATE_UPDATED);
+				ret = ([allImporter importMetaData:file path:[file path]] == ImportStateUpdated);
 			NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
 			[server importCompleteWithChanges:changes updated:ret];
 			[singleImportPool release];
@@ -395,7 +395,7 @@ static SapphireImportHelper *shared = nil;
 		[SapphireMetaDataSupport applyChanges:changes toContext:moc];
 	if(currentImporting == nil)
 		return;
-	[[currentImporting informer] informComplete:updated];
+	[[currentImporting informer] informComplete:updated onPath:[currentImporting path]];
 	[currentImporting release];
 	currentImporting = nil;
 }

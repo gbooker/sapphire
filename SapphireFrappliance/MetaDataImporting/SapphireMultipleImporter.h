@@ -25,10 +25,10 @@
  *
  * This class implements SapphireImporter to provide a proxy to multiple importers.  This is the mechanism by which the "Import All Data" works.
  */
-@interface SapphireMultipleImporter : NSObject <SapphireImporter>{
-	NSArray		*importers;		/*!< @brief The list of importers to use, in order*/
-	int			importIndex;	/*!< @brief The index of the next importer to run*/
-	ImportState	resumedState;	/*!< @brief The state to use when we finally resume */
+@interface SapphireMultipleImporter : NSObject <SapphireImporter, SapphireImporterDelegate>{
+	NSArray							*importers;			/*!< @brief The list of importers to use, in order*/
+	id <SapphireImporterDelegate>	delegate;			/*!< @brief The importer's delegate*/
+	NSMutableDictionary				*pendingImports;	/*!< @brief The pending importers waiting*/
 }
 
 /*!
