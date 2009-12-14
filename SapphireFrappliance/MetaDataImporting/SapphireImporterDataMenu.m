@@ -598,6 +598,7 @@
 {
 	SapphireImportChooserQueueItem *queueItem = [[SapphireImportChooserQueueItem alloc] initWithChooser:chooser forImporter:aImporter withContext:context];
 	[choosers addObject:queueItem];
+	[queueItem release];
 	[[self stack] pushController:chooser];
 }
 
