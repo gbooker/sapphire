@@ -77,6 +77,12 @@ NSArray *showEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredica
 	return [normalEntries arrayByAddingObjectsFromArray:customDirectoryNames];
 }
 
+- (NSArray *)metaFiles
+{
+	NSPredicate *allPred = [NSPredicate predicateWithFormat:@"tvEpisode != nil"];
+	return doFetchRequest(SapphireFileMetaDataName, moc, allPred);
+}
+
 - (id <SapphireDirectory>)metaDataForDirectory:(NSString *)directory
 {
 	id <SapphireDirectory> ret = [super metaDataForDirectory:directory];
