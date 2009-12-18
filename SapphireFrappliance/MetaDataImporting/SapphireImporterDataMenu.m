@@ -535,6 +535,7 @@
 	importTimer = nil;
 	[importItems removeAllObjects];
 	[importer cancelImports];
+	[choosers removeAllObjects];
 	/*Reset the display and write data*/
 	[self resetUIElements];
 	[SapphireMetaDataSupport save:moc];
