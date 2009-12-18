@@ -22,7 +22,7 @@
 
 #define DISTRIBUTED_MESSAGES_PORT 15473
 
-@class SapphireSettings, SapphireTheme, SapphireLeopardOnly, SapphireImporterDataMenu, SapphireBrowser, SapphireDistributedMessagesReceiver, SapphireCustomVirtualDirectoryImporter;
+@class SapphireSettings, SapphireTheme, SapphireLeopardOnly, SapphireImporterDataMenu, SapphireBrowser, SapphireDistributedMessagesReceiver, SapphireCustomVirtualDirectoryImporter, SapphireURLLoader;
 
 extern NSString *SAPPHIRE_MANAGED_OBJECT_CONTEXT_CLOSING;
 
@@ -145,6 +145,13 @@ NSString *applicationSupportDir(void);
  * @return The current custom virtual directory importer
  */
 + (SapphireCustomVirtualDirectoryImporter *)customVirtualDirectoryImporter;
+
+/*!
+ * @brief Gets the current URL loader
+ *
+ * @return The current URL loader
+ */
++ (SapphireURLLoader *)urlLoader;
 
 /*!
  * @brief Log an exception to the console

@@ -171,6 +171,7 @@
 		F5E849C70C3F008100913832 /* SapphireMetaDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E849C60C3F008100913832 /* SapphireMetaDataScanner.m */; };
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
+		F5F5142410DBDF90006B9DED /* SapphireURLLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F5142310DBDF90006B9DED /* SapphireURLLoader.m */; };
 		FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */; };
 		FE4239A40C331FFD0035A717 /* Green.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A00C331FFD0035A717 /* Green.png */; };
 		FE4239A50C331FFD0035A717 /* Yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A10C331FFD0035A717 /* Yellow.png */; };
@@ -583,6 +584,8 @@
 		F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMarkMenu.m; sourceTree = "<group>"; };
 		F5EA91330C3063F500B1EC7D /* SapphireMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMedia.h; sourceTree = "<group>"; };
 		F5EA91340C3063F500B1EC7D /* SapphireMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMedia.m; sourceTree = "<group>"; };
+		F5F5142210DBDF90006B9DED /* SapphireURLLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireURLLoader.h; sourceTree = "<group>"; };
+		F5F5142310DBDF90006B9DED /* SapphireURLLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireURLLoader.m; sourceTree = "<group>"; };
 		F5FB82E20D18065F0018E4C9 /* NSArray-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray-Extensions.h"; sourceTree = "<group>"; };
 		F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray-Extensions.m"; sourceTree = "<group>"; };
 		F5FC58B41039F61600042296 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -835,6 +838,8 @@
 				F52E4E2E0F4397D700AC6C52 /* SapphireWaitDisplay.m */,
 				F52E4EA80F43B53F00AC6C52 /* SapphireConfirmPrompt.h */,
 				F52E4EA90F43B53F00AC6C52 /* SapphireConfirmPrompt.m */,
+				F5F5142210DBDF90006B9DED /* SapphireURLLoader.h */,
+				F5F5142310DBDF90006B9DED /* SapphireURLLoader.m */,
 			);
 			path = FRAppliance;
 			sourceTree = "<group>";
@@ -1432,6 +1437,7 @@
 				5941C04810786ECA004C887B /* SapphireCustomVirtualDirectoryImporter.m in Sources */,
 				F5A9A89510A7A69600BA95CD /* NSXMLDocument-Extensions.m in Sources */,
 				F506593110B22EC800D0F1FE /* SapphireTVDirectory.m in Sources */,
+				F5F5142410DBDF90006B9DED /* SapphireURLLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

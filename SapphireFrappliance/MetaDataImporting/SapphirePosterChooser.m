@@ -28,6 +28,7 @@
 #import "SapphireDirectoryMetaData.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireApplianceController.h"
+#import "SapphireURLLoader.h"
 
 #import "NSImage-Extensions.h"
 
@@ -38,16 +39,16 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @end
 
 @interface SapphirePosterChooser (private)
-- (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath;
-- (void) loadPoster:(int)index;
-- (void) hideIconMarch;
-- (void) showIconMarch;
-- (void) selectionChanged: (NSNotification *) note;
+- (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData;
+- (void)loadPoster:(int)index;
+- (void)hideIconMarch;
+- (void)showIconMarch;
+- (void)selectionChanged:(NSNotification *)note;
 @end
 
 @implementation SapphirePosterChooser
 
-- (id) initWithScene: (BRRenderScene *) scene
+- (id)initWithScene:(BRRenderScene *)scene
 {
 	self = [super initWithScene: scene];
 	if(!self)
@@ -67,7 +68,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y = frame.size.height / 1.25f;
 	frame.origin.x = (frame.size.width / 4.0f) ;
-	defaultImage = [[self getPosterLayer:[[NSBundle bundleForClass:[self class]] pathForResource:@"PH" ofType:@"png"]] retain];
+	NSString *defaultPosterPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"PH" ofType:@"png"];
+	NSData *defaultPosterData = [NSData dataWithContentsOfFile:defaultPosterPath];
+	defaultImage = [[self getPosterLayerForData:defaultPosterData] retain];
+	defaultNSImage = [[NSImage alloc] initWithContentsOfFile:defaultPosterPath];
 
 	
 	[fileInfoText setFrame: frame];
@@ -92,23 +96,24 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[fileInfoText release];
 	[posterMarch release];
 	[defaultImage release];
+	[defaultNSImage release];
 	[meta release];
 	[super dealloc];
 }
 
-- (void)setRefreshInvokation: (NSInvocation *)invoke;
+- (void)setRefreshInvokation:(NSInvocation *)invoke;
 {
 	[refreshInvoke release];
 	refreshInvoke = [invoke retain];
 }
 
-- (void) resetLayout
+- (void)resetLayout
 {
     [super resetLayout];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
-- (void) willBePushed
+- (void)willBePushed
 {
 	[self showIconMarch];
     // always call super
@@ -133,7 +138,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[super wasPushed];
 }
 
-- (void) wasPopped
+- (void)wasPopped
 {
     // The user pressed Menu, removing us from the screen
     // always call super
@@ -163,12 +168,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return ret;
 }
 
-- (void) itemSelected: (long) row
+- (void)itemSelected:(long)row
 {
 	/*User made a selection*/
 	if ( refreshInvoke != nil && row == [posters count] )
 	{
-		NSInvocation *invoke = [NSInvocation invocationWithMethodSignature: [self methodSignatureForSelector: @selector(doRefresh)]];
+		NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector: @selector(doRefresh)]];
 		[invoke setSelector: @selector(doRefresh)];
 		[invoke setTarget:   self];
 		
@@ -201,7 +206,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 - (void)setPosters:(NSArray *)posterList
 {
-	posters = [posterList retain];
+	posters = [posterList mutableCopy];
 	if([posters count] > 5)
 	{
 		[posterMarch release];
@@ -232,9 +237,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
-- (void)reloadPoster:(int)index
+- (void)reloadPosterWithData:(NSData *)data atIndex:(NSNumber *)index;
 {
-	[self loadPoster:index];
+	[posterLayers replaceObjectAtIndex:[index intValue] withObject:[self getPosterLayerForData:data]];
+	NSImage *image = [[NSImage alloc] initWithData:data];
+	[posters replaceObjectAtIndex:[index intValue] withObject:image];
+	[image release];
 	[posterMarch _updateIcons];
 	[self resetPreviewController];
 	[SapphireFrontRowCompat renderScene:[self scene]];
@@ -287,17 +295,17 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return selection;
 }
 
-- (long) iconCount
+- (long)iconCount
 {
 	return [posterLayers count];
 }
 
-- (NSDictionary *) iconInfoAtIndex: (long) index
+- (NSDictionary *)iconInfoAtIndex:(long)index
 {
 	return [NSDictionary dictionaryWithObject:[posterLayers objectAtIndex:index] forKey:@"icon"];
 }
 
-- (id) iconAtIndex: (long) index
+- (id)iconAtIndex:(long)index
 {
     if ( index >= [posterLayers count] )
         return nil;
@@ -306,7 +314,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 }
 
 
-- (long) itemCount
+- (long)itemCount
 {
 	if ( refreshInvoke != nil ) 
 		return [posters count] + 1;
@@ -315,7 +323,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 }
 
 
-- (id) itemForRow: (long) row
+- (id)itemForRow:(long)row
 {
 	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 	if ( refreshInvoke != nil && row == [posters count] )
@@ -325,7 +333,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return result;
 }
 
-- (NSString *) titleForRow: (long) row
+- (NSString *)titleForRow:(long)row
 {
 	if(row > [posters count])
 		return nil;
@@ -336,19 +344,19 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return [NSString stringWithFormat:@"Version %2d",row+1];
 }
 
-- (long) rowForTitle: (NSString *) title
+- (long)rowForTitle:(NSString *)title
 {
     long result = -1;
     long i, count = [self itemCount];
-    for ( i = 0; i < count; i++ )
+    for(i=0; i<count; i++)
     {
-        if ( [title isEqualToString: [self titleForRow: i]] )
-       {
+        if([title isEqualToString:[self titleForRow:i]])
+		{
             result = i;
             break;
-       }
+		}
     }
-    return ( result );
+    return result;
 }
 
 /*!
@@ -356,33 +364,27 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
  *
  * @param The index of the poster to load
  */
-- (void) loadPoster:(int)index;
+- (void)loadPoster:(int)index;
 {
-	NSString *poster = [posters objectAtIndex:index];
-	NSString *posterDest=[NSString stringWithFormat:@"%@/%@",
-		[applicationSupportDir() stringByAppendingPathComponent:@"Poster_Buffer"],
-		[poster lastPathComponent]];
-	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayer:posterDest]];
+	NSString *posterURL = [posters objectAtIndex:index];
+	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
+	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withCache:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index]];
 }
 
-- (BRBlurryImageLayer *) getPosterLayer: (NSString *) thePosterPath
+- (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData
 {
 	if([SapphireFrontRowCompat usingLeopardOrATypeOfTakeTwo])
 	{
 		/*The marching icons has changed, dramatically, so we do the changes here*/
-		id ret = [SapphireFrontRowCompat imageAtPath:thePosterPath];
+		id ret = [SapphireFrontRowCompat imageFromData:thePosterData];
 		if(ret != nil)
 			return ret;
 		else
 			return defaultImage;
 	}
-    NSURL * posterURL = [NSURL fileURLWithPath: thePosterPath];
-	
-    if (posterURL==nil)
-		return nil;
 	CGImageRef posterImage=NULL;
 	CGImageSourceRef  sourceRef;	
-    sourceRef = CGImageSourceCreateWithURL((CFURLRef)posterURL, NULL);
+    sourceRef = CGImageSourceCreateWithData((CFDataRef)thePosterData, NULL);
     if(sourceRef) {
         posterImage = CGImageSourceCreateImageAtIndex(sourceRef, 0, NULL);
         CFRelease(sourceRef);
@@ -419,16 +421,16 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	
     [lucid release];
 	
-    return ( result );
+    return result;
 }
 
-- (void) hideIconMarch
+- (void)hideIconMarch
 {
 	/* Might want to free memory here since posters won't be chosen again */
     [posterMarch removeFromSuperlayer];
 }
 
-- (void) showIconMarch
+- (void)showIconMarch
 {
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
     frame.size.width *= 0.50f;
@@ -464,7 +466,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[selInv invokeWithTarget:posterMarch];
 }
 
-- (void) selectionChanged: (NSNotification *) note
+- (void)selectionChanged:(NSNotification *)note
 {
 	/* ATV version 1.1 */
 	if([(BRListControl *)[note object] respondsToSelector:@selector(renderSelection)])
@@ -474,7 +476,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		[self setSelectionForPoster:[(BRListControl *)[note object] selection]];
 }
 
-- (id<BRMediaPreviewController>) previewControlForItem: (long) row
+- (id<BRMediaPreviewController>)previewControlForItem:(long)row
 {
 	if(posterMarch != nil)
 		return nil;
@@ -489,21 +491,15 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
 		id poster = [posters objectAtIndex:row];
 
-		if ( [poster isKindOfClass:[NSString class]] )
-		{
-			NSString *posterDest = [NSString stringWithFormat:@"%@/%@",	[applicationSupportDir() stringByAppendingPathComponent:@"Poster_Buffer"],
-																		[poster lastPathComponent]];
-			[asset setImagePath: posterDest];
-		}
+		if(![poster isKindOfClass:[NSString class]])
+			[asset setImage:poster];
 		else
-		{
-			[asset setImage: poster];
-		}
+			[asset setImage:defaultNSImage];
 
 		[preview setAsset:asset];
 		[asset release];
 	}
-	else if ( row == [posters count] )
+	else if(row == [posters count])
 	{
 		NSMutableDictionary *refreshMeta = [NSMutableDictionary dictionary];
 		[refreshMeta setObject: BRLocalizedString( @"Refresh the artwork selection", @"Refresh the artwork selection" ) forKey: META_TITLE_KEY];
@@ -513,7 +509,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return [preview autorelease];
 }
 
-- (id<BRMediaPreviewController>) previewControllerForItem: (long) row
+- (id<BRMediaPreviewController>)previewControllerForItem:(long)row
 {
 	return [self previewControlForItem:row];
 }

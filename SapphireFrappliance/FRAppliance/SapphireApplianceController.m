@@ -45,6 +45,7 @@
 #import "SapphireAudioNowPlayingController.h"
 #import "SapphireTVDirectory.h"
 #import "SapphireCustomVirtualDirectoryImporter.h"
+#import "SapphireURLLoader.h"
 
 #import "NSFileManager-Extensions.h"
 
@@ -251,6 +252,14 @@ BRMusicNowPlayingController *musicController = nil;
 	if(customVirtualDirectoryImporter == nil)
 		customVirtualDirectoryImporter = [[SapphireCustomVirtualDirectoryImporter alloc] initWithPath:[applicationSupportDir() stringByAppendingPathComponent:@"virtualDirs.xml"]];
 	return customVirtualDirectoryImporter;
+}
+
++ (SapphireURLLoader *)urlLoader
+{
+	static SapphireURLLoader *urlLoader = nil;
+	if(urlLoader == nil)
+		urlLoader = [[SapphireURLLoader alloc] init];
+	return urlLoader;
 }
 
 + (void)logException:(NSException *)e

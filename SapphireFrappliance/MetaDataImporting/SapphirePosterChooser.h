@@ -30,7 +30,7 @@
  * This class provides a menu and maching icons to display posters for the user to choose.
  */
 @interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate, SapphireChooser> {
-	NSArray					*posters;		/*!< @brief The array of poster paths*/
+	NSMutableArray			*posters;		/*!< @brief The array of poster urls*/
 	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
 	NSString				*fileName;		/*!< @brief The movie filename*/
 	NSString				*movieTitle;	/*!< @brief The title of the movie*/
@@ -38,6 +38,7 @@
 	BRTextControl			*fileInfoText;	/*!< @brief The text control to display filename and movie title*/
 	BRMarchingIconLayer		*posterMarch;	/*!< @brief The icon march to display the posters*/
 	BRBlurryImageLayer		*defaultImage;	/*!< @brief The image to use when the poster isn't loaded yet*/
+	NSImage					*defaultNSImage;/*!< @brief The NSImage to use when the poster isn't loaded yet*/
 	SapphireFileMetaData	*meta;			/*!< @brief The file's meta*/
 	NSInvocation			*refreshInvoke;	/*!< @brief Should the chooser allow a refresh of the available cover art*/
 }
@@ -66,7 +67,7 @@
 /*!
  * @brief Sets the posters to choose from
  *
- * @param posterList The list of movies to choose from specified as paths
+ * @param posterList The list of movies to choose from specified as urls
  */
 - (void)setPosters:(NSArray *)posterList;
 
@@ -81,13 +82,6 @@
  * @brief Loads the posters from disk
  */
 - (void)loadPosters;
-
-/*!
- * @brief Reloads a poster from disk
- *
- * @param index The index of the poster to reload
- */
-- (void)reloadPoster:(int)index;
 
 /*!
  * @brief Sets the filename to display

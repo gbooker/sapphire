@@ -33,6 +33,7 @@
 #import "SapphireMovieTranslation.h"
 #import "SapphireMoviePoster.h"
 #import "SapphireApplianceController.h"
+#import "SapphireURLLoader.h"
 
 #define MOVIE_TRAN_IMDB_NAME_KEY				@"name"
 #define MOVIE_TRAN_IMDB_LINK_KEY				@"IMDB Link"
@@ -49,100 +50,6 @@
 /* IMP XPATHS */
 #define IMP_POSTER_CANDIDATES_XPATH		@"//img/@src"
 #define IMP_LINK_REDIRECT_XPATH				@"//head/meta/@content/string()"
-
-
-
-
-/*Delegate class to download cover art*/
-@interface SapphireMovieDataMenuDownloadDelegate : NSObject
-{
-	NSString *destination;
-	NSSet *requestList ;
-	NSMutableArray *delegates;
-	long downloadsLeft;
-	SapphirePosterChooser *posterChooser;
-}
-- (id)initWithRequest:(NSSet*)reqList withDestination:(NSString *)dest chooser:(SapphirePosterChooser *)chooser;
-- (void) downloadDidFinish: (NSURLDownload *) download;
-- (void)downloadMoviePosters ;
--(void)downloadSingleMoviePoster;
-@end
-
-@interface NSObject (MovieDataDownloadDelegateDelegate)
-- (void)downloadCompleted:(NSURLDownload *)download atIndex:(int)index;
-@end
-
-@implementation SapphireMovieDataMenuDownloadDelegate
-/*!
-* @brief Initialize a cover art downloader
- *
- * @param reqList The list of url requests to try
- * @param dest The path to save the file
- */
-- (id)initWithRequest:(NSSet*)reqList withDestination:(NSString *)dest chooser:(SapphirePosterChooser *)chooser
-{
-	self = [super init];
-	if(!self)
-		return nil;
-	delegates = [NSMutableArray new];
-	destination = [dest retain];
-	requestList = [reqList retain];
-	downloadsLeft=[requestList count];
-	posterChooser = chooser;
-	return self;	
-}
-
-- (void)dealloc
-{
-	[destination release];
-	[requestList release];
-	[delegates release];
-	[super dealloc];
-}
-
-/*!
- * @brief Fire the delegate to start downloading the posters
- *
- */
--(void)downloadMoviePosters
-{
-	NSEnumerator *reqEnum = [requestList objectEnumerator] ;
-	SapphireMoviePoster *poster = nil ;
-	while((poster = [reqEnum nextObject]) !=nil)
-	{
-		NSString *req = [poster link];
-		NSURL *posterURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@",req]];
-		NSString *fullDestination = [NSString stringWithFormat:@"%@/%@", destination, [req lastPathComponent]];
-		NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
-		NSURLDownload *currentDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self] ;
-		[currentDownload setDestination:fullDestination allowOverwrite:YES];
-		[delegates addObject:currentDownload];
-		[currentDownload release];
-	}
-}
-
-/*!
- * @brief Fire the delegate to start downloading a single poster
- *
- */
--(void)downloadSingleMoviePoster
-{
-	NSURL *posterURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.IMPAwards.com%@", [[requestList anyObject] link]]];
-	NSString *fullDestination = destination;
-	NSURLRequest *request = [NSURLRequest requestWithURL:posterURL];
-	NSURLDownload *currentDownload = [[NSURLDownload alloc] initWithRequest:request delegate:self] ;
-	[currentDownload setDestination:fullDestination allowOverwrite:YES];
-	[delegates addObject:currentDownload];
-	[currentDownload release];
-}
-
-- (void) downloadDidFinish: (NSURLDownload *) download
-{
-	downloadsLeft--;
-	[posterChooser reloadPoster:[delegates indexOfObject:download]];
-}
-
-@end
 
 @implementation SapphireMovieImporter
 
@@ -259,16 +166,6 @@
 		[ret addObject:[SapphireMoviePoster createPosterWithLink:[candidatePosterLinks objectAtIndex:i] index:i translation:nil inContext:moc]];
 	}
 	return [ret autorelease];
-}
-
-- (void)downloadPosterCandidates:(NSSet *)posterCandidates forChooser:(SapphirePosterChooser *)chooser
-{
-	/* download all posters to the scratch folder */
-	NSString *posterBuffer = [applicationSupportDir() stringByAppendingPathComponent:@"Poster_Buffer"];
-	[[NSFileManager defaultManager] constructPath:posterBuffer];
-	SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterCandidates withDestination:posterBuffer chooser:chooser];
-	[myDelegate downloadMoviePosters] ;
-	[myDelegate autorelease];
 }
 
 /*!
@@ -758,8 +655,14 @@
 			}
 			else
 			{
-				[self downloadPosterCandidates:posters forChooser:posterChooser];
-				[posterChooser setPosters:[[tran orderedPosters] valueForKey:@"link"]];
+				NSMutableArray *posterPaths = [[[tran orderedPosters] valueForKey:@"link"] mutableCopy];
+				int i, count = [posterPaths count];
+				for(i=0; i<count; i++)
+				{
+					[posterPaths replaceObjectAtIndex:i withObject:[@"http://www.IMPAwards.com" stringByAppendingString:[posterPaths objectAtIndex:i]]];
+				}
+				[posterChooser setPosters:posterPaths];
+				[posterPaths release];
 				[posterChooser setFileName:lookupName];
 				[posterChooser setFile:(SapphireFileMetaData *)metaData];
 				[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
@@ -778,48 +681,12 @@
 	coverart=[coverart stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", imdbNumber]];
 	if(selectedPoster && [tran IMPLink])
 	{
-		/* Lets move the selected poster to the corresponding Cover Art Directory */
-		NSString *poster = [applicationSupportDir() stringByAppendingPathComponent:@"Poster_Buffer"];
-		poster = [poster stringByAppendingPathComponent:[[selectedPoster link] lastPathComponent]];
-		coverart=[coverart stringByAppendingPathExtension:[poster pathExtension]];
-		if([fileAgent fileExistsAtPath:poster])/* See if we need to clean up */
-		{
-			if([fileAgent fileExistsAtPath:coverart])/* Remove old poster */
-				[fileAgent removeFileAtPath:coverart handler:self];
-			[fileAgent movePath:poster toPath:coverart handler:self] ;
-			/* Lets clean up the Poster_Buffer */
-			NSSet *oldPosters = [tran postersSet];
-			if([oldPosters count])
-			{
-				NSEnumerator *resultEnum = [oldPosters objectEnumerator];
-				SapphireMoviePoster *result = nil;
-				while((result = [resultEnum nextObject]) != nil)
-				{
-					BOOL isDir=NO ;
-					NSString *removeFile=[NSString stringWithFormat:@"%@/%@",[applicationSupportDir() stringByAppendingPathComponent:@"Poster_Buffer"],[[result link] lastPathComponent]];
-					[fileAgent fileExistsAtPath:removeFile isDirectory:&isDir];
-					if(!isDir)[fileAgent removeFileAtPath:removeFile handler:self] ;
-				}
-			}
-		}
-		else if(![fileAgent fileExistsAtPath:coverart])
-		{
-			/* We have seen this file before, but in a different location */
-			/* - OR - the coverart has been deleted */
-			NSSet *posterList = [NSSet setWithObject:selectedPoster];
-			SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart chooser:nil];
-			[myDelegate downloadSingleMoviePoster] ;
-			[myDelegate autorelease];
-		}
+		[[SapphireApplianceController urlLoader] saveDataAtURL:[@"http://www.IMPAwards.com" stringByAppendingString:[selectedPoster link]] toFile:coverart];
 	}
 	else if(autoSelectPoster)
 	{
 		/* The poster chooser wasn't loaded - ATV 1.0 */
-		NSSet *posterList = [NSSet setWithObject:autoSelectPoster];
-		coverart = [coverart stringByAppendingPathExtension:[[autoSelectPoster link] pathExtension]];
-		SapphireMovieDataMenuDownloadDelegate *myDelegate = [[SapphireMovieDataMenuDownloadDelegate alloc] initWithRequest:posterList withDestination:coverart chooser:nil];
-		[myDelegate downloadSingleMoviePoster] ;
-		[myDelegate autorelease];	
+		[[SapphireApplianceController urlLoader] saveDataAtURL:[@"http://www.IMPAwards.com" stringByAppendingString:[autoSelectPoster link]] toFile:coverart];
 	}
 	
 	/* If we have JPEG art and content is a ripped DVD we provide Preview.jpg coverart in the film folder,
