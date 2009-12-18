@@ -59,4 +59,24 @@
 	return BRLocalizedString(@"Start Populating Data", @"Button");
 }
 
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
+{
+	[super exhumedChooser:chooser withContext:context];
+}
+
+- (void)cancelImports
+{
+	[super cancelImports];
+}
+
+- (void)setDelegate:(id <SapphireImporterDelegate>)aDelegate
+{
+	[super setDelegate:aDelegate];
+}
+
+- (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
+{
+	return [super importMetaData:metaData path:path];
+}
+
 @end
