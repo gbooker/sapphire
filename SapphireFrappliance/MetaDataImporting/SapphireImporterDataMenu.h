@@ -23,7 +23,7 @@
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
 
 @class SapphireImporterDataMenu, SapphireFileMetaData;
-@protocol SapphireImporterDelegate;
+@protocol SapphireImporterDelegate, SapphireChooser;
 
 /*!
  * @brief Status of an import
@@ -108,7 +108,7 @@ typedef enum{
  * @param chooser The chooser which was exhumed
  * @param context The context for this choice
  */
-- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context;
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context;
 @end
 
 @protocol SapphireImporterDelegate <NSObject>
@@ -150,7 +150,7 @@ typedef enum{
  * @param importer The importer wanting to display a chooser
  * @param context The context item for the chooser
  */
-- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
+- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
 
 @end
 

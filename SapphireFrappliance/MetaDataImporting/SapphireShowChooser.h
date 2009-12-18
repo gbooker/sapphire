@@ -20,20 +20,18 @@
 
 #import <SapphireCompatClasses/SapphireCenteredMenuController.h>
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
-
-#define SHOW_CHOOSE_CANCEL -2
-#define SHOW_CHOOSE_NOT_SHOW -1
+#import "SapphireChooser.h"
 
 /*!
  * @brief A subclass of SapphireCenteredMenuController to choose a show title
  *
  * This class presents the user with a list of possible shows to match a file and asks the user to choose its name.
  */
-@interface SapphireShowChooser : SapphireCenteredMenuController <SapphireLayoutDelegate> {
-	NSArray			*shows;		/*!< @brief The list of possible shows*/
-	NSString		*searchStr;	/*!< @brief The string we searched for*/
-	int				selection;	/*!< @brief The user's selection*/
-	BRTextControl	*fileName;	/*!< @brief The filename control*/
+@interface SapphireShowChooser : SapphireCenteredMenuController <SapphireLayoutDelegate, SapphireChooser> {
+	NSArray					*shows;		/*!< @brief The list of possible shows*/
+	NSString				*searchStr;	/*!< @brief The string we searched for*/
+	SapphireChooserChoice	selection;	/*!< @brief The user's selection*/
+	BRTextControl			*fileName;	/*!< @brief The filename control*/
 }
 
 /*!
@@ -70,12 +68,5 @@
  * @return The string we searched for
  */
 - (NSString *)searchStr;
-
-/*!
- * @brief The item the user selected.  Special values are in the header file
- *
- * @return The user's selection
- */
-- (int)selection;
 
 @end

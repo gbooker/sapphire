@@ -20,9 +20,7 @@
 
 #import <SapphireCompatClasses/SapphireMediaMenuController.h>
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
-
-#define POSTER_CHOOSE_CANCEL		-1
-#define POSTER_CHOOSE_REFRESH		0
+#import "SapphireChooser.h"
 
 @class BRRenderScene, BRRenderLayer, BRMarchingIconLayer, SapphireFileMetaData;
 
@@ -31,12 +29,12 @@
  *
  * This class provides a menu and maching icons to display posters for the user to choose.
  */
-@interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate> {
+@interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate, SapphireChooser> {
 	NSArray					*posters;		/*!< @brief The array of poster paths*/
 	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
 	NSString				*fileName;		/*!< @brief The movie filename*/
 	NSString				*movieTitle;	/*!< @brief The title of the movie*/
-	long					selectedPoster;	/*!< @brief The user's selection*/
+	SapphireChooserChoice	selection;		/*!< @brief The user's selection*/
 	BRTextControl			*fileInfoText;	/*!< @brief The text control to display filename and movie title*/
 	BRMarchingIconLayer		*posterMarch;	/*!< @brief The icon march to display the posters*/
 	BRBlurryImageLayer		*defaultImage;	/*!< @brief The image to use when the poster isn't loaded yet*/
@@ -125,12 +123,5 @@
  * @return The file name we searched for
  */
 - (NSString *)fileName;
-
-/*!
- * @brief The item the user selected.  Special values are in the header file
- *
- * @return The user's selection
- */
-- (long)selectedPoster;
 
 @end

@@ -52,7 +52,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	self = [super initWithScene: scene];
 	if(!self)
 		return nil;
-	selectedPoster = -1;
+	selection = SapphireChooserChoiceCancel;
 	
 	// we want to know when the list selection changes, so we can pass
     // that information on to the icon march layer
@@ -179,8 +179,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	}
 	else
 	{
-		selectedPoster = row;
-		if ( [[posters objectAtIndex:selectedPoster] isKindOfClass:[NSImage class]] )
+		selection = row;
+		if ( [[posters objectAtIndex:selection] isKindOfClass:[NSImage class]] )
 			[[posters objectAtIndex:row] writeToFile:[meta coverArtPath] atomically:YES];
 		[[self stack] popController];
 	}
@@ -282,9 +282,9 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return movieTitle;
 }
 
-- (long)selectedPoster
+- (SapphireChooserChoice)selection
 {
-	return selectedPoster;
+	return selection;
 }
 
 - (long) iconCount

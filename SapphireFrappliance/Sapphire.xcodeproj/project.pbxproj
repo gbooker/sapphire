@@ -420,6 +420,7 @@
 		F53420540DC2F17F00498822 /* SapphireVideoPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireVideoPlayerController.h; sourceTree = "<group>"; };
 		F53420550DC2F17F00498822 /* SapphireVideoPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireVideoPlayerController.m; sourceTree = "<group>"; };
 		F535C7420DF2353900716DA9 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		F5409DE710D9760300DB3B0C /* SapphireChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireChooser.h; sourceTree = "<group>"; };
 		F541CBF30D9C2D19002F9278 /* SapphireRadioSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireRadioSetting.h; sourceTree = "<group>"; };
 		F541CBF40D9C2D19002F9278 /* SapphireRadioSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireRadioSetting.m; sourceTree = "<group>"; };
 		F54460290E030D5100311C03 /* SapphireDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireDirectory.m; sourceTree = "<group>"; };
@@ -918,6 +919,7 @@
 				F5A262530DD624B900AFB1D6 /* SapphireVideoTSParser.m */,
 				F5CE69540D45732C003C4B2D /* SapphireXMLFileDataImporter.h */,
 				F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */,
+				F5409DE710D9760300DB3B0C /* SapphireChooser.h */,
 			);
 			path = MetaDataImporting;
 			sourceTree = "<group>";

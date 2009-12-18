@@ -878,7 +878,7 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
 {
 	/*See if it was a movie chooser*/
 	if([chooser isKindOfClass:[SapphireMovieChooser class]])
@@ -890,12 +890,12 @@
 		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		int selection = [movieChooser selection];
-		if(selection == MOVIE_CHOOSE_CANCEL)
+		if(selection == SapphireChooserChoiceCancel)
 		{
 			/*They aborted, skip*/
 			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUpdated];
 		}
-		else if(selection == MOVIE_CHOOSE_NOT_MOVIE)
+		else if(selection == SapphireChooserChoiceNotType)
 		{
 			/*They said it is not a movie, so put in empty data so they are not asked again*/
 			[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
@@ -922,8 +922,8 @@
 		SapphireFileMetaData *currentData = state->file;
 		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
-		int selectedPoster = [posterChooser selectedPoster];
-		if(selectedPoster == POSTER_CHOOSE_CANCEL)
+		SapphireChooserChoice selectedPoster = [posterChooser selection];
+		if(selectedPoster == SapphireChooserChoiceCancel)
 			/*They aborted, skip*/
 			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUpdated];
 		else

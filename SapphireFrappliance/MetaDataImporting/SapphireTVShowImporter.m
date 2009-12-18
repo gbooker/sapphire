@@ -816,7 +816,7 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void)exhumedChooser:(BRLayerController *)aChooser withContext:(id)context;
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)aChooser withContext:(id)context;
 {
 	if(![aChooser isKindOfClass:[SapphireShowChooser class]])
 		return;
@@ -828,10 +828,10 @@
 	
 	/*Get the user's selection*/
 	int selection = [chooser selection];
-	if(selection == SHOW_CHOOSE_CANCEL)
+	if(selection == SapphireChooserChoiceCancel)
 		/*They aborted, skip*/
 		[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUserSkipped];
-	else if(selection == SHOW_CHOOSE_NOT_SHOW)
+	else if(selection == SapphireChooserChoiceNotType)
 	{
 		/*They said it is not a show, so put in empty data so they are not asked again*/
 		[currentData didImportType:IMPORT_TYPE_TVSHOW_MASK];

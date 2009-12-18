@@ -34,7 +34,7 @@
 	if(!self)
 		return nil;
 	
-	selection = -1;
+	selection = SapphireChooserChoiceCancel;
 	
 	/* Set a control to display the fileName */
 	fileName = [SapphireFrontRowCompat newTextControlWithScene:scene];
@@ -102,9 +102,9 @@
 	[super wasPushed];
 }
 
-- (int)selection
+- (SapphireChooserChoice)selection
 {
-	return selection - 1;
+	return selection;
 }
 
 - (long) itemCount
@@ -147,7 +147,7 @@
 - (void) itemSelected: (long) row
 {
 	/*User made selection, let's exit*/
-	selection = row;
+	selection = row - 1;
 	[[self stack] popController];
 }
 @end

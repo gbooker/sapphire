@@ -82,7 +82,7 @@
 	SapphireMultipleImporterState *state = [pendingImports objectForKey:path];
 	if(state == nil)
 	{
-		state = [[SapphireMultipleImporterState alloc] init];
+		state = [[SapphireMultipleImporterState alloc] initWithFile:metaData];
 		[pendingImports setObject:state forKey:path];
 		[state release];		
 	}
@@ -146,7 +146,7 @@
 	return @"";
 }
 
-- (void)exhumedChooser:(BRLayerController *)chooser withContext:(id)context
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
 {
 }
 
@@ -166,11 +166,19 @@
 	if(status == ImportStateUpdated)
 		state->updated = YES;
 	
+	if(status == ImportStateUserSkipped)
+	{
+		if(state->updated)
+			status = ImportStateUpdated;
+		[delegate backgroundImporter:self completedImportOnPath:path withState:status];
+		return;
+	}
+	
 	if(state->nextImportIndex == index)
 	{
 		[self importMetaData:state->file path:path];
 	}
-	if(state->completedMask == (1 << [importers count]) - 1)
+	else if(state->completedMask == (1 << [importers count]) - 1)
 	{	
 		if(state->updated)
 			status = ImportStateUpdated;
@@ -194,7 +202,7 @@
 	return [delegate chooserScene];
 }
 
-- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
+- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
 {
 	[delegate displayChooser:chooser forImporter:importer withContext:context];
 }

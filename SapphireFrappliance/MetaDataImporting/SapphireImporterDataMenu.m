@@ -30,24 +30,25 @@
 #import "SapphireMetaDataSupport.h"
 #import "NSManagedObject-Extensions.h"
 #import "SapphireFileSymLink.h"
+#import "SapphireChooser.h"
 
 #define updateFreq 0.05
 
 @interface SapphireImportChooserQueueItem : NSObject
 {
-	BRLayerController		*chooser;
-	id <SapphireImporter>	importer;
-	id						context;
+	BRLayerController <SapphireChooser>	*chooser;
+	id <SapphireImporter>				importer;
+	id									context;
 }
-- (id)initWithChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
-- (BRLayerController *)chooser;
+- (id)initWithChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context;
+- (BRLayerController <SapphireChooser> *)chooser;
 - (id <SapphireImporter>)importer;
 - (id)context;
 @end
 
 @implementation SapphireImportChooserQueueItem
 
-- (id)initWithChooser:(BRLayerController *)aChooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)aContext
+- (id)initWithChooser:(BRLayerController <SapphireChooser>*)aChooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)aContext
 {
 	self = [super init];
 	if(!self)
@@ -68,7 +69,7 @@
 	[super dealloc];
 }
 
-- (BRLayerController *)chooser
+- (BRLayerController <SapphireChooser> *)chooser
 {
 	return chooser;
 }
@@ -594,12 +595,22 @@
 	return [self scene];
 }
 
-- (void)displayChooser:(BRLayerController *)chooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)context
+- (void)displayNextChooser
+{
+	if(![choosers count])
+		return;
+	
+	SapphireImportChooserQueueItem *queueItem = [choosers objectAtIndex:0];
+	[[self stack] pushController:[queueItem chooser]];
+}
+
+- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)context
 {
 	SapphireImportChooserQueueItem *queueItem = [[SapphireImportChooserQueueItem alloc] initWithChooser:chooser forImporter:aImporter withContext:context];
 	[choosers addObject:queueItem];
 	[queueItem release];
-	[[self stack] pushController:chooser];
+	if([choosers count] == 1)
+		[[self stack] pushController:chooser];
 }
 
 /*!
@@ -643,8 +654,16 @@
 - (void)wasExhumed
 {
 	SapphireImportChooserQueueItem *queueItem = [choosers objectAtIndex:0];
-	[[queueItem importer] exhumedChooser:[queueItem chooser] withContext:[queueItem context]];
+	BRLayerController <SapphireChooser> *chooser = [queueItem chooser];
+	[[queueItem importer] exhumedChooser:chooser withContext:[queueItem context]];
 	[choosers removeObjectAtIndex:0];
+	if([choosers count])
+	{
+		if([chooser selection] == SapphireChooserChoiceCancel)
+			[self performSelector:@selector(displayNextChooser) withObject:nil afterDelay:0.5];
+		else
+			[self displayNextChooser];
+	}
 	[super wasExhumed];
 }
 

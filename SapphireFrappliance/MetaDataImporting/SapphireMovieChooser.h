@@ -20,20 +20,18 @@
 
 #import <SapphireCompatClasses/SapphireCenteredMenuController.h>
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
-
-#define MOVIE_CHOOSE_CANCEL		-2
-#define MOVIE_CHOOSE_NOT_MOVIE	-1
+#import "SapphireChooser.h"
 
 /*!
  * @brief A subclass of SapphireCenteredMenuController to choose a movie title
  *
  * This class presents the user with a list of possible movies to match a file and asks the user to choose its name.
  */
-@interface SapphireMovieChooser : SapphireCenteredMenuController <SapphireLayoutDelegate> {
-	NSArray			*movies;		/*!< @brief The list of possible movies*/
-	NSString		*fileName;		/*!< @brief The filename of the current file*/
-	int				selection;		/*!< @brief The selection the user made*/
-	BRTextControl	*fileNameText;	/*!< @brief The display of the filename on the screen*/
+@interface SapphireMovieChooser : SapphireCenteredMenuController <SapphireLayoutDelegate, SapphireChooser> {
+	NSArray					*movies;		/*!< @brief The list of possible movies*/
+	NSString				*fileName;		/*!< @brief The filename of the current file*/
+	SapphireChooserChoice	selection;		/*!< @brief The selection the user made*/
+	BRTextControl			*fileNameText;	/*!< @brief The display of the filename on the screen*/
 }
 
 /*!
@@ -63,12 +61,5 @@
  * @return The file name we searched for
  */
 - (NSString *)fileName;
-
-/*!
- * @brief The item the user selected.  Special values are in the header file
- *
- * @return The user's selection
- */
-- (int)selection;
 
 @end
