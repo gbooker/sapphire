@@ -1,9 +1,9 @@
 /*
- * SapphireChooser.m
+ * SapphireChooser.h
  * Sapphire
  *
- * Created by gbooker on Dec. 16, 2009.
- * Copyright 2007 Sapphire Development Team and/or www.nanopi.net
+ * Created by Graham Booker on Dec. 16, 2009.
+ * Copyright 2009 Sapphire Development Team and/or www.nanopi.net
  * All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
