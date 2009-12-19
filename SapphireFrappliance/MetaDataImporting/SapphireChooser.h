@@ -18,14 +18,27 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*!
+ * @brief The user's choice
+ */
 typedef enum {
-	SapphireChooserChoiceCancel = -2,
-	SapphireChooserChoiceNotType = -1,
-	SapphireChooserChoiceFirstItem,
+	SapphireChooserChoiceCancel = -2,	/*!< @brief The user canceled the chooser*/
+	SapphireChooserChoiceNotType = -1,	/*!< @brief The user said this is not a (movie/tv show)*/
+	SapphireChooserChoiceFirstItem,		/*!< @brief The user selected the first item.  Values 0 and up are selections*/
 } SapphireChooserChoice;
 
+/*!
+ * @brief The Chooser protocol
+ *
+ * @This protocol defines basic functions all choosers must implement.
+ */
 @protocol SapphireChooser <NSObject>
 
+/*!
+ * @brief Get the user's selection from the chooser
+ *
+ * @return The user's selection
+ */
 - (SapphireChooserChoice)selection;
 
 @end
