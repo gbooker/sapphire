@@ -1675,7 +1675,7 @@
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../pcre\"",
+					"\"$(SRCROOT)/pcre\"",
 				);
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -1704,7 +1704,7 @@
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../pcre\"",
+					"\"$(SRCROOT)/pcre\"",
 				);
 				OTHER_LDFLAGS = (
 					"-undefined",
