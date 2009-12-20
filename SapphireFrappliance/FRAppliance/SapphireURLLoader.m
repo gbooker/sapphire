@@ -135,9 +135,42 @@
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSError *error = nil;
-	NSStringEncoding encoding;
 	
-	loadedString = [[NSString alloc] initWithContentsOfURL:url usedEncoding:&encoding error:&error];
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
+	NSURLResponse *response = nil;
+	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+	if(error != nil)
+		return;
+	
+	NSStringEncoding responseEncoding = NSISOLatin1StringEncoding;
+	NSString *encodingName = [response textEncodingName];
+	if([encodingName length])
+		responseEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName));
+	loadedString = [[NSString alloc] initWithData:documentData encoding:responseEncoding];
+	if(loadedString == nil)
+	{
+		//Most likely this is UTF-8 and some moron doesn't understand that the meta tags need to follow the same encoding.
+		NSMutableData *mutData = [documentData mutableCopy];
+		int length = [mutData length];
+		const char *bytes = [mutData bytes];
+		const char *location;
+		while((location = strnstr(bytes, "<meta", length)) != NULL)
+		{
+			int offset = location - bytes;
+			const char *end = strnstr(location, ">", length-offset);
+			if(end != NULL)
+			{
+				int replaceLength = end-location+2;
+				[mutData replaceBytesInRange:NSMakeRange(offset, replaceLength) withBytes:"" length:0];
+				bytes = [mutData bytes];
+				length = [mutData length];
+			}
+			else
+				break;
+		}
+		loadedString = [[NSString alloc] initWithData:mutData encoding:responseEncoding];
+		[mutData release];
+	}
 	loaded = YES;
 	[self performSelectorOnMainThread:@selector(tellInformers) withObject:nil waitUntilDone:NO];
 	[pool drain];
