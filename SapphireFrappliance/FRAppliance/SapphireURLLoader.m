@@ -32,6 +32,7 @@
 - (id)initWithURL:(NSURL *)url;
 - (void)loadData;
 - (void)addInformer:(NSInvocation *)invoke;
+- (BOOL)loaded;
 - (id)loadedObject;
 
 @end
@@ -87,6 +88,11 @@
 
 - (void)realLoadData
 {
+}
+
+- (BOOL)loaded
+{
+	return loaded;
 }
 
 - (id)loadedObject
@@ -223,6 +229,7 @@
 	[workers release];
 	[workerQueue release];
 	[myInformer release];
+	[clearTimer invalidate];
 	[super dealloc];
 }
 
@@ -251,6 +258,27 @@
 		workersCurrentlyWorking--;
 }
 
+- (void)clearCache
+{
+	clearTimer = nil;
+	NSDictionary *dictCopy = [workers copy];
+	NSEnumerator *keyEnum = [dictCopy keyEnumerator];
+	NSString *key;
+	while((key = [keyEnum nextObject]) != nil)
+	{
+		SapphireURLLoaderWorker *worker = [workers objectForKey:key];
+		if([worker loaded])
+			[workers removeObjectForKey:key];
+	}
+	[dictCopy release];
+}
+
+- (void)resetClearTimer
+{
+	[clearTimer invalidate];
+	clearTimer = [NSTimer scheduledTimerWithTimeInterval:180 target:self selector:@selector(clearCache) userInfo:nil repeats:NO];
+}
+
 - (void)addCallbackToWorker:(SapphireURLLoaderWorker *)worker withTarget:(id)target selector:(SEL)selector object:(id)anObject
 {
 	NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
@@ -260,6 +288,7 @@
 	if(anObject != nil)
 		[invoke setArgument:&anObject atIndex:3];
 	
+	[self resetClearTimer];
 	[worker addInformer:invoke];
 }
 

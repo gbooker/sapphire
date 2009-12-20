@@ -23,6 +23,7 @@
 	NSMutableArray		*workerQueue;				/*!< @brief The list of workers waiting to start*/
 	int					workersCurrentlyWorking;	/*!< @brief The number of workers currently in progress*/
 	NSInvocation		*myInformer;				/*!< @brief The invokation telling the loader when a worker is complete (queue management)*/
+	NSTimer				*clearTimer;				/*!< @brief Timer indicating when the cache should be cleared*/
 }
 
 /*!
