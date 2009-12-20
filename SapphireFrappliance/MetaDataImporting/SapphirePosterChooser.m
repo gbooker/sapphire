@@ -41,9 +41,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @interface SapphirePosterChooser (private)
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData;
 - (void)loadPoster:(int)index;
-- (void)hideIconMarch;
-- (void)showIconMarch;
-- (void)selectionChanged:(NSNotification *)note;
 @end
 
 @implementation SapphirePosterChooser
@@ -101,23 +98,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[super dealloc];
 }
 
-- (void)setRefreshInvokation:(NSInvocation *)invoke;
-{
-	[refreshInvoke release];
-	refreshInvoke = [invoke retain];
-}
+#pragma mark Layout
 
 - (void)resetLayout
 {
     [super resetLayout];
 	[SapphireFrontRowCompat renderScene:[self scene]];
-}
-
-- (void)willBePushed
-{
-	[self showIconMarch];
-    // always call super
-    [super willBePushed];
 }
 
 - (void)doMyLayout
@@ -131,20 +117,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[fileInfoText setFrame:frame];
 }
 
-- (void)wasPushed
+- (void)setRefreshInvokation:(NSInvocation *)invoke;
 {
-	[self doMyLayout];
-	[[self list] reload];
-	[super wasPushed];
-}
-
-- (void)wasPopped
-{
-    // The user pressed Menu, removing us from the screen
-    // always call super
-    [super wasPopped];
-    // remove the icon march from the scene
-    [self hideIconMarch];
+	[refreshInvoke release];
+	refreshInvoke = [invoke retain];
 }
 
 /*!
@@ -160,36 +136,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return listFrame;
 }
 
-- (BRLayerController *)doRefresh
-{
-	[refreshInvoke invoke];
-	BRLayerController *ret = nil;
-	[refreshInvoke getReturnValue:&ret];
-	return ret;
-}
-
-- (void)itemSelected:(long)row
-{
-	/*User made a selection*/
-	if ( refreshInvoke != nil && row == [posters count] )
-	{
-		NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector: @selector(doRefresh)]];
-		[invoke setSelector: @selector(doRefresh)];
-		[invoke setTarget:   self];
-		
-		SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene: [self scene]
-																		 title: BRLocalizedString(@"Getting artwork selection", @"Getting artwork selection")
-																	invokation: invoke];
-		[[self stack] swapController:[wait autorelease]];
-	}
-	else
-	{
-		selection = row;
-		if ( [[posters objectAtIndex:selection] isKindOfClass:[NSImage class]] )
-			[[posters objectAtIndex:row] writeToFile:[meta coverArtPath] atomically:YES];
-		[[self stack] popController];
-	}
-}
+#pragma mark Display
 
 - (BOOL)okayToDisplay
 {
@@ -199,10 +146,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		return NO;
 }
 
-- (NSArray *)posters
-{
-	return posters;
-}
+#pragma mark List of posters
 
 - (void)setPosters:(NSArray *)posterList
 {
@@ -227,14 +171,31 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[[self list] setDatasource: self];
 }
 
+- (NSArray *)posters
+{
+	return posters;
+}
+
 - (void)loadPosters
 {
 	int i, count = [posters count];
 	posterLayers = [posters mutableCopy];
 	for(i=0; i<count; i++)
 		[self loadPoster:i];
-	[posterMarch reload] ;
+	[posterMarch reload];
 	[SapphireFrontRowCompat renderScene:[self scene]];
+}
+
+/*!
+ * @brief load poster image layers
+ *
+ * @param The index of the poster to load
+ */
+- (void)loadPoster:(int)index;
+{
+	NSString *posterURL = [posters objectAtIndex:index];
+	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
+	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index]];
 }
 
 - (void)reloadPosterWithData:(NSData *)data atIndex:(NSNumber *)index;
@@ -250,6 +211,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
+#pragma mark Filename and file
+
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	fileName=[choosingForFileName retain];
@@ -259,16 +222,18 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		[SapphireFrontRowCompat setText:fileName withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 }
 
+- (NSString *)fileName
+{
+	return fileName;
+}
+
 - (void)setFile:(SapphireFileMetaData *)aMeta;
 {
 	[meta release];
 	meta = [aMeta retain];
 }
 
-- (NSString *)fileName
-{
-	return fileName;
-}
+#pragma mark Title
 
 - (void)setMovieTitle:(NSString *)theMovieTitle
 {
@@ -297,81 +262,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	return selection;
 }
 
-- (long)iconCount
-{
-	return [posterLayers count];
-}
-
-- (NSDictionary *)iconInfoAtIndex:(long)index
-{
-	return [NSDictionary dictionaryWithObject:[posterLayers objectAtIndex:index] forKey:@"icon"];
-}
-
-- (id)iconAtIndex:(long)index
-{
-    if ( index >= [posterLayers count] )
-        return nil;
-	
-    return [posterLayers objectAtIndex:index];
-}
-
-
-- (long)itemCount
-{
-	if ( refreshInvoke != nil ) 
-		return [posters count] + 1;
-	
-	return [posters count];
-}
-
-
-- (id)itemForRow:(long)row
-{
-	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
-	if ( refreshInvoke != nil && row == [posters count] )
-		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"Refresh", @"Reload images") forMenu:result];
-	else
-		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"Version %2d",row+1] forMenu:result];
-	return result;
-}
-
-- (NSString *)titleForRow:(long)row
-{
-	if(row > [posters count])
-		return nil;
-
-	if (refreshInvoke != nil && row == [posters count])
-		return BRLocalizedString(@"Refresh", @"Reload images");
-
-	return [NSString stringWithFormat:@"Version %2d",row+1];
-}
-
-- (long)rowForTitle:(NSString *)title
-{
-    long result = -1;
-    long i, count = [self itemCount];
-    for(i=0; i<count; i++)
-    {
-        if([title isEqualToString:[self titleForRow:i]])
-		{
-            result = i;
-            break;
-		}
-    }
-    return result;
-}
-
-/*!
- * @brief load poster image layers
- *
- * @param The index of the poster to load
- */
-- (void)loadPoster:(int)index;
-{
-	NSString *posterURL = [posters objectAtIndex:index];
-	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
-	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index]];
-}
+#pragma mark Icon march
 
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData
 {
@@ -447,6 +338,110 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	if(posterMarch != nil)
 		[SapphireFrontRowCompat addSublayer:posterMarch toControl:self];
 }
+- (long)iconCount
+{
+	return [posterLayers count];
+}
+
+- (NSDictionary *)iconInfoAtIndex:(long)index
+{
+	return [NSDictionary dictionaryWithObject:[posterLayers objectAtIndex:index] forKey:@"icon"];
+}
+
+- (id)iconAtIndex:(long)index
+{
+    if ( index >= [posterLayers count] )
+        return nil;
+	
+    return [posterLayers objectAtIndex:index];
+}
+
+
+- (long)itemCount
+{
+	if ( refreshInvoke != nil ) 
+		return [posters count] + 1;
+	
+	return [posters count];
+}
+
+#pragma mark Preview display
+
+- (id<BRMediaPreviewController>)previewControlForItem:(long)row
+{
+	if(posterMarch != nil)
+		return nil;
+	
+	SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
+	[preview setShowsMetadataImmediately:YES];
+	
+	if ( row < [posters count] )
+	{
+		[preview setMetaData:meta inMetaData:[meta parent]];
+		
+		SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
+		id poster = [posters objectAtIndex:row];
+		
+		if(![poster isKindOfClass:[NSString class]])
+			[asset setImage:poster];
+		else
+			[asset setImage:defaultNSImage];
+		
+		[preview setAsset:asset];
+		[asset release];
+	}
+	else if(row == [posters count])
+	{
+		NSMutableDictionary *refreshMeta = [NSMutableDictionary dictionary];
+		[refreshMeta setObject: BRLocalizedString( @"Refresh the artwork selection", @"Refresh the artwork selection" ) forKey: META_TITLE_KEY];
+		[preview setUtilityData: refreshMeta];
+	}
+	
+	return [preview autorelease];
+}
+
+- (id<BRMediaPreviewController>)previewControllerForItem:(long)row
+{
+	return [self previewControlForItem:row];
+}
+
+#pragma mark Menu list
+
+- (id)itemForRow:(long)row
+{
+	BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+	if ( refreshInvoke != nil && row == [posters count] )
+		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"Refresh", @"Reload images") forMenu:result];
+	else
+		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"Version %2d",row+1] forMenu:result];
+	return result;
+}
+
+- (NSString *)titleForRow:(long)row
+{
+	if(row > [posters count])
+		return nil;
+	
+	if (refreshInvoke != nil && row == [posters count])
+		return BRLocalizedString(@"Refresh", @"Reload images");
+	
+	return [NSString stringWithFormat:@"Version %2d",row+1];
+}
+
+- (long)rowForTitle:(NSString *)title
+{
+    long result = -1;
+    long i, count = [self itemCount];
+    for(i=0; i<count; i++)
+    {
+        if([title isEqualToString:[self titleForRow:i]])
+		{
+            result = i;
+            break;
+		}
+    }
+    return result;
+}
 
 - (void)setSelectionForPoster:(double)sel
 {
@@ -478,43 +473,60 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		[self setSelectionForPoster:[(BRListControl *)[note object] selection]];
 }
 
-- (id<BRMediaPreviewController>)previewControlForItem:(long)row
+- (BRLayerController *)doRefresh
 {
-	if(posterMarch != nil)
-		return nil;
+	[refreshInvoke invoke];
+	BRLayerController *ret = nil;
+	[refreshInvoke getReturnValue:&ret];
+	return ret;
+}
 
-	SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
-	[preview setShowsMetadataImmediately:YES];
-	
-	if ( row < [posters count] )
+- (void)itemSelected:(long)row
+{
+	/*User made a selection*/
+	if ( refreshInvoke != nil && row == [posters count] )
 	{
-		[preview setMetaData:meta inMetaData:[meta parent]];
+		NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector: @selector(doRefresh)]];
+		[invoke setSelector: @selector(doRefresh)];
+		[invoke setTarget:   self];
 		
-		SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
-		id poster = [posters objectAtIndex:row];
-
-		if(![poster isKindOfClass:[NSString class]])
-			[asset setImage:poster];
-		else
-			[asset setImage:defaultNSImage];
-
-		[preview setAsset:asset];
-		[asset release];
+		SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene: [self scene]
+																		 title: BRLocalizedString(@"Getting artwork selection", @"Getting artwork selection")
+																	invokation: invoke];
+		[[self stack] swapController:[wait autorelease]];
 	}
-	else if(row == [posters count])
+	else
 	{
-		NSMutableDictionary *refreshMeta = [NSMutableDictionary dictionary];
-		[refreshMeta setObject: BRLocalizedString( @"Refresh the artwork selection", @"Refresh the artwork selection" ) forKey: META_TITLE_KEY];
-		[preview setUtilityData: refreshMeta];
+		selection = row;
+		if ( [[posters objectAtIndex:selection] isKindOfClass:[NSImage class]] )
+			[[posters objectAtIndex:row] writeToFile:[meta coverArtPath] atomically:YES];
+		[[self stack] popController];
 	}
-
-	return [preview autorelease];
 }
 
-- (id<BRMediaPreviewController>)previewControllerForItem:(long)row
+#pragma mark Pushing and popping
+
+- (void)willBePushed
 {
-	return [self previewControlForItem:row];
+	[self showIconMarch];
+    // always call super
+    [super willBePushed];
 }
 
+- (void)wasPushed
+{
+	[self doMyLayout];
+	[[self list] reload];
+	[super wasPushed];
+}
+
+- (void)wasPopped
+{
+    // The user pressed Menu, removing us from the screen
+    // always call super
+    [super wasPopped];
+    // remove the icon march from the scene
+    [self hideIconMarch];
+}
 
 @end

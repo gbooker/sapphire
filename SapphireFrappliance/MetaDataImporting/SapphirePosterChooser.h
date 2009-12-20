@@ -30,7 +30,7 @@
  * This class provides a menu and maching icons to display posters for the user to choose.
  */
 @interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate, SapphireChooser> {
-	NSMutableArray			*posters;		/*!< @brief The array of poster urls*/
+	NSMutableArray			*posters;		/*!< @brief The array of poster urls and after loaded, the NSImages*/
 	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
 	NSString				*fileName;		/*!< @brief The movie filename*/
 	NSString				*movieTitle;	/*!< @brief The title of the movie*/
@@ -58,13 +58,6 @@
 - (BOOL)okayToDisplay;
 
 /*!
- * @brief The list of movies to choose from
- *
- * @return The list of movies to choose from
- */
-- (NSArray *)posters;
-
-/*!
  * @brief Sets the posters to choose from
  *
  * @param posterList The list of movies to choose from specified as urls
@@ -79,6 +72,13 @@
 - (void)setPosterImages:(NSArray *)posterList;
 
 /*!
+ * @brief The list of posters to choose from
+ *
+ * @return The list of posters to choose from
+ */
+- (NSArray *)posters;
+
+/*!
  * @brief Loads the posters from disk
  */
 - (void)loadPosters;
@@ -89,6 +89,13 @@
  * @param choosingForFileName The filename being choosen for
  */
 - (void)setFileName:(NSString *)choosingForFileName;
+
+/*!
+ * @brief The filename we searched for
+ *
+ * @return The file name we searched for
+ */
+- (NSString *)fileName;
 
 /*!
  * @brief Sets the file's metadata
@@ -110,12 +117,5 @@
  * @return The string we searched for
  */
 - (NSString *)movieTitle;
-
-/*!
- * @brief The filename we searched for
- *
- * @return The file name we searched for
- */
-- (NSString *)fileName;
 
 @end
