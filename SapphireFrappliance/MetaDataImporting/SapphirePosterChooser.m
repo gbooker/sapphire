@@ -239,12 +239,14 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 - (void)reloadPosterWithData:(NSData *)data atIndex:(NSNumber *)index;
 {
-	[posterLayers replaceObjectAtIndex:[index intValue] withObject:[self getPosterLayerForData:data]];
+	int intIndex = [index intValue];
+	[posterLayers replaceObjectAtIndex:intIndex withObject:[self getPosterLayerForData:data]];
 	NSImage *image = [[NSImage alloc] initWithData:data];
-	[posters replaceObjectAtIndex:[index intValue] withObject:image];
+	[posters replaceObjectAtIndex:intIndex withObject:image];
 	[image release];
 	[posterMarch _updateIcons];
-	[self resetPreviewController];
+	if([self getSelection] == intIndex)
+		[self resetPreviewController];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
 
@@ -368,7 +370,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	NSString *posterURL = [posters objectAtIndex:index];
 	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
-	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withCache:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index]];
+	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index]];
 }
 
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData

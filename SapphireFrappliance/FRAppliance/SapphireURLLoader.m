@@ -48,15 +48,6 @@
 }
 @end
 
-@interface SapphireDataURLToFileWorker : NSObject
-{
-	NSString		*path;
-}
-- (id)initWithPath:(NSString *)aPath;
-@end
-
-
-
 @implementation SapphireURLLoaderWorker
 
 - (id)initWithURL:(NSURL *)aUrl
@@ -210,38 +201,6 @@
 
 @end
 
-@implementation SapphireDataURLToFileWorker
-
-- (id)initWithPath:(NSString *)aPath
-{
-	self = [super init];
-	if(!self)
-		return self;
-	
-	path = [aPath retain];
-	
-	return self;
-}
-
-- (void)dealloc
-{
-	[path release];
-	[super dealloc];
-}
-
-- (void)dataLoaded:(NSData *)data
-{
-	if(![data length])
-		//Some failure, oh well
-		return;
-	
-	[data writeToFile:path atomically:YES];
-}
-
-@end
-
-
-
 @implementation SapphireURLLoader
 
 - (id)init
@@ -304,9 +263,9 @@
 	[worker addInformer:invoke];
 }
 
-- (void)loadStringURL:(NSString *)url withCache:(NSString *)cache withTarget:(id)target selector:(SEL)selector object:(id)anObject
+- (void)loadStringURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject
 {
-	NSString *key = [@"S" stringByAppendingString:cache];
+	NSString *key = [@"S" stringByAppendingString:url];
 	SapphireStringURLLoaderWorker *worker = [workers objectForKey:key];
 	if(worker == nil)
 	{
@@ -319,9 +278,9 @@
 	[self addCallbackToWorker:worker withTarget:target selector:selector object:anObject];
 }
 
-- (void)loadDataURL:(NSString *)url withCache:(NSString *)cache withTarget:(id)target selector:(SEL)selector object:(id)anObject
+- (void)loadDataURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject
 {
-	NSString *key = [@"D" stringByAppendingString:cache];
+	NSString *key = [@"D" stringByAppendingString:url];
 	SapphireDataURLLoaderWorker *worker = [workers objectForKey:key];
 	if(worker == nil)
 	{
@@ -334,13 +293,15 @@
 	[self addCallbackToWorker:worker withTarget:target selector:selector object:anObject];
 }
 
+- (void)saveData:(NSData *)data toFile:(NSString *)path
+{
+	if([data length])
+		[data writeToFile:path atomically:YES];
+}
+
 - (void)saveDataAtURL:(NSString *)url toFile:(NSString *)path
 {
-	SapphireDataURLToFileWorker *worker = [[SapphireDataURLToFileWorker alloc] initWithPath:path];
-	
-	[self loadDataURL:url withCache:url withTarget:worker selector:@selector(dataLoaded:) object:nil];
-	
-	[worker release];
+	[self loadDataURL:url withTarget:self selector:@selector(saveData:toFile:) object:path];
 }
 
 @end

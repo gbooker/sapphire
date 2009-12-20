@@ -25,8 +25,8 @@
 	NSInvocation		*myInformer;
 }
 
-- (void)loadStringURL:(NSString *)url withCache:(NSString *)cache withTarget:(id)target selector:(SEL)selector object:(id)anObject;
-- (void)loadDataURL:(NSString *)url withCache:(NSString *)cache withTarget:(id)target selector:(SEL)selector object:(id)anObject;
+- (void)loadStringURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject;
+- (void)loadDataURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject;
 - (void)saveDataAtURL:(NSString *)url toFile:(NSString *)path;
 
 @end
