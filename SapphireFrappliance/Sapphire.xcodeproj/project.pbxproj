@@ -172,6 +172,9 @@
 		F5EA8FCE0C30459400B1EC7D /* SapphireMarkMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA8FCD0C30459400B1EC7D /* SapphireMarkMenu.m */; };
 		F5EA91350C3063F500B1EC7D /* SapphireMedia.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EA91340C3063F500B1EC7D /* SapphireMedia.m */; };
 		F5F5142410DBDF90006B9DED /* SapphireURLLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F5142310DBDF90006B9DED /* SapphireURLLoader.m */; };
+		F5F5156B10DD7BA2006B9DED /* SapphireScraper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F5156A10DD7BA2006B9DED /* SapphireScraper.m */; };
+		F5F515BA10DD8A31006B9DED /* libpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F515B810DD8A31006B9DED /* libpcre.a */; };
+		F5F515EA10DD8B21006B9DED /* SapphireSiteScraper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F515E910DD8B21006B9DED /* SapphireSiteScraper.m */; };
 		FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */; };
 		FE4239A40C331FFD0035A717 /* Green.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A00C331FFD0035A717 /* Green.png */; };
 		FE4239A50C331FFD0035A717 /* Yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A10C331FFD0035A717 /* Yellow.png */; };
@@ -586,6 +589,12 @@
 		F5EA91340C3063F500B1EC7D /* SapphireMedia.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMedia.m; sourceTree = "<group>"; };
 		F5F5142210DBDF90006B9DED /* SapphireURLLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireURLLoader.h; sourceTree = "<group>"; };
 		F5F5142310DBDF90006B9DED /* SapphireURLLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireURLLoader.m; sourceTree = "<group>"; };
+		F5F5156910DD7BA2006B9DED /* SapphireScraper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireScraper.h; sourceTree = "<group>"; };
+		F5F5156A10DD7BA2006B9DED /* SapphireScraper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireScraper.m; sourceTree = "<group>"; };
+		F5F515B810DD8A31006B9DED /* libpcre.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcre.a; sourceTree = "<group>"; };
+		F5F515B910DD8A31006B9DED /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pcre.h; sourceTree = "<group>"; };
+		F5F515E810DD8B21006B9DED /* SapphireSiteScraper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireSiteScraper.h; sourceTree = "<group>"; };
+		F5F515E910DD8B21006B9DED /* SapphireSiteScraper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireSiteScraper.m; sourceTree = "<group>"; };
 		F5FB82E20D18065F0018E4C9 /* NSArray-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray-Extensions.h"; sourceTree = "<group>"; };
 		F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray-Extensions.m"; sourceTree = "<group>"; };
 		F5FC58B41039F61600042296 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -643,6 +652,7 @@
 				F56A1DF50C31CE190022918E /* QTKit.framework in Frameworks */,
 				F5D909190DB520B900F12E12 /* Security.framework in Frameworks */,
 				F535C7430DF2353900716DA9 /* CoreData.framework in Frameworks */,
+				F5F515BA10DD8A31006B9DED /* libpcre.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -691,6 +701,7 @@
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				F5F515B710DD8A31006B9DED /* pcre */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 				F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */,
 				F532EC3B0E44FB8100DBEE13 /* main_debug.m */,
@@ -904,6 +915,7 @@
 				F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */,
 				F5C4F5890C677C4D00C99092 /* SapphireAllImporter.h */,
 				F5C4F58A0C677C4D00C99092 /* SapphireAllImporter.m */,
+				F5409DE710D9760300DB3B0C /* SapphireChooser.h */,
 				FE88FD0E0C2F564700C55E3F /* SapphireFileDataImporter.h */,
 				FE88FD0F0C2F564700C55E3F /* SapphireFileDataImporter.m */,
 				F56B72780C3716B300E934AA /* SapphireImporterDataMenu.h */,
@@ -916,6 +928,10 @@
 				F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */,
 				FE4BE49D0CBEAC7F00A7B24E /* SapphirePosterChooser.h */,
 				FE4BE49E0CBEAC7F00A7B24E /* SapphirePosterChooser.m */,
+				F5F515E810DD8B21006B9DED /* SapphireSiteScraper.h */,
+				F5F515E910DD8B21006B9DED /* SapphireSiteScraper.m */,
+				F5F5156910DD7BA2006B9DED /* SapphireScraper.h */,
+				F5F5156A10DD7BA2006B9DED /* SapphireScraper.m */,
 				F56B765C0C3837CE00E934AA /* SapphireShowChooser.h */,
 				F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */,
 				F56B72ED0C371E4B00E934AA /* SapphireTVShowImporter.h */,
@@ -924,7 +940,6 @@
 				F5A262530DD624B900AFB1D6 /* SapphireVideoTSParser.m */,
 				F5CE69540D45732C003C4B2D /* SapphireXMLFileDataImporter.h */,
 				F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */,
-				F5409DE710D9760300DB3B0C /* SapphireChooser.h */,
 			);
 			path = MetaDataImporting;
 			sourceTree = "<group>";
@@ -1073,6 +1088,15 @@
 				F54A38E8109F43A600DCC808 /* SapphireTakeThreeCompatClasses.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F5F515B710DD8A31006B9DED /* pcre */ = {
+			isa = PBXGroup;
+			children = (
+				F5F515B810DD8A31006B9DED /* libpcre.a */,
+				F5F515B910DD8A31006B9DED /* pcre.h */,
+			);
+			path = pcre;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1438,6 +1462,8 @@
 				F5A9A89510A7A69600BA95CD /* NSXMLDocument-Extensions.m in Sources */,
 				F506593110B22EC800D0F1FE /* SapphireTVDirectory.m in Sources */,
 				F5F5142410DBDF90006B9DED /* SapphireURLLoader.m in Sources */,
+				F5F5156B10DD7BA2006B9DED /* SapphireScraper.m in Sources */,
+				F5F515EA10DD8B21006B9DED /* SapphireSiteScraper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1583,6 +1609,10 @@
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/SVNRevision.h";
 				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../pcre\"",
+				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -1608,6 +1638,10 @@
 				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/SVNRevision.h";
 				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../pcre\"",
+				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
