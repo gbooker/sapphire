@@ -19,14 +19,43 @@
  */
 
 @interface SapphireURLLoader : NSObject {
-	NSMutableDictionary	*workers;
-	NSMutableArray		*workerQueue;
-	int					workersCurrentlyWorking;
-	NSInvocation		*myInformer;
+	NSMutableDictionary	*workers;					/*!< @brief The list of workers, completed an not.  This is also the cache*/
+	NSMutableArray		*workerQueue;				/*!< @brief The list of workers waiting to start*/
+	int					workersCurrentlyWorking;	/*!< @brief The number of workers currently in progress*/
+	NSInvocation		*myInformer;				/*!< @brief The invokation telling the loader when a worker is complete (queue management)*/
 }
 
+/*!
+ * @brief Load a string at a URL
+ *
+ * Loads a string at a given URL, informing the target/selecter when it is done.
+ * This attempts to discover the string encoding used by the source and produce a string in that encoding.
+ *
+ * @param url The URL to load (as an NSString)
+ * @param target The target to call upon completion
+ * @param selector The selector to call upon completion
+ * @param anObject The context object to pass as the second parameter to the selector upon completion
+ */
 - (void)loadStringURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject;
+
+/*!
+ * @brief Load data at a URL
+ *
+ * Loads data at a given URL, informing the target/selecter when it is done.
+ *
+ * @param url The URL to load (as an NSString)
+ * @param target The target to call upon completion
+ * @param selector The selector to call upon completion
+ * @param anObject The context object to pass as the second parameter to the selector upon completion
+ */
 - (void)loadDataURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject;
+
+/*!
+ * @brief Saves data at a given URL to a file
+ *
+ * @param url The URL to load (as an NSString)
+ * @param path The path at which to save the data
+ */
 - (void)saveDataAtURL:(NSString *)url toFile:(NSString *)path;
 
 @end
