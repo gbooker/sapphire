@@ -175,6 +175,13 @@
 		F5F5156B10DD7BA2006B9DED /* SapphireScraper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F5156A10DD7BA2006B9DED /* SapphireScraper.m */; };
 		F5F515BA10DD8A31006B9DED /* libpcre.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5F515B810DD8A31006B9DED /* libpcre.a */; };
 		F5F515EA10DD8B21006B9DED /* SapphireSiteScraper.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F515E910DD8B21006B9DED /* SapphireSiteScraper.m */; };
+		F5F5175B10DE7519006B9DED /* dtrailer.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175010DE74E9006B9DED /* dtrailer.xml */; };
+		F5F5175C10DE7519006B9DED /* imdb.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175110DE74E9006B9DED /* imdb.xml */; };
+		F5F5175D10DE7519006B9DED /* impa.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175210DE74E9006B9DED /* impa.xml */; };
+		F5F5175E10DE7519006B9DED /* movieposterdb.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175310DE74E9006B9DED /* movieposterdb.xml */; };
+		F5F5175F10DE7519006B9DED /* tmdb.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175410DE74E9006B9DED /* tmdb.xml */; };
+		F5F5176010DE7526006B9DED /* imdb.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175510DE74E9006B9DED /* imdb.xml */; };
+		F5F5176110DE7526006B9DED /* tvrage.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5F5175610DE74E9006B9DED /* tvrage.xml */; };
 		FE076E410D0CCAA40053FF1A /* NSFileManager-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = FE076E3F0D0CCAA40053FF1A /* NSFileManager-Extensions.m */; };
 		FE4239A40C331FFD0035A717 /* Green.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A00C331FFD0035A717 /* Green.png */; };
 		FE4239A50C331FFD0035A717 /* Yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = FE4239A10C331FFD0035A717 /* Yellow.png */; };
@@ -357,6 +364,31 @@
 			files = (
 				F5BA80A10EE3392000A5C679 /* SapphireRescanDir in CopyFiles */,
 				F5B4191B0D0B2CD300BDD361 /* ImportHelper in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F5175910DE7504006B9DED /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Scrapers;
+			dstSubfolderSpec = 7;
+			files = (
+				F5F5176010DE7526006B9DED /* imdb.xml in CopyFiles */,
+				F5F5176110DE7526006B9DED /* tvrage.xml in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5F5175A10DE7504006B9DED /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Scrapers/common;
+			dstSubfolderSpec = 7;
+			files = (
+				F5F5175B10DE7519006B9DED /* dtrailer.xml in CopyFiles */,
+				F5F5175C10DE7519006B9DED /* imdb.xml in CopyFiles */,
+				F5F5175D10DE7519006B9DED /* impa.xml in CopyFiles */,
+				F5F5175E10DE7519006B9DED /* movieposterdb.xml in CopyFiles */,
+				F5F5175F10DE7519006B9DED /* tmdb.xml in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -595,6 +627,13 @@
 		F5F515B910DD8A31006B9DED /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pcre.h; sourceTree = "<group>"; };
 		F5F515E810DD8B21006B9DED /* SapphireSiteScraper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireSiteScraper.h; sourceTree = "<group>"; };
 		F5F515E910DD8B21006B9DED /* SapphireSiteScraper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireSiteScraper.m; sourceTree = "<group>"; };
+		F5F5175010DE74E9006B9DED /* dtrailer.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = dtrailer.xml; sourceTree = "<group>"; };
+		F5F5175110DE74E9006B9DED /* imdb.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = imdb.xml; sourceTree = "<group>"; };
+		F5F5175210DE74E9006B9DED /* impa.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = impa.xml; sourceTree = "<group>"; };
+		F5F5175310DE74E9006B9DED /* movieposterdb.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = movieposterdb.xml; sourceTree = "<group>"; };
+		F5F5175410DE74E9006B9DED /* tmdb.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tmdb.xml; sourceTree = "<group>"; };
+		F5F5175510DE74E9006B9DED /* imdb.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = imdb.xml; sourceTree = "<group>"; };
+		F5F5175610DE74E9006B9DED /* tvrage.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = tvrage.xml; sourceTree = "<group>"; };
 		F5FB82E20D18065F0018E4C9 /* NSArray-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray-Extensions.h"; sourceTree = "<group>"; };
 		F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray-Extensions.m"; sourceTree = "<group>"; };
 		F5FC58B41039F61600042296 /* French */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = French; path = French.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -911,6 +950,7 @@
 		F57FFFC00C64028900450D81 /* MetaDataImporting */ = {
 			isa = PBXGroup;
 			children = (
+				F5F5174E10DE74E9006B9DED /* Scrapers */,
 				F5CE69640D4575DC003C4B2D /* SapphireAllFileDataImporter.h */,
 				F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */,
 				F5C4F5890C677C4D00C99092 /* SapphireAllImporter.h */,
@@ -1099,6 +1139,28 @@
 			path = pcre;
 			sourceTree = "<group>";
 		};
+		F5F5174E10DE74E9006B9DED /* Scrapers */ = {
+			isa = PBXGroup;
+			children = (
+				F5F5174F10DE74E9006B9DED /* common */,
+				F5F5175510DE74E9006B9DED /* imdb.xml */,
+				F5F5175610DE74E9006B9DED /* tvrage.xml */,
+			);
+			path = Scrapers;
+			sourceTree = "<group>";
+		};
+		F5F5174F10DE74E9006B9DED /* common */ = {
+			isa = PBXGroup;
+			children = (
+				F5F5175010DE74E9006B9DED /* dtrailer.xml */,
+				F5F5175110DE74E9006B9DED /* imdb.xml */,
+				F5F5175210DE74E9006B9DED /* impa.xml */,
+				F5F5175310DE74E9006B9DED /* movieposterdb.xml */,
+				F5F5175410DE74E9006B9DED /* tmdb.xml */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1122,6 +1184,8 @@
 				8D5B49B1048680CD000E48DA /* Sources */,
 				8D5B49B3048680CD000E48DA /* Frameworks */,
 				F5FDA1990CE27CC000812CE5 /* CopyFiles */,
+				F5F5175910DE7504006B9DED /* CopyFiles */,
+				F5F5175A10DE7504006B9DED /* CopyFiles */,
 			);
 			buildRules = (
 			);
