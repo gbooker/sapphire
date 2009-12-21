@@ -218,6 +218,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 		[delegate displayChooser:chooser forImporter:self withContext:state];
 		[chooser release];
 	}
+	[movies release];
 }
 
 - (ImportState)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran
@@ -411,7 +412,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 		lookupName = fileName;
 	
 	SapphireSiteMovieScraper *siteScraper = [[[SapphireSiteMovieScraper alloc] initWithMovieScraper:scraper delegate:self loader:[SapphireApplianceController urlLoader]] autorelease];
-	SapphireMovieImportStateData *state = [[SapphireMovieImportStateData alloc] initWithFile:metaData atPath:path scraper:siteScraper];
+	SapphireMovieImportStateData *state = [[[SapphireMovieImportStateData alloc] initWithFile:metaData atPath:path scraper:siteScraper] autorelease];
 	[state setLookupName:lookupName];
 	/*Get the movie title*/
 	NSString *movieDataLink = nil ;
