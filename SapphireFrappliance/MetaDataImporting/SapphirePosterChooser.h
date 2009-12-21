@@ -39,6 +39,8 @@
 	BRMarchingIconLayer		*posterMarch;	/*!< @brief The icon march to display the posters*/
 	BRBlurryImageLayer		*defaultImage;	/*!< @brief The image to use when the poster isn't loaded yet*/
 	NSImage					*defaultNSImage;/*!< @brief The NSImage to use when the poster isn't loaded yet*/
+	BRBlurryImageLayer		*errorImage;	/*!< @brief The image to use when the poster fails to load*/
+	NSImage					*errorNSImage;	/*!< @brief The NSImage to use when the poster fails to load*/
 	SapphireFileMetaData	*meta;			/*!< @brief The file's meta*/
 	NSInvocation			*refreshInvoke;	/*!< @brief Should the chooser allow a refresh of the available cover art*/
 }

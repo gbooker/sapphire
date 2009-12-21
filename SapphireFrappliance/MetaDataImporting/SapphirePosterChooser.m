@@ -64,12 +64,16 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[SapphireFrontRowCompat setText:@"No File" withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileInfoText];
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	frame.origin.y = frame.size.height / 1.25f;
-	frame.origin.x = (frame.size.width / 4.0f) ;
+	frame.origin.x = (frame.size.width / 4.0f);
 	NSString *defaultPosterPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"PH" ofType:@"png"];
 	NSData *defaultPosterData = [NSData dataWithContentsOfFile:defaultPosterPath];
 	defaultImage = [[self getPosterLayerForData:defaultPosterData] retain];
 	defaultNSImage = [[NSImage alloc] initWithContentsOfFile:defaultPosterPath];
-
+	NSString *errorPosterPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"video_H" ofType:@"png"];
+	NSData *errorPosterData = [NSData dataWithContentsOfFile:errorPosterPath];
+	errorImage = [[self getPosterLayerForData:errorPosterData] retain];
+	errorNSImage = [[NSImage alloc] initWithContentsOfFile:errorPosterPath];
+	
 	
 	[fileInfoText setFrame: frame];
 	[self addControl: fileInfoText];
@@ -94,6 +98,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[posterMarch release];
 	[defaultImage release];
 	[defaultNSImage release];
+	[errorImage release];
+	[errorNSImage release];
 	[meta release];
 	[super dealloc];
 }
@@ -203,6 +209,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	int intIndex = [index intValue];
 	[posterLayers replaceObjectAtIndex:intIndex withObject:[self getPosterLayerForData:data]];
 	NSImage *image = [[NSImage alloc] initWithData:data];
+	if(image == nil)
+		image = [errorNSImage retain];
 	[posters replaceObjectAtIndex:intIndex withObject:image];
 	[image release];
 	[posterMarch _updateIcons];
@@ -266,6 +274,9 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData
 {
+	if(thePosterData == nil)
+		return defaultImage;
+	
 	if([SapphireFrontRowCompat usingLeopardOrATypeOfTakeTwo])
 	{
 		/*The marching icons has changed, dramatically, so we do the changes here*/
@@ -273,7 +284,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		if(ret != nil)
 			return ret;
 		else
-			return defaultImage;
+			return errorImage;
 	}
 	CGImageRef posterImage=NULL;
 	CGImageSourceRef  sourceRef;	
@@ -283,7 +294,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
         CFRelease(sourceRef);
     }
     if(posterImage==nil)
-		return defaultImage;
+		return errorImage;
 	
     struct BRBitmapDataInfo info;
     info.internalFormat = GL_RGBA;
@@ -499,8 +510,16 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	else
 	{
 		selection = row;
-		if ( [[posters objectAtIndex:selection] isKindOfClass:[NSImage class]] )
-			[[posters objectAtIndex:row] writeToFile:[meta coverArtPath] atomically:YES];
+		SapphireURLLoader *loader = [SapphireApplianceController urlLoader];
+		NSEnumerator *posterEnum = [posters objectEnumerator];
+		NSString *posterURL;
+		while((posterURL = [posterEnum nextObject]) != nil)
+		{
+			if(![posterURL isKindOfClass:[NSString class]])
+				continue;
+			
+			[loader cancelLoadOfURL:posterURL forTarget:self];
+		}
 		[[self stack] popController];
 	}
 }
