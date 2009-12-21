@@ -159,9 +159,11 @@ typedef enum{
 @public
 	SapphireFileMetaData	*file;
 	NSString				*path;
+	NSString				*lookupName;
 }
 
 - (id)initWithFile:(SapphireFileMetaData *)file atPath:(NSString *)path;
+- (void)setLookupName:(NSString *)lookupName;
 @end
 
 

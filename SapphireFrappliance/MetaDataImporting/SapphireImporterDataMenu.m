@@ -104,7 +104,14 @@
 {
 	[file release];
 	[path release];
+	[lookupName release];
 	[super dealloc];
+}
+
+- (void)setLookupName:(NSString *)aName
+{
+	[lookupName autorelease];
+	lookupName = [aName retain];
 }
 
 @end
