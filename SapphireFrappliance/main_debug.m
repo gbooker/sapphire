@@ -245,6 +245,7 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/MovieTests/FIFTH_ELEMENT.mov" inContext:moc];
 		SapphireMovieImporter *import = [[SapphireMovieImporter alloc] init];
+		[file setToReimportFromMaskValue:IMPORT_TYPE_MOVIE_MASK];
 		[import importMetaData:file path:[file path]];
 		[import release];
 	}
@@ -279,13 +280,18 @@ int main(int argc, char *argv[])
 		[movieDir release];
 	}
 #endif
-#define TESTING_TV_IMPORT_THROUGH_XML
+//#define TESTING_TV_IMPORT_THROUGH_XML
 #ifdef TESTING_TV_IMPORT_THROUGH_XML
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/life on mars.avi" inContext:moc];
 		[allImporter importMetaData:file path:[file path]];
 	}
 #endif
+	
+	NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
+	while([currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
+		;	
+	
 	[allImporter release];
 	
 	[moc release];
