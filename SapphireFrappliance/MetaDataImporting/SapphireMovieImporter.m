@@ -181,6 +181,9 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 			NSURL *trimmer = [NSURL URLWithString:url];
 			url = [trimmer path];
 		}
+		NSString *year = stringValueOfChild(entity, @"year");
+		if([year length])
+			title = [title stringByAppendingFormat:@" (%@)", year];
 		
 		if([title length] && [url length])
 			[movies addObject:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -201,7 +204,8 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	{
 		SapphireFileMetaData *metaData = state->file;
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
-		SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
+		NSString *lookupName = [[state->lookupName lowercaseString] stringByDeletingPathExtension];
+		SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:lookupName inContext:moc];
 		[tran setIMDBLink:[[movies objectAtIndex:0] objectForKey:MOVIE_TRAN_IMDB_LINK_KEY]];
 		[self getMovieResultsForState:state translation:tran];
 	}
@@ -452,7 +456,8 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 			return ImportStateNotUpdated;
 		
 		/*Look for a year in the title*/
-		NSScanner *titleYearScanner = [NSScanner scannerWithString:lookupName];
+		NSString *searchStr = [lookupName stringByDeletingPathExtension];
+		NSScanner *titleYearScanner = [NSScanner scannerWithString:searchStr];
 		NSString *normalTitle = nil;
 		int year = 0;
 		BOOL success = YES;
@@ -465,7 +470,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 		NSString *yearStr = nil;
 		if(!success)
 		{
-			normalTitle = lookupName;
+			normalTitle = searchStr;
 		}
 		else
 			yearStr = [NSString stringWithFormat:@"%d", year];
