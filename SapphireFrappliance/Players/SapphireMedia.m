@@ -92,9 +92,13 @@
 	if (coverart)
 	{
 		CGImageRef imageRef = [coverart newImageRef];
-		id ret = [SapphireFrontRowCompat coverartAsImage:imageRef];
-		CFRelease(imageRef);
-		return ret;
+		if(imageRef)
+		{
+			id ret = [SapphireFrontRowCompat coverartAsImage:imageRef];
+			CFRelease(imageRef);
+			return ret;
+		}
+		return nil;
 	}
 
 	return nil;
