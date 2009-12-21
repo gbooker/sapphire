@@ -16,7 +16,7 @@
 			<RegExp input="$$1" output="&lt;setting label=&quot;Enable posters from themoviedb.org&quot; type=&quot;bool&quot; id=&quot;tmdbthumbs&quot; default=&quot;true&quot;&gt;&lt;/setting&gt;" dest="5+">
 				<expression/>
 			</RegExp>
-			<RegExp input="$$1" output="&lt;setting label=&quot;Enable posters from IMPAwards&quot; type=&quot;bool&quot; id=&quot;impawards&quot; default=&quot;false&quot;&gt;&lt;/setting&gt;" dest="5+">
+			<RegExp input="$$1" output="&lt;setting label=&quot;Enable posters from IMPAwards&quot; type=&quot;bool&quot; id=&quot;impawards&quot; default=&quot;true&quot;&gt;&lt;/setting&gt;" dest="5+">
 				<expression/>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;setting label=&quot;Enable posters from MoviePosterDB&quot; type=&quot;bool&quot; id=&quot;movieposterdb&quot; default=&quot;false&quot;&gt;&lt;/setting&gt;" dest="5+">
@@ -61,8 +61,8 @@
 			<RegExp input="$$1" output="\1" dest="4">
 				<expression noclean="1">(&gt;&lt;a href=&quot;/title.*)</expression>
 			</RegExp>
-			<RegExp input="$$4" output="&lt;entity&gt;&lt;title&gt;\2&lt;/title&gt;&lt;year&gt;\3&lt;/year&gt;&lt;url&gt;http://akas.imdb.com/title/\1/&lt;/url&gt;&lt;id&gt;\1&lt;/id&gt;&lt;/entity&gt;" dest="5+">
-				<expression repeat="yes" noclean="1,2">&gt;&lt;a href=&quot;/title/([t0-9]*)/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt; *\(([0-9]*)</expression>
+			<RegExp input="$$4" output="&lt;entity&gt;&lt;title&gt;\2&lt;/title&gt;&lt;year&gt;\3&lt;/year&gt;&lt;url&gt;http://akas.imdb.com/title/\1/&lt;/url&gt;&lt;id&gt;\1&lt;/id&gt;&lt;kind&gt;\4&lt;/kind&gt;&lt;/entity&gt;" dest="5+">
+				<expression repeat="yes" noclean="1,2">&gt;&lt;a href=&quot;/title/([t0-9]*)/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt; *\(([0-9]*)(?:\)[^/]*\(([a-z A-Z]*)\))?</expression>
 			</RegExp>
 			<expression clear="yes" noclean="1"/>
 		</RegExp>
@@ -110,6 +110,9 @@
 			</RegExp>
 			<RegExp input="$$1" output="&lt;oscars&gt;\1&lt;/oscars&gt;" dest="5+">
 				<expression>Awards:&lt;/h5&gt;\n&lt;div class=&quot;info-content&quot;&gt;\nWon ([0-9]*) Oscars</expression>
+			</RegExp>
+			<RegExp input="$$1" output="&lt;releasedate&gt;\1&lt;/releasedate&gt;" dest="5+">
+				<expression>&lt;h5&gt;Release Date:&lt;/h5&gt;\n&lt;div class=&quot;info-content&quot;&gt;\n([^&lt;]*?) \(</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;url function=&quot;GetIMDBPlot&quot;&gt;$$3plotsummary&lt;/url&gt;" dest="5+">
 				<expression/>
