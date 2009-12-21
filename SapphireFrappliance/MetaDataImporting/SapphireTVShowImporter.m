@@ -24,7 +24,6 @@
 #import "NSString-Extensions.h"
 #import "NSFileManager-Extensions.h"
 #import "SapphireShowChooser.h"
-#import "SapphireMovieChooser.h"
 #import "SapphireMetaDataSupport.h"
 #import "SapphireTVTranslation.h"
 #import "SapphireEpisode.h"
@@ -32,7 +31,9 @@
 #import "NSImage-Extensions.h"
 #import "SapphireTVShow.h"
 #import "NSXMLDocument-Extensions.h"
-
+#import "SapphireScraper.h"
+#import "SapphireApplianceController.h"
+#import "SapphireURLLoader.h"
 
 /* TVRage XPATHS  */
 #define TVRAGE_SHOWNAME_XPATH @".//font[@size=2][@color=\"white\"]/b/text()"
@@ -46,56 +47,148 @@
 #define TVRAGE_SHOW_RAW_DESC_XPATH @"//tr[@id='iconn1']/td/table/tr/td//text()"
 #define TVRAGE_SHOW_IMG_XPATH @"//img[contains(@src, 'shows')]"
 
-#define TRANSLATIONS_KEY		@"Translations"
 #define LINK_KEY				@"Link"
 #define IMG_URL					@"imgURL"
 
-/*Delegate class to download cover art*/
-@interface SapphireTVShowDataMenuDownloadDelegate : NSObject
+@interface SapphireTVShowImportStateData : SapphireImportStateData
 {
-	NSString *destination;
+@public
+	SapphireSiteTVShowScraper	*siteScraper;
+	SapphireTVTranslation		*translation;
+	NSString					*showName;
+	NSString					*showPath;
+	SapphireTVShow				*show;
+	int							episode;
+	int							secondEp;
+	int							season;
+	NSString					*episodeTitle;
+	NSMutableArray				*episodeInfoArray;
+	int							episodesCompleted;
 }
-- (id)initWithDest:(NSString *)dest;
+- (id)initWithFile:(SapphireFileMetaData *)aFile atPath:(NSString *)aPath scraper:(SapphireSiteTVShowScraper *)siteScaper;
+- (void)setTranslation:(SapphireTVTranslation *)translation;
+- (void)setShowName:(NSString *)showName;
+- (void)setShowPath:(NSString *)showPath;
+- (void)setShow:(SapphireTVShow *)show;
+- (void)setEpisodeTitle:(NSString *)episodeTitle;
+- (void)setEpisodeInfoArray:(NSMutableArray *)episodeInfoArray;
 @end
 
-@implementation SapphireTVShowDataMenuDownloadDelegate
-/*!
- * @brief Initialize a cover art downloader
- *
- * @param dest The path to save the file
- */
-- (id)initWithDest:(NSString *)dest
+@implementation SapphireTVShowImportStateData
+
+- (id)initWithFile:(SapphireFileMetaData *)aFile atPath:(NSString *)aPath scraper:(SapphireSiteTVShowScraper *)aSiteScaper
 {
-	self = [super init];
+	self = [super initWithFile:aFile atPath:aPath];
 	if(!self)
-		return nil;
+		return self;
 	
-	destination = [dest retain];
+	siteScraper = [aSiteScaper retain];
 	
 	return self;
 }
 
 - (void)dealloc
 {
-	[destination release];
+	[siteScraper release];
+	[translation release];
+	[showName release];
+	[showPath release];
+	[show release];
+	[episodeTitle release];
+	[episodeInfoArray release];
 	[super dealloc];
 }
 
-/*!
- * @brief Delegate Method which prompts for location to save file.  Override and set new
- * destination
- *
- * @param download The downloader
- * @param filename The suggested filename
- */
-- (void)download:(NSURLDownload *)download decideDestinationWithSuggestedFilename:(NSString *)filename
+- (void)setTranslation:(SapphireTVTranslation *)aTranslation
 {
-	[download setDestination:destination allowOverwrite:YES];
+	[translation autorelease];
+	translation = [aTranslation retain];
+	NSString *aShowPath = aTranslation.showPath;
+	if([aShowPath length])
+		[self setShowPath:aShowPath];
 }
+
+- (void)setShowName:(NSString *)aShowName
+{
+	[showName autorelease];
+	showName = [aShowName retain];
+}
+
+- (void)setShowPath:(NSString *)aShowPath
+{
+	[showPath autorelease];
+	showPath = [aShowPath retain];
+}
+
+- (void)setShow:(SapphireTVShow *)aShow
+{
+	[show autorelease];
+	show = [aShow retain];
+	NSString *aShowName = aShow.name;
+	if([aShowName length])
+		[self setShowName:aShowName];
+}
+
+- (void)setEpisodeTitle:(NSString *)anEpisodeTitle
+{
+	[episodeTitle autorelease];
+	episodeTitle = [anEpisodeTitle retain];
+}
+
+- (void)setEpisodeInfoArray:(NSMutableArray *)anEpisodeInfoArray
+{
+	[episodeInfoArray release];
+	episodeInfoArray = [anEpisodeInfoArray retain];
+}
+
+@end
+
+@interface SapphireSingleTVShowEpisodeImportStateData : NSObject
+{
+@public
+	SapphireTVShowImportStateData	*state;
+	int								index;
+	SapphireSiteTVShowScraper		*siteScraper;
+	int								absEpisode;
+}
+
+- (id)initWithState:(SapphireTVShowImportStateData *)state index:(int)index;
+@end
+
+@implementation SapphireSingleTVShowEpisodeImportStateData
+
+- (id)initWithState:(SapphireTVShowImportStateData *)aState index:(int)anIndex
+{
+	self = [super init];
+	if(!self)
+		return self;
+	
+	state = [aState retain];
+	index = anIndex;
+	if(anIndex == 0)
+		siteScraper = [aState->siteScraper retain];
+	else
+		siteScraper = [aState->siteScraper copy];
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[state release];
+	[siteScraper release];
+	[super dealloc];
+}
+
+
 @end
  
 @interface SapphireTVShowImporter (private)
-- (ImportState)doRealImportMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path;
+- (void)getTVShowResultsForState:(SapphireTVShowImportStateData *)state;
+- (void)getTVShowEpisodeListForState:(SapphireTVShowImportStateData *)state;
+- (void)getTVShowEpisodesForState:(SapphireSingleTVShowEpisodeImportStateData *)state atURL:(NSString *)url;
+- (void)completeWithState:(SapphireTVShowImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
+- (void)completedEpisode:(NSDictionary *)dict forState:(SapphireTVShowImportStateData *)state atIndex:(int)index;
 @end
 
 @implementation SapphireTVShowImporter
@@ -106,8 +199,10 @@
 	if(!self)
 		return nil;
 	
-	/*Cached show info*/
-	showInfo = [NSMutableDictionary new];
+	NSError *error = nil;
+	NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
+	NSString *path = [selfBundle pathForResource:@"tvrage" ofType:@"xml" inDirectory:@"scrapers"];
+	scraper = [[SapphireTVShowScraper alloc] initWithPath:path error:&error];
 	
 	/*Initialize the regexes*/
 	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+([-E]+[0-9]+)?", REG_EXTENDED | REG_ICASE);
@@ -118,8 +213,7 @@
 
 - (void)dealloc
 {
-	[showInfo release];
-	[showInfoClearTimer invalidate];
+	[scraper release];
 	regfree(&letterMarking);
 	regfree(&seasonByEpisode);
 	regfree(&seasonEpisodeTriple);
@@ -133,432 +227,308 @@
 
 - (void)cancelImports
 {
-	//No background imports so nothing to do
+	cancelled = YES;
 }
 
-/*!
- * @brief Add an episode's info into our cache dict
- *
- * @param showName The TV Show's name
- * @param epTitle The episode's title
- * @param season The episode's season
- * @param ep The episodes's episode number within the season
- * @param summary The episodes's summary
- * @param eplink The episode's info URL
- * @param epNumber The absolute episode number
- * @param airDate The episode's air date
- * @param imgURL The episode's screenshot URL
- * @param dict The cache dictionary
- */
-- (void)addEp:(NSString *)showName title:(NSString *)epTitle season:(int)season epNum:(int)ep summary:(NSString *)summary link:(NSString *)epLink absEpNum:(int)epNumber airDate:(NSDate *)airDate showID:(NSString *)showID imgURL:(NSString *)imgURL toDict:(NSMutableDictionary *)dict
+- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(SapphireTVShowImportStateData *)state
 {
-	/*Set the key by which to store this.  Either by season/ep or season/title*/
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Adding ep to show %@, title %@, season %d, num %d, sum %@ link %@, absNum %d, date %@, id %@, img %@", showName, epTitle, season, ep, summary, epLink, epNumber, airDate, showID, imgURL);
-	NSNumber *epNum = [NSNumber numberWithInt:ep];
-	id key = epNum;
-	if(ep == 0)
-		key = [epTitle lowercaseString];
+	[state->siteScraper setObject:nil];	//Avoid retain loop
+	if(cancelled)
+		return;
 	
-	/*Get the ep dict*/
-	NSNumber *seasonNum = [NSNumber numberWithInt:season];
-	NSMutableDictionary *epDict = [dict objectForKey:key];
-	if(epDict == nil)
+	NSXMLElement *root = [results rootElement];
+	NSArray *entities = [root elementsForName:@"entity"];
+	NSMutableArray *shows = [[NSMutableArray alloc] initWithCapacity:[entities count]];
+	NSEnumerator *entityEnum = [entities objectEnumerator];
+	NSXMLElement *entity;
+	while((entity = [entityEnum nextObject]) != nil)
 	{
-		epDict = [NSMutableDictionary new];
-		[dict setObject:epDict forKey:key];
-		[epDict release];
+		NSString *title = stringValueOfChild(entity, @"title");
+		NSString *url = stringValueOfChild(entity, @"url");
+		if([url length])
+		{
+			NSURL *trimmer = [NSURL URLWithString:url];
+			url = [trimmer path];
+		}
+		if([title length] && [url length])
+			[shows addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+							   title, tvShowTranslationNameKey,
+							   url, tvShowTranslationLinkKey,
+							   nil]];
 	}
+	
+	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Found shows: %@", shows);
+	
+	/* No need to prompt the user for an empty set */
+	if(![shows count])
+	{
+		/* We tried to import but found nothing - mark this file to be skipped on future imports */
+		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+	}
+	if([[SapphireSettings sharedSettings] autoSelection])
+	{
+		SapphireFileMetaData *metaData = state->file;
+		NSManagedObjectContext *moc = [metaData managedObjectContext];
+		NSString *showPath = [[shows objectAtIndex:0] objectForKey:tvShowTranslationLinkKey];
+		SapphireTVTranslation *tran = [SapphireTVTranslation createTVTranslationForName:state->lookupName withPath:showPath inContext:moc];
+		[state setTranslation:tran];
+		[self getTVShowResultsForState:state];
+	}
+	else
+	{
+		/*Bring up the prompt*/
+		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[delegate chooserScene]];
+		[chooser setShows:shows];
+		[chooser setFileName:[NSString stringByCroppingDirectoryPath:state->path toLength:3]];		
+		[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
+		/*And display prompt*/
+		[delegate displayChooser:chooser forImporter:self withContext:state];
+		[chooser release];
+	}
+	[shows release];	
+}
+
+- (void)getTVShowResultsForState:(SapphireTVShowImportStateData *)state
+{
+	SapphireTVShow *show = [state->translation tvShow];
+	BOOL fetchShowData = NO;
+	if(show == nil)
+		fetchShowData = YES;
+	else if(![[show showDescription] length])
+		fetchShowData = YES;
+	
+	if(!fetchShowData)
+	{
+		NSString *coverArtPath = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"@TV/%@/cover.jpg", [show name]]];
+		BOOL isDir = NO;
+		if(![[NSFileManager defaultManager] fileExistsAtPath:coverArtPath])
+			fetchShowData = YES;
+	}
+	if(fetchShowData)
+	{
+		SapphireSiteTVShowScraper *siteScraper = state->siteScraper;
+		[siteScraper setObject:state];
+		NSString *fullURL = [@"http://www.tvrage.com" stringByAppendingString:state->showPath];
+		[siteScraper getShowDetailsAtURL:fullURL];
+	}
+	else
+	{
+		[state setShow:show];
+		[self getTVShowEpisodeListForState:state];
+	}
+}
+
+- (void)retrievedShowDetails:(NSXMLDocument *)details forObject:(SapphireTVShowImportStateData *)state
+{
+	[state->siteScraper setObject:nil];	//Avoid retain loop
+	if(cancelled)
+		return;
+	
+	NSXMLElement *root = [details rootElement];
+	NSString *plot = stringValueOfChild(root, @"plot");
+	NSString *thumb = stringValueOfChild(root, @"thumb");
+	
+	/*Check for series info*/
+	NSManagedObjectContext *moc = [state->file managedObjectContext];
+	SapphireTVShow *show = state->show;
+	if(!show)
+	{
+		SapphireTVTranslation *tran = state->translation;
+		show = tran.tvShow;
+		if(!show)
+		{
+			NSString *title = stringValueOfChild(root, @"title");
+			if(![title length])
+				//We can't import anymore; importer broken.  Abort.
+				[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+			show = [SapphireTVShow show:title withPath:state->showPath inContext:moc];
+			tran.tvShow = show;
+		}
+		[state setShow:show];
+	}
+	if([thumb length])
+	{
+		NSString *coverArtPath = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"@TV/%@/cover.jpg", [show name]]];
+		[[SapphireApplianceController urlLoader] saveDataAtURL:thumb toFile:coverArtPath];
+	}
+	if([plot length])
+		show.showDescription = plot;
+	
+	[self getTVShowEpisodeListForState:state];
+}
+
+- (void)getTVShowEpisodeListForState:(SapphireTVShowImportStateData *)state
+{
+	SapphireSiteTVShowScraper *siteScraper = state->siteScraper;
+	[siteScraper setObject:state];
+	NSString *fullURL = [NSString stringWithFormat:@"http://www.tvrage.com%@/episode_list/all", state->showPath];
+	[siteScraper getEpisodeListAtURL:fullURL];
+}
+
+- (void)getEpisode:(int)episode withSeason:(int)season title:(NSString *)episodeTitle state:(SapphireTVShowImportStateData *)state inList:(NSXMLDocument *)episodeList index:(int)index
+{
+	NSString *xquery;
+	if(episode)
+		xquery = [NSString stringWithFormat:@"//episode[number(season)=%d and number(epnum)=%d]/url", season, episode];
+	else
+	{
+		NSString *escapedTitle = [episodeTitle stringByReplacingAllOccurancesOf:@"'" withString:@"\\'"];
+		xquery = [NSString stringWithFormat:@"//episode[number(season)=%d and title='%@']/url", season, escapedTitle];
+	}
+	NSArray *epElements = [episodeList objectsForXQuery:xquery error:nil];
+	if([epElements count])
+	{
+		NSXMLElement *epURLElement = [epElements objectAtIndex:0];
+		NSXMLElement *episodeElement = (NSXMLElement *)[epURLElement parent];
+		NSNumber *absoluteNumber = intValueOfChild(episodeElement, @"absoluteEp");
+		int absNumber = [absoluteNumber intValue];
+		SapphireSingleTVShowEpisodeImportStateData *epState = [[SapphireSingleTVShowEpisodeImportStateData alloc] initWithState:state index:index];
+		epState->absEpisode = absNumber;
+		[self getTVShowEpisodesForState:epState atURL:[epURLElement stringValue]];
+		[epState release];
+	}
+}
+
+- (void)retrievedEpisodeList:(NSXMLDocument *)episodeList forObject:(SapphireTVShowImportStateData *)state
+{
+	[state->siteScraper setObject:nil];	//Avoid retain loop
+	if(cancelled)
+		return;
+	
+	NSMutableArray *infoArray;
+	int secondEp = state->secondEp;
+	if(secondEp)
+		infoArray = [[NSMutableArray alloc] initWithObjects:[NSNull null], [NSNull null], nil];
+	else
+		infoArray = [[NSMutableArray alloc] initWithObjects:[NSNull null], nil];
+	[state setEpisodeInfoArray:infoArray];
+	[infoArray release];
+	
+	[self getEpisode:state->episode withSeason:state->season title:state->episodeTitle state:state inList:episodeList index:0];
+	if(secondEp)
+		[self getEpisode:secondEp withSeason:state->season title:nil state:state inList:episodeList index:1];
+}
+
+- (void)getTVShowEpisodesForState:(SapphireSingleTVShowEpisodeImportStateData *)epState atURL:(NSString *)url
+{
+	SapphireSiteTVShowScraper *siteScraper = epState->siteScraper;
+	[siteScraper setObject:epState];
+	[siteScraper getEpisodeDetailsAtURL:url];
+}
+
+- (void)retrievedEpisodeDetails:(NSXMLDocument *)details forObject:(SapphireSingleTVShowEpisodeImportStateData *)state
+{
+	SapphireTVShowImportStateData *tvState = state->state;
+	[state->siteScraper setObject:nil];	//Avoid retain loop
+	if(cancelled)
+		return;
+	
+	int index = state->index;
+	NSXMLElement *root = [details rootElement];
+	NSString *epTitle = stringValueOfChild(root, @"title");
+	int ep = tvState->episode;
+	if(index != 0)
+		ep = tvState->secondEp;
+	if(ep == 0 && ![epTitle length])
+	{
+		//No episode number or title; something is seriously wrong here
+		[self completedEpisode:nil forState:tvState atIndex:state->index];
+		return;
+	}
+	
+	NSMutableDictionary *epDict = [NSMutableDictionary dictionary];
 	/*Add info*/
-	if(showName)
-	{
-		[epDict setObject:showName forKey:META_SHOW_NAME_KEY] ;
-	}
+	[epDict setObject:tvState->show.name forKey:META_SHOW_NAME_KEY];
 	if(ep != 0)
-		[epDict setObject:epNum forKey:META_EPISODE_NUMBER_KEY];
-	if(season != 0)
-	{
-		[epDict setObject:seasonNum forKey:META_SEASON_NUMBER_KEY];
-	}
+		[epDict setObject:[NSNumber numberWithInt:ep] forKey:META_EPISODE_NUMBER_KEY];
+	[epDict setObject:[NSNumber numberWithInt:tvState->season] forKey:META_SEASON_NUMBER_KEY];
+
 	if(epTitle != nil)
 		[epDict setObject:epTitle forKey:META_TITLE_KEY];
-	if(epLink != nil)
-		[epDict setObject:epLink forKey:LINK_KEY];
-	if(showID != nil)
-		[epDict setObject:showID forKey:META_SHOW_IDENTIFIER_KEY];
+	[epDict setObject:tvState->showPath forKey:META_SHOW_IDENTIFIER_KEY];
+	NSString *summary = stringValueOfChild(root, @"plot");
 	if(summary != nil)
 		[epDict setObject:summary forKey:META_DESCRIPTION_KEY];
-	if(epNumber != nil)
-		[epDict setObject:[NSNumber numberWithInt:epNumber] forKey:META_ABSOLUTE_EP_NUMBER_KEY];
+	if(state->absEpisode)
+		[epDict setObject:[NSNumber numberWithInt:state->absEpisode] forKey:META_ABSOLUTE_EP_NUMBER_KEY];
+	NSDate *airDate = dateValueOfChild(root, @"aired");
 	if(airDate != nil)
 		[epDict setObject:airDate forKey:META_SHOW_AIR_DATE];
-	if(imgURL != nil)
-		[epDict setObject:imgURL forKey:IMG_URL];
-}
-
-- (NSMutableDictionary *)getMetaForSeries:(NSString *)seriesName
-{
-	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
-	/*Get the season's html*/
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@", seriesName]];
-	NSError *error = nil;
-	NSXMLDocument *document = [NSXMLDocument tidyDocumentWithURL:url error:&error];
-	if(document == nil)
-		return nil;
-	/*Get the series info*/
-	if(error != nil && ![[error domain] isEqualToString:@"NSXMLParserErrorDomain"])
+	NSString *imgURL = stringValueOfChild(root, @"thumb");
+	if([imgURL length])
 	{
-		/*Error fetching data; return nil*/
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to parse data with error %@", error);
-		return nil;
-	}
-	
-	NSXMLElement *html = [document rootElement];
-	
-	NSArray *summaryArray = [html objectsForXQuery:TVRAGE_SHOW_FULL_DESC_XPATH error:&error];
-	if([summaryArray count])
-	{	
-		NSString *summary = [summaryArray componentsJoinedByString:@""];
-		if([summary hasSuffix:@"[-] Hide Full Summary\n"])
-			summary = [summary substringToIndex:[summary length] - 23];
-		[ret setObject:summary forKey:META_DESCRIPTION_KEY];
-		
-	}
-	else
-	{
-		summaryArray = [html objectsForXQuery:TVRAGE_SHOW_RAW_DESC_XPATH error:&error];
-		NSMutableArray *mutSums = [summaryArray mutableCopy];
-		if([[[mutSums lastObject] stringValue] hasPrefix:@"This Show Has"])
-			[mutSums removeLastObject];
-		NSString *summary = [mutSums componentsJoinedByString:@""];
-		[mutSums release];
-		NSMutableString *mutSummary = [summary mutableCopy];
-		NSCharacterSet *nonWhiteChars = [[NSCharacterSet characterSetWithCharactersInString:[NSString stringWithFormat:@"\n %C", 160]] invertedSet];
-		NSRange range = [mutSummary rangeOfCharacterFromSet:nonWhiteChars];
-		NSRange replaceRange = NSMakeRange(0, range.location);
-		if(range.location != 0 && range.location != NSNotFound)
-			[mutSummary replaceCharactersInRange:replaceRange withString:@""];
-		range = [mutSummary rangeOfCharacterFromSet:nonWhiteChars options:NSBackwardsSearch];
-		int endOfRange = range.location + range.length;
-		replaceRange = NSMakeRange(endOfRange, [mutSummary length] - endOfRange);
-		if(endOfRange != [mutSummary length] && range.location != NSNotFound)
-			[mutSummary replaceCharactersInRange:replaceRange withString:@""];
-		[mutSummary replaceOccurrencesOfString:@"\n\n" withString:@"\n" options:0 range:NSMakeRange(0, [mutSummary length])];
-		[ret setObject:mutSummary forKey:META_DESCRIPTION_KEY];
-		[mutSummary release];
-	}
-	
-	NSArray *imgArray = [html objectsForXQuery:TVRAGE_SHOW_IMG_XPATH error:&error];
-	if([imgArray count])
-		[ret setObject:[[(NSXMLElement *)[imgArray objectAtIndex:0] attributeForName:@"src"] stringValue] forKey:IMG_URL];
-	
-	return ret;
-}
-
-/*!
- * @brief Fetch information about a season of a show
- *
- * @param seriesName The tvrage series name (part of the show's URL)
- * @param season The season to fech
- * @return A cached dictionary of the season's episodes
- */
-- (NSMutableDictionary *)getMetaForSeries:(NSString *)seriesName inSeason:(int)season
-{
-	NSMutableDictionary *ret = [NSMutableDictionary dictionary];
-	NSCharacterSet *decimalSet = [NSCharacterSet decimalDigitCharacterSet];
-	/*Get the season's html*/
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com%@/episode_guide/%d", seriesName, season]];
-	NSError *error = nil;
-	NSXMLDocument *document = [NSXMLDocument tidyDocumentWithURL:url error:&error];
-	if(document == nil)
-		return nil;
-	/* Dump XML document to disk (Dev Only) */
-/*	NSString *documentPath =[applicationSupportDir() stringByAppendingPathComponent:@"XML"];
-	[[document XMLDataWithOptions:NSXMLNodePrettyPrint] writeToFile:[NSString stringWithFormat:@"/%@%@.xml",documentPath,seriesName] atomically:YES] ;*/
-	/*Get the episode list*/
-	if(error != nil && ![[error domain] isEqualToString:@"NSXMLParserErrorDomain"])
-	{
-		/*Error fetching data; return nil*/
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to parse data with error %@", error);
-		return nil;
-	}
-	NSString *showName= nil;
-	
-	
-	NSXMLElement *html = [document rootElement];
-	
-	NSArray *titleArray=[html objectsForXQuery:TVRAGE_SHOWNAME_XPATH error:&error];
-	if([titleArray count])
-	{
-		showName=[[titleArray objectAtIndex:0] stringValue];
-		int length = [showName length];
-		if([showName characterAtIndex:length - 1] == '\n')
-			showName = [showName substringToIndex:length - 1];
-/*		int index = [showName rangeOfString:@"Season" options:0].location;
-		if(index != NSNotFound)
-			showName = [showName substringToIndex:index - 1];*/
-	}
-
-	NSArray *eps = [html objectsForXQuery:TVRAGE_EPLIST_XPATH error:&error];
-	NSEnumerator *epEnum = [eps objectEnumerator];
-	NSXMLNode *epNode = nil;
-	while((epNode = [epEnum nextObject]) != nil)
-	{
-		/*Parse the episode's info*/
-		NSString *epTitle = nil;
-		NSString *link = nil;
-		int seasonNum = 0;
-		int ep = 0;
-		int epNumber = 0;
-		NSString *summary = nil;
-		NSDate *airDate = nil;
-		NSString *imageURL = nil;
-		
-		/*Get the info pieces*/
-		NSArray *epInfos = [epNode objectsForXQuery:TVRAGE_EP_INFO error:&error];
-		NSEnumerator *epInfoEnum = [epInfos objectEnumerator];
-		NSXMLNode *epInfo = nil;
-		while((epInfo = [epInfoEnum nextObject]) != nil)
+		NSString *previewArtPath = [NSFileManager previewArtPathForTV:tvState->show.name season:tvState->season];
+		NSString *newPath = nil;
+		if(ep != 0)
+			newPath = [previewArtPath stringByAppendingFormat:@"/Episode %d", ep];
+		else
+			newPath = [previewArtPath stringByAppendingPathComponent:epTitle];
+		NSString *imageDestination = [newPath stringByAppendingPathExtension:@"jpg"];
+		BOOL isDir = NO;
+		BOOL imageExists = [[NSFileManager defaultManager] fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
+		if(imgURL && !imageExists)
 		{
-			NSString *nodeName = [epInfo name];
-			NSArray *summaryObjects = [epInfo objectsForXQuery:@".//font" error:&error];
-			if([summaryObjects count] && ![nodeName isEqualToString:@"font"])
+			/*Download the screen cap*/
+			[[SapphireApplianceController urlLoader] saveDataAtURL:imgURL toFile:imageDestination];
+		}
+		else if(!imageExists)
+		{
+			//QTMovie is broken on ATV, don't fetch images there
+			SapphireFileMetaData *metaData = tvState->file;
+			if ([SapphireFrontRowCompat usingLeopard] && [metaData fileContainerTypeValue] == FILE_CONTAINER_TYPE_QT_MOVIE)
 			{
-				/*Sometimes, the summary is inside formatting, strip*/
-				epInfo = [summaryObjects objectAtIndex:0];
-				nodeName = [epInfo name];
+				// NSImage-Extensions
+				[[NSImage imageFromMovie:tvState->path] writeToFile:imageDestination atomically:YES];
 			}
-			if(link == nil && [nodeName isEqualToString:@"a"])
+		}		
+	}
+	[self completedEpisode:epDict forState:tvState atIndex:index];
+}
+
+- (void)completedEpisode:(NSDictionary *)dict forState:(SapphireTVShowImportStateData *)state atIndex:(int)index
+{
+	state->episodesCompleted++;
+	NSMutableArray *infoArray = state->episodeInfoArray;
+	[infoArray replaceObjectAtIndex:index withObject:dict];
+	if(state->episodesCompleted == [infoArray count])
+	{
+		for(int i=0; i<[infoArray count]; i++)
+		{
+			if(![[infoArray objectAtIndex:i] count])
 			{
-				/*Get the URL*/
-				link = [[(NSXMLElement *)epInfo attributeForName:@"href"] stringValue];
-				link = [NSString stringWithFormat:@"http://www.tvrage.com%@", link];
-				/*Parse the name*/
-				NSString *epInfoStr = [[epInfo childAtIndex:0] stringValue];
-				if(epInfoStr != nil)
-				{
-					/*Get the season number and ep numbers*/
-					NSScanner *scanner = [NSScanner scannerWithString:epInfoStr];
-					NSRange range = [epInfoStr rangeOfString:@" - " options:0];
-					if(range.location != NSNotFound)
-					{
-						[scanner scanInt:&epNumber];
-						[scanner scanUpToCharactersFromSet:decimalSet intoString:nil];
-						[scanner scanInt:&seasonNum];
-						[scanner scanUpToCharactersFromSet:decimalSet intoString:nil];
-						[scanner scanInt:&ep];
-						[scanner setScanLocation:range.length + range.location];
-						if(seasonNum == 0)
-							seasonNum = season;
-					}
-					else
-						seasonNum = season;
-					epTitle = [epInfoStr substringFromIndex:[scanner scanLocation]];
-				}
-			}
-			else if(summary == nil && [nodeName isEqualToString:@"font"])
-			{
-				/*Get the summary*/
-				NSArray *summaries = [epInfo objectsForXQuery:@"string()" error:&error];
-				summary = [summaries componentsJoinedByString:@"\n"];
-				NSMutableString *mutSummary = [summary mutableCopy];
-				[mutSummary replaceOccurrencesOfString:@"\n\n" withString:@"\n" options:0 range:NSMakeRange(0, [summary length])];
-				summary = [NSString stringWithString:mutSummary];
-				[mutSummary release];
-				
-				if([summary hasSuffix:@"No Summary (Add Here)"])
-					summary = nil;
-				if(![summary length])
-					summary = nil;
-			}
-			else if(imageURL == nil)
-			{
-				NSArray *images = [epInfo objectsForXQuery:TVRAGE_SCREEN_CAP_XPATH error:&error];
-				if([images count])
-				{
-					imageURL = [[(NSXMLElement *)[images objectAtIndex:0] attributeForName:@"src"] stringValue];
-				}
+				[infoArray removeObjectAtIndex:i];
+				i--;
 			}
 		}
-		epInfos = [epNode objectsForXQuery:TVRAGE_EP_TEXT error:&error];
-		epInfoEnum = [epInfos objectEnumerator];
-		epInfo = nil;
-		while((epInfo = [epInfoEnum nextObject]) != nil)
+		if([infoArray count])
 		{
-			/*Get the air date*/
-			NSString *nodeName = [epInfo stringValue];
-			if ([nodeName hasPrefix:@" ("] && [nodeName hasSuffix:@") "])
-			{
-				NSString *subStr = [nodeName substringWithRange:NSMakeRange(2, [nodeName length] - 4)];
-				
-				airDate = [NSDate dateWithNaturalLanguageString:subStr];
-				if([airDate timeIntervalSince1970] == 0)
-					airDate = nil;
-				else
-					break;
-			}
+			SapphireFileMetaData *file = state->file;
+			SapphireEpisode *ep = [SapphireEpisode episodeWithDictionaries:infoArray inContext:[file managedObjectContext]];
+			file.tvEpisode = ep;
+			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
 		}
-		/*Add to cache*/
-		[self addEp:showName title:epTitle season:seasonNum epNum:ep summary:summary link:link absEpNum:epNumber airDate:airDate showID:seriesName imgURL:imageURL toDict:ret];
 	}
-	return ret;
 }
 
-/*!
- * @brief Searches for a show based on the filename
- *
- * @param searchStr Part of the filename to use in the show search
- * @return An array of possible results
- */
-- (NSArray *)searchResultsForSeries:(NSString *)searchStr
+- (void)completeWithState:(SapphireTVShowImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
 {
-	/*Load the search info*/
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.tvrage.com/search.php?search=%@&sonly=1", [searchStr URLEncode]]];
-	NSError *error = nil;
-	NSXMLDocument *document = [[[NSXMLDocument alloc] initWithContentsOfURL:url options:NSXMLDocumentTidyHTML error:&error] autorelease];
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Document is %@", document);
-	if(error != nil && ![[error domain] isEqualToString:@"NSXMLParserErrorDomain"])
+	SapphireFileMetaData *currentData = state->file;
+	if(!userCanceled)
 	{
-		/*Error fetching data*/
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Got Error %@, %@", [error domain], [error userInfo]);
-		return nil;
+		[currentData didImportType:IMPORT_TYPE_TVSHOW_MASK];
+		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_MOVIE)
+			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
 	}
-	
-	/*Get the results list*/
-	NSXMLElement *root = [document rootElement];
-	NSArray *results = [root objectsForXQuery:TVRAGE_SEARCH_XPATH error:&error];
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Got raw search results %@", results);
-	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[results count]];
-	if([results count])
-	{
-		/*Get each result*/
-		NSEnumerator *resultEnum = [results objectEnumerator];
-		NSXMLElement *result = nil;
-		while((result = [resultEnum nextObject]) != nil)
-		{
-			/*Add the result to the list*/
-			NSURL *resultURL = [NSURL URLWithString:[[result attributeForName:@"href"] stringValue]];
-			if(resultURL == nil)
-				continue;
-			[ret addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-				[[result childAtIndex:0] stringValue], @"name",
-				[resultURL path], LINK_KEY,
-				nil]];
-		}
-		return ret;
-	}
-	/*No results found*/
-	return [NSArray array];
-}
-
-/*!
- * @brief Fetch cached information about a show's season, and if none, fetch it
- *
- * @param show The tvrage series name
- * @param season The season to fetch
- * @return A dictionary with info about the season
- */
-- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season
-{
-	/*Get the show's info*/
-	NSMutableDictionary *showDict = [showInfo objectForKey:show];
-	NSMutableDictionary *seasonDict = nil;
-	NSNumber *seasonNum = [NSNumber numberWithInt:season];
-	if(!showDict)
-	{
-		showDict = [NSMutableDictionary new];
-		[showInfo setObject:showDict forKey:show];
-		[showDict release];
-	}
-	else
-		/*Get the season's info*/
-		seasonDict = [showDict objectForKey:seasonNum];
-	if(!seasonDict)
-	{
-		/*Not in cache, so fetch it*/
-		seasonDict = [self getMetaForSeries:show inSeason:season];
-		if(seasonDict != nil)
-			/*Put the result in cache*/
-			[showDict setObject:seasonDict forKey:seasonNum];
-	}
-	/*Return the info*/
-	return seasonDict;
-}
-
-/*!
- * @brief Get info about a show's episode from a key
- *
- * @param show The tvrage show name
- * @param season The episode's season
- * @param key The lookup key to use
- * @return nil if network failure, empty dictionary if info doesn't exist, otherwise the episode's info
- */
-- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season key:(id)key
-{
-	NSMutableDictionary *seasonDict = [self getInfo:show forSeason:season];
-	if(seasonDict == nil)
-		return nil;
-	NSDictionary *ret = [seasonDict objectForKey:key];
-	if(ret != nil)
-		return [NSMutableDictionary dictionaryWithDictionary:ret];
-	return [NSDictionary dictionary];
-}
-
-/*!
- * @brief Get info about a show's episode
- *
- * @param show The tvrage show name
- * @param season The episode's season
- * @param ep The episode's episode number
- * @return nil if network failure, empty dictionary if info doesn't exist, otherwise the episode's info
- */
-- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episode:(int)ep
-{
-	NSNumber *epNum = [NSNumber numberWithInt:ep];
-	return [self getInfo:show forSeason:season key:epNum];
-}
-
-/*!
- * @brief Get info about a show's episode which doesn't have an episode number (specials)
- *
- * @param show The tvrage show name
- * @param season The episode's season
- * @param epTitle The episode's title
- * @return nil if network failure, empty dictionary if info doesn't exist, otherwise the episode's info
- */
-- (NSMutableDictionary *)getInfo:(NSString *)show forSeason:(int)season episodeTitle:(NSString *)epTitle
-{
-	return [self getInfo:show forSeason:season key:[epTitle lowercaseString]];
-}
-
-- (void)clearCache
-{
-	showInfoClearTimer = nil;
-	[showInfo removeAllObjects];
-}
-
-/*!
- * @brief Write our setings out
- */
-- (void)writeSettingsForContext:(NSManagedObjectContext *)moc
-{
-	[SapphireMetaDataSupport save:moc];
+	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
-	[showInfoClearTimer invalidate];
-	showInfoClearTimer = nil;
-	ImportState ret = [self doRealImportMetaData:metaData path:path];
-	showInfoClearTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(clearCache) userInfo:nil repeats:NO];
-	return ret;
-}
-
-- (ImportState)doRealImportMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
-{
+	cancelled = NO;
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
 		return ImportStateNotUpdated;
-//	NSArray *pathComponents = [path pathComponents];
+	//	NSArray *pathComponents = [path pathComponents];
 	NSString *fileName = [path lastPathComponent];
 	
 	/*Check regexes to see if this is a tv show*/
@@ -584,7 +554,7 @@
 		index = matches[0].rm_so;
 		/*Insert an artificial season/ep seperator so things are easier later*/
 		NSMutableString *tempStr = [fileName mutableCopy];
-//		if(index > [tempStr length] || index <= 0 )return NO;
+		//		if(index > [tempStr length] || index <= 0 )return NO;
 		[tempStr deleteCharactersInRange:NSMakeRange(0, index+1)];
 		[tempStr insertString:@"x" atIndex:matches[0].rm_eo - index - 4];
 		scanString = [tempStr autorelease];
@@ -595,52 +565,6 @@
 	{	
 		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
 		return ImportStateNotUpdated;
-	}
-	
-	/*Get the show title*/
-	NSString *searchStr = [fileName substringToIndex:index];
-	NSString *searchShowName = [metaData searchShowName];
-	if(searchShowName != nil)
-		searchStr = searchShowName;
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"%@ matched regex; checking show name %@", fileName, searchStr);
-	/*Check to see if we know this title*/
-	NSManagedObjectContext *moc = [metaData managedObjectContext];
-	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:[searchStr lowercaseString] inContext:moc];
-	if([tran showPath] == nil)
-	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Conducting search");
-		if(![delegate canDisplayChooser])
-			/*There is no data menu, background import. So we can't ask user, skip*/
-			return ImportStateNotUpdated;
-		/*Ask the user what show this is*/
-		NSArray *shows = [self searchResultsForSeries:searchStr];
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Found shows %@", shows);
-		if(shows == nil)
-			return ImportStateNotUpdated;
-		
-		if([[SapphireSettings sharedSettings] autoSelection])
-		{
-			NSString *path = [[shows objectAtIndex:0] objectForKey:LINK_KEY];
-			if(tran == nil)
-				tran = [SapphireTVTranslation createTVTranslationForName:[searchStr lowercaseString] withPath:path inContext:moc];
-			else
-				[tran setShowPath:path];
-		}
-		else
-		{
-			/*Bring up the prompt*/
-			SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[delegate chooserScene]];
-			[chooser setShows:shows];
-			[chooser setFileName:fileName];
-			[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
-			[chooser setSearchStr:searchStr];
-			SapphireImportStateData *state = [[SapphireImportStateData alloc] initWithFile:metaData atPath:path];
-			/*And display prompt*/
-			[delegate displayChooser:chooser forImporter:self withContext:state];
-			[chooser release];
-			[state release];
-			return ImportStateSuspend;
-		}
 	}
 	
 	int season = 0;
@@ -661,11 +585,11 @@
 	int overriddenSeason = [metaData searchSeasonNumber];
 	if(overriddenSeason != -1)
 		season = overriddenSeason;
-
+	
 	int overriddenEpisode = [metaData searchEpisodeNumber];
 	if(overriddenEpisode != -1)
 		ep = overriddenEpisode;
-
+	
 	/*No season, no info*/
 	if(season == 0)
 	{	
@@ -684,117 +608,67 @@
 	overriddenEpisode = [metaData searchLastEpisodeNumber];
 	if(overriddenEpisode != -1)
 		otherEp = overriddenEpisode;
-
-	/*Get the episode's info*/
-	NSMutableDictionary *info = nil, *info2 = nil;
-	if(ep != 0)
+	
+	/*Get the show title*/
+	NSString *searchStr = [fileName substringToIndex:index];
+	NSString *searchShowName = [metaData searchShowName];
+	if(searchShowName != nil)
+		searchStr = searchShowName;
+	searchStr = [searchStr lowercaseString];
+	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"%@ matched regex; checking show name %@", fileName, searchStr);
+	/*Check to see if we know this title*/
+	NSManagedObjectContext *moc = [metaData managedObjectContext];
+	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:searchStr inContext:moc];
+	SapphireSiteTVShowScraper *siteScraper = [[SapphireSiteTVShowScraper alloc] initWithTVShowScraper:scraper delegate:self loader:[SapphireApplianceController urlLoader]];
+	SapphireTVShowImportStateData *state = [[[SapphireTVShowImportStateData alloc] initWithFile:metaData atPath:path scraper:siteScraper] autorelease];
+	[siteScraper release];
+	
+	[state setLookupName:searchStr];
+	[state setTranslation:tran];
+	SapphireTVShow *show = tran.tvShow;
+	[state setShow:show];
+	state->episode = ep;
+	state->season = season;
+	state->secondEp = otherEp;
+	if(ep == 0)
 	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Importing TV show %@ %d %d %d", [tran showPath], season, ep, otherEp);
-		/*Match on s/e*/
-		info = [self getInfo:[tran showPath] forSeason:season episode:ep];
-		if(otherEp != 0)
-			info2 = [self getInfo:[tran showPath] forSeason:season episode:otherEp];
-	}
-	else
-	{
-		/*Match on show title*/
-		NSString *showTitle = nil;
+		NSString *epTitle = nil;
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:nil];
-		if([scanner scanUpToString:@"." intoString:&showTitle])
-			info = [self getInfo:[tran showPath] forSeason:season episodeTitle:showTitle];
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Searching for title \"%@\"", showTitle);
+		if([scanner scanUpToString:@"." intoString:&epTitle])
+			[state setEpisodeTitle:epTitle];
 	}
-	/*No info, well, no info, so we didn't import*/
-	if(info == nil)
-		return ImportStateNotUpdated;
-	if(![info count])
+	if([tran showPath] == nil)
 	{
-		/*Our search was successful, but there's no tv episode data, so it doesn't try to import again.*/
-		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
-		return ImportStateNotUpdated;
+		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Conducting search");
+		if(![delegate canDisplayChooser])
+		/*There is no data menu, background import. So we can't ask user, skip*/
+			return ImportStateNotUpdated;
+		/*Ask the user what show this is*/
+		[siteScraper setObject:state];
+		[siteScraper searchForShowNamed:searchStr];
+		return ImportStateMultipleSuspend;
 	}
 	
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Import info is %@", info);
-		
-	/* Lets process the cover art directory structure */
-	NSString * previewArtPath = [NSFileManager previewArtPathForTV:[info objectForKey:META_SHOW_NAME_KEY] season:[[info objectForKey:META_SEASON_NUMBER_KEY] intValue]];
-	
-	NSFileManager *fm = [NSFileManager defaultManager];
-	[fm constructPath:previewArtPath];
-	/*Check for screen cap locally and on server*/
-	NSString *imgURL = [info objectForKey:IMG_URL];
-	NSString *newPath = nil;
-	if(ep != 0)
-		newPath = [previewArtPath stringByAppendingFormat:@"/Episode %d", ep];
-	else
-		newPath = [previewArtPath stringByAppendingPathComponent:[info objectForKey:META_TITLE_KEY]];
-	NSString *imageDestination = [newPath stringByAppendingPathExtension:@"jpg"];
-	BOOL isDir = NO;
-	BOOL imageExists = [fm fileExistsAtPath:imageDestination isDirectory:&isDir] && !isDir;
-	if(imgURL && !imageExists)
-	{
-		/*Download the screen cap*/
-		NSURL *imageURL = [NSURL URLWithString:imgURL];
-		NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-		SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:imageDestination];
-		[[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate] autorelease];
-		[myDelegate release];
-	}
-	else if(!imageExists)
-	{
-		//QTMovie is broken on ATV, don't fetch images there
-		if ([SapphireFrontRowCompat usingLeopard] && [metaData fileContainerTypeValue] == FILE_CONTAINER_TYPE_QT_MOVIE)
-		{
-			// NSImage-Extensions
-			[[NSImage imageFromMovie:path] writeToFile:imageDestination atomically:YES];
-		}
-	}
-	
-	/*Import the info*/
-	[info removeObjectForKey:LINK_KEY];
-	NSMutableArray *dictionaries = [NSMutableArray arrayWithObjects:info, info2, nil];
-	SapphireEpisode *episode = [SapphireEpisode episodeWithDictionaries:dictionaries inContext:moc];
-	[metaData setTvEpisode:episode];
-	
-	/*Finish Translations*/
-	SapphireTVShow *tvShow = [episode tvShow];
-	if(tvShow != nil)
-	{
-		[tran setTvShow:tvShow];
-		NSString *showName = [[tvShow name] lowercaseString];
-		SapphireTVTranslation *nameTran = [SapphireTVTranslation tvTranslationForName:showName inContext:moc];
-		if(nameTran == nil)
-		{
-			nameTran = [SapphireTVTranslation createTVTranslationForName:showName withPath:[tran showPath] inContext:moc];
-			[nameTran setTvShow:tvShow];
-		}
-	}
-	
-	/*Check for series info*/
-	NSString *showCoverArtPath = [[previewArtPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"cover.jpg"];
-	imageExists = [fm fileExistsAtPath:showCoverArtPath isDirectory:&isDir] && !isDir;
-	if(![tvShow.showDescription length] || !imageExists)
-	{
-		NSDictionary *showDict = [self getMetaForSeries:[tran showPath]];
-		NSString *summary = [showDict objectForKey:META_DESCRIPTION_KEY];
-		if([summary length])
-			tvShow.showDescription = summary;
-		
-		imgURL = [showDict objectForKey:IMG_URL];
-		if([imgURL length] && !imageExists)
-		{
-			/*Download the screen cap*/
-			NSURL *imageURL = [NSURL URLWithString:imgURL];
-			NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-			SapphireTVShowDataMenuDownloadDelegate *myDelegate = [[SapphireTVShowDataMenuDownloadDelegate alloc] initWithDest:showCoverArtPath];
-			[[[NSURLDownload alloc] initWithRequest:request delegate:myDelegate] autorelease];
-			[myDelegate release];
-		}
-	}
-	
-	/*We imported something*/
-	return ImportStateUpdated;
+	[self getTVShowResultsForState:state];
+	return ImportStateMultipleSuspend;
 }
+
+/*!
+ * @brief Write our setings out
+ */
+- (void)writeSettingsForContext:(NSManagedObjectContext *)moc
+{
+	[SapphireMetaDataSupport save:moc];
+}
+
+/*- (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
+{
+	[showInfoClearTimer invalidate];
+	showInfoClearTimer = nil;
+	ImportState ret = [self doRealImportMetaData:metaData path:path];
+	showInfoClearTimer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(clearCache) userInfo:nil repeats:NO];
+	return ret;
+}*/
 
 - (NSString *)completionText
 {
@@ -816,13 +690,25 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)aChooser withContext:(id)context;
+- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireTVShowImportStateData *)state
+{
+	/*Check for a match done earlier*/
+	NSManagedObjectContext *moc = [state->file managedObjectContext];
+	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:state->lookupName inContext:moc];
+	if([tran showPath])
+	{
+		[state setTranslation:tran];
+		[self getTVShowResultsForState:state];
+		return NO;
+	}
+	return YES;
+}
+
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)aChooser withContext:(SapphireTVShowImportStateData *)state;
 {
 	if(![aChooser isKindOfClass:[SapphireShowChooser class]])
 		return;
 	SapphireShowChooser *chooser = (SapphireShowChooser *)aChooser;
-	
-	SapphireImportStateData *state = (SapphireImportStateData *)context;
 	SapphireFileMetaData *currentData = state->file;
 	NSString *path = state->path;
 	
@@ -830,24 +716,20 @@
 	int selection = [chooser selection];
 	if(selection == SapphireChooserChoiceCancel)
 		/*They aborted, skip*/
-		[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUserSkipped];
+		[self completeWithState:state withStatus:ImportStateUserSkipped userCanceled:YES];
 	else if(selection == SapphireChooserChoiceNotType)
-	{
 		/*They said it is not a show, so put in empty data so they are not asked again*/
-		[currentData didImportType:IMPORT_TYPE_TVSHOW_MASK];
-		if ([currentData fileClassValue] == FILE_CLASS_TV_SHOW)
-			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
-	}
+		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
 	else
 	{
 		/*They selected a show, save the translation and write it*/
 		NSDictionary *show = [[chooser shows] objectAtIndex:selection];
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
-		[SapphireTVTranslation createTVTranslationForName:[[chooser searchStr] lowercaseString] withPath:[show objectForKey:LINK_KEY] inContext:moc];
+		SapphireTVTranslation *tran = [SapphireTVTranslation createTVTranslationForName:state->lookupName withPath:[show objectForKey:tvShowTranslationLinkKey] inContext:moc];
+		[state setTranslation:tran];
 		[self writeSettingsForContext:moc];
+		[self getTVShowResultsForState:state];
 	}
-	/*We can resume now*/
-	[delegate resumeWithPath:path];
 }
 
 @end

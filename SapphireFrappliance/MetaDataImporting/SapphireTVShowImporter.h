@@ -20,6 +20,7 @@
 
 #import "SapphireImporterDataMenu.h"
 #include <regex.h>
+#import "SapphireSiteScraper.h"
 
 @class SapphireShowChooser;
 
@@ -28,10 +29,10 @@
  *
  * This class is a subclass of SapphireMultipleImporter for importing TV data.  It will search tvrage in an attempt to identify the tv show.  Then it will present the user with the results it found and ask them to make a choice.  Once the tv show is identified, it will then import data from tvrage.  In addition, it will download screenshots to display for cover art.
  */
-@interface SapphireTVShowImporter : NSObject <SapphireImporter>{
+@interface SapphireTVShowImporter : NSObject <SapphireImporter, SapphireSiteTVShowScraperDelegate>{
 	id <SapphireImporterDelegate>	delegate;				/*!< @brief The delegate for the import (not retained)*/
-	NSMutableDictionary				*showInfo;				/*!< @brief The info about a TV show kept during import so that it doesn't need feteching every time*/
-	NSTimer							*showInfoClearTimer;	/*!< @brief Timer to clear the show info cache*/
+	BOOL							cancelled;				/*!< @brief YES if the import has been cancelled, NO otherwise*/
+	SapphireTVShowScraper			*scraper;				/*!< @brief The scraper to use*/
 	regex_t							letterMarking;			/*!< @brief Regex for matching S##E##*/
 	regex_t							seasonByEpisode;		/*!< @brief Regex for matching #x##*/
 	regex_t							seasonEpisodeTriple;	/*!< @brief Regex for matching ###*/
