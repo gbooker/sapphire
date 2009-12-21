@@ -125,7 +125,6 @@
 - (void)layoutFrame;
 - (void)setFileProgress:(NSString *)updateFileProgress;
 - (void)resetUIElements;
-- (void)pause;
 - (void)itemImportBackgrounded;
 - (void)updateDisplay;
 @end
@@ -325,7 +324,6 @@
 		[SapphireFrontRowCompat renderScene:[self scene]];
 		/*Initialize the import process*/
 		canceled = NO;
-		suspended = NO;
 		collectionIndex = 0;
 		[collectionDirectories release];
 		collectionDirectories = [[SapphireCollectionDirectory availableCollectionDirectoriesInContext:moc includeHiddenOverSkipped:YES] retain];
@@ -506,13 +504,11 @@
 			if([self doImport] && !backgrounded)
 				updated++;		
 			
-			/*Check for a suspend and reimport afterwards*/
-			if(suspended || backgrounded)
+			/*Check for a background import*/
+			if(backgrounded)
 			{
 				backgrounded = NO;
 				current--;
-				if(suspended)
-					return;
 			}
 			
 			/*Start with the first item*/
@@ -545,21 +541,6 @@
 	[SapphireMetaDataSupport save:moc];
 }
 
-- (void)pause
-{
-	/*Kill the timer*/
-	suspended = YES;
-}
-
-- (void)resumeWithPath:(NSString *)path
-{
-	/*Sanity checks*/
-	[importTimer invalidate];
-	/*Resume*/
-	suspended = NO;
-	importTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f target:self selector:@selector(importNextItem:) userInfo:nil repeats:NO];
-}
-
 - (void)itemImportBackgrounded
 {
 	backgrounded = YES;
@@ -578,14 +559,6 @@
 	if(state == ImportStateUpdated)
 		updated++;
 
-	if(suspended && [[[importItems objectAtIndex:0] path] isEqualToString:path])
-	{
-		/*Remove the next item from the queue*/
-		if([importItems count])
-			[importItems removeObjectAtIndex:0];
-
-		[self resumeWithPath:path];
-	}
 	current++;
 	[self updateDisplay];
 }

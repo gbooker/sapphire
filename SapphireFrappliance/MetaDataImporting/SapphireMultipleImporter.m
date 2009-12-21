@@ -194,11 +194,6 @@
 	}
 }
 
-- (void)resumeWithPath:(NSString *)path
-{
-	[delegate resumeWithPath:path];
-}
-
 - (BOOL)canDisplayChooser
 {
 	return [delegate canDisplayChooser];

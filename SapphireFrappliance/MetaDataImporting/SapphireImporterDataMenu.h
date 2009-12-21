@@ -134,13 +134,6 @@ typedef enum{
 - (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state;
 
 /*!
- * @brief Resume the import process
- *
- * @param The path at which the importer ran
- */
-- (void)resumeWithPath:(NSString *)path;
-
-/*!
  * @brief States whether a chooser can be displayed
  *
  * @return YES if a chooser can be displayed, NO otherwise
@@ -201,7 +194,6 @@ typedef enum{
 	float							max;					/*!< @brief The max number to import*/
 	float							current;				/*!< @brief The current count of imported items*/
 	float							updated ;				/*!< @brief The number of items with new data*/
-	BOOL							suspended;				/*!< @brief YES if import is suspended, NO otherwise*/
 	BOOL							canceled;				/*!< @brief YES if the import was cancelled, NO otherwise*/
 	BOOL							backgrounded;			/*!< @brief YES if the current file is backgrounded, NO otherwise*/
 	
