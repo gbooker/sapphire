@@ -18,6 +18,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 #import "SapphireImporterDataMenu.h"
+#import "SapphireSiteScraper.h"
 
 @class SapphirePosterChooser;
 
@@ -26,8 +27,10 @@
  *
  * This class is a subclass of SapphireMultipleImporter for importing movie data.  It will search IMDB in an attempt to identify the movie.  Then it will present the user with the results it found and ask them to make a choice.  Once the movie is identified, it will then import data from IMDB.  In addition, it will download posters from impawards and ask the user to select a poster to display for cover art.
  */
-@interface SapphireMovieImporter : NSObject <SapphireImporter>{
+@interface SapphireMovieImporter : NSObject <SapphireImporter, SapphireSiteMovieScraperDelegate>{
 	id <SapphireImporterDelegate>	delegate;				/*!< @brief The UI for the import (not retained)*/
+	BOOL							cancelled;				/*!< @brief YES if the import has been cancelled, NO otherwise*/
+	SapphireMovieScraper			*scraper;				/*!< @brief The scraper to use*/
 }
 
 @end
