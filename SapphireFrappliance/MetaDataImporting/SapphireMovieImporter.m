@@ -106,57 +106,8 @@
 	cancelled = YES;
 }
 
-static NSString *stringValueOfChild(NSXMLElement *element, NSString *childName)
+- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(SapphireMovieImportStateData *)state
 {
-	NSArray *children = [element elementsForName:childName];
-	if(![children count])
-		return nil;
-	
-	return [[children lastObject] stringValue];
-}
-
-static NSNumber *intValueOfChild(NSXMLElement *element, NSString *childName)
-{
-	NSArray *children = [element elementsForName:childName];
-	if(![children count])
-		return nil;
-	
-	NSString *str = [[children lastObject] stringValue];
-	return [NSNumber numberWithInt:[str intValue]];
-}
-
-static NSDate *dateValueOfChild(NSXMLElement *element, NSString *childName)
-{
-	NSArray *children = [element elementsForName:childName];
-	if(![children count])
-		return nil;
-	
-	NSString *str = [[children lastObject] stringValue];
-	return [NSDate dateWithNaturalLanguageString:str];
-}
-
-static NSArray *arrayStringValueOfChild(NSXMLElement *element, NSString *childName)
-{
-	NSArray *children = [element elementsForName:childName];
-	if(![children count])
-		return nil;
-	
-	return [children valueForKey:@"stringValue"];
-}
-
-static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
-{
-	NSError *error = nil;
-	NSArray *children = [element objectsForXQuery:xpath error:&error];
-	if(![children count])
-		return nil;
-	
-	return [children valueForKey:@"stringValue"];
-}
-
-- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(id)object
-{
-	SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)object;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 	if(cancelled)
 		return;
@@ -234,9 +185,8 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	[siteScraper getMovieDetailsAtURL:fullURL forMovieID:[link lastPathComponent]];
 }
 
-- (void)retrievedMovieDetails:(NSXMLDocument *)details forObject:(id)object
+- (void)retrievedMovieDetails:(NSXMLDocument *)details forObject:(SapphireMovieImportStateData *)state
 {
-	SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)object;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 
 	if(cancelled)
@@ -514,14 +464,13 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireMovieImportStateData *)state
 {
 	/*See if it was a movie chooser*/
 	if([chooser isKindOfClass:[SapphireMovieChooser class]])
 	{
 		/*Get the user's selection*/
 		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
-		SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)context;
 		SapphireFileMetaData *currentData = state->file;
 		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
@@ -552,7 +501,6 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	else if([chooser isKindOfClass:[SapphirePosterChooser class]])
 	{
 		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
-		SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)context;
 		SapphireFileMetaData *currentData = state->file;
 		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];

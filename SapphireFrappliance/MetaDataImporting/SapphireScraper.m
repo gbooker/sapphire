@@ -583,3 +583,51 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 }
 
 @end
+
+NSString *stringValueOfChild(NSXMLElement *element, NSString *childName)
+{
+	NSArray *children = [element elementsForName:childName];
+	if(![children count])
+		return nil;
+	
+	return [[children lastObject] stringValue];
+}
+
+NSNumber *intValueOfChild(NSXMLElement *element, NSString *childName)
+{
+	NSArray *children = [element elementsForName:childName];
+	if(![children count])
+		return nil;
+	
+	NSString *str = [[children lastObject] stringValue];
+	return [NSNumber numberWithInt:[str intValue]];
+}
+
+NSDate *dateValueOfChild(NSXMLElement *element, NSString *childName)
+{
+	NSArray *children = [element elementsForName:childName];
+	if(![children count])
+		return nil;
+	
+	NSString *str = [[children lastObject] stringValue];
+	return [NSDate dateWithNaturalLanguageString:str];
+}
+
+NSArray *arrayStringValueOfChild(NSXMLElement *element, NSString *childName)
+{
+	NSArray *children = [element elementsForName:childName];
+	if(![children count])
+		return nil;
+	
+	return [children valueForKey:@"stringValue"];
+}
+
+NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
+{
+	NSError *error = nil;
+	NSArray *children = [element objectsForXQuery:xpath error:&error];
+	if(![children count])
+		return nil;
+	
+	return [children valueForKey:@"stringValue"];
+}

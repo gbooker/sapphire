@@ -63,3 +63,9 @@
 - (NSString *)episodeDetailsForURLContent:(NSString *)urlContent atURL:(NSString *)url;
 
 @end
+
+NSString *stringValueOfChild(NSXMLElement *element, NSString *childName);
+NSNumber *intValueOfChild(NSXMLElement *element, NSString *childName);
+NSDate *dateValueOfChild(NSXMLElement *element, NSString *childName);
+NSArray *arrayStringValueOfChild(NSXMLElement *element, NSString *childName);
+NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath);
