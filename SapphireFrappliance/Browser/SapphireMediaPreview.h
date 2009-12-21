@@ -42,6 +42,7 @@ extern NSString *SUBTITLE_LABEL_KEY;
 	int		padding[32];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/	
 	id <SapphireMetaDataProtocol>	meta;			/*!< @brief The metadata to display in the preview*/
 	id <SapphireDirectory>			dirMeta;		/*!< @brief The directory containing the metadata*/
+	BOOL							imageOnly;		/*!< @brief Sets preview to only display the image (like in poster choosers)*/
 }
 
 /*!
@@ -54,5 +55,6 @@ extern NSString *SUBTITLE_LABEL_KEY;
  */
 - (void)setMetaData:(id <SapphireMetaDataProtocol>)newMeta inMetaData:(id <SapphireDirectory>)dir;
 - (void)setUtilityData:(NSMutableDictionary *)newMeta;
+- (void)setImageOnly:(BOOL)imageOnly;
 
 @end

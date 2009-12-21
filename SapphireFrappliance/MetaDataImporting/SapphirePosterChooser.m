@@ -378,6 +378,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	if ( row < [posters count] )
 	{
 		[preview setMetaData:meta inMetaData:[meta parent]];
+		[preview setImageOnly:YES];
 		
 		SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
 		id poster = [posters objectAtIndex:row];

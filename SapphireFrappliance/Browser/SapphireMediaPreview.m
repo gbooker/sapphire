@@ -120,6 +120,11 @@ static NSSet *coverArtExtentions = nil;
 	[super dealloc];
 }
 
+- (void)setImageOnly:(BOOL)newImageOnly
+{
+	imageOnly = newImageOnly;
+}
+
 - (void)setUtilityData:(NSMutableDictionary *)newMeta
 {
 	[meta release];
@@ -515,6 +520,11 @@ static NSSet *coverArtExtentions = nil;
 	}
 	if(!allMeta)
 		fileClass=FILE_CLASS_UTILITY;
+	if(imageOnly)
+	{	
+		fileClass = FILE_CLASS_NOT_FILE;
+		[allMeta removeAllObjects];
+	}
 		
 	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
 	/* TV Show Preview Handeling */
