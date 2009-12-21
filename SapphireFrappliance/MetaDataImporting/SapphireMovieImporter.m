@@ -226,7 +226,10 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	NSString *link = [tran IMDBLink];
 	SapphireSiteMovieScraper *siteScraper = state->siteScraper;
 	[siteScraper setObject:state];
-	[siteScraper getMovieDetailsAtURL:[@"http://akas.imdb.com" stringByAppendingString:link] forMovieID:[link lastPathComponent]];
+	NSString *fullURL = [@"http://akas.imdb.com" stringByAppendingString:link];
+	if([fullURL characterAtIndex:[fullURL length]-1] != '/')
+		fullURL = [fullURL stringByAppendingString:@"/"];
+	[siteScraper getMovieDetailsAtURL:fullURL forMovieID:[link lastPathComponent]];
 }
 
 - (void)retrievedMovieDetails:(NSXMLDocument *)details forObject:(id)object
@@ -305,7 +308,10 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	if(fanart)
 		thumbs = [thumbs arrayByAddingObjectsFromArray:[fanart elementsForName:@"thumb"]];
 	
-	[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
+	if([thumbs count])
+		[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
+	else
+		[delegate backgroundImporter:self completedImportOnPath:state->path withState:ImportStateUpdated];
 }
 
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
