@@ -70,6 +70,7 @@
 - (void)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran;
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
 - (void)saveMoviePosterAtURL:(NSString *)url forTranslation:(SapphireMovieTranslation *)tran;
+- (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
 @end
 
 @implementation SapphireMovieImporter
@@ -194,10 +195,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	if(![movies count])
 	{
 		/* We tried to import but found nothing - mark this file to be skipped on future imports */
-		SapphireFileMetaData *metaData = state->file;
-		[metaData didImportType:IMPORT_TYPE_MOVIE_MASK];
-		[metaData setFileClassValue:FILE_CLASS_OTHER];
-		[delegate backgroundImporter:self completedImportOnPath:state->path withState:ImportStateNotUpdated];
+		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
 	}
 	if([[SapphireSettings sharedSettings] autoSelection])
 	{
@@ -298,7 +296,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	if(movie == nil)
 	{
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to import movie for %@", state->path);
-		[delegate backgroundImporter:self completedImportOnPath:state->path withState:ImportStateNotUpdated];
+		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
 	}
 	[tran setMovie:movie];
 	[metaData setMovie:movie];
@@ -311,7 +309,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	if([thumbs count])
 		[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
 	else
-		[delegate backgroundImporter:self completedImportOnPath:state->path withState:ImportStateUpdated];
+		[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
 }
 
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
@@ -383,6 +381,18 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 	[[SapphireApplianceController urlLoader] saveDataAtURL:url toFile:coverart];	
 }
 
+- (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
+{
+	SapphireFileMetaData *currentData = state->file;
+	if(!userCanceled)
+	{
+		[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
+		if (status == ImportStateNotUpdated || [currentData fileClassValue] != FILE_CLASS_TV_SHOW)
+			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
+	}
+	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
+}
+
 /*!
 * @brief verify file extention of a file
  *
@@ -402,6 +412,7 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
+	cancelled = NO;
 	/*Check to see if it is already imported*/
 	if([metaData importTypeValue] & IMPORT_TYPE_MOVIE_MASK)
 		return ImportStateNotUpdated;
@@ -513,15 +524,12 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 		if(selection == SapphireChooserChoiceCancel)
 		{
 			/*They aborted, skip*/
-			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateNotUpdated];
+			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:YES];
 		}
 		else if(selection == SapphireChooserChoiceNotType)
 		{
 			/*They said it is not a movie, so put in empty data so they are not asked again*/
-			[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
-			if ([currentData fileClassValue] != FILE_CLASS_TV_SHOW)
-				[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
-			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateNotUpdated];
+			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
 		}
 		else
 		{
@@ -546,14 +554,14 @@ static NSArray *arrayStringValueOfXPath(NSXMLElement *element, NSString *xpath)
 		SapphireChooserChoice selectedPoster = [posterChooser selection];
 		if(selectedPoster == SapphireChooserChoiceCancel)
 			/*They aborted, skip*/
-			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUpdated];
+			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:YES];
 		else
 		{
 			NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
 			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:filename inContext:moc];
 			[tran setSelectedPosterIndexValue:selectedPoster];
 			[self saveMoviePosterAtURL:[[tran posterAtIndex:selectedPoster] link] forTranslation:tran];
-			[delegate backgroundImporter:self completedImportOnPath:path withState:ImportStateUpdated];
+			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
 		}
 		posterChooser = nil;
 		[SapphireMetaDataSupport save:moc];
