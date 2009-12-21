@@ -34,6 +34,7 @@
 - (void)addInformer:(NSInvocation *)invoke;
 - (BOOL)loaded;
 - (id)loadedObject;
+- (int)cancelForTarget:(id)target;
 
 @end
 
@@ -117,6 +118,20 @@
 		[informers addObject:invoke];
 }
 
+- (int)cancelForTarget:(id)target
+{
+	for(int i=0; i<[informers count]; i++)
+	{
+		NSInvocation *invoke = [informers objectAtIndex:i];
+		if([invoke target] == target)
+		{
+			[informers removeObjectAtIndex:i];
+			i--;
+		}
+	}
+	return [informers count];
+}
+
 @end
 
 @implementation SapphireStringURLLoaderWorker
@@ -136,39 +151,41 @@
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
 	NSURLResponse *response = nil;
 	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-	if(error != nil)
-		return;
-	
-	NSStringEncoding responseEncoding = NSISOLatin1StringEncoding;
-	NSString *encodingName = [response textEncodingName];
-	if([encodingName length])
-		responseEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName));
-	loadedString = [[NSString alloc] initWithData:documentData encoding:responseEncoding];
-	if(loadedString == nil)
-	{
-		//Most likely this is UTF-8 and some moron doesn't understand that the meta tags need to follow the same encoding.
-		NSMutableData *mutData = [documentData mutableCopy];
-		int length = [mutData length];
-		const char *bytes = [mutData bytes];
-		const char *location;
-		while((location = strnstr(bytes, "<meta", length)) != NULL)
+	if(error == nil)
+	{	
+		NSStringEncoding responseEncoding = NSISOLatin1StringEncoding;
+		NSString *encodingName = [response textEncodingName];
+		if([encodingName length])
+			responseEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingName));
+		loadedString = [[NSString alloc] initWithData:documentData encoding:responseEncoding];
+		if(loadedString == nil)
 		{
-			int offset = location - bytes;
-			const char *end = strnstr(location, ">", length-offset);
-			if(end != NULL)
+			//Most likely this is UTF-8 and some moron doesn't understand that the meta tags need to follow the same encoding.
+			NSMutableData *mutData = [documentData mutableCopy];
+			int length = [mutData length];
+			const char *bytes = [mutData bytes];
+			const char *location;
+			while((location = strnstr(bytes, "<meta", length)) != NULL)
 			{
-				int replaceLength = end-location+2;
-				[mutData replaceBytesInRange:NSMakeRange(offset, replaceLength) withBytes:"" length:0];
-				bytes = [mutData bytes];
-				length = [mutData length];
+				int offset = location - bytes;
+				const char *end = strnstr(location, ">", length-offset);
+				if(end != NULL)
+				{
+					int replaceLength = end-location+2;
+					[mutData replaceBytesInRange:NSMakeRange(offset, replaceLength) withBytes:"" length:0];
+					bytes = [mutData bytes];
+					length = [mutData length];
+				}
+				else
+					break;
 			}
-			else
-				break;
+			loadedString = [[NSString alloc] initWithData:mutData encoding:responseEncoding];
+			[mutData release];
 		}
-		loadedString = [[NSString alloc] initWithData:mutData encoding:responseEncoding];
-		[mutData release];
 	}
 	loaded = YES;
+	if(![loadedString length])
+		NSLog(@"Load of %@ failed with error %@!!!", url, error);
 	[self performSelectorOnMainThread:@selector(tellInformers) withObject:nil waitUntilDone:NO];
 	[pool drain];
 }
@@ -237,13 +254,12 @@
 {
 	if(workersCurrentlyWorking < MAX_WORKERS)
 	{
+		[worker addInformer:myInformer];
 		[worker loadData];
 		workersCurrentlyWorking++;
 	}
 	else
 		[workerQueue addObject:worker];
-	
-	[worker addInformer:myInformer];
 }
 
 - (void)workerFinished:(SapphireURLLoaderWorker *)worker
@@ -251,6 +267,7 @@
 	if(workersCurrentlyWorking == MAX_WORKERS && [workerQueue count])
 	{
 		SapphireURLLoaderWorker *newWorker = [workerQueue objectAtIndex:0];
+		[newWorker addInformer:myInformer];
 		[newWorker loadData];
 		[workerQueue removeObjectAtIndex:0];
 	}
@@ -331,6 +348,26 @@
 - (void)saveDataAtURL:(NSString *)url toFile:(NSString *)path
 {
 	[self loadDataURL:url withTarget:self selector:@selector(saveData:toFile:) object:path];
+}
+
+- (void)cancelLoadOfURL:(NSString *)url forTarget:(id)target
+{
+	NSString *key = [@"D" stringByAppendingString:url];
+	SapphireURLLoaderWorker *worker = [workers objectForKey:key];
+	if(![worker loaded] && ![worker cancelForTarget:target])
+	{
+		//Worker is no longer needed
+		[workerQueue removeObject:worker];
+		[workers removeObjectForKey:key];
+	}
+	key = [@"S" stringByAppendingString:url];
+	worker = [workers objectForKey:key];
+	if(![worker loaded] && ![worker cancelForTarget:target])
+	{
+		//Worker is no longer needed
+		[workerQueue removeObject:worker];
+		[workers removeObjectForKey:key];
+	}
 }
 
 @end

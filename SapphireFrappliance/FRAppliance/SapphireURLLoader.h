@@ -59,4 +59,14 @@
  */
 - (void)saveDataAtURL:(NSString *)url toFile:(NSString *)path;
 
+/*!
+ * @brief Cancels the load of a URL for a target
+ *
+ * Cancels the load of a URL for a target.  This will not stop the load if it has already started.
+ *
+ * @param url The URL to cancel
+ * @param target The target for which to cancel the URL
+ */
+- (void)cancelLoadOfURL:(NSString *)url forTarget:(id)target;
+
 @end
