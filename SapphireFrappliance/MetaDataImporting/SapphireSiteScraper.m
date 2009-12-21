@@ -65,16 +65,19 @@
 	{
 		NSString *result = [[self scraper] functionResultWithArguments:function, data, nil];
 		NSError *error = nil;
-		NSXMLDocument *resultDoc = [[NSXMLDocument alloc] initWithXMLString:result options:0 error:&error];
-		NSXMLElement *rootElement = [resultDoc rootElement];
-		NSXMLElement *elementToAdd;
-		NSEnumerator *elementEnum = [[rootElement children] objectEnumerator];
-		while((elementToAdd = [elementEnum nextObject]) != nil)
+		if([result length])
 		{
-			[elementToAdd detach];
-			[parent addChild:elementToAdd];
+			NSXMLDocument *resultDoc = [[NSXMLDocument alloc] initWithXMLString:result options:0 error:&error];
+			NSXMLElement *rootElement = [resultDoc rootElement];
+			NSXMLElement *elementToAdd;
+			NSEnumerator *elementEnum = [[rootElement children] objectEnumerator];
+			while((elementToAdd = [elementEnum nextObject]) != nil)
+			{
+				[elementToAdd detach];
+				[parent addChild:elementToAdd];
+			}
+			[resultDoc release];
 		}
-		[resultDoc release];
 	}
 	[element detach];
 	
