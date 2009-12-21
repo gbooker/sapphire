@@ -133,7 +133,7 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSError *error = nil;
 	
-	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
 	NSURLResponse *response = nil;
 	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
 	if(error != nil)
@@ -194,7 +194,7 @@
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSError *error = nil;
 	
-	loadedData = [[NSData alloc] initWithContentsOfURL:url options:0 error:&error];
+	loadedData = [[NSData alloc] initWithContentsOfURL:url options:NSUncachedRead error:&error];
 	loaded = YES;
 	[self performSelectorOnMainThread:@selector(tellInformers) withObject:nil waitUntilDone:NO];
 	[pool drain];
