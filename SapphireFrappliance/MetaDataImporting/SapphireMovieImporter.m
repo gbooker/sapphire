@@ -338,7 +338,7 @@
 	if(!userCanceled)
 	{
 		[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
-		if (status == ImportStateNotUpdated || [currentData fileClassValue] != FILE_CLASS_TV_SHOW)
+		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_TV_SHOW)
 			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
 	}
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
