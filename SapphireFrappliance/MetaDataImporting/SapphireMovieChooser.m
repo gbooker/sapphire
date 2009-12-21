@@ -22,6 +22,9 @@
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import	"SapphireTheme.h"
 
+NSString *movieTranslationNameKey = @"name";
+NSString *movieTranslationLinkKey = @"IMDB Link";
+
 @interface SapphireMovieChooser (private)
 - (void)doMyLayout;
 @end
@@ -117,7 +120,7 @@
 	else
 	{
 		/*Put in the movie results*/
-		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"  %@",[[movies objectAtIndex:row-1] objectForKey:@"name"]] forMenu:result];
+		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"  %@",[[movies objectAtIndex:row-1] objectForKey:movieTranslationNameKey]] forMenu:result];
 		[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
 	}
 	return result;
@@ -132,7 +135,7 @@
 		return BRLocalizedString(@"<This is Not a Movie>", @"Mark a file that is not a movie in the movie chooser");
 	else
 		/*Put in the movie*/
-		return [[movies objectAtIndex:row-1] objectForKey:@"name"];
+		return [[movies objectAtIndex:row-1] objectForKey:movieTranslationNameKey];
 }
 
 

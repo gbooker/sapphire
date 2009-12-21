@@ -22,6 +22,9 @@
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
 #import "SapphireChooser.h"
 
+extern NSString *movieTranslationNameKey;
+extern NSString *movieTranslationLinkKey;
+
 /*!
  * @brief A subclass of SapphireCenteredMenuController to choose a movie title
  *

@@ -32,9 +32,6 @@
 #import "SapphireURLLoader.h"
 #import "SapphireScraper.h"
 
-#define MOVIE_TRAN_IMDB_NAME_KEY				@"name"
-#define MOVIE_TRAN_IMDB_LINK_KEY				@"IMDB Link"
-
 @interface SapphireMovieImportStateData : SapphireImportStateData
 {
 @public
@@ -138,8 +135,8 @@
 		
 		if([title length] && [url length])
 			[movies addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-							   title, MOVIE_TRAN_IMDB_NAME_KEY,
-							   url, MOVIE_TRAN_IMDB_LINK_KEY,
+							   title, movieTranslationNameKey,
+							   url, movieTranslationLinkKey,
 							   nil]];
 	}
 	
@@ -157,7 +154,7 @@
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
 		NSString *lookupName = [[state->lookupName lowercaseString] stringByDeletingPathExtension];
 		SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:lookupName inContext:moc];
-		[tran setIMDBLink:[[movies objectAtIndex:0] objectForKey:MOVIE_TRAN_IMDB_LINK_KEY]];
+		[tran setIMDBLink:[[movies objectAtIndex:0] objectForKey:movieTranslationLinkKey]];
 		[self getMovieResultsForState:state translation:tran];
 	}
 	else
@@ -492,7 +489,7 @@
 			NSString *filename = [[[movieChooser fileName] lowercaseString] stringByDeletingPathExtension];
 			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:filename inContext:moc];
 			/* Add IMDB Key */
-			[tran setIMDBLink:[movie objectForKey:MOVIE_TRAN_IMDB_LINK_KEY]];
+			[tran setIMDBLink:[movie objectForKey:movieTranslationLinkKey]];
 			/*We can resume now*/
 			[self getMovieResultsForState:state translation:tran];
 		}
