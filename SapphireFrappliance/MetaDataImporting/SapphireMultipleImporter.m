@@ -24,7 +24,7 @@
 {
 @public
 	int						completedMask;
-	int						nextImportIndex;
+	int						currentImportIndex;
 	BOOL					updated;
 	SapphireFileMetaData	*file;
 }
@@ -88,14 +88,14 @@
 	}
 	ImportState ret = ImportStateNotUpdated;
 	int importIndex;
-	for(importIndex = state->nextImportIndex;importIndex < count; importIndex++)
+	for(importIndex = state->currentImportIndex;importIndex < count; importIndex++)
 	{
 		id <SapphireImporter> importer = [importers objectAtIndex:importIndex];
 		ImportState result = [importer importMetaData:metaData path:path];
 		switch(result)
 		{
-			case ImportStateSuspend:
-				state->nextImportIndex = importIndex;
+			case ImportStateMultipleSuspend:
+				state->currentImportIndex = importIndex;
 				return result;
 			case ImportStateBackground:
 				ret = result;
@@ -112,7 +112,7 @@
 	if(state->completedMask == (1 << count) -1)
 		[pendingImports removeObjectForKey:path];
 	else
-		state->nextImportIndex = count;
+		state->currentImportIndex = count;
 	return ret;
 }
 
@@ -146,6 +146,12 @@
 	return @"";
 }
 
+- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
+{
+	//No choosers displayed
+	return NO;
+}
+
 - (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
 {
 }
@@ -174,8 +180,9 @@
 		return;
 	}
 	
-	if(state->nextImportIndex == index)
+	if(state->currentImportIndex == index)
 	{
+		state->currentImportIndex++;
 		[self importMetaData:state->file path:path];
 	}
 	else if(state->completedMask == (1 << [importers count]) - 1)

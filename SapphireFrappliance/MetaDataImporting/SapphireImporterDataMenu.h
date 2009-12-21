@@ -31,7 +31,7 @@
 typedef enum{
 	ImportStateNotUpdated,		/*!< @brief The data was not updated*/
 	ImportStateUpdated,			/*!< @brief The data was updated*/
-	ImportStateSuspend,			/*!< @brief The data update has been suspended pending UI*/
+	ImportStateMultipleSuspend,	/*!< @brief The data update should be suspended for this file since it's decision could impact later imports*/
 	ImportStateBackground,		/*!< @brief The data was backgrounded*/
 	ImportStateUserSkipped,		/*!< @brief The user asked to skip import*/
 } ImportState;
@@ -99,6 +99,17 @@ typedef enum{
  * @return The button title
  */
 - (NSString *)buttonTitle;
+
+/*!
+ * @brief See if the poster need still be displayed
+ *
+ * Sometimes a chooser no longer needs to be displayed, so this handles that case.  If it is not going to be displayed, no call is made to exhumeChooser, so importer must handle any futher processing it must do.
+ *
+ * @param chooser The chooser in question
+ * @param context The context for this chooser
+ * @return YES if it must still be displayed, NO otherwise
+ */
+- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context;
 
 /*!
  * @brief The data menu was exhumed

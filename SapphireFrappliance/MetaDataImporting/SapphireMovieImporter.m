@@ -461,6 +461,36 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
+- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireMovieImportStateData *)state
+{
+	if([chooser isKindOfClass:[SapphireMovieChooser class]])
+	{
+		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
+		NSManagedObjectContext *moc = [state->file managedObjectContext];
+		NSString *filename = [[[movieChooser fileName] lowercaseString] stringByDeletingPathExtension];
+		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:filename inContext:moc];
+		if([tran IMDBLink])
+		{
+			[self getMovieResultsForState:state translation:tran];
+			return NO;
+		}
+	}
+	else if([chooser isKindOfClass:[SapphirePosterChooser class]])
+	{
+		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
+		NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
+		NSManagedObjectContext *moc = [state->file managedObjectContext];
+		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:filename inContext:moc];
+		if([[tran selectedPoster] link])
+		{
+			[self saveMoviePosterAtURL:[[tran selectedPoster] link] forTranslation:tran];
+			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
+			return NO;
+		}
+	}
+	return YES;
+}
+
 - (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireMovieImportStateData *)state
 {
 	/*See if it was a movie chooser*/

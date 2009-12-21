@@ -415,10 +415,7 @@
 				ret = YES;
 				SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Updated %@", [file path]);
 				break;
-			case ImportStateSuspend:
-				[self pause];
-				ret = NO;
-				break;
+			case ImportStateMultipleSuspend:
 			case ImportStateBackground:
 				[self itemImportBackgrounded];
 				ret = NO;
@@ -603,13 +600,27 @@
 	return [self scene];
 }
 
+static SapphireImportChooserQueueItem *findNextChooser(NSMutableArray *choosers)
+{
+	SapphireImportChooserQueueItem *candidate = [choosers objectAtIndex:0];
+	while(![[candidate importer] stillNeedsDisplayOfChooser:[candidate chooser] withContext:[candidate context]])
+	{
+		[choosers removeObjectAtIndex:0];
+		if(![choosers count])
+			return nil;
+		candidate = [choosers objectAtIndex:0];
+	}
+	return candidate;
+}
+
 - (void)displayNextChooser
 {
 	if(![choosers count])
 		return;
 	
-	SapphireImportChooserQueueItem *queueItem = [choosers objectAtIndex:0];
-	[[self stack] pushController:[queueItem chooser]];
+	SapphireImportChooserQueueItem *queueItem = findNextChooser(choosers);
+	if(queueItem)
+		[[self stack] pushController:[queueItem chooser]];
 }
 
 - (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)aImporter withContext:(id)context
