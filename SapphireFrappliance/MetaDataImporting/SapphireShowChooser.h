@@ -22,6 +22,9 @@
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
 #import "SapphireChooser.h"
 
+extern NSString *tvShowTranslationNameKey;
+extern NSString *tvShowTranslationLinkKey;
+
 /*!
  * @brief A subclass of SapphireCenteredMenuController to choose a show title
  *
@@ -29,7 +32,6 @@
  */
 @interface SapphireShowChooser : SapphireCenteredMenuController <SapphireLayoutDelegate, SapphireChooser> {
 	NSArray					*shows;		/*!< @brief The list of possible shows*/
-	NSString				*searchStr;	/*!< @brief The string we searched for*/
 	SapphireChooserChoice	selection;	/*!< @brief The user's selection*/
 	BRTextControl			*fileName;	/*!< @brief The filename control*/
 }
@@ -54,19 +56,4 @@
  * @return The list of shows to choose from
  */
 - (NSArray *)shows;
-
-/*!
- * @brief Sets the string we searched for
- *
- * @param search The string we searched for
- */
-- (void)setSearchStr:(NSString *)search;
-
-/*!
- * @brief The string we searched for
- *
- * @return The string we searched for
- */
-- (NSString *)searchStr;
-
 @end

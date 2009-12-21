@@ -22,6 +22,9 @@
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireTheme.h"
 
+NSString *tvShowTranslationNameKey = @"name";
+NSString *tvShowTranslationLinkKey = @"Link";
+
 @interface SapphireShowChooser (private)
 - (void)doMyLayout;
 @end
@@ -52,7 +55,6 @@
 - (void)dealloc
 {
 	[shows release];
-	[searchStr release];
 	[super dealloc];
 }
 
@@ -80,19 +82,9 @@
 	return shows;
 }
 
-- (void)setSearchStr:(NSString *)search
-{
-	searchStr = [search retain];
-}
-
 - (void)setFileName:(NSString*)choosingForFileName
 {
 	[SapphireFrontRowCompat setText:choosingForFileName withAtrributes:[SapphireFrontRowCompat paragraphTextAttributes] forControl:fileName];
-}
-
-- (NSString *)searchStr
-{
-	return searchStr;
 }
 
 - (void)wasPushed
@@ -123,7 +115,7 @@
 	else
 	{
 		/*Put in the show*/
-		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"  %@",[[shows objectAtIndex:row-1] objectForKey:@"name"]] forMenu:result];
+		[SapphireFrontRowCompat setTitle:[NSString stringWithFormat:@"  %@",[[shows objectAtIndex:row-1] objectForKey:tvShowTranslationNameKey]] forMenu:result];
 		[SapphireFrontRowCompat setRightIcon:[theme gem:TVR_GEM_KEY] forMenu:result];
 	}
 	
@@ -140,7 +132,7 @@
 		return BRLocalizedString(@"<This is not a TV Show>", @"Mark an episode as not a TV show in the show chooser");
 	else
 		/*Put in the show*/
-		return [[shows objectAtIndex:row-1] objectForKey:@"name"];
+		return [[shows objectAtIndex:row-1] objectForKey:tvShowTranslationNameKey];
 }
 
 
