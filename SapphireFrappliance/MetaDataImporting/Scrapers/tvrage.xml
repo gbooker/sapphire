@@ -19,13 +19,13 @@
 				<expression>&lt;/a&gt;&quot;([^&quot;]*)&quot; Summary&lt;/h5&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">				
-				<expression>\n&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;(.*)&lt;br&gt;&amp;nbsp;&lt;/div&gt;&lt;/td&gt;&lt;/tr&gt;</expression>
+				<expression>\n&lt;/script&gt;&lt;table.*?\n&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;(.*)&lt;br&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;</expression>
 			</RegExp>						
 			<RegExp input="$$1" output="&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;" dest="5+">
 				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes cast\)&lt;/td&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;actor&gt;&lt;name&gt;\1&lt;/name&gt;&lt;role&gt;\2&lt;/role&gt;&lt;/actor&gt;"  dest="5+">
-				<expression repeat="yes">a href='/person/[^&gt;]*&gt;([^(&lt;|\(|/)]*)&lt;/a&gt;&lt;/i&gt;&lt;/span&gt;&lt;/td&gt;&lt;td[^&gt;]*&gt;&lt;b&gt;played&lt;/b&gt;&lt;/td&gt;&lt;td[^&gt;]*&gt;&lt;div[^&gt;]*&gt;&lt;i&gt;([^(&lt;|\(|/)]*)</expression>
+				<expression repeat="yes">a href='/person/[^&gt;]*&gt;([^(&lt;|\(|/)]*)(?: [0-9()]*)?&lt;/a&gt;&lt;/i&gt;&lt;/span&gt;&lt;/td&gt;&lt;td[^&gt;]*&gt;&lt;b&gt;played&lt;/b&gt;&lt;/td&gt;&lt;td[^&gt;]*&gt;&lt;div[^&gt;]*&gt;&lt;i&gt;([^(&lt;|\(|/)]*)</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;thumb&gt;\1&lt;/thumb&gt;" dest="5+">
 				<expression>(http://images\.tvrage\.com/shows/[0-9/]+\.(gif|jpg|png))</expression>
