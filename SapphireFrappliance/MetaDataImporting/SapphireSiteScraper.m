@@ -48,7 +48,7 @@
 
 - (void)setObject:(id)object
 {
-	[referenceObject release];
+	[referenceObject autorelease];
 	referenceObject = [object retain];
 }
 
