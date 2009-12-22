@@ -21,6 +21,7 @@
 #import "SapphireDirectory.h"
 #import <SapphireCompatClasses/SapphireCenteredMenuController.h>
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
+#import "SapphireURLLoader.h"
 
 @class SapphireImporterDataMenu, SapphireFileMetaData;
 @protocol SapphireImporterDelegate, SapphireChooser;
@@ -177,7 +178,7 @@ typedef enum{
  *
  * This class creates the importer UI.  It handles all the user interaction and passes commands on to its subordinates.
  */
-@interface SapphireImporterDataMenu : SapphireCenteredMenuController <SapphireMetaDataScannerDelegate, SapphireLayoutDelegate, SapphireImporterDelegate>
+@interface SapphireImporterDataMenu : SapphireCenteredMenuController <SapphireMetaDataScannerDelegate, SapphireLayoutDelegate, SapphireImporterDelegate, SapphireURLLoaderDelegate>
 {
 	BRTextControl					*text;					/*!< @brief The informative text*/
 	BRTextControl					*fileProgress;			/*!< @brief The progress text*/
@@ -204,6 +205,7 @@ typedef enum{
 	NSTimer							*updateTimer;			/*!< @brief Timer to aggregate updates to reduce CPU usage*/
 	NSString						*currentFilename;		/*!< @brief The current file to display*/
 	NSMutableArray					*choosers;				/*!< @brief The array of choosers to display*/
+	int								pendingURLCount;		/*!< @brief The number of remaining URLs to load*/
 }
 /*!
  * @brief Creates a new Importer Data Menu

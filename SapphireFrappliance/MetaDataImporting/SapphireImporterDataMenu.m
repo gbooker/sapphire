@@ -323,6 +323,8 @@
 		[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 		[SapphireFrontRowCompat renderScene:[self scene]];
 		/*Initialize the import process*/
+		[[SapphireApplianceController urlLoader] addDelegate:self];
+		pendingURLCount = 0;
 		canceled = NO;
 		collectionIndex = 0;
 		[collectionDirectories release];
@@ -472,7 +474,7 @@
 		}
 		else
 		{
-			[self realSetCurrentFile:BRLocalizedString(@"Waiting for background import to complete", @"The import is complete, just waiting on background processes")];
+			[self realSetCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Waiting for background import to complete: %d URLs remaining to load", @"The import is complete, just waiting on background processes, parameter is number of URLs remaining to load"), pendingURLCount]];
 		}
 		[self setFileProgress:[NSString stringWithFormat:BRLocalizedString(@"Finished Processing: %0.0f / %0.0f", @"Import progress format, current and the max"), current, max,updated]];
 		[bar setPercentage:current/max * 100.0f];
@@ -537,6 +539,7 @@
 	[importer cancelImports];
 	[choosers removeAllObjects];
 	/*Reset the display and write data*/
+	[[SapphireApplianceController urlLoader] removeDelegate:self];
 	[self resetUIElements];
 	[SapphireMetaDataSupport save:moc];
 }
@@ -560,6 +563,24 @@
 		updated++;
 
 	current++;
+	[self updateDisplay];
+}
+
+- (void)urlLoaderFinisedResource:(SapphireURLLoader *)loader
+{
+	pendingURLCount--;
+	[self updateDisplay];
+}
+
+- (void)urlLoaderCancelledResource:(SapphireURLLoader *)loader
+{
+	pendingURLCount--;
+	[self updateDisplay];
+}
+
+- (void)urlLoaderAddedResource:(SapphireURLLoader *)loader
+{
+	pendingURLCount++;
 	[self updateDisplay];
 }
 
