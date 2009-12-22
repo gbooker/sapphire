@@ -67,7 +67,7 @@
 - (void)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran;
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
 - (void)saveMoviePosterAtURL:(NSString *)url forTranslation:(SapphireMovieTranslation *)tran;
-- (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
+- (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status importComplete:(BOOL)importComplete;
 @end
 
 @implementation SapphireMovieImporter
@@ -109,6 +109,12 @@
 	if(cancelled)
 		return;
 	
+	if(results == nil)
+	{
+		/*Failed to get data, network likely, don't mark this as imported*/
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
 	NSXMLElement *root = [results rootElement];
 	NSArray *entities = [root elementsForName:@"entity"];
 	NSMutableArray *movies = [[NSMutableArray alloc] initWithCapacity:[entities count]];
@@ -118,7 +124,7 @@
 	{
 		NSString *kind = stringValueOfChild(entity, @"kind");
 		
-		//Skip video games and tv series
+		/*Skip video games and tv series*/
 		if([kind isEqualToString:@"VG"] || [kind isEqualToString:@"TV series"])
 			continue;
 		
@@ -146,7 +152,7 @@
 	if(![movies count])
 	{
 		/* We tried to import but found nothing - mark this file to be skipped on future imports */
-		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:YES];
 	}
 	if([[SapphireSettings sharedSettings] autoSelection])
 	{
@@ -189,6 +195,12 @@
 	if(cancelled)
 		return;
 	
+	if(details == nil)
+	{
+		/*Failed to get data, network likely, don't mark this as imported*/
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
 	NSXMLElement *root = [details rootElement];
 	
 	NSString	*movieTitleLink	= stringValueOfChild(root, @"id");
@@ -247,7 +259,7 @@
 	if(movie == nil)
 	{
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to import movie for %@", state->path);
-		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		return;
 	}
 	[tran setMovie:movie];
@@ -261,7 +273,7 @@
 	if([thumbs count] && [delegate canDisplayChooser])
 		[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
 	else
-		[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
+		[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
 }
 
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
@@ -323,7 +335,7 @@
 		}		
 	}
 	else
-		[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
+		[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
 }
 
 - (void)saveMoviePosterAtURL:(NSString *)url forTranslation:(SapphireMovieTranslation *)tran
@@ -335,10 +347,10 @@
 	[[SapphireApplianceController urlLoader] saveDataAtURL:url toFile:coverart];	
 }
 
-- (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
+- (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status importComplete:(BOOL)importComplete;
 {
 	SapphireFileMetaData *currentData = state->file;
-	if(!userCanceled)
+	if(importComplete)
 	{
 		[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
 		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_TV_SHOW)
@@ -487,7 +499,7 @@
 		if([[tran selectedPoster] link])
 		{
 			[self saveMoviePosterAtURL:[[tran selectedPoster] link] forTranslation:tran];
-			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
+			[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
 			return NO;
 		}
 	}
@@ -508,12 +520,12 @@
 		if(selection == SapphireChooserChoiceCancel)
 		{
 			/*They aborted, skip*/
-			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:YES];
+			[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		}
 		else if(selection == SapphireChooserChoiceNotType)
 		{
 			/*They said it is not a movie, so put in empty data so they are not asked again*/
-			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+			[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:YES];
 		}
 		else
 		{
@@ -537,14 +549,14 @@
 		SapphireChooserChoice selectedPoster = [posterChooser selection];
 		if(selectedPoster == SapphireChooserChoiceCancel)
 			/*They aborted, skip*/
-			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:YES];
+			[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		else
 		{
 			NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
 			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:filename inContext:moc];
 			[tran setSelectedPosterIndexValue:selectedPoster];
 			[self saveMoviePosterAtURL:[[tran posterAtIndex:selectedPoster] link] forTranslation:tran];
-			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
+			[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
 		}
 		posterChooser = nil;
 		[SapphireMetaDataSupport save:moc];

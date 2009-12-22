@@ -187,7 +187,7 @@
 - (void)getTVShowResultsForState:(SapphireTVShowImportStateData *)state;
 - (void)getTVShowEpisodeListForState:(SapphireTVShowImportStateData *)state;
 - (void)getTVShowEpisodesForState:(SapphireSingleTVShowEpisodeImportStateData *)state atURL:(NSString *)url;
-- (void)completeWithState:(SapphireTVShowImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
+- (void)completeWithState:(SapphireTVShowImportStateData *)state withStatus:(ImportState)status importComplete:(BOOL)importComplete;
 - (void)completedEpisode:(NSDictionary *)dict forState:(SapphireTVShowImportStateData *)state atIndex:(int)index;
 @end
 
@@ -236,6 +236,12 @@
 	if(cancelled)
 		return;
 	
+	if(results == nil)
+	{
+		/*Failed to get data, network likely, don't mark this as imported*/
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
 	NSXMLElement *root = [results rootElement];
 	NSArray *entities = [root elementsForName:@"entity"];
 	NSMutableArray *shows = [[NSMutableArray alloc] initWithCapacity:[entities count]];
@@ -263,7 +269,7 @@
 	if(![shows count])
 	{
 		/* We tried to import but found nothing - mark this file to be skipped on future imports */
-		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:YES];
 	}
 	if([[SapphireSettings sharedSettings] autoSelection])
 	{
@@ -324,6 +330,12 @@
 	if(cancelled)
 		return;
 	
+	if(details == nil)
+	{
+		/*Failed to get data, network likely, don't mark this as imported*/
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
 	NSXMLElement *root = [details rootElement];
 	NSString *plot = stringValueOfChild(root, @"plot");
 	NSString *thumb = stringValueOfChild(root, @"thumb");
@@ -341,7 +353,7 @@
 			if(![title length])
 			{
 				//We can't import anymore.  Importer or site broken; abort.
-				[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+				[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 				return;
 			}
 			show = [SapphireTVShow show:title withPath:state->showPath inContext:moc];
@@ -512,17 +524,17 @@
 			SapphireFileMetaData *file = state->file;
 			SapphireEpisode *ep = [SapphireEpisode episodeWithDictionaries:infoArray inContext:[file managedObjectContext]];
 			file.tvEpisode = ep;
-			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
+			[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
 		}
 		else
-			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+			[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:YES];
 	}
 }
 
-- (void)completeWithState:(SapphireTVShowImportStateData *)state withStatus:(ImportState)status userCanceled:(BOOL)userCanceled;
+- (void)completeWithState:(SapphireTVShowImportStateData *)state withStatus:(ImportState)status importComplete:(BOOL)importComplete;
 {
 	SapphireFileMetaData *currentData = state->file;
-	if(!userCanceled)
+	if(importComplete)
 	{
 		[currentData didImportType:IMPORT_TYPE_TVSHOW_MASK];
 		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_MOVIE)
@@ -725,10 +737,10 @@
 	int selection = [chooser selection];
 	if(selection == SapphireChooserChoiceCancel)
 		/*They aborted, skip*/
-		[self completeWithState:state withStatus:ImportStateUserSkipped userCanceled:YES];
+		[self completeWithState:state withStatus:ImportStateUserSkipped importComplete:NO];
 	else if(selection == SapphireChooserChoiceNotType)
 		/*They said it is not a show, so put in empty data so they are not asked again*/
-		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:YES];
 	else
 	{
 		/*They selected a show, save the translation and write it*/

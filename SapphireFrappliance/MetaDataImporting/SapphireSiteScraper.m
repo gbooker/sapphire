@@ -191,7 +191,9 @@
 
 - (void)foundSearchResults:(NSString *)results
 {
-	NSString *xmlResults = [scraper searchResultsForURLContent:results];
+	NSString *xmlResults = nil;
+	if([results length])
+		xmlResults = [scraper searchResultsForURLContent:results];
 	
 	[self callDelegateSelector:@selector(retrievedSearchResuls:forObject:) forConent:xmlResults];
 }
@@ -217,7 +219,9 @@
 
 - (void)gotMovieDetails:(NSString *)details atURL:(NSString *)url
 {
-	NSString *xmlDetails = [scraper movieDetailsForURLContent:details movieID:movieID atURL:url];
+	NSString *xmlDetails = nil;
+	if([details length])
+		xmlDetails = [scraper movieDetailsForURLContent:details movieID:movieID atURL:url];
 	
 	[self callDelegateSelector:@selector(retrievedMovieDetails:forObject:) forConent:xmlDetails];
 }
@@ -273,7 +277,9 @@
 
 - (void)foundSearchResults:(NSString *)results
 {
-	NSString *xmlResults = [scraper searchResultsForURLContent:results];
+	NSString *xmlResults = nil;
+	if([results length])
+		xmlResults = [scraper searchResultsForURLContent:results];
 	
 	[self callDelegateSelector:@selector(retrievedSearchResuls:forObject:) forConent:xmlResults];
 }
@@ -299,7 +305,9 @@
 
 - (void)gotShowDetails:(NSString *)details atURL:(NSString *)url
 {
-	NSString *xmlDetails = [scraper showDetailsForURLContent:details atURL:url];
+	NSString *xmlDetails = nil;
+	if([details length])
+		xmlDetails = [scraper showDetailsForURLContent:details atURL:url];
 	
 	[self callDelegateSelector:@selector(retrievedShowDetails:forObject:) forConent:xmlDetails];
 }
@@ -314,7 +322,9 @@
 
 - (void)gotEpisodeList:(NSString *)details atURL:(NSString *)url
 {
-	NSString *xmlDetails = [scraper episodeListForURLContent:details atURL:url];
+	NSString *xmlDetails = nil;
+	if([details length])
+		xmlDetails = [scraper episodeListForURLContent:details atURL:url];
 	
 	[self callDelegateSelector:@selector(retrievedEpisodeList:forObject:) forConent:xmlDetails];
 }
@@ -329,7 +339,9 @@
 
 - (void)gotEpisodeDetails:(NSString *)details atURL:(NSString *)url
 {
-	NSString *xmlDetails = [scraper episodeDetailsForURLContent:details atURL:url];
+	NSString *xmlDetails = nil;
+	if([details length])
+		xmlDetails = [scraper episodeDetailsForURLContent:details atURL:url];
 	
 	[self callDelegateSelector:@selector(retrievedEpisodeDetails:forObject:) forConent:xmlDetails];
 }
