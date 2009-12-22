@@ -201,7 +201,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	NSString *posterURL = [posters objectAtIndex:index];
 	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
-	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index]];
+	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index] withPriority:YES];
 }
 
 - (void)reloadPosterWithData:(NSData *)data atIndex:(NSNumber *)index;
