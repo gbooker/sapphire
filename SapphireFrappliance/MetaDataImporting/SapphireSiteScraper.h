@@ -36,7 +36,7 @@
 @end
 
 
-@interface SapphireSiteScraper : NSObject {
+@interface SapphireSiteScraper : NSObject <NSCopying>{
 	id <SapphireSiteScraperDelegate>	delegate;
 	id									referenceObject;
 	SapphireURLLoader					*loader;

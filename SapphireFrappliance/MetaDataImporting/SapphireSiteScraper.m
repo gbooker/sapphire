@@ -36,6 +36,22 @@
 	return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+	SapphireSiteScraper *myCopy = [[[self class] allocWithZone:zone] init];
+	
+	if(!myCopy)
+		return myCopy;
+	
+	myCopy->delegate = [delegate retain];
+	myCopy->referenceObject = [referenceObject retain];
+	myCopy->loader = [loader retain];
+	myCopy->finishedInvokation = [finishedInvokation retain];
+	myCopy->pendingUrlElements = [pendingUrlElements retain];
+	
+	return myCopy;
+}
+
 - (void) dealloc
 {
 	[delegate release];
@@ -148,7 +164,20 @@
 	return self;
 }
 
-- (void) dealloc
+- (id)copyWithZone:(NSZone *)zone
+{
+	SapphireSiteMovieScraper *myCopy = [[[self class] allocWithZone:zone] init];
+	
+	if(!myCopy)
+		return myCopy;
+	
+	myCopy->scraper = [scraper retain];
+	myCopy->movieID = [movieID retain];
+	
+	return myCopy;
+}
+
+- (void)dealloc
 {
 	[scraper release];
 	[movieID release];
@@ -219,7 +248,19 @@
 	return self;
 }
 
-- (void) dealloc
+- (id)copyWithZone:(NSZone *)zone
+{
+	SapphireSiteTVShowScraper *myCopy = [super copyWithZone:zone];
+	
+	if(!myCopy)
+		return myCopy;
+	
+	myCopy->scraper = [scraper retain];
+	
+	return myCopy;
+}
+
+- (void)dealloc
 {
 	[scraper release];
 	[super dealloc];
