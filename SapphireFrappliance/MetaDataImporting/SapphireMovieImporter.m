@@ -331,7 +331,7 @@
 	NSString *coverart = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:@"@MOVIES"];
 	[[NSFileManager defaultManager] constructPath:coverart];
 	int imdbNumber = [SapphireMovie imdbNumberFromString:[tran IMDBLink]];
-	coverart = [coverart stringByAppendingPathComponent:[NSString stringWithFormat:@"%d", imdbNumber]];
+	coverart = [coverart stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.jpg", imdbNumber]];
 	[[SapphireApplianceController urlLoader] saveDataAtURL:url toFile:coverart];	
 }
 
