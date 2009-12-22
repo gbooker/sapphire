@@ -248,6 +248,7 @@
 	{
 		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to import movie for %@", state->path);
 		[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+		return;
 	}
 	[tran setMovie:movie];
 	[metaData setMovie:movie];
@@ -257,7 +258,7 @@
 	if(fanart)
 		thumbs = [thumbs arrayByAddingObjectsFromArray:[fanart elementsForName:@"thumb"]];
 	
-	if([thumbs count])
+	if([thumbs count] && [delegate canDisplayChooser])
 		[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
 	else
 		[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
@@ -321,6 +322,8 @@
 			[posterChooser release];
 		}		
 	}
+	else
+		[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
 }
 
 - (void)saveMoviePosterAtURL:(NSString *)url forTranslation:(SapphireMovieTranslation *)tran

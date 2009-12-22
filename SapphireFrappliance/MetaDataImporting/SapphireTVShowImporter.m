@@ -339,8 +339,11 @@
 		{
 			NSString *title = stringValueOfChild(root, @"title");
 			if(![title length])
-				//We can't import anymore; importer broken.  Abort.
+			{
+				//We can't import anymore.  Importer or site broken; abort.
 				[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
+				return;
+			}
 			show = [SapphireTVShow show:title withPath:state->showPath inContext:moc];
 			tran.tvShow = show;
 		}
@@ -387,6 +390,8 @@
 		[self getTVShowEpisodesForState:epState atURL:[epURLElement stringValue]];
 		[epState release];
 	}
+	else
+		[self completedEpisode:nil forState:state atIndex:index];
 }
 
 - (void)retrievedEpisodeList:(NSXMLDocument *)episodeList forObject:(SapphireTVShowImportStateData *)state
@@ -489,6 +494,8 @@
 {
 	state->episodesCompleted++;
 	NSMutableArray *infoArray = state->episodeInfoArray;
+	if(dict == nil)
+		dict = [NSMutableDictionary dictionary];
 	[infoArray replaceObjectAtIndex:index withObject:dict];
 	if(state->episodesCompleted == [infoArray count])
 	{
@@ -507,6 +514,8 @@
 			file.tvEpisode = ep;
 			[self completeWithState:state withStatus:ImportStateUpdated userCanceled:NO];
 		}
+		else
+			[self completeWithState:state withStatus:ImportStateNotUpdated userCanceled:NO];
 	}
 }
 
