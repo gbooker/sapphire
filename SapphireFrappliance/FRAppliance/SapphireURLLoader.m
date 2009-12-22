@@ -30,12 +30,13 @@
 }
 
 - (id)initWithURL:(NSURL *)url;
+- (NSString *)urlKey;
 - (void)loadData;
 - (void)addInformer:(NSInvocation *)invoke;
 - (BOOL)loaded;
+- (BOOL)failed;
 - (id)loadedObject;
 - (int)cancelForTarget:(id)target;
-
 @end
 
 @interface SapphireStringURLLoaderWorker : SapphireURLLoaderWorker
@@ -71,6 +72,11 @@
 	[super dealloc];
 }
 
+- (NSString *)urlKey
+{
+	return [url absoluteString];
+}
+
 - (void)tellInformers
 {
 	NSEnumerator *invokeEnum = [informers objectEnumerator];
@@ -94,6 +100,11 @@
 - (BOOL)loaded
 {
 	return loaded;
+}
+
+- (BOOL)failed
+{
+	return NO;
 }
 
 - (id)loadedObject
@@ -142,6 +153,10 @@
 	[super dealloc];
 }
 
+- (NSString *)urlKey
+{
+	return [@"S" stringByAppendingString:[url absoluteString]];
+}
 
 - (void)realLoadData
 {
@@ -195,6 +210,11 @@
 	return loadedString;
 }
 
+- (BOOL)failed
+{
+	return [loadedString length] != 0;
+}
+
 @end
 
 @implementation SapphireDataURLLoaderWorker
@@ -205,6 +225,10 @@
 	[super dealloc];
 }
 
+- (NSString *)urlKey
+{
+	return [@"D" stringByAppendingString:[url absoluteString]];
+}
 
 - (void)realLoadData
 {
@@ -222,7 +246,17 @@
 	return loadedData;
 }
 
+- (BOOL)failed
+{
+	return [loadedData length] != 0;
+}
+
 @end
+
+@interface SapphireURLLoader (private)
+- (void)addCallbackToWorker:(SapphireURLLoaderWorker *)worker withTarget:(id)target selector:(SEL)selector object:(id)anObject;
+@end
+
 
 @implementation SapphireURLLoader
 
@@ -234,9 +268,8 @@
 	
 	workers = [[NSMutableDictionary alloc] init];
 	workerQueue = [[NSMutableArray alloc] init];
-	myInformer = [[NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(workerFinished:)]] retain];
-	[myInformer setTarget:self];
-	[myInformer setSelector:@selector(workerFinished:)];
+	priorityWorkerQueue = [[NSMutableArray alloc] init];
+	delegates = [[NSMutableArray alloc] init];
 	
 	return self;
 }
@@ -245,34 +278,51 @@
 {
 	[workers release];
 	[workerQueue release];
-	[myInformer release];
+	[priorityWorkerQueue release];
 	[clearTimer invalidate];
+	[delegates release];
 	[super dealloc];
 }
 
-- (void)addWorkerToQueue:(SapphireURLLoaderWorker *)worker
+- (void)addWorkerToQueue:(SapphireURLLoaderWorker *)worker withPriority:(BOOL)priority
 {
 	if(workersCurrentlyWorking < MAX_WORKERS)
 	{
-		[worker addInformer:myInformer];
+		[self addCallbackToWorker:worker withTarget:self selector:@selector(loadedData:fromWorker:) object:worker];
 		[worker loadData];
 		workersCurrentlyWorking++;
 	}
+	else if(priority)
+		[priorityWorkerQueue addObject:worker];
 	else
 		[workerQueue addObject:worker];
+	[delegates makeObjectsPerformSelector:@selector(urlLoaderAddedResource:) withObject:self];
 }
 
-- (void)workerFinished:(SapphireURLLoaderWorker *)worker
+- (void)loadedData:(id)obj fromWorker:(SapphireURLLoaderWorker *)worker
 {
-	if(workersCurrentlyWorking == MAX_WORKERS && [workerQueue count])
+	int priorityCount = [priorityWorkerQueue count];
+	if(workersCurrentlyWorking == MAX_WORKERS && (priorityCount || [workerQueue count]))
 	{
-		SapphireURLLoaderWorker *newWorker = [workerQueue objectAtIndex:0];
-		[newWorker addInformer:myInformer];
+		SapphireURLLoaderWorker *newWorker;
+		if(priorityCount)
+			newWorker = [priorityWorkerQueue objectAtIndex:0];
+		else
+			newWorker = [workerQueue objectAtIndex:0];
+		[self addCallbackToWorker:newWorker withTarget:self selector:@selector(loadedData:fromWorker:) object:newWorker];
 		[newWorker loadData];
-		[workerQueue removeObjectAtIndex:0];
+		if(priorityCount)
+			[priorityWorkerQueue removeObjectAtIndex:0];
+		else
+			[workerQueue removeObjectAtIndex:0];
 	}
 	else
 		workersCurrentlyWorking--;
+	[delegates makeObjectsPerformSelector:@selector(urlLoaderFinisedResource:) withObject:self];
+	if([worker failed])
+	{
+		[workers removeObjectForKey:[worker urlKey]];
+	}
 }
 
 - (void)clearCache
@@ -318,13 +368,17 @@
 		worker = [[SapphireStringURLLoaderWorker alloc] initWithURL:[NSURL URLWithString:url]];
 		[workers setObject:worker forKey:key];
 		[worker release];
-		[self addWorkerToQueue:worker];
+		[self addWorkerToQueue:worker withPriority:NO];
 	}
 	
 	[self addCallbackToWorker:worker withTarget:target selector:selector object:anObject];
 }
 
 - (void)loadDataURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject
+{
+	[self loadDataURL:url withTarget:target selector:selector object:anObject withPriority:NO];
+}
+- (void)loadDataURL:(NSString *)url withTarget:(id)target selector:(SEL)selector object:(id)anObject withPriority:(BOOL)priority
 {
 	NSString *key = [@"D" stringByAppendingString:url];
 	SapphireDataURLLoaderWorker *worker = [workers objectForKey:key];
@@ -333,7 +387,7 @@
 		worker = [[SapphireDataURLLoaderWorker alloc] initWithURL:[NSURL URLWithString:url]];
 		[workers setObject:worker forKey:key];
 		[worker release];
-		[self addWorkerToQueue:worker];
+		[self addWorkerToQueue:worker withPriority:priority];
 	}
 	
 	[self addCallbackToWorker:worker withTarget:target selector:selector object:anObject];
@@ -358,7 +412,9 @@
 	{
 		//Worker is no longer needed
 		[workerQueue removeObject:worker];
+		[priorityWorkerQueue removeObject:worker];
 		[workers removeObjectForKey:key];
+		[delegates makeObjectsPerformSelector:@selector(urlLoaderCancelledResource:) withObject:self];
 	}
 	key = [@"S" stringByAppendingString:url];
 	worker = [workers objectForKey:key];
@@ -366,8 +422,20 @@
 	{
 		//Worker is no longer needed
 		[workerQueue removeObject:worker];
+		[priorityWorkerQueue removeObject:worker];
 		[workers removeObjectForKey:key];
+		[delegates makeObjectsPerformSelector:@selector(urlLoaderCancelledResource:) withObject:self];
 	}
+}
+
+- (void)addDelegate:(id <SapphireURLLoaderDelegate>)delegate
+{
+	[delegates addObject:delegate];
+}
+
+- (void)removeDelegate:(id <SapphireURLLoaderDelegate>)delegate
+{
+	[delegates removeObject:delegate];
 }
 
 @end
