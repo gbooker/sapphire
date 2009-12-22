@@ -105,6 +105,66 @@ void overrideApplicationSupportdir(NSString *override);
 + (void)deletePendingObjects;
 @end
 
+static BOOL completedImports = YES;
+
+@interface TestImportManager : NSObject <SapphireImporterDelegate>
+{
+	NSMutableArray		*waitingImports;
+}
+
+- (void)importer:(id <SapphireImporter>)importer importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path;
+@end
+
+@implementation TestImportManager
+
+- (id)init
+{
+	self = [super init];
+	if (self != nil) {
+		waitingImports = [[NSMutableArray alloc] init];
+	}
+	return self;
+}
+
+- (void) dealloc
+{
+	[waitingImports release];
+	[super dealloc];
+}
+
+- (void)importer:(id <SapphireImporter>)importer importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path;
+{
+	[importer setDelegate:self];
+	ImportState state = [importer importMetaData:metaData path:path];
+	if(state == ImportStateBackground || state == ImportStateMultipleSuspend)
+	{
+		[waitingImports addObject:importer];
+		completedImports = NO;
+	}
+}
+
+- (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state
+{
+	[waitingImports removeObject:importer];
+	if(![waitingImports count])
+		completedImports = YES;
+}
+
+- (BOOL)canDisplayChooser
+{
+	return NO;
+}
+
+- (id)chooserScene
+{
+	return nil;
+}
+
+- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
+{
+}
+
+@end
 
 
 
@@ -148,6 +208,8 @@ int main(int argc, char *argv[])
 	[tvImp release];
 	[movImp release];
 	
+	TestImportManager *importManager = [[TestImportManager alloc] init];
+	
 	//Debug code goes here:
 //#define LISTING_MOVIES
 #ifdef LISTING_MOVIES
@@ -168,12 +230,12 @@ int main(int argc, char *argv[])
 //#define TESTING_XML_IMPORT
 #ifdef TESTING_XML_IMPORT
 	{
-		NSString *path = @"/Users/gbooker/Movies/Little Einsteins.avi";
+		NSString *path = @"/Users/gbooker/Movies/MovieTests/Little Eistiens: Our Big Huge Adventure (2005).avi";
 		SapphireFileMetaData *meta = [SapphireFileMetaData fileWithPath:path inContext:moc];
 		[meta clearMetaData];
 		[SapphireMetaDataSupport save:moc];
 		SapphireXMLFileDataImporter *importer = [[SapphireXMLFileDataImporter alloc] init];
-		[importer importMetaData:meta path:[meta path]];
+		[importManager importer:importer importMetaData:meta path:[meta path]];
 		[importer release];		
 	}
 #endif
@@ -199,7 +261,7 @@ int main(int argc, char *argv[])
 		NSString *path = @"/Users/gbooker/Movies/Little Einsteins.avi";
 		SapphireFileMetaData *meta = [SapphireFileMetaData fileWithPath:path inContext:moc];
 		[meta clearMetaData];
-		[allImporter importMetaData:meta path:[meta path]];
+		[importManager importer:allImporter importMetaData:meta path:[meta path]];
 		
 		NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
 		[moc reset];
@@ -240,13 +302,13 @@ int main(int argc, char *argv[])
 		NSLog(@"Movies: %@\nShows: %@\nCast: %@\nGenres: %@\nDirectors: %@", allMovies, allShows, allCast, allGenres, allDirectors);
 	}
 #endif
-//#define TESTING_MOVIE_IMPORT
+#define TESTING_MOVIE_IMPORT
 #ifdef TESTING_MOVIE_IMPORT
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/MovieTests/FIFTH_ELEMENT.mov" inContext:moc];
 		SapphireMovieImporter *import = [[SapphireMovieImporter alloc] init];
 		[file setToReimportFromMaskValue:IMPORT_TYPE_MOVIE_MASK];
-		[import importMetaData:file path:[file path]];
+		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 	}
 #endif
@@ -255,7 +317,8 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Doctor Who (2005) S03ES1 Voyage of the Damned.avi" inContext:moc];
 		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
-		[import importMetaData:file path:[file path]];
+		[file setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
+		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 	}
 #endif
@@ -264,10 +327,13 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E01-E02.avi" inContext:moc];
 		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
-		[import importMetaData:file path:[file path]];
+		[file setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
+		[importManager importer:import importMetaData:file path:[file path]];
+		[import release];
 		
+		import = [[SapphireTVShowImporter alloc] init];
 		file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E02.avi" inContext:moc];
-		[import importMetaData:file path:[file path]];
+//		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 	}
 #endif
@@ -284,18 +350,21 @@ int main(int argc, char *argv[])
 #ifdef TESTING_TV_IMPORT_THROUGH_XML
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/life on mars.avi" inContext:moc];
-		[allImporter importMetaData:file path:[file path]];
+		[importManager importer:allImporter importMetaData:file path:[file path]];
 	}
 #endif
-	
-	NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
-	while([currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
-		;	
 	
 	[allImporter release];
 	
 	[moc release];
-	[pool release];
+	[pool drain];
 	
+	pool = [[NSAutoreleasePool alloc] init];
+	NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
+	while(!completedImports && [currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
+		;
+	
+	[importManager release];
+	[pool drain];
 	return 0;
 }
