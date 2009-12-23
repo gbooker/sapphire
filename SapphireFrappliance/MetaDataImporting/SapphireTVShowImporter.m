@@ -150,14 +150,15 @@
 	int								index;
 	SapphireSiteTVShowScraper		*siteScraper;
 	int								absEpisode;
+	NSString						*epID;
 }
 
-- (id)initWithState:(SapphireTVShowImportStateData *)state index:(int)index;
+- (id)initWithState:(SapphireTVShowImportStateData *)state index:(int)index episodeID:(NSString *)epID;
 @end
 
 @implementation SapphireSingleTVShowEpisodeImportStateData
 
-- (id)initWithState:(SapphireTVShowImportStateData *)aState index:(int)anIndex
+- (id)initWithState:(SapphireTVShowImportStateData *)aState index:(int)anIndex episodeID:(NSString *)anEpID;
 {
 	self = [super init];
 	if(!self)
@@ -169,6 +170,7 @@
 		siteScraper = [aState->siteScraper retain];
 	else
 		siteScraper = [aState->siteScraper copy];
+	epID = [anEpID retain];
 	
 	return self;
 }
@@ -177,6 +179,7 @@
 {
 	[state release];
 	[siteScraper release];
+	[epID release];
 	[super dealloc];
 }
 
@@ -315,7 +318,7 @@
 		SapphireSiteTVShowScraper *siteScraper = state->siteScraper;
 		[siteScraper setObject:state];
 		NSString *fullURL = [@"http://www.tvrage.com" stringByAppendingString:state->showPath];
-		[siteScraper getShowDetailsAtURL:fullURL];
+		[siteScraper getShowDetailsAtURL:fullURL forShowID:state->showPath];
 	}
 	else
 	{
@@ -396,8 +399,9 @@
 		NSXMLElement *epURLElement = [epElements objectAtIndex:0];
 		NSXMLElement *episodeElement = (NSXMLElement *)[epURLElement parent];
 		NSNumber *absoluteNumber = intValueOfChild(episodeElement, @"absoluteEp");
+		NSString *epID = stringValueOfChild(episodeElement, @"id");
 		int absNumber = [absoluteNumber intValue];
-		SapphireSingleTVShowEpisodeImportStateData *epState = [[SapphireSingleTVShowEpisodeImportStateData alloc] initWithState:state index:index];
+		SapphireSingleTVShowEpisodeImportStateData *epState = [[SapphireSingleTVShowEpisodeImportStateData alloc] initWithState:state index:index episodeID:epID];
 		epState->absEpisode = absNumber;
 		[self getTVShowEpisodesForState:epState atURL:[epURLElement stringValue]];
 		[epState release];
@@ -430,7 +434,7 @@
 {
 	SapphireSiteTVShowScraper *siteScraper = epState->siteScraper;
 	[siteScraper setObject:epState];
-	[siteScraper getEpisodeDetailsAtURL:url];
+	[siteScraper getEpisodeDetailsAtURL:url forEpisodeID:epState->epID];
 }
 
 - (void)retrievedEpisodeDetails:(NSXMLDocument *)details forObject:(SapphireSingleTVShowEpisodeImportStateData *)state

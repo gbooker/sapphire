@@ -58,9 +58,9 @@
 }
 
 - (NSString *)searchURLForShowName:(NSString *)showName;
-- (NSString *)showDetailsForURLContent:(NSString *)urlContent atURL:(NSString *)url;
+- (NSString *)showDetailsForURLContent:(NSString *)urlContent showID:(NSString *)showID atURL:(NSString *)url;
 - (NSString *)episodeListForURLContent:(NSString *)urlContent atURL:(NSString *)url;
-- (NSString *)episodeDetailsForURLContent:(NSString *)urlContent atURL:(NSString *)url;
+- (NSString *)episodeDetailsForURLContent:(NSString *)urlContent episodeID:(NSString *)epID atURL:(NSString *)url;
 
 @end
 

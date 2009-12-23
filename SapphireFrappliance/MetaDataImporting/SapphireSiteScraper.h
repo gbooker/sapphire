@@ -63,11 +63,13 @@
 
 @interface SapphireSiteTVShowScraper : SapphireSiteScraper {
 	SapphireTVShowScraper	*scraper;
+	NSString				*showID;
+	NSString				*epID;
 }
 
 - (id)initWithTVShowScraper:(SapphireTVShowScraper *)scraper delegate:(id <SapphireSiteTVShowScraperDelegate>)delegate loader:(SapphireURLLoader *)loader;
 - (void)searchForShowNamed:(NSString *)name;
-- (void)getShowDetailsAtURL:(NSString *)url;
+- (void)getShowDetailsAtURL:(NSString *)url forShowID:(NSString *)showID;
 - (void)getEpisodeListAtURL:(NSString *)url;
-- (void)getEpisodeDetailsAtURL:(NSString *)url;
+- (void)getEpisodeDetailsAtURL:(NSString *)url forEpisodeID:(NSString *)epID;
 @end

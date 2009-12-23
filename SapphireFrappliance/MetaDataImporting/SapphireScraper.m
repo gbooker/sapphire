@@ -561,10 +561,11 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	return [self parseFunction:@"CreateSearchUrl"];
 }
 
-- (NSString *)showDetailsForURLContent:(NSString *)urlContent atURL:(NSString *)url;
+- (NSString *)showDetailsForURLContent:(NSString *)urlContent showID:(NSString *)showID atURL:(NSString *)url;
 {
 	[self setBuffer:0 toString:urlContent];
-	[self setBuffer:1 toString:url];
+	[self setBuffer:1 toString:showID];
+	[self setBuffer:2 toString:url];
 	return [self parseFunction:@"GetDetails"];
 }
 
@@ -575,10 +576,11 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	return [self parseFunction:@"GetEpisodeList"];
 }
 
-- (NSString *)episodeDetailsForURLContent:(NSString *)urlContent atURL:(NSString *)url;
+- (NSString *)episodeDetailsForURLContent:(NSString *)urlContent episodeID:(NSString *)epID atURL:(NSString *)url;
 {
 	[self setBuffer:0 toString:urlContent];
-	[self setBuffer:1 toString:url];
+	[self setBuffer:1 toString:epID];
+	[self setBuffer:2 toString:url];
 	return [self parseFunction:@"GetEpisodeDetails"];
 }
 

@@ -228,7 +228,7 @@
 
 - (void)getMovieDetailsAtURL:(NSString *)url forMovieID:(NSString *)aMovieID
 {
-	[movieID release];
+	[movieID autorelease];
 	movieID = [aMovieID retain];
 	
 	if([url length])
@@ -260,6 +260,8 @@
 		return myCopy;
 	
 	myCopy->scraper = [scraper retain];
+	myCopy->showID = [showID retain];
+	myCopy->epID = [epID retain];
 	
 	return myCopy;
 }
@@ -267,6 +269,8 @@
 - (void)dealloc
 {
 	[scraper release];
+	[showID release];
+	[epID release];
 	[super dealloc];
 }
 
@@ -307,13 +311,16 @@
 {
 	NSString *xmlDetails = nil;
 	if([details length])
-		xmlDetails = [scraper showDetailsForURLContent:details atURL:url];
+		xmlDetails = [scraper showDetailsForURLContent:details showID:showID atURL:url];
 	
 	[self callDelegateSelector:@selector(retrievedShowDetails:forObject:) forConent:xmlDetails];
 }
 
-- (void)getShowDetailsAtURL:(NSString *)url
+- (void)getShowDetailsAtURL:(NSString *)url forShowID:(NSString *)aShowID
 {
+	[showID autorelease];
+	showID = [aShowID retain];
+	
 	if([url length])
 		[loader loadStringURL:url withTarget:self selector:@selector(gotShowDetails:atURL:) object:url];
 	else
@@ -341,13 +348,16 @@
 {
 	NSString *xmlDetails = nil;
 	if([details length])
-		xmlDetails = [scraper episodeDetailsForURLContent:details atURL:url];
+		xmlDetails = [scraper episodeDetailsForURLContent:details episodeID:epID atURL:url];
 	
 	[self callDelegateSelector:@selector(retrievedEpisodeDetails:forObject:) forConent:xmlDetails];
 }
 
-- (void)getEpisodeDetailsAtURL:(NSString *)url
+- (void)getEpisodeDetailsAtURL:(NSString *)url forEpisodeID:(NSString *)anEpisodeID
 {
+	[epID autorelease];
+	epID = [anEpisodeID retain];
+	
 	if([url length])
 		[loader loadStringURL:url withTarget:self selector:@selector(gotEpisodeDetails:atURL:) object:url];
 	else
