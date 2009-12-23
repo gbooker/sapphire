@@ -731,7 +731,6 @@
 		return;
 	SapphireShowChooser *chooser = (SapphireShowChooser *)aChooser;
 	SapphireFileMetaData *currentData = state->file;
-	NSString *path = state->path;
 	
 	/*Get the user's selection*/
 	int selection = [chooser selection];

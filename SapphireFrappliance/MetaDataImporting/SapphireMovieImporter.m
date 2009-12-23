@@ -514,7 +514,6 @@
 		/*Get the user's selection*/
 		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
 		SapphireFileMetaData *currentData = state->file;
-		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		int selection = [movieChooser selection];
 		if(selection == SapphireChooserChoiceCancel)
@@ -544,7 +543,6 @@
 	{
 		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
 		SapphireFileMetaData *currentData = state->file;
-		NSString *path = state->path;
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
 		SapphireChooserChoice selectedPoster = [posterChooser selection];
 		if(selectedPoster == SapphireChooserChoiceCancel)
