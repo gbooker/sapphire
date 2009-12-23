@@ -1,8 +1,16 @@
 Since changing the schema is a bit of a pain, here are the items to add to the next schema.
 
 Code is present but commented out with //AAA:
-Add movieSortTitle to XMLData
+	Add movieSortTitle to XMLData
+
 Add an NSDictionary to every object to allow these changes to be made immediately and then made properties in the future.
+Change translations (and importers to match):
+	TV and Movies (not posters):
+		showPath and IMDBLink or renamed to url and become full URLs
+		Add identifier for importer used
+		Add id for movie/series (tt#### for IMDB, numeric for for tvrage)
+	Movies:
+		IMPLink is removed
 
 Ideas:
 Add watched/favorite keys to directories, movies, episodes, and virtual directories
