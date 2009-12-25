@@ -1,10 +1,22 @@
-//
-//  Regex_TesterAppDelegate.m
-//  Regex Tester
-//
-//  Created by Graham Booker on 12/24/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
-//
+/*
+ * Regex_TesterAppDelegate.m
+ * Regex Tester
+ *
+ * Created by Graham Booker on Dec. 24 2009.
+ * Copyright 2008 Sapphire Development Team and/or www.nanopi.net
+ * All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
 
 #import "Regex_TesterAppDelegate.h"
 
@@ -160,6 +172,23 @@
 		[self processHaystack];
 }
 
+NSString *storedMatches[10] = {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil};
+
+- (void)setStoredMatch:(int)index toString:(NSString *)str
+{
+	[storedMatches[index] release];
+	storedMatches[index] = [str retain];
+}
+
+- (void)clearStorchMatches
+{
+	for(int i=0; i<10; i++)
+	{
+		[storedMatches[i] release];
+		storedMatches[i] = nil;
+	}
+}
+
 - (NSString *)replacementStrForInputStr:(const char *)input matches:(int *)matches count:(int)matchCount
 {
 	NSMutableString *mutStr = [output mutableCopy];
@@ -167,19 +196,24 @@
 	NSRange range = NSMakeRange(0, [mutStr length]);
 	while((range = [mutStr rangeOfString:@"\\" options:0 range:range]).location != NSNotFound)
 	{
-		int index = [[mutStr substringFromIndex:range.location + 1] intValue];
+		BOOL storedMatch = ([mutStr characterAtIndex:range.location + 1] == '$');
+		int index = [[mutStr substringFromIndex:range.location + 1 + storedMatch] intValue];
 		NSString *replacement;
 		if(index > 0 && index < matchCount)
 		{
-			if(index > 9)
-				range.length += 2;
-			else
-				range.length ++;
+			range.length++;
 		}
+		range.length += storedMatch;
 		int start = matches[index<<1];
 		int end = matches[(index<<1) + 1];
 		if(range.length > 1 && start != -1)
+		{
 			replacement = [[[NSString alloc] initWithBytes:input+start length:end-start encoding:NSUTF8StringEncoding] autorelease];
+			if(storedMatch)
+				[self setStoredMatch:index toString:replacement];
+		}
+		else if(range.length > 1 && storedMatch)
+			replacement = storedMatches[index];
 		else
 			replacement = @"";
 		[mutStr replaceCharactersInRange:range withString:replacement];
@@ -195,7 +229,7 @@
 - (void)processHaystack
 {
 	int matchCount = 0;
-	int match[20];
+	int match[30];
 	const char *inputStr = [[haystack string] UTF8String];
 	int inputLength = 0;
 	if(inputStr)
@@ -206,7 +240,7 @@
 	[txtStorage removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0, [haystack length])];
 	int offset = 0;
 	NSString *result = @"";
-	while((matchCount = pcre_exec(reg, NULL, inputStr, inputLength, offset, 0, match, 20)) >= 0)
+	while((matchCount = pcre_exec(reg, NULL, inputStr, inputLength, offset, 0, match, 30)) >= 0)
 	{
 		int start = match[0];
 		int end = match[1];
