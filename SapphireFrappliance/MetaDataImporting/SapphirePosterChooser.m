@@ -38,7 +38,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (double)renderSelection;
 @end
 
-@interface SapphirePosterChooser (private)
+@interface SapphirePosterChooser ()
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData;
 - (void)loadPoster:(int)index;
 @end

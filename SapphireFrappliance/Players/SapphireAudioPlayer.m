@@ -43,7 +43,7 @@ typedef enum {
 	BRMusicPlayerStateSeekingBack = 7
 } BRMusicPlayerState;
 
-@interface SapphireAudioPlayer (private)
+@interface SapphireAudioPlayer ()
 - (void)setState:(int)newState;
 - (void)stopUITimer;
 - (void)setSkipTimer;

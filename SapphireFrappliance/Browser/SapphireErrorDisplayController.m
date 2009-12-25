@@ -21,7 +21,7 @@
 #import "SapphireErrorDisplayController.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
-@interface SapphireErrorDisplayController (private)
+@interface SapphireErrorDisplayController ()
 - (void)layoutFrame;
 @end
 

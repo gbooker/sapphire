@@ -65,7 +65,7 @@ NSString *SAPPHIRE_MANAGED_OBJECT_CONTEXT_CLOSING =	@"SapphireManagedObjectConte
 @end
 
 
-@interface SapphireApplianceController (private)
+@interface SapphireApplianceController ()
 - (void)setMenuFromSettings;
 - (void)recreateMenu;
 @end

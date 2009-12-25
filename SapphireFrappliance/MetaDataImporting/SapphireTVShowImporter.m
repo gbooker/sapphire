@@ -186,7 +186,7 @@
 
 @end
  
-@interface SapphireTVShowImporter (private)
+@interface SapphireTVShowImporter ()
 - (void)getTVShowResultsForState:(SapphireTVShowImportStateData *)state;
 - (void)getTVShowEpisodeListForState:(SapphireTVShowImportStateData *)state;
 - (void)getTVShowEpisodesForState:(SapphireSingleTVShowEpisodeImportStateData *)state atURL:(NSString *)url;

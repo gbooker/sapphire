@@ -253,7 +253,7 @@
 
 @end
 
-@interface SapphireURLLoader (private)
+@interface SapphireURLLoader ()
 - (void)addCallbackToWorker:(SapphireURLLoaderWorker *)worker withTarget:(id)target selector:(SEL)selector object:(id)anObject;
 @end
 

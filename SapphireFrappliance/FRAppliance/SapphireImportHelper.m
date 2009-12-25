@@ -43,7 +43,7 @@
 - (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer type:(ImportType)aType;
 @end
 
-@interface SapphireImportHelperServer (private)
+@interface SapphireImportHelperServer ()
 - (void)startClient;
 @end
 

@@ -167,7 +167,7 @@ typedef enum {
 
 @end
 
-@interface SapphireCustomVirtualDirectoryImporter (private)
+@interface SapphireCustomVirtualDirectoryImporter ()
 - (NSPredicate *)predicateWithElement:(NSXMLElement *)elem;
 - (NSPredicate *)allPredicateWithElement:(NSXMLElement *)elem;
 - (NSPredicate *)anyPredicateWithElement:(NSXMLElement *)elem;

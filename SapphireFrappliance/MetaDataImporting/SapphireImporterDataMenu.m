@@ -121,7 +121,7 @@
 - (NSRect)controllerFrame;  /*technically wrong; it is really a CGRect*/
 @end
 
-@interface SapphireImporterDataMenu (private)
+@interface SapphireImporterDataMenu ()
 - (void)layoutFrame;
 - (void)setFileProgress:(NSString *)updateFileProgress;
 - (void)resetUIElements;

@@ -32,7 +32,7 @@
 @end
 
 
-@interface SapphireTextEntryController (private)
+@interface SapphireTextEntryController ()
 - (void)layoutFrame;
 @end
 

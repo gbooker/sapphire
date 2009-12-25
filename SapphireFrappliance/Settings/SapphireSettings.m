@@ -39,11 +39,6 @@
 
 static SapphireSettings *sharedInstance = nil;
 
-@interface SapphireSettings(private)
-- (void)processFiles:(NSArray *)files;
-- (void)filesProcessed:(NSDictionary *)files;
-@end
-
 @implementation SapphireSettings
 
 NSString *HIDE_FAVORITE_KEY			= @"HideFavorites";

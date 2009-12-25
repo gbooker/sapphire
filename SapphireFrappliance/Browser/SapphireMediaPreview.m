@@ -81,7 +81,7 @@ NSString *SUBTITLE_LABEL_KEY =     			@"Subtitles";
 }
 @end
 
-@interface SapphireMediaPreview (private)
+@interface SapphireMediaPreview ()
 - (void)doPopulation;
 - (NSString *)coverArtForPath;
 - (NSString *)keyForDisplay:(NSString *)key;

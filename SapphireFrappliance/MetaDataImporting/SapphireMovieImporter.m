@@ -63,7 +63,7 @@
 
 
 
-@interface SapphireMovieImporter (private)
+@interface SapphireMovieImporter ()
 - (void)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran;
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
 - (void)saveMoviePosterAtURL:(NSString *)url forTranslation:(SapphireMovieTranslation *)tran;
@@ -177,7 +177,7 @@
 	[movies release];
 }
 
-- (ImportState)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran
+- (void)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran
 {
 	NSString *link = [tran IMDBLink];
 	SapphireSiteMovieScraper *siteScraper = state->siteScraper;

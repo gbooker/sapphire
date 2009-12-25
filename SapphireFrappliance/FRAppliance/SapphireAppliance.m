@@ -56,7 +56,7 @@
 @end
 
 //Really BRImage
-@interface NSObject (private)
+@interface NSObject (compat)
 - (id)downsampledImageForMaxSize:(NSSize )size;
 @end
 

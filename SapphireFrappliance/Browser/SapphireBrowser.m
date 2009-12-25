@@ -48,7 +48,7 @@
 
 #import "NSFileManager-Extensions.h"
 
-@interface SapphireBrowser (private)
+@interface SapphireBrowser ()
 - (void)reloadDirectoryContents;
 - (void)setNewPredicate:(NSPredicate *)newPredicate;
 @end

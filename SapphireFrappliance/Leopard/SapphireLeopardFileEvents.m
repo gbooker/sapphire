@@ -22,7 +22,7 @@
 #import "SapphireCollectionDirectory.h"
 #import "SapphireDirectoryMetaData.h"
 
-@interface SapphireLeopardFileEvents (private)
+@interface SapphireLeopardFileEvents ()
 - (void)reloadDir:(NSString *)dir;
 @end
 
