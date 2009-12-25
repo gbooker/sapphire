@@ -29,6 +29,7 @@
 	BOOL				trim[SCRAPER_MATCH_COUNT];				/*!< @brief Indicates wether a buffer must have leading and trailing whitespace trimmed*/
 	NSMutableDictionary	*settings;								/*!< @brief The current settings for the scraper*/
 	NSString			*settingsXML;							/*!< @brief The XML defining the settings*/
+	NSString			*storedMatches[SCRAPER_MATCH_COUNT];	/*!< @brief The last matches which were made (\$n store/reads)*/
 }
 
 - (id)initWithPath:(NSString *)path error:(NSError * *)error;

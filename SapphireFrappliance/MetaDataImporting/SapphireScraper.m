@@ -21,10 +21,12 @@
 #import "SapphireScraper.h"
 #include "pcre.h"
 
-@interface SapphireScraper (private)
+@interface SapphireScraper ()
 - (void)parseSettings;
 - (void)setBuffer:(int)index toString:(NSString *)str;
 - (void)clearBuffers;
+- (void)setStoredMatch:(int)index toString:(NSString *)str;
+- (void)clearStorchMatches;
 - (NSString *)parseFunction:(NSString *)function;
 @end
 
@@ -82,6 +84,7 @@
 	[settings release];
 	[settingsXML release];
 	[self clearBuffers];
+	[self clearStorchMatches];
 	[super dealloc];
 }
 
@@ -147,6 +150,21 @@
 	{	
 		[scraperBuffers[i] release];
 		scraperBuffers[i] = nil;
+	}
+}
+
+- (void)setStoredMatch:(int)index toString:(NSString *)str
+{
+	[storedMatches[index] release];
+	storedMatches[index] = [str retain];
+}
+
+- (void)clearStorchMatches
+{
+	for(int i=0; i<SCRAPER_MATCH_COUNT; i++)
+	{
+		[storedMatches[i] release];
+		storedMatches[i] = nil;
 	}
 }
 
@@ -332,22 +350,27 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	NSRange range = NSMakeRange(0, [mutStr length]);
 	while((range = [mutStr rangeOfString:@"\\" options:0 range:range]).location != NSNotFound)
 	{
-		int index = [[mutStr substringFromIndex:range.location + 1] intValue];
+		BOOL storedMatch = ([mutStr characterAtIndex:range.location + 1] == '$');
+		int index = [[mutStr substringFromIndex:range.location + 1 + storedMatch] intValue];
 		NSString *replacement;
 		if(index > 0 && index < matchCount)
-		{
 			range.length++;
-		}
+		range.length += storedMatch;
+		
 		int start = matches[index<<1];
 		int end = matches[(index<<1) + 1];
 		if(range.length > 1 && start != -1)
 		{
 			replacement = [[[NSString alloc] initWithBytes:input+start length:end-start encoding:NSUTF8StringEncoding] autorelease];
+			if(storedMatch)
+				[self setStoredMatch:index toString:replacement];
 			if(clean[index])
 				replacement = cleanedString(replacement);
 			else if(trim[index])
 				replacement = trimmedString(replacement);
 		}
+		else if(range.length > 1 && storedMatch)
+			replacement = storedMatches[index];
 		else
 			replacement = @"";
 		[mutStr replaceCharactersInRange:range withString:replacement];
@@ -397,6 +420,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	const char *inputStr = [input UTF8String];
 	int inputLen = strlen(inputStr);
 	int matchCount = 0;
+	[self clearStorchMatches];
 	while((matchCount = pcre_exec(reg, NULL, inputStr, inputLen, offset, 0, match, 30)) >= 0)
 	{
 		BOOL addToResult = YES;
