@@ -228,10 +228,10 @@ NSString *cleanedString(NSString *str)
 void bufferBooleanAttributeWithDefault(NSXMLElement *element, NSString *attributeName, BOOL defaultValue, BOOL *values)
 {
 	if(defaultValue)
-		for(int i=0; i<SCRAPER_BUFFER_COUNT; i++)
+		for(int i=0; i<SCRAPER_MATCH_COUNT; i++)
 			values[i] = YES;
 	else
-		memset(values, 0, sizeof(BOOL)*SCRAPER_BUFFER_COUNT);
+		memset(values, 0, sizeof(BOOL)*SCRAPER_MATCH_COUNT);
 	
 	NSString *attr = [[element attributeForName:attributeName] stringValue];
 	if(attr)
@@ -241,7 +241,7 @@ void bufferBooleanAttributeWithDefault(NSXMLElement *element, NSString *attribut
 		for(int i=0; i<count; i++)
 		{
 			int index = [[valueStrings objectAtIndex:i] intValue];
-			if(index > 0 && index <= SCRAPER_BUFFER_COUNT)
+			if(index > 0 && index <= SCRAPER_MATCH_COUNT)
 				values[index] = !defaultValue;
 		}
 	}
@@ -336,10 +336,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 		NSString *replacement;
 		if(index > 0 && index < matchCount)
 		{
-			if(index > 9)
-				range.length += 2;
-			else
-				range.length ++;
+			range.length++;
 		}
 		int start = matches[index<<1];
 		int end = matches[(index<<1) + 1];
@@ -395,12 +392,12 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	bufferBooleanAttributeWithDefault(expressionElement, @"trim", NO, trim);
 	
 	NSString *result = @"";
-	int match[40];
+	int match[30];
 	int offset = 0;
 	const char *inputStr = [input UTF8String];
 	int inputLen = strlen(inputStr);
 	int matchCount = 0;
-	while((matchCount = pcre_exec(reg, NULL, inputStr, inputLen, offset, 0, match, 20)) >= 0)
+	while((matchCount = pcre_exec(reg, NULL, inputStr, inputLen, offset, 0, match, 30)) >= 0)
 	{
 		BOOL addToResult = YES;
 		NSString *replacementString = [self replacementStrForOutput:output inputStr:inputStr matches:match count:matchCount];

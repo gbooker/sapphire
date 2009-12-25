@@ -19,13 +19,14 @@
  */
 
 #define SCRAPER_BUFFER_COUNT 20
+#define SCRAPER_MATCH_COUNT 10
 
 @interface SapphireScraper : NSObject {
 	NSXMLElement		*root;									/*!< @brief The XML document of the scraper*/
 	
 	NSString			*scraperBuffers[SCRAPER_BUFFER_COUNT];	/*!< @brief The scraper's string buffers for substitution*/
-	BOOL				clean[SCRAPER_BUFFER_COUNT];			/*!< @brief Indicates wether a buffer must be cleaned (HTML removed and trimmed)*/
-	BOOL				trim[SCRAPER_BUFFER_COUNT];				/*!< @brief Indicates wether a buffer must have leading and trailing whitespace trimmed*/
+	BOOL				clean[SCRAPER_MATCH_COUNT];				/*!< @brief Indicates wether a buffer must be cleaned (HTML removed and trimmed)*/
+	BOOL				trim[SCRAPER_MATCH_COUNT];				/*!< @brief Indicates wether a buffer must have leading and trailing whitespace trimmed*/
 	NSMutableDictionary	*settings;								/*!< @brief The current settings for the scraper*/
 	NSString			*settingsXML;							/*!< @brief The XML defining the settings*/
 }
