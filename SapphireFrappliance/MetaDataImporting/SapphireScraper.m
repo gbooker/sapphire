@@ -54,9 +54,9 @@ static NSDictionary *scraperPaths = nil;
 		NSError *error;
 		NSURL *url = [NSURL fileURLWithPath:path];
 		NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:0 error:&error];
-		NSXMLElement *root = [doc rootElement];
-		if(!root)
+		if(!doc)
 			continue;
+		NSXMLElement *root = [doc rootElement];
 		
 		NSString *name = [[root attributeForName:@"name"] stringValue];
 		NSString *type = [[root attributeForName:@"content"] stringValue];
