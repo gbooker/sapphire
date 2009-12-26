@@ -43,6 +43,7 @@
 #import "SapphireDirector.h"
 #import "SapphireXMLData.h"
 #import "SapphireMovieDirectory.h"
+#import "SapphireNfoImporter.h"
 
 void overrideApplicationSupportdir(NSString *override);
 
@@ -200,11 +201,13 @@ int main(int argc, char *argv[])
 	[SapphireMetaDataSupport setMainContext:moc];
 	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
 	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
+	SapphireNfoImporter *nfoImp = [[SapphireNfoImporter alloc] init];
 	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] init];
 	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] init];
-	SapphireAllImporter *allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
+	SapphireAllImporter *allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,nfoImp,tvImp,movImp,fileImp,nil]];
 	[xmlImpr release];
 	[fileImp release];
+	[nfoImp release];
 	[tvImp release];
 	[movImp release];
 	

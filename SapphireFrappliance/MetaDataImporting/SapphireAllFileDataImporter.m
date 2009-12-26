@@ -21,20 +21,24 @@
 #import "SapphireAllFileDataImporter.h"
 #import "SapphireFileDataImporter.h"
 #import "SapphireXMLFileDataImporter.h"
+#import "SapphireNfoImporter.h"
 
 @implementation SapphireAllFileDataImporter
 
 - (id) init
 {
 	SapphireFileDataImporter *file = [[SapphireFileDataImporter alloc] init];
+	SapphireNfoImporter *nfo = [[SapphireNfoImporter alloc] init];
 	SapphireXMLFileDataImporter *xml = [[SapphireXMLFileDataImporter alloc] init];
 	NSArray *ourImporters = [[NSArray alloc] initWithObjects:
-						  file,
-						  xml,
-						  nil];
+							 file,
+							 nfo,
+							 xml,
+							 nil];
 	self = [super initWithImporters:ourImporters];
 	[file release];
 	[xml release];
+	[nfo release];
 	[ourImporters release];
 	return self;
 }
