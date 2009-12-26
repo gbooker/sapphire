@@ -79,9 +79,7 @@
 		return self;
 	
 	NSError *error = nil;
-	NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
-	NSString *path = [selfBundle pathForResource:@"imdb" ofType:@"xml" inDirectory:@"scrapers"];
-	scraper = [[SapphireMovieScraper alloc] initWithPath:path error:&error];
+	scraper = [[SapphireScraper scrapperWithName:@"IMDb.com"] retain];
 	
 	return self;
 }

@@ -202,10 +202,7 @@
 	if(!self)
 		return nil;
 	
-	NSError *error = nil;
-	NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
-	NSString *path = [selfBundle pathForResource:@"tvrage" ofType:@"xml" inDirectory:@"scrapers"];
-	scraper = [[SapphireTVShowScraper alloc] initWithPath:path error:&error];
+	scraper = [[SapphireScraper scrapperWithName:@"TV Rage"] retain];
 	
 	/*Initialize the regexes*/
 	regcomp(&letterMarking, "[\\. -]?S[0-9]+E[S0-9]+([-E]+[0-9]+)?", REG_EXTENDED | REG_ICASE);

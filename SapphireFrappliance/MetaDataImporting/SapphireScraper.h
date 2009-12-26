@@ -32,6 +32,9 @@
 	NSString			*storedMatches[SCRAPER_MATCH_COUNT];	/*!< @brief The last matches which were made (\$n store/reads)*/
 }
 
++ (NSArray *)allScrapperNames;
++ (SapphireScraper *)scrapperWithName:(NSString *)filename;
+
 - (id)initWithPath:(NSString *)path error:(NSError * *)error;
 
 - (NSString *)name;
@@ -43,6 +46,7 @@
 - (NSMutableDictionary *)settings;
 
 - (NSString *)searchResultsForURLContent:(NSString *)urlContent;
+- (NSString *)searchResultsForNfoContent:(NSString *)nfoContent;
 - (NSString *)functionResultWithArguments:(NSString *)arg1, ...;
 
 

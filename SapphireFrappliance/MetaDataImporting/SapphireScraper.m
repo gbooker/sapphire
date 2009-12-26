@@ -32,6 +32,78 @@
 
 @implementation SapphireScraper
 
+static NSMutableDictionary *scrapers = nil;
+static NSDictionary *scraperPaths = nil;
+
++ (void)initialize
+{
+	if(!scrapers)
+		scrapers = [[NSMutableDictionary alloc] init];
+}
+
++ (NSArray *)allScrapperNames
+{
+	NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
+	NSArray *paths = [selfBundle pathsForResourcesOfType:@"xml" inDirectory:@"scrapers"];
+	
+	NSMutableDictionary *scraperPathsDict = [[NSMutableDictionary alloc] init];
+	NSEnumerator *pathEnum = [paths objectEnumerator];
+	NSString *path;
+	while((path = [pathEnum nextObject]) != nil)
+	{
+		NSError *error;
+		NSURL *url = [NSURL fileURLWithPath:path];
+		NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:url options:0 error:&error];
+		NSXMLElement *root = [doc rootElement];
+		if(!root)
+			continue;
+		
+		NSString *name = [[root attributeForName:@"name"] stringValue];
+		NSString *type = [[root attributeForName:@"content"] stringValue];
+		
+		[scraperPathsDict setObject:[type stringByAppendingFormat:@"-%@", path] forKey:name];
+		[doc release];
+	}
+	[scraperPaths release];
+	scraperPaths = [scraperPathsDict copy];
+	[scraperPathsDict release];
+	return [scraperPaths allKeys];
+}
+
++ (SapphireScraper *)scrapperWithName:(NSString *)filename
+{
+	if(!scraperPaths)
+		[SapphireScraper allScrapperNames];
+	
+	NSValue *value = [scrapers objectForKey:filename];
+	if(value == nil)
+	{
+		NSString *path = [scraperPaths objectForKey:filename];
+		if(path == nil)
+			return nil;
+		
+		int index = [path rangeOfString:@"-"].location;
+		NSString *type = [path substringToIndex:index];
+		path = [path substringFromIndex:index+1];
+		NSError *error;
+		SapphireScraper *scraper;
+		if([type isEqualToString:@"tvshows"])
+			scraper = [[SapphireTVShowScraper alloc] initWithPath:path error:&error];
+		else if([type isEqualToString:@"movies"])
+			scraper = [[SapphireMovieScraper alloc] initWithPath:path error:&error];
+		else
+			scraper = nil;
+		
+		if(!scraper)
+			return nil;
+		
+		value = [NSValue valueWithNonretainedObject:scraper];
+		[scrapers setObject:value forKey:[scraper name]];
+		[scraper autorelease];
+	}
+	return [value nonretainedObjectValue];
+}
+
 - (id)initWithPath:(NSString *)path error:(NSError * *)error
 {
 	self = [super init];
@@ -80,6 +152,7 @@
 
 - (void) dealloc
 {
+	[scrapers removeObjectForKey:[self name]];
 	[root release];
 	[settings release];
 	[settingsXML release];
@@ -120,8 +193,16 @@
 
 - (NSString *)searchResultsForURLContent:(NSString *)urlContent
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:urlContent];
 	return [self parseFunction:@"GetSearchResults"];
+}
+
+- (NSString *)searchResultsForNfoContent:(NSString *)nfoContent
+{
+	[self clearBuffers];
+	[self setBuffer:0 toString:nfoContent];
+	return [self parseFunction:@"NfoUrl"];
 }
 
 - (NSString *)functionResultWithArguments:(NSString *)function, ...
@@ -546,6 +627,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 
 - (NSString *)searchURLForMovieName:(NSString *)movieName year:(NSString *)year
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:[movieName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	[self setBuffer:1 toString:[year stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	return [self parseFunction:@"CreateSearchUrl"];
@@ -553,6 +635,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 
 - (NSString *)movieDetailsForURLContent:(NSString *)urlContent movieID:(NSString *)movieID atURL:(NSString *)url
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:urlContent];
 	[self setBuffer:1 toString:movieID];
 	[self setBuffer:2 toString:url];
@@ -578,12 +661,14 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 
 - (NSString *)searchURLForShowName:(NSString *)showName;
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:[showName stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	return [self parseFunction:@"CreateSearchUrl"];
 }
 
 - (NSString *)showDetailsForURLContent:(NSString *)urlContent showID:(NSString *)showID atURL:(NSString *)url;
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:urlContent];
 	[self setBuffer:1 toString:showID];
 	[self setBuffer:2 toString:url];
@@ -592,6 +677,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 
 - (NSString *)episodeListForURLContent:(NSString *)urlContent atURL:(NSString *)url;
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:urlContent];
 	[self setBuffer:1 toString:url];
 	return [self parseFunction:@"GetEpisodeList"];
@@ -599,6 +685,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 
 - (NSString *)episodeDetailsForURLContent:(NSString *)urlContent episodeID:(NSString *)epID atURL:(NSString *)url;
 {
+	[self clearBuffers];
 	[self setBuffer:0 toString:urlContent];
 	[self setBuffer:1 toString:epID];
 	[self setBuffer:2 toString:url];
