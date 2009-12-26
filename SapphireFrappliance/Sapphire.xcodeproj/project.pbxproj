@@ -83,6 +83,7 @@
 		F535C7430DF2353900716DA9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F535C7420DF2353900716DA9 /* CoreData.framework */; };
 		F535C7440DF2353900716DA9 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F535C7420DF2353900716DA9 /* CoreData.framework */; };
 		F541CBF50D9C2D19002F9278 /* SapphireRadioSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = F541CBF40D9C2D19002F9278 /* SapphireRadioSetting.m */; };
+		F542052810E6D1FE007B0D3A /* SapphireNfoImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F542052710E6D1FE007B0D3A /* SapphireNfoImporter.m */; };
 		F544602A0E030D5100311C03 /* SapphireDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F54460290E030D5100311C03 /* SapphireDirectory.m */; };
 		F54A38ED109F43C600DCC808 /* SapphireTakeThreeCompatClasses.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F54A38E8109F43A600DCC808 /* SapphireTakeThreeCompatClasses.framework */; };
 		F54A5FFA0E07089500F9827C /* SapphireFileSorter.m in Sources */ = {isa = PBXBuildFile; fileRef = F54A5FF90E07089500F9827C /* SapphireFileSorter.m */; };
@@ -459,6 +460,8 @@
 		F5409DE710D9760300DB3B0C /* SapphireChooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireChooser.h; sourceTree = "<group>"; };
 		F541CBF30D9C2D19002F9278 /* SapphireRadioSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireRadioSetting.h; sourceTree = "<group>"; };
 		F541CBF40D9C2D19002F9278 /* SapphireRadioSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireRadioSetting.m; sourceTree = "<group>"; };
+		F542052610E6D1FE007B0D3A /* SapphireNfoImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireNfoImporter.h; sourceTree = "<group>"; };
+		F542052710E6D1FE007B0D3A /* SapphireNfoImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireNfoImporter.m; sourceTree = "<group>"; };
 		F54460290E030D5100311C03 /* SapphireDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireDirectory.m; sourceTree = "<group>"; };
 		F54A5FF80E07089500F9827C /* SapphireFileSorter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireFileSorter.h; sourceTree = "<group>"; };
 		F54A5FF90E07089500F9827C /* SapphireFileSorter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireFileSorter.m; sourceTree = "<group>"; };
@@ -966,6 +969,8 @@
 				FEB9DE9D0C96095A00E7788A /* SapphireMovieImporter.m */,
 				F5DF24690C8636DE005C7ECB /* SapphireMultipleImporter.h */,
 				F5DF246A0C8636DE005C7ECB /* SapphireMultipleImporter.m */,
+				F542052610E6D1FE007B0D3A /* SapphireNfoImporter.h */,
+				F542052710E6D1FE007B0D3A /* SapphireNfoImporter.m */,
 				FE4BE49D0CBEAC7F00A7B24E /* SapphirePosterChooser.h */,
 				FE4BE49E0CBEAC7F00A7B24E /* SapphirePosterChooser.m */,
 				F5F515E810DD8B21006B9DED /* SapphireSiteScraper.h */,
@@ -1528,6 +1533,7 @@
 				F5F5142410DBDF90006B9DED /* SapphireURLLoader.m in Sources */,
 				F5F5156B10DD7BA2006B9DED /* SapphireScraper.m in Sources */,
 				F5F515EA10DD8B21006B9DED /* SapphireSiteScraper.m in Sources */,
+				F542052810E6D1FE007B0D3A /* SapphireNfoImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
