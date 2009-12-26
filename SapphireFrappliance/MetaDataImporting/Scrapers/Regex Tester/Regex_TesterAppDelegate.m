@@ -226,6 +226,14 @@ NSString *storedMatches[10] = {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	return ret;
 }
 
+static inline int getUnicodeLength(const char *inputStr, int byteLength)
+{
+	NSString *testStr = [[NSString alloc] initWithBytes:inputStr length:byteLength encoding:NSUTF8StringEncoding];
+	int length = [testStr length];
+	[testStr release];
+	return length;
+}
+
 - (void)processHaystack
 {
 	int matchCount = 0;
@@ -242,17 +250,17 @@ NSString *storedMatches[10] = {nil, nil, nil, nil, nil, nil, nil, nil, nil, nil}
 	NSString *result = @"";
 	while((matchCount = pcre_exec(reg, NULL, inputStr, inputLength, offset, 0, match, 30)) >= 0)
 	{
-		int start = match[0];
-		int end = match[1];
-		[txtStorage addAttribute:NSBackgroundColorAttributeName value:[NSColor colorWithDeviceRed:0.75 green:0.75 blue:1 alpha:1] range:NSMakeRange(start, end-start)];
+		int matchBegin = match[0];
+		int start = getUnicodeLength(inputStr, matchBegin);
+		int length = getUnicodeLength(inputStr + matchBegin, match[1] - matchBegin);
+		[txtStorage addAttribute:NSBackgroundColorAttributeName value:[NSColor colorWithDeviceRed:0.75 green:0.75 blue:1 alpha:1] range:NSMakeRange(start, length)];
 		int i;
 		for(i=1; i<matchCount; i++)
 		{
-			start = match[i<<1];
-			end = match[(i<<1) + 1];
-			NSString *matchStr = [[NSString alloc] initWithBytes:inputStr+start length:end-start encoding:NSUTF8StringEncoding];
-			[txtStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithDeviceRed:1 green:0 blue:0 alpha:1] range:NSMakeRange(start, end-start)];
-			[matchStr release];
+			matchBegin = match[i<<1];
+			start = getUnicodeLength(inputStr, matchBegin);
+			length = getUnicodeLength(inputStr + matchBegin, match[(i<<1) + 1] - matchBegin);
+			[txtStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithDeviceRed:1 green:0 blue:0 alpha:1] range:NSMakeRange(start, length)];
 		}
 		NSString *replacementStr = [self replacementStrForInputStr:inputStr matches:match count:matchCount];
 		result = [result stringByAppendingFormat:@"\n%@", replacementStr];
