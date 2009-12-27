@@ -357,6 +357,35 @@
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
 
+- (NSString *)moviePathFromNfoFilePath:(NSString *)filepath
+{
+	NSString *nfoContent = [NSString stringWithContentsOfFile:filepath];
+	
+	if(![nfoContent length])
+		return nil;
+	
+	NSString *results = [scraper searchResultsForNfoContent:nfoContent];
+	if(![results length])
+		return nil;
+	
+	NSString *fullResults = [NSString stringWithFormat:@"<results>%@</results>", results];
+	NSError *error = nil;
+	NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithXMLString:fullResults options:0 error:&error] autorelease];
+	if(!doc)
+		return nil;
+	
+	NSXMLElement *root = [doc rootElement];
+	NSString *urlStr = stringValueOfChild(root, @"url");
+	if(![urlStr length])
+		return nil;
+	
+	NSURL *url = [NSURL URLWithString:urlStr];
+	if(!url)
+		return nil;
+	
+	return [url path];
+}
+
 /*!
 * @brief verify file extention of a file
  *
@@ -411,36 +440,47 @@
 	}
 	if([tran IMDBLink] == nil)
 	{
-		if(![delegate canDisplayChooser])
-		/*There is no data menu, background import. So we can't ask user, skip*/
-			return ImportStateNotUpdated;
+		BOOL nfoPathIsDir = NO;
+		NSString *nfoFilePath=[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"nfo"];
+		NSString *moviePath = nil;
+		if([[NSFileManager defaultManager] fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] && !nfoPathIsDir)
+			moviePath = [self moviePathFromNfoFilePath:nfoFilePath];
 		
-		/*Look for a year in the title*/
-		NSString *searchStr = [lookupName stringByDeletingPathExtension];
-		NSScanner *titleYearScanner = [NSScanner scannerWithString:searchStr];
-		NSString *normalTitle = nil;
-		int year = 0;
-		BOOL success = YES;
-		success &= [titleYearScanner scanUpToString:@"(" intoString:&normalTitle];
-		NSString *junk = nil;
-		success &= [titleYearScanner scanString:@"(" intoString:nil];
-		success &= [titleYearScanner scanInt:&year];
-		success &= [titleYearScanner scanString:@")" intoString:nil];
-		
-		NSString *yearStr = nil;
-		if(!success)
-		{
-			normalTitle = searchStr;
-		}
+		if([moviePath length])
+			[tran setIMDBLink:moviePath];
 		else
-			yearStr = [NSString stringWithFormat:@"%d", year];
-		
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Searching for %@ with year %@", normalTitle, yearStr);
-		
-		/*Ask the user what movie this is*/
-		[siteScraper setObject:state];
-		[siteScraper searchForMovieName:normalTitle year:yearStr];
-		return ImportStateBackground;
+		{
+			if(![delegate canDisplayChooser])
+			/*There is no data menu, background import. So we can't ask user, skip*/
+				return ImportStateNotUpdated;
+			
+			/*Look for a year in the title*/
+			NSString *searchStr = [lookupName stringByDeletingPathExtension];
+			NSScanner *titleYearScanner = [NSScanner scannerWithString:searchStr];
+			NSString *normalTitle = nil;
+			int year = 0;
+			BOOL success = YES;
+			success &= [titleYearScanner scanUpToString:@"(" intoString:&normalTitle];
+			NSString *junk = nil;
+			success &= [titleYearScanner scanString:@"(" intoString:nil];
+			success &= [titleYearScanner scanInt:&year];
+			success &= [titleYearScanner scanString:@")" intoString:nil];
+			
+			NSString *yearStr = nil;
+			if(!success)
+			{
+				normalTitle = searchStr;
+			}
+			else
+				yearStr = [NSString stringWithFormat:@"%d", year];
+			
+			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Searching for %@ with year %@", normalTitle, yearStr);
+			
+			/*Ask the user what movie this is*/
+			[siteScraper setObject:state];
+			[siteScraper searchForMovieName:normalTitle year:yearStr];
+			return ImportStateBackground;
+		}
 	}
 	
 	SapphireMovie *movie = [tran movie];
