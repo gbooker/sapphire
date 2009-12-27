@@ -544,6 +544,35 @@
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
 
+- (NSString *)showPathFromNfoFilePath:(NSString *)filepath
+{
+	NSString *nfoContent = [NSString stringWithContentsOfFile:filepath];
+
+	if(![nfoContent length])
+		return nil;
+	
+	NSString *results = [scraper searchResultsForNfoContent:nfoContent];
+	if(![results length])
+		return nil;
+	
+	NSString *fullResults = [NSString stringWithFormat:@"<results>%@</results>", results];
+	NSError *error = nil;
+	NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithXMLString:fullResults options:0 error:&error] autorelease];
+	if(!doc)
+		return nil;
+	
+	NSXMLElement *root = [doc rootElement];
+	NSString *urlStr = stringValueOfChild(root, @"url");
+	if(![urlStr length])
+		return nil;
+	
+	NSURL *url = [NSURL URLWithString:urlStr];
+	if(!url)
+		return nil;
+	
+	return [url path];
+}
+
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
 {
 	cancelled = NO;
@@ -661,14 +690,28 @@
 	}
 	if([tran showPath] == nil)
 	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Conducting search");
-		if(![delegate canDisplayChooser])
-		/*There is no data menu, background import. So we can't ask user, skip*/
-			return ImportStateNotUpdated;
-		/*Ask the user what show this is*/
-		[siteScraper setObject:state];
-		[siteScraper searchForShowNamed:searchStr];
-		return ImportStateMultipleSuspend;
+		BOOL nfoPathIsDir = NO;
+		NSString *nfoFilePath=[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"nfo"];
+		NSString *showPath = nil;
+		if([[NSFileManager defaultManager] fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] && !nfoPathIsDir)
+			showPath = [self showPathFromNfoFilePath:nfoFilePath];
+		
+		if([showPath length])
+		{
+			[tran setShowPath:showPath];
+			[state setShowPath:showPath];
+		}
+		else
+		{
+			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Conducting search");
+			if(![delegate canDisplayChooser])
+			/*There is no data menu, background import. So we can't ask user, skip*/
+				return ImportStateNotUpdated;
+			/*Ask the user what show this is*/
+			[siteScraper setObject:state];
+			[siteScraper searchForShowNamed:searchStr];
+			return ImportStateMultipleSuspend;
+		}
 	}
 	
 	[self getTVShowResultsForState:state];
