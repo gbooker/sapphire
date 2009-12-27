@@ -30,7 +30,7 @@
 	if(!self)
 		return self;
 	
-	scraperNames = [SapphireScraper allScrapperNames];
+	scraperNames = [[SapphireScraper allScrapperNames] retain];
 	
 	return self;
 }
