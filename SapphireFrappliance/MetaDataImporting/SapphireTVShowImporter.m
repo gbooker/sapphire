@@ -387,8 +387,8 @@
 		xquery = [NSString stringWithFormat:@"//episode[number(season)=%d and number(epnum)=%d]/url", season, episode];
 	else
 	{
-		NSString *escapedTitle = [episodeTitle stringByReplacingAllOccurancesOf:@"'" withString:@"\\'"];
-		xquery = [NSString stringWithFormat:@"//episode[number(season)=%d and title='%@']/url", season, escapedTitle];
+		NSString *escapedTitle = [[episodeTitle lowercaseString] stringByReplacingAllOccurancesOf:@"'" withString:@"\\'"];
+		xquery = [NSString stringWithFormat:@"//episode[number(season)=%d and lower-case(title)='%@']/url", season, escapedTitle];
 	}
 	NSArray *epElements = [episodeList objectsForXQuery:xquery error:nil];
 	if([epElements count])
