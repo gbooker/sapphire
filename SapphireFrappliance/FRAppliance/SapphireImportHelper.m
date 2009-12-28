@@ -25,10 +25,6 @@
 #import "SapphireImportHelper.h"
 #import "SapphireMetaData.h"
 #import "SapphireAllImporter.h"
-#import "SapphireXMLFileDataImporter.h"
-#import "SapphireFileDataImporter.h"
-#import "SapphireTVShowImporter.h"
-#import "SapphireMovieImporter.h"
 #import "SapphireFileMetaData.h"
 #import "SapphireMetaDataSupport.h"
 #import "SapphireApplianceController.h"
@@ -93,15 +89,7 @@ static SapphireImportHelper *shared = nil;
 		return nil;
 	
 	moc = [context retain];
-	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
-	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] init];
-	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] init];
-	allImporter = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,tvImp,movImp,fileImp,nil]];
-	[xmlImpr release];
-	[fileImp release];
-	[tvImp release];
-	[movImp release];
+	allImporter = [[SapphireAllImporter alloc] init];
 	keepRunning = YES;
 	
 	return self;

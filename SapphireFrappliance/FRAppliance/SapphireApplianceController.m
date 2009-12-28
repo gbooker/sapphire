@@ -31,10 +31,6 @@
 #import "SapphireCollectionDirectory.h"
 
 #import "SapphireImporterDataMenu.h"
-#import "SapphireXMLFileDataImporter.h"
-#import "SapphireFileDataImporter.h"
-#import "SapphireTVShowImporter.h"
-#import "SapphireMovieImporter.h"
 #import "SapphireAllImporter.h"
 #import "SapphireImportHelper.h"
 #import "SapphireMetaDataSupport.h"
@@ -46,7 +42,6 @@
 #import "SapphireTVDirectory.h"
 #import "SapphireCustomVirtualDirectoryImporter.h"
 #import "SapphireURLLoader.h"
-#import "SapphireNfoImporter.h"
 
 #import "NSFileManager-Extensions.h"
 
@@ -478,17 +473,7 @@ BRMusicNowPlayingController *musicController = nil;
 
 - (SapphireImporterDataMenu *)allImporter
 {
-	SapphireXMLFileDataImporter *xmlImpr = [[SapphireXMLFileDataImporter alloc] init];
-	SapphireFileDataImporter *fileImp = [[SapphireFileDataImporter alloc] init];
-	SapphireNfoImporter *nfoImp = [[SapphireNfoImporter alloc] init];
-	SapphireTVShowImporter *tvImp = [[SapphireTVShowImporter alloc] init];
-	SapphireMovieImporter *movImp = [[SapphireMovieImporter alloc] init];
-	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] initWithImporters:[NSArray arrayWithObjects:xmlImpr,nfoImp,tvImp,movImp,fileImp,nil]];
-	[xmlImpr release];
-	[fileImp release];
-	[nfoImp release];
-	[tvImp release];
-	[movImp release];
+	SapphireAllImporter *allImp = [[SapphireAllImporter alloc] init];
 	SapphireImporterDataMenu *ret = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] context:moc importer:allImp];
 	[allImp release];
 	return [ret autorelease];

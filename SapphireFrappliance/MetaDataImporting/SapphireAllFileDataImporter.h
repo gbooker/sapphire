@@ -26,7 +26,7 @@
  * This class is a subclass of SapphireMultipleImporter for importing file data.  It will read in data from the file, such as size, length, and codecs.  In addition, it will also read any data stored in XML files with the file.
  */
 
-@interface SapphireAllFileDataImporter : SapphireMultipleImporter <SapphireImporter>{
+@interface SapphireAllFileDataImporter : SapphireMultipleImporter{
 }
 
 @end

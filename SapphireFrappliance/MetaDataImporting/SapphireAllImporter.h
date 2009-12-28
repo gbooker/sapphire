@@ -25,7 +25,7 @@
  *
  * This class is a subclass of SapphireMultipleImporter for importing all data.  It only overrides the strings for display.
  */
-@interface SapphireAllImporter : SapphireMultipleImporter <SapphireImporter>{
+@interface SapphireAllImporter : SapphireMultipleImporter{
 }
 
 @end

@@ -19,9 +19,37 @@
  */
 
 #import "SapphireAllImporter.h"
-
+#import "SapphireXMLFileDataImporter.h"
+#import "SapphireFileDataImporter.h"
+#import "SapphireTVShowImporter.h"
+#import "SapphireMovieImporter.h"
+#import "SapphireNfoImporter.h"
 
 @implementation SapphireAllImporter
+
+- (id) init
+{
+	SapphireXMLFileDataImporter *xml = [[SapphireXMLFileDataImporter alloc] init];
+	SapphireFileDataImporter *file = [[SapphireFileDataImporter alloc] init];
+	SapphireNfoImporter *nfo = [[SapphireNfoImporter alloc] init];
+	SapphireTVShowImporter *tv = [[SapphireTVShowImporter alloc] init];
+	SapphireMovieImporter *movie = [[SapphireMovieImporter alloc] init];
+	NSArray *ourImporters = [[NSArray alloc] initWithObjects:
+							 xml,
+							 nfo,
+							 file,
+							 tv,
+							 movie,
+							 nil];
+	self = [super initWithImporters:ourImporters];
+	[xml release];
+	[file release];
+	[nfo release];
+	[tv release];
+	[movie release];
+	[ourImporters release];
+	return self;
+}
 
 - (NSString *)completionText
 {
@@ -42,25 +70,4 @@
 {
 	return BRLocalizedString(@"Start Importing Data", @"Button");
 }
-
-- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
-{
-	[super exhumedChooser:chooser withContext:context];
-}
-
-- (void)cancelImports
-{
-	[super cancelImports];
-}
-
-- (void)setDelegate:(id <SapphireImporterDelegate>)aDelegate
-{
-	[super setDelegate:aDelegate];
-}
-
-- (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
-{
-	return [super importMetaData:metaData path:path];
-}
-
 @end
