@@ -184,7 +184,7 @@
 	[super dealloc];
 }
 
-- (SapphireScraper *)scraper
+- (SapphireMovieScraper *)scraper
 {
 	return scraper;
 }
@@ -274,7 +274,7 @@
 	[super dealloc];
 }
 
-- (SapphireScraper *)scraper
+- (SapphireTVShowScraper *)scraper
 {
 	return scraper;
 }

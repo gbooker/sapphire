@@ -180,7 +180,8 @@
 	NSString *link = [tran IMDBLink];
 	SapphireSiteMovieScraper *siteScraper = state->siteScraper;
 	[siteScraper setObject:state];
-	NSString *fullURL = [@"http://akas.imdb.com" stringByAppendingString:link];
+	NSString *site = [[[siteScraper scraper] settings] objectForKey:@"url"];
+	NSString *fullURL = [NSString stringWithFormat:@"http://%@%@", site, link];
 	if([fullURL characterAtIndex:[fullURL length]-1] != '/')
 		fullURL = [fullURL stringByAppendingString:@"/"];
 	[siteScraper getMovieDetailsAtURL:fullURL forMovieID:[link lastPathComponent]];

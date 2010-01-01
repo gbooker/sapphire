@@ -56,6 +56,7 @@
 }
 
 - (id)initWithMovieScraper:(SapphireMovieScraper *)scraper delegate:(id <SapphireSiteMovieScraperDelegate>)delegate loader:(SapphireURLLoader *)loader;
+- (SapphireMovieScraper *)scraper;
 - (void)searchForMovieName:(NSString *)name year:(NSString *)year;
 - (void)getMovieDetailsAtURL:(NSString *)url forMovieID:(NSString *)movieID;
 
@@ -68,6 +69,7 @@
 }
 
 - (id)initWithTVShowScraper:(SapphireTVShowScraper *)scraper delegate:(id <SapphireSiteTVShowScraperDelegate>)delegate loader:(SapphireURLLoader *)loader;
+- (SapphireTVShowScraper *)scraper;
 - (void)searchForShowNamed:(NSString *)name;
 - (void)getShowDetailsAtURL:(NSString *)url forShowID:(NSString *)showID;
 - (void)getEpisodeListAtURL:(NSString *)url;
