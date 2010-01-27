@@ -377,7 +377,6 @@ BRMusicNowPlayingController *musicController = nil;
 	mountsOnly = NO;
 	
 	SapphireSetLogLevel(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_ERROR);
-	SapphireSetLogLevel(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG);
 	
 	distributed = [[SapphireDistributedMessagesReceiver alloc] initWithController:self];
 	
