@@ -278,16 +278,27 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		{
 			NSArray *names = [NSKeyedUnarchiver unarchiveObjectWithData:propData];
 			NSMutableArray *mutRet = [NSMutableArray arrayWithCapacity:[names count]];
-			NSManagedObjectContext *moc = [self managedObjectContext];
-			NSEnumerator *nameEnum = [names objectEnumerator];
-			NSString *name;
-			while((name = [nameEnum nextObject]) != nil)
+			
+			NSSet *allCast = [self castSet];
+			NSMutableDictionary *castByName = [[NSMutableDictionary alloc] initWithCapacity:[allCast count]];
+			SapphireCast *cast;
+			NSEnumerator *castEnum = [allCast objectEnumerator];
+			while((cast = [castEnum nextObject]) != nil)
+				[castByName setObject:cast forKey:cast.name];
+			
+			NSString *castName;
+			castEnum = [names objectEnumerator];
+			while((castName = [castEnum nextObject]) != nil)
 			{
-				SapphireCast *aCast = [SapphireCast createCast:name inContext:moc];
-				if(aCast != nil)
-					[mutRet addObject:aCast];
+				cast = [castByName objectForKey:castName];
+				if(cast != nil)
+					[mutRet addObject:cast];
+				else
+					SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not locate cast member %@ of movie %@", castName, self.title);
 			}
-			ret = [NSArray arrayWithArray:mutRet];
+			[castByName release];
+			NSArray *ret = [NSArray arrayWithArray:mutRet];
+			
 			[self setPrimitiveValue:ret forKey:ORDERED_CAST_KEY];
 		}
 	}
@@ -326,16 +337,27 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		{
 			NSArray *genres = [NSKeyedUnarchiver unarchiveObjectWithData:propData];
 			NSMutableArray *mutRet = [NSMutableArray arrayWithCapacity:[genres count]];
-			NSManagedObjectContext *moc = [self managedObjectContext];
-			NSEnumerator *genreEnum = [genres objectEnumerator];
-			NSString *genre;
+			
+			NSSet *allGenres = [self genresSet];
+			NSMutableDictionary *genreByName = [[NSMutableDictionary alloc] initWithCapacity:[allGenres count]];
+			SapphireGenre *genre;
+			NSEnumerator *genreEnum = [allGenres objectEnumerator];
 			while((genre = [genreEnum nextObject]) != nil)
+				[genreByName setObject:genre forKey:genre.name];
+			
+			NSString *genreName;
+			genreEnum = [genres objectEnumerator];
+			while((genreName = [genreEnum nextObject]) != nil)
 			{
-				SapphireGenre *aGenre = [SapphireGenre createGenre:genre inContext:moc];
-				if(aGenre != nil)
-					[mutRet addObject:aGenre];
+				genre = [genreByName objectForKey:genreName];
+				if(genre != nil)
+					[mutRet addObject:genre];
+				else
+					SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not locate genre %@ of movie %@", genreName, self.title);
 			}
-			ret = [NSArray arrayWithArray:mutRet];
+			[genreByName release];
+			NSArray *ret = [NSArray arrayWithArray:mutRet];			
+			
 			[self setPrimitiveValue:ret forKey:ORDERED_GENRES_KEY];
 		}
 	}
