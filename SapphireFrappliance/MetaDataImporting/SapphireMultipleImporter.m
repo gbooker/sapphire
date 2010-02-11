@@ -185,7 +185,7 @@
 		state->currentImportIndex++;
 		[self importMetaData:state->file path:path];
 	}
-	else if(state->completedMask == (1 << [importers count]) - 1)
+	if(state->completedMask == (1 << [importers count]) - 1)
 	{	
 		if(state->updated)
 			status = ImportStateUpdated;
