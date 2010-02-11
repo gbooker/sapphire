@@ -90,6 +90,7 @@ static SapphireImportHelper *shared = nil;
 	
 	moc = [context retain];
 	allImporter = [[SapphireAllImporter alloc] init];
+	[allImporter setDelegate:self];
 	keepRunning = YES;
 	
 	return self;
@@ -100,6 +101,25 @@ static SapphireImportHelper *shared = nil;
 	[allImporter release];
 	[moc release];
 	[super dealloc];
+}
+
+- (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state
+{
+	importComplete = YES;
+}
+
+- (BOOL)canDisplayChooser
+{
+	return NO;
+}
+
+- (id)chooserScene
+{
+	return nil;
+}
+
+- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
+{
 }
 
 - (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
@@ -156,7 +176,19 @@ static SapphireImportHelper *shared = nil;
 			if(type == IMPORT_TYPE_FILE_DATA)
 				ret = updateMetaData(file);
 			else
-				ret = ([allImporter importMetaData:file path:[file path]] == ImportStateUpdated);
+			{
+				ImportState state = [allImporter importMetaData:file path:[file path]];
+				if(state == ImportStateBackground || state == ImportStateMultipleSuspend)
+				{
+					importComplete = NO;
+					NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
+					while(!importComplete && [currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
+						;
+					ret = YES;
+				}
+				else
+					ret = (state == ImportStateUpdated);
+			}
 			NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
 			[server importCompleteWithChanges:changes updated:ret];
 			[singleImportPool release];
@@ -172,6 +204,7 @@ static SapphireImportHelper *shared = nil;
 {
 	[self performSelectorOnMainThread:@selector(realStartQueue) withObject:nil waitUntilDone:NO];
 }
+
 @end
 
 @implementation SapphireImportHelperServer

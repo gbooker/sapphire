@@ -18,6 +18,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "SapphireImporterDataMenu.h"
+
 @protocol SapphireImporterBackgroundProtocol;
 @class SapphireImporterDataMenu, SapphireAllImporter, SapphireFileMetaData;
 
@@ -165,11 +167,12 @@ typedef enum {
 /*!
  * @brief The importer client object
  */
-@interface SapphireImportHelperClient : SapphireImportHelper <SapphireImportClient> {
+@interface SapphireImportHelperClient : SapphireImportHelper <SapphireImportClient, SapphireImporterDelegate> {
 	id <SapphireImportServer>	server;			/*!< @brief The server*/
 	SapphireAllImporter			*allImporter;	/*!< @brief An allimporter object for importing all data*/
 	NSManagedObjectContext		*moc;			/*!< @brief The object context*/
 	BOOL						keepRunning;	/*!< @brief Keep running (for terminating run loop)*/
+	BOOL						importComplete;	/*!< @brief The background importer completed*/
 }
 
 /*!
