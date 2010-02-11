@@ -219,7 +219,21 @@
 	{
 		NSScanner *trimmer=[NSScanner scannerWithString:[mpaaStr substringFromIndex:6]] ;
 		[trimmer scanUpToString:@" " intoString:&mpaaRating];
-	}	
+	}
+	else
+	{
+		NSArray *certifications = arrayStringValueOfXPath(root, @"certification");
+		NSString *certification;
+		NSEnumerator *certEnum = [certifications objectEnumerator];
+		while((certification = [certEnum nextObject]) != nil)
+		{
+			if([certification hasPrefix:@"USA:"])
+			{
+				NSScanner *trimmer=[NSScanner scannerWithString:[certification substringFromIndex:4]];
+				[trimmer scanUpToString:@" " intoString:&mpaaRating];
+			}
+		}
+	}
 	
 	
 	NSMutableDictionary *infoIMDB = [NSMutableDictionary dictionary];
