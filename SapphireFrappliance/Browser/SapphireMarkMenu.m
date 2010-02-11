@@ -35,6 +35,7 @@
 #import "SapphirePosterChooser.h"
 #import "NSImage-Extensions.h"
 #import "NSFileManager-Extensions.h"
+#import "SapphireSettings.h"
 
 BOOL allowCoverArtChange( NSString * const path )
 {
@@ -73,6 +74,7 @@ typedef enum {
 	COMMAND_MARK_AND_JOIN,
 	COMMAND_CLEAR_JOIN_MARK,
 	COMMAND_JOIN,
+	COMMAND_SHOW_ONLY_SUMMARY,
 	//Directory Only Commands
 	COMMAND_MARK_WATCHED,
 	COMMAND_MARK_UNWATCHED,
@@ -373,6 +375,12 @@ static NSString *movingPath = nil;
 					[NSNumber numberWithInt:COMMAND_CLEAR_JOIN_MARK], MARK_COMMAND,
 					nil]];
 		}
+		[marks addObject:
+			[NSDictionary dictionaryWithObjectsAndKeys:
+				BRLocalizedString(@"Display Description", @"Marks file to only display discription"), MARK_NAME,
+				BRLocalizedString(@"Hide all other info in preview one time", @"Display Description description"), MARK_DESCRIPTION,
+				[NSNumber numberWithInt:COMMAND_SHOW_ONLY_SUMMARY], MARK_COMMAND,
+				 nil]];
 		[marks addObject:
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				BRLocalizedString(@"Move File", @"Marks this file to be moved"), MARK_NAME,
@@ -734,6 +742,9 @@ static NSString *movingPath = nil;
 				
 				replaceController = [wait autorelease];
 			}
+				break;
+			case COMMAND_SHOW_ONLY_SUMMARY:
+				[[SapphireSettings sharedSettings] setDisplayOnlyPlotUntil:[NSDate dateWithTimeIntervalSinceNow:5]];
 				break;
 			case COMMAND_RENAME:
 			{

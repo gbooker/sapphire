@@ -295,6 +295,7 @@ typedef enum {
 	[path release];
 	[defaults release];
 	[moc release];
+	[displayOnlyPlot release];
 	[super dealloc];
 }
 
@@ -406,6 +407,17 @@ typedef enum {
 	[options setObject:[NSNumber numberWithInt:index] forKey:LAST_PREDICATE];
 	/*Save our settings*/
 	[self writeSettings];
+}
+
+- (void)setDisplayOnlyPlotUntil:(NSDate *)plotOnlyTime
+{
+	[displayOnlyPlot release];
+	displayOnlyPlot = [plotOnlyTime retain];
+}
+
+- (BOOL)displayOnlyPlot
+{
+	return [displayOnlyPlot compare:[NSDate date]] == NSOrderedDescending;
 }
 
 - (void)wasExhumed

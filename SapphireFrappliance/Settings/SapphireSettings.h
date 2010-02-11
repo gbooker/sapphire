@@ -33,6 +33,7 @@
 	NSDictionary				*defaults;				/*!< @brief The default settings, in order*/
 	NSManagedObjectContext		*moc;					/*!< @brief The context*/
 	int							lastCommand;			/*!< @brief The last command issued*/
+	NSDate						*displayOnlyPlot;		/*!< @brief Disploy only the plot in the preview until time has passed*/
 }
 
 /*!
@@ -164,4 +165,16 @@
  * @param index The index of the last predicate used
  */
 - (void)setIndexOfLastPredicate:(int)index;
+
+/*!
+ * @brief Sets hiding of all info besides plot
+ *
+ * @param plotOnlyTime Time when to continue displaying plot
+ */
+- (void)setDisplayOnlyPlotUntil:(NSDate *)plotOnlyTime;
+
+/*!
+ * @brief Gets hiding of all info besides plot for next preview controller
+ */
+- (BOOL)displayOnlyPlot;
 @end

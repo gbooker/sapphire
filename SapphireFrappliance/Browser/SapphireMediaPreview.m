@@ -230,20 +230,22 @@ static NSSet *coverArtExtentions = nil;
 		[metaLayer setTitle:value];
 	}
 	
+	SapphireSettings *settings = [SapphireSettings sharedSettings];
+	BOOL displayOnlyPlot = [settings displayOnlyPlot];
 	/*Get the rating*/
 	value = [allMeta objectForKey:META_RATING_KEY];
-	if(value != nil)
+	if(value != nil && !displayOnlyPlot)
 		[metaLayer setRating:value];
 	
 	/*Get the description*/
 	value = [allMeta objectForKey:META_DESCRIPTION_KEY];
 	if(value != nil)
-		if([[SapphireSettings sharedSettings] displaySpoilers])
+		if([settings displaySpoilers] || displayOnlyPlot)
 			[metaLayer setSummary:value];
 	
 	/*Get the copyright*/
 	value = [allMeta objectForKey:META_COPYRIGHT_KEY];
-	if(value != nil)
+	if(value != nil && !displayOnlyPlot)
 		[metaLayer setCopyright:value];
 	
 	/*Get the season and episodes*/
@@ -279,19 +281,21 @@ static NSSet *coverArtExtentions = nil;
 		[allMeta removeObjectForKey:META_MOVIE_RELEASE_DATE_KEY];
 		[allMeta removeObjectForKey:META_MOVIE_TITLE_KEY];
 	}
+	SapphireSettings *settings = [SapphireSettings sharedSettings];
+	BOOL displayOnlyPlot = [settings displayOnlyPlot];
 	/* No release date, sub in the movie title */
 	[metaLayer setTitle:value];
 
 	/*Get the rating*/
 	value=nil;
 	value = [allMeta objectForKey:META_MOVIE_MPAA_RATING_KEY];
-	if(value != nil)
+	if(value != nil && !displayOnlyPlot)
 		[metaLayer setRating:value];
 	/*Get the movie plot*/
 	value=nil;
 	value = [allMeta objectForKey:META_MOVIE_PLOT_KEY];
 	if(value != nil)
-		if([[SapphireSettings sharedSettings] displaySpoilers])
+		if([settings displaySpoilers] || displayOnlyPlot)
 			[metaLayer setSummary:value];
 	
 	NSArray *values=nil;
@@ -554,17 +558,42 @@ static NSSet *coverArtExtentions = nil;
 			[metaLayer setTitle:value];
 	}
 	
+	SapphireSettings *settings = [SapphireSettings sharedSettings];
+	BOOL displayOnlyPlot = [settings displayOnlyPlot];
 	/* Show / Hide perian info */
-	if(![[SapphireSettings sharedSettings] displayAudio])
+	if(![settings displayAudio] || displayOnlyPlot)
 	{
 		[allMeta removeObjectForKey:AUDIO_DESC_LABEL_KEY];
 		[allMeta removeObjectForKey:AUDIO2_DESC_LABEL_KEY];
 		[allMeta removeObjectForKey:SUBTITLE_LABEL_KEY];        
 	}
-	if(![[SapphireSettings sharedSettings] displayVideo])
+	if(![settings displayVideo] || displayOnlyPlot)
 	{
 		[allMeta removeObjectForKey:VIDEO_DESC_LABEL_KEY];
 		[allMeta removeObjectForKey:VIDEO2_DESC_LABEL_KEY];
+	}
+	if(displayOnlyPlot)
+	{
+		[allMeta removeObjectForKey:META_FILE_SUBTITLES_KEY];
+		[allMeta removeObjectForKey:META_FILE_SIZE_KEY];
+		[allMeta removeObjectForKey:META_FILE_DURATION_KEY];
+		
+		//TV
+		[allMeta removeObjectForKey:META_SHOW_AIR_DATE];
+		[allMeta removeObjectForKey:BRLocalizedString(@"Season", @"Season in metadata display")];
+		[allMeta removeObjectForKey:BRLocalizedString(@"Episode", @"Episode in metadata display")];
+		[allMeta removeObjectForKey:BRLocalizedString(@"S/E", @"Season / Episode in metadata display")];
+		
+		//Movie
+		[allMeta removeObjectForKey:META_MOVIE_MPAA_RATING_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_IMDB_RATING_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_RELEASE_DATE_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_IMDB_250_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_OSCAR_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_DIRECTOR_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_CAST_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_GENRES_KEY];
+		[allMeta removeObjectForKey:META_MOVIE_IMDB_STATS_KEY];
 	}
 	
 	NSMutableArray *values = [NSMutableArray array];
@@ -585,7 +614,6 @@ static NSSet *coverArtExtentions = nil;
 	
 	/*And set it*/
 	[metaLayer setMetadata:values withLabels:keys];
-
 }
 
 /*!
