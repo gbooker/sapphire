@@ -1,0 +1,575 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		F5001CBF1120939D001B52FE /* CMPOverlayModeAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F5001CBD1120939D001B52FE /* CMPOverlayModeAction.h */; };
+		F5001CC01120939D001B52FE /* CMPOverlayModeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F5001CBE1120939D001B52FE /* CMPOverlayModeAction.m */; };
+		F5001CDA1120980E001B52FE /* CoreGraphicsServices.h in Headers */ = {isa = PBXBuildFile; fileRef = F5001CD91120980E001B52FE /* CoreGraphicsServices.h */; };
+		F5002756112358E1001B52FE /* debug_main.m in Sources */ = {isa = PBXBuildFile; fileRef = F500272111235748001B52FE /* debug_main.m */; };
+		F500276311235964001B52FE /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D6A5FE840307C02AAC07 /* AppKit.framework */; };
+		F500276411235967001B52FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+		F5002A3011247ACC001B52FE /* BackRowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F5002A2F11247ACC001B52FE /* BackRowUtils.h */; };
+		F50CCAC7111786E000213966 /* CMPPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAC6111786E000213966 /* CMPPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50CCAC91117871400213966 /* CMPPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAC81117871400213966 /* CMPPlayerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50CCACB1117875B00213966 /* CMPTypesDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCACA1117875B00213966 /* CMPTypesDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50CCACF111787A200213966 /* CMPPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCACD111787A200213966 /* CMPPlayerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50CCAD0111787A200213966 /* CMPPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCACE111787A200213966 /* CMPPlayerManager.m */; };
+		F50CCAF0111796D000213966 /* CMPActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAEF111796D000213966 /* CMPActionController.h */; };
+		F50CCCF81118ED7D00213966 /* CMPScreenReleaseAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCCF61118ED7D00213966 /* CMPScreenReleaseAction.h */; };
+		F50CCCF91118ED7D00213966 /* CMPScreenReleaseAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCCF71118ED7D00213966 /* CMPScreenReleaseAction.m */; };
+		F50CCDAA1118F3B400213966 /* CMPATVVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCDA81118F3B400213966 /* CMPATVVersion.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50CCDAB1118F3B400213966 /* CMPATVVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCDA91118F3B400213966 /* CMPATVVersion.m */; };
+		F50CCDF61118F8E500213966 /* CMPDVDWindowCreationAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCDF41118F8E500213966 /* CMPDVDWindowCreationAction.h */; };
+		F50CCDF71118F8E500213966 /* CMPDVDWindowCreationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCDF51118F8E500213966 /* CMPDVDWindowCreationAction.m */; };
+		F50CCE291118FD9000213966 /* CMPDVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCE271118FD9000213966 /* CMPDVDPlayer.h */; settings = {ATTRIBUTES = (); }; };
+		F50CCE2A1118FD9000213966 /* CMPDVDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCE281118FD9000213966 /* CMPDVDPlayer.m */; };
+		F50CCE911119DECA00213966 /* CMPDVDPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCE8F1119DECA00213966 /* CMPDVDPlayerController.h */; settings = {ATTRIBUTES = (); }; };
+		F50CCE921119DECA00213966 /* CMPDVDPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCE901119DECA00213966 /* CMPDVDPlayerController.m */; };
+		F531CAE3111E2EF9005DF910 /* CMPLeopardDVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F531CAE1111E2EF9005DF910 /* CMPLeopardDVDPlayer.h */; };
+		F531CAE4111E2EF9005DF910 /* CMPLeopardDVDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F531CAE2111E2EF9005DF910 /* CMPLeopardDVDPlayer.m */; };
+		F531CAFD111E305B005DF910 /* CMPLeopardDVDPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F531CAFB111E305B005DF910 /* CMPLeopardDVDPlayerController.h */; };
+		F531CAFE111E305B005DF910 /* CMPLeopardDVDPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F531CAFC111E305B005DF910 /* CMPLeopardDVDPlayerController.m */; };
+		F595C42F1119F79700C6C322 /* CMPDVDFrameworkLoadAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F595C42D1119F79700C6C322 /* CMPDVDFrameworkLoadAction.h */; };
+		F595C4301119F79700C6C322 /* CMPDVDFrameworkLoadAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F595C42E1119F79700C6C322 /* CMPDVDFrameworkLoadAction.m */; };
+		F595C652111A70CD00C6C322 /* CMPBaseMediaAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = F595C650111A70CD00C6C322 /* CMPBaseMediaAsset.h */; };
+		F595C653111A70CD00C6C322 /* CMPBaseMediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = F595C651111A70CD00C6C322 /* CMPBaseMediaAsset.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F5002757112358E7001B52FE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = CommonMediaPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		32DBCF5E0370ADEE00C91783 /* CommonMediaPlayer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMediaPlayer_Prefix.pch; sourceTree = "<group>"; };
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DC2EF5B0486A6940098B216 /* CommonMediaPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonMediaPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		F5001CBD1120939D001B52FE /* CMPOverlayModeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPOverlayModeAction.h; sourceTree = "<group>"; };
+		F5001CBE1120939D001B52FE /* CMPOverlayModeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPOverlayModeAction.m; sourceTree = "<group>"; };
+		F5001CD91120980E001B52FE /* CoreGraphicsServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreGraphicsServices.h; sourceTree = "<group>"; };
+		F500272111235748001B52FE /* debug_main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = debug_main.m; sourceTree = "<group>"; };
+		F5002752112358D4001B52FE /* UIDebug */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UIDebug; sourceTree = BUILT_PRODUCTS_DIR; };
+		F5002A2F11247ACC001B52FE /* BackRowUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackRowUtils.h; sourceTree = "<group>"; };
+		F50CCAC6111786E000213966 /* CMPPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPPlayer.h; sourceTree = "<group>"; };
+		F50CCAC81117871400213966 /* CMPPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPPlayerController.h; sourceTree = "<group>"; };
+		F50CCACA1117875B00213966 /* CMPTypesDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPTypesDefines.h; sourceTree = "<group>"; };
+		F50CCACD111787A200213966 /* CMPPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPPlayerManager.h; sourceTree = "<group>"; };
+		F50CCACE111787A200213966 /* CMPPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPPlayerManager.m; sourceTree = "<group>"; };
+		F50CCAEF111796D000213966 /* CMPActionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPActionController.h; sourceTree = "<group>"; };
+		F50CCCF61118ED7D00213966 /* CMPScreenReleaseAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPScreenReleaseAction.h; sourceTree = "<group>"; };
+		F50CCCF71118ED7D00213966 /* CMPScreenReleaseAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPScreenReleaseAction.m; sourceTree = "<group>"; };
+		F50CCDA81118F3B400213966 /* CMPATVVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPATVVersion.h; sourceTree = "<group>"; };
+		F50CCDA91118F3B400213966 /* CMPATVVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPATVVersion.m; sourceTree = "<group>"; };
+		F50CCDF41118F8E500213966 /* CMPDVDWindowCreationAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDWindowCreationAction.h; sourceTree = "<group>"; };
+		F50CCDF51118F8E500213966 /* CMPDVDWindowCreationAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDWindowCreationAction.m; sourceTree = "<group>"; };
+		F50CCE271118FD9000213966 /* CMPDVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDPlayer.h; sourceTree = "<group>"; };
+		F50CCE281118FD9000213966 /* CMPDVDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDPlayer.m; sourceTree = "<group>"; };
+		F50CCE8F1119DECA00213966 /* CMPDVDPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDPlayerController.h; sourceTree = "<group>"; };
+		F50CCE901119DECA00213966 /* CMPDVDPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDPlayerController.m; sourceTree = "<group>"; };
+		F531CAE1111E2EF9005DF910 /* CMPLeopardDVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPLeopardDVDPlayer.h; sourceTree = "<group>"; };
+		F531CAE2111E2EF9005DF910 /* CMPLeopardDVDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPLeopardDVDPlayer.m; sourceTree = "<group>"; };
+		F531CAFB111E305B005DF910 /* CMPLeopardDVDPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPLeopardDVDPlayerController.h; sourceTree = "<group>"; };
+		F531CAFC111E305B005DF910 /* CMPLeopardDVDPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPLeopardDVDPlayerController.m; sourceTree = "<group>"; };
+		F595C42D1119F79700C6C322 /* CMPDVDFrameworkLoadAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDFrameworkLoadAction.h; sourceTree = "<group>"; };
+		F595C42E1119F79700C6C322 /* CMPDVDFrameworkLoadAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDFrameworkLoadAction.m; sourceTree = "<group>"; };
+		F595C650111A70CD00C6C322 /* CMPBaseMediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPBaseMediaAsset.h; sourceTree = "<group>"; };
+		F595C651111A70CD00C6C322 /* CMPBaseMediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPBaseMediaAsset.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DC2EF560486A6940098B216 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5002750112358D4001B52FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F500276311235964001B52FE /* AppKit.framework in Frameworks */,
+				F500276411235967001B52FE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5B0486A6940098B216 /* CommonMediaPlayer.framework */,
+				F5002752112358D4001B52FE /* UIDebug */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* CommonMediaPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				F50CCCF01118ECAD00213966 /* Media Players */,
+				F50CCCF51118ED3A00213966 /* General Actions */,
+				F5002A2E112479FB001B52FE /* General Headers */,
+				F50027201123573A001B52FE /* Debug */,
+				32C88DFF0371C24200C91783 /* Other Sources */,
+				089C1665FE841158C02AAC07 /* Resources */,
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = CommonMediaPlayer;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+				1058C7B2FEA5585E11CA2CBB /* Other Frameworks */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C1665FE841158C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				F50CCAC6111786E000213966 /* CMPPlayer.h */,
+				F50CCAC81117871400213966 /* CMPPlayerController.h */,
+				F50CCACA1117875B00213966 /* CMPTypesDefines.h */,
+				F50CCACD111787A200213966 /* CMPPlayerManager.h */,
+				F50CCACE111787A200213966 /* CMPPlayerManager.m */,
+				F50CCAEF111796D000213966 /* CMPActionController.h */,
+				F50CCDA81118F3B400213966 /* CMPATVVersion.h */,
+				F50CCDA91118F3B400213966 /* CMPATVVersion.m */,
+				F595C650111A70CD00C6C322 /* CMPBaseMediaAsset.h */,
+				F595C651111A70CD00C6C322 /* CMPBaseMediaAsset.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7B2FEA5585E11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0867D6A5FE840307C02AAC07 /* AppKit.framework */,
+				D2F7E79907B2D74100F64583 /* CoreData.framework */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		32C88DFF0371C24200C91783 /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		F50027201123573A001B52FE /* Debug */ = {
+			isa = PBXGroup;
+			children = (
+				F500272111235748001B52FE /* debug_main.m */,
+			);
+			name = Debug;
+			sourceTree = "<group>";
+		};
+		F5002A2E112479FB001B52FE /* General Headers */ = {
+			isa = PBXGroup;
+			children = (
+				F5002A2F11247ACC001B52FE /* BackRowUtils.h */,
+				32DBCF5E0370ADEE00C91783 /* CommonMediaPlayer_Prefix.pch */,
+				F5001CD91120980E001B52FE /* CoreGraphicsServices.h */,
+			);
+			path = "General Headers";
+			sourceTree = "<group>";
+		};
+		F50CCCF01118ECAD00213966 /* Media Players */ = {
+			isa = PBXGroup;
+			children = (
+				F531CAE0111E2EDF005DF910 /* Leopard DVD Framework */,
+				F50CCCF41118ED0000213966 /* DVD Framework */,
+			);
+			path = "Media Players";
+			sourceTree = "<group>";
+		};
+		F50CCCF41118ED0000213966 /* DVD Framework */ = {
+			isa = PBXGroup;
+			children = (
+				F50CCDF41118F8E500213966 /* CMPDVDWindowCreationAction.h */,
+				F50CCDF51118F8E500213966 /* CMPDVDWindowCreationAction.m */,
+				F50CCE271118FD9000213966 /* CMPDVDPlayer.h */,
+				F50CCE281118FD9000213966 /* CMPDVDPlayer.m */,
+				F50CCE8F1119DECA00213966 /* CMPDVDPlayerController.h */,
+				F50CCE901119DECA00213966 /* CMPDVDPlayerController.m */,
+				F595C42D1119F79700C6C322 /* CMPDVDFrameworkLoadAction.h */,
+				F595C42E1119F79700C6C322 /* CMPDVDFrameworkLoadAction.m */,
+			);
+			path = "DVD Framework";
+			sourceTree = "<group>";
+		};
+		F50CCCF51118ED3A00213966 /* General Actions */ = {
+			isa = PBXGroup;
+			children = (
+				F50CCCF61118ED7D00213966 /* CMPScreenReleaseAction.h */,
+				F50CCCF71118ED7D00213966 /* CMPScreenReleaseAction.m */,
+				F5001CBD1120939D001B52FE /* CMPOverlayModeAction.h */,
+				F5001CBE1120939D001B52FE /* CMPOverlayModeAction.m */,
+			);
+			path = "General Actions";
+			sourceTree = "<group>";
+		};
+		F531CAE0111E2EDF005DF910 /* Leopard DVD Framework */ = {
+			isa = PBXGroup;
+			children = (
+				F531CAE1111E2EF9005DF910 /* CMPLeopardDVDPlayer.h */,
+				F531CAE2111E2EF9005DF910 /* CMPLeopardDVDPlayer.m */,
+				F531CAFB111E305B005DF910 /* CMPLeopardDVDPlayerController.h */,
+				F531CAFC111E305B005DF910 /* CMPLeopardDVDPlayerController.m */,
+			);
+			path = "Leopard DVD Framework";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8DC2EF500486A6940098B216 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F50CCAC7111786E000213966 /* CMPPlayer.h in Headers */,
+				F50CCAC91117871400213966 /* CMPPlayerController.h in Headers */,
+				F50CCACB1117875B00213966 /* CMPTypesDefines.h in Headers */,
+				F50CCACF111787A200213966 /* CMPPlayerManager.h in Headers */,
+				F50CCAF0111796D000213966 /* CMPActionController.h in Headers */,
+				F50CCCF81118ED7D00213966 /* CMPScreenReleaseAction.h in Headers */,
+				F50CCDAA1118F3B400213966 /* CMPATVVersion.h in Headers */,
+				F50CCDF61118F8E500213966 /* CMPDVDWindowCreationAction.h in Headers */,
+				F50CCE291118FD9000213966 /* CMPDVDPlayer.h in Headers */,
+				F50CCE911119DECA00213966 /* CMPDVDPlayerController.h in Headers */,
+				F595C42F1119F79700C6C322 /* CMPDVDFrameworkLoadAction.h in Headers */,
+				F595C652111A70CD00C6C322 /* CMPBaseMediaAsset.h in Headers */,
+				F531CAE3111E2EF9005DF910 /* CMPLeopardDVDPlayer.h in Headers */,
+				F531CAFD111E305B005DF910 /* CMPLeopardDVDPlayerController.h in Headers */,
+				F5001CBF1120939D001B52FE /* CMPOverlayModeAction.h in Headers */,
+				F5001CDA1120980E001B52FE /* CoreGraphicsServices.h in Headers */,
+				F5002A3011247ACC001B52FE /* BackRowUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8DC2EF4F0486A6940098B216 /* CommonMediaPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "CommonMediaPlayer" */;
+			buildPhases = (
+				8DC2EF500486A6940098B216 /* Headers */,
+				8DC2EF520486A6940098B216 /* Resources */,
+				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF560486A6940098B216 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CommonMediaPlayer;
+			productInstallPath = "$(HOME)/Library/Frameworks";
+			productName = CommonMediaPlayer;
+			productReference = 8DC2EF5B0486A6940098B216 /* CommonMediaPlayer.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F5002751112358D4001B52FE /* UIDebug */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F500275C11235912001B52FE /* Build configuration list for PBXNativeTarget "UIDebug" */;
+			buildPhases = (
+				F500274F112358D4001B52FE /* Sources */,
+				F5002750112358D4001B52FE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F5002758112358E7001B52FE /* PBXTargetDependency */,
+			);
+			name = UIDebug;
+			productName = UIDebug;
+			productReference = F5002752112358D4001B52FE /* UIDebug */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "CommonMediaPlayer" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* CommonMediaPlayer */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8DC2EF4F0486A6940098B216 /* CommonMediaPlayer */,
+				F5002751112358D4001B52FE /* UIDebug */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8DC2EF520486A6940098B216 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DC2EF540486A6940098B216 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F50CCAD0111787A200213966 /* CMPPlayerManager.m in Sources */,
+				F50CCCF91118ED7D00213966 /* CMPScreenReleaseAction.m in Sources */,
+				F50CCDAB1118F3B400213966 /* CMPATVVersion.m in Sources */,
+				F50CCDF71118F8E500213966 /* CMPDVDWindowCreationAction.m in Sources */,
+				F50CCE2A1118FD9000213966 /* CMPDVDPlayer.m in Sources */,
+				F50CCE921119DECA00213966 /* CMPDVDPlayerController.m in Sources */,
+				F595C4301119F79700C6C322 /* CMPDVDFrameworkLoadAction.m in Sources */,
+				F595C653111A70CD00C6C322 /* CMPBaseMediaAsset.m in Sources */,
+				F531CAE4111E2EF9005DF910 /* CMPLeopardDVDPlayer.m in Sources */,
+				F531CAFE111E305B005DF910 /* CMPLeopardDVDPlayerController.m in Sources */,
+				F5001CC01120939D001B52FE /* CMPOverlayModeAction.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F500274F112358D4001B52FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5002756112358E1001B52FE /* debug_main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F5002758112358E7001B52FE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* CommonMediaPlayer */;
+			targetProxy = F5002757112358E7001B52FE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C1667FE841158C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91AE08733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "General Headers/CommonMediaPlayer_Prefix.pch";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = CommonMediaPlayer;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		1DEB91AF08733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
+				FRAMEWORK_VERSION = A;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = CommonMediaPlayer_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = CommonMediaPlayer;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1DEB91B208733DA50010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+				SYMROOT = ../build;
+			};
+			name = Debug;
+		};
+		1DEB91B308733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = 4.0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.4;
+				SYMROOT = ../build;
+			};
+			name = Release;
+		};
+		F5002754112358D5001B52FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = UIDebug;
+			};
+			name = Debug;
+		};
+		F5002755112358D5001B52FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = UIDebug;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "CommonMediaPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91AE08733DA50010E9CD /* Debug */,
+				1DEB91AF08733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "CommonMediaPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91B208733DA50010E9CD /* Debug */,
+				1DEB91B308733DA50010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F500275C11235912001B52FE /* Build configuration list for PBXNativeTarget "UIDebug" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F5002754112358D5001B52FE /* Debug */,
+				F5002755112358D5001B52FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
