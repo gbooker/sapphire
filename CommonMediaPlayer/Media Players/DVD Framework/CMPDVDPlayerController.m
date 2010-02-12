@@ -445,6 +445,7 @@ static NSTimer *timer = nil;
 	BOOL supressStateDisplay = NO;
 	
 	switch (action) {
+		case kBREventRemoteActionSwipeRight:
 		case kBREventRemoteActionRight:
 			if(blurredMenu)
 				return NO;
@@ -467,6 +468,7 @@ static NSTimer *timer = nil;
 			else
 				[player nextFrame];
 			break;
+		case kBREventRemoteActionSwipeLeft:
 		case kBREventRemoteActionLeft:
 			if(blurredMenu)
 				return NO;
@@ -490,6 +492,7 @@ static NSTimer *timer = nil;
 				//We cannot step frame backwards!!!!
 				[player decrementScanRate];
 			break;
+		case kBREventRemoteActionSwipeUp:
 		case kBREventRemoteActionUp:
 			if(blurredMenu)
 				return [blurredMenu previousItem];
@@ -504,6 +507,7 @@ static NSTimer *timer = nil;
 			else
 				;//Something else
 			break;
+		case kBREventRemoteActionSwipeDown:
 		case kBREventRemoteActionDown:
 			if(blurredMenu)
 				return [blurredMenu nextItem];

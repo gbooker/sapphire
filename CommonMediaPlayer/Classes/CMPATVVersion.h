@@ -30,6 +30,7 @@ typedef enum {
 	CMPATVVersion2Dot3,
 	CMPATVVersion2Dot4,
 	CMPATVVersion3,
+	CMPATVVersion302,
 } CMPATVVersionValue;
 
 // Gesture events have a dictionary defining the touch points and other info.

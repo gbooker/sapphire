@@ -32,6 +32,19 @@ enum {
 	kBREventRemoteActionTake3SwipeDown,
 };
 
+//Take 3.0.2 Remote Actions
+
+enum {
+	kBREventRemoteActionTake302TouchBegin = 30,
+	kBREventRemoteActionTake302TouchMove,
+	kBREventRemoteActionTake302TouchEnd,
+	kBREventRemoteActionTake302SwipeLeft,
+	kBREventRemoteActionTake302SwipeRight,
+	kBREventRemoteActionTake302SwipeUp,
+	kBREventRemoteActionTake302SwipeDown,
+};
+
+
 @implementation CMPATVVersion
 
 static CMPATVVersionValue atvVersion = CMPATVVersionUnknown;
@@ -69,6 +82,16 @@ static BOOL usingATypeOfTakeThree = NO;
 	{	
 		atvVersion = CMPATVVersion3;
 		usingATypeOfTakeThree = YES;
+		NSDictionary *finderDict = [[NSBundle mainBundle] infoDictionary];
+		NSString *theVersion = [finderDict objectForKey: @"CFBundleVersion"];
+		//NSLog(@"appletversion: %@",  theVersion);
+		
+		NSComparisonResult theResult = [@"3.0.2" compare:theVersion options:NSNumericSearch];
+		if ( theResult == NSOrderedAscending ){
+			atvVersion = CMPATVVersion302;
+		} else if ( theResult == NSOrderedSame ) {
+			atvVersion = CMPATVVersion302;
+		}
 	}
 }
 
@@ -119,6 +142,22 @@ static BOOL usingATypeOfTakeThree = NO;
 
 + (BREventRemoteAction)remoteActionForEvent:(BREvent *)event
 {
+	if(atvVersion >= CMPATVVersion302)
+	{
+		BREventRemoteAction action = [event remoteAction];
+		switch (action) {
+			case kBREventRemoteActionTake302TouchEnd:
+			case kBREventRemoteActionTake302SwipeLeft:
+			case kBREventRemoteActionTake302SwipeRight:
+			case kBREventRemoteActionTake302SwipeUp:
+			case kBREventRemoteActionTake302SwipeDown:
+				return action - 2;
+				break;
+			default:
+				return action;
+				break;
+		}
+	}
 	if(atvVersion >= CMPATVVersion3)
 	{
 		BREventRemoteAction action = [event remoteAction];
