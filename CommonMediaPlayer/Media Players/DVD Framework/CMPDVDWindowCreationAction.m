@@ -752,6 +752,7 @@ static int CreateEmptyWindow(CGRect myFrame)
 //	NSLog(@"conn: %i dvdWindow: %i", conn, dvdWindowID);
 //	OSStatus theErr = CGSReleaseWindow(conn, dvdWindowID);
 //	NSLog(@"CGSReleaseWindow: %d", theErr);
+	[self closeAllOverlays];
 	[dvdWindow close];
 	
 	return [screenRelease closeWithError:error];

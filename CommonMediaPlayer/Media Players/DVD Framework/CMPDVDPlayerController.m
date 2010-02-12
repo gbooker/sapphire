@@ -302,7 +302,6 @@ static NSTimer *timer = nil;
 //	}	
 	
 #endif
-	[windowCreation closeAllOverlays];
 	NSMutableDictionary *endSettings = [[NSMutableDictionary alloc] init];
 	double elapsed = [player elapsedPlaybackTime];
 	double duration = [player trackDuration];
