@@ -44,6 +44,9 @@
 #import "SapphireErrorDisplayController.h"
 #import "SapphireAudioNowPlayingController.h"
 
+
+#import "SapphireCMPWrapper.h"
+
 #import <objc/objc-class.h>
 
 #import "NSFileManager-Extensions.h"
@@ -56,6 +59,13 @@
 static BOOL is10Version = NO;
 
 @implementation SapphireBrowser
+
++ (void)initialize
+{
+	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
+	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"];
+	[[NSBundle bundleWithPath:frameworkPath] load];
+}
 
 - (id) initWithScene: (BRRenderScene *) scene metaData:(id <SapphireDirectory>)meta
 {
@@ -554,20 +564,11 @@ static BOOL is10Version = NO;
 	
 	if([currentPlayFile fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS && path != nil)
 	{
-		if([SapphireFrontRowCompat usingLeopard])
-		{
-			BRDVDMediaAsset *asset = [[BRDVDMediaAsset alloc] initWithPath:path];
-			SapphireDVDLoadingController *controller = [[SapphireDVDLoadingController alloc] initWithScene:[self scene] forAsset:asset];
-			[asset release];
-			[[self stack] pushController:controller];
-			[controller release];
-		}
-		else
-		{
-			SapphireErrorDisplayController *controller = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Playback Error", @"Short error indicating an error while playing a file") longError:BRLocalizedString(@"DVD Playback is not supported on the AppleTV", @"Error message saying DVD on ATV not supported")];
-			[[self stack] pushController:controller];
-			[controller release];
-		}
+		SapphireCMPWrapper *wrapper = [[SapphireCMPWrapper alloc] initWithFile:currentPlayFile scene:[self scene]];
+		id controller = [wrapper controller];
+		[wrapper release];
+//			SapphireErrorDisplayController *controller = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Playback Error", @"Short error indicating an error while playing a file") longError:BRLocalizedString(@"DVD Playback is not supported on the AppleTV", @"Error message saying DVD on ATV not supported")];
+		[[self stack] pushController:controller];
 	}
 	else if([[NSFileManager defaultManager] acceptFilePath:path] && [currentPlayFile hasVideoValue])
 	{
