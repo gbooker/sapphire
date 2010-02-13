@@ -19,38 +19,12 @@
  * 02111-1307, USA.
  */
 
-#import "CMPDVDPlayer.h"
 #import "CMPISODVDPlayer.h"
 #import <DVDPlayback/DVDPlayback.h>
 #import "CMPDVDFrameworkLoadAction.h"
 #import "CMPDVDPlayerController.h"
 #import <AudioUnit/AudioUnit.h>
 #import "CMPDVDImageAction.h"
-
-enum{
-	kDVDAudioModeUninitialized 		= 0,
-	kDVDAudioModeProLogic 			= 1 << 0,
-	kDVDAudioModeSPDIF				= 1 << 1
-};
-typedef SInt32	DVDAudioMode;
-
-extern	OSStatus	DVDGetAudioOutputModeCapabilities(DVDAudioMode *outModes)									AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-extern	OSStatus	DVDSetAudioOutputMode(DVDAudioMode inMode)													AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-extern	OSStatus	DVDGetAudioOutputMode(DVDAudioMode *outMode)												AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-extern	OSStatus	DVDGetSPDIFDataOutDeviceCount(UInt32 *outCount)												AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-extern	OSStatus	DVDGetSPDIFDataOutDeviceCFName(UInt32 inIndex, CFStringRef *outName)						AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-extern	OSStatus	DVDSetSPDIFDataOutDevice(UInt32 inIndex)													AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-extern	OSStatus	DVDGetSPDIFDataOutDevice(UInt32 *outIndex)													AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
-
-@interface CMPDVDPlayer()
-- (void)updateVideoBounds;
-- (BOOL)initializeFrameworkWithError:(NSError **)error;
-- (void)playbackStopped;
-- (void)titleChanged;
-- (void)titleTimeChanged;
-@end
-
-static UInt32						eventCallbackID = 0;
 
 @implementation CMPISODVDPlayer
 
@@ -65,43 +39,25 @@ static UInt32						eventCallbackID = 0;
 	if(!self)
 		return self;
 	
-	frameworkLoad = [[CMPDVDFrameworkLoadAction alloc] initWithController:nil andSettings:nil];
+	imageMount = [[CMPDVDImageAction alloc] initWithPlayer:self andPath:path];
 	
 	return self;
 }
 
 - (void) dealloc
 {
-	[asset release];
-	[frameworkLoad release];
+	[imageMount release];
+	[mountedPath release];
 	[super dealloc];
 }
 
-- (double)elapsedPlaybackTime
-{
-	if(titleCount != 1)
-		return 0.0;
-	
-	return currentElapsedTime;
-}
-
-- (double)trackDuration
-{
-	if(titleCount != 1)
-		return 0.0;
-	
-	return titleDuration;
-}
-
-static BOOL pauseOnPlay = NO;
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {
 	//mount iso here
 
-	NSURL *url = [NSURL URLWithString:[asset mediaURL]];
+	NSURL *url = [NSURL URLWithString:[imageAsset mediaURL]];
 	NSString *path = [url path];
 	//NSLog(@"imagePath: %@", path);
-	imageMount = [[CMPDVDImageAction alloc] initWithPlayer:self andPath:path];
 	if (![imageMount openWithError:nil] == YES)
 	{
 		NSLog(@"fail");
@@ -109,112 +65,33 @@ static BOOL pauseOnPlay = NO;
 	}
 	
 	//NSLog(@"mountedPath = %@", [self mountedPath]);
-	if (![self openMediaWithError:nil])
+	CMPBaseMediaAsset *realAsset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:path]];
+	BOOL success = [super setMedia:realAsset withError:nil];
+	[realAsset release];
+	if(!success)
 	{
 		NSLog(@"open media failed!");
 		return;
 	}
-	DVDGetNumTitles(&titleCount);
-	BOOL doingResume = titleCount == 1 && resumeTime != 0;
-	DVDMute(true);
-	OSStatus playError = DVDPlay();
-	if(doingResume)
-	{
-		pauseOnPlay = YES;
-		DVDSetTime(kDVDTimeCodeElapsedSeconds, resumeTime, 0);
-		DVDPause();
-	}
-	DVDMute(false);
-	if(resume)
-		*resume = doingResume;
-	
-	if(playError != noErr)
-		return;
-	
-	[self updateVideoBounds];
-	
-	Boolean hasMenu = false;
-	OSStatus menuCheck = DVDHasMenu(kDVDMenuRoot, &hasMenu);
-	
-	if(menuCheck == noErr && hasMenu && !doingResume)
-		DVDGoToMenu(kDVDMenuRoot);
-}
-
-- (BOOL)openMediaWithError:(NSError * *)error
-{
-	NSString *path = [[self mountedPath] stringByAppendingPathComponent:@"VIDEO_TS"];
-	NSLog(@"Going to play %@", path);
-	const char *cPath = [path fileSystemRepresentation];
-	
-	BOOL ret = [frameworkLoad openWithError:error];
-	NSLog(@"Framework usable is %d", ret);
-	if(!ret)
-		return NO;
-	ret = [self initializeFrameworkWithError:error];
-	NSLog(@"Initialize is %d", ret);
-	if(!ret)
-		return NO;
-	
-	FSRef fsRef;
-	OSStatus resultz = FSPathMakeRef((UInt8*)cPath, &fsRef, NULL);
-	NSLog(@"make path is %d", resultz);
-	OSStatus openError = resultz;
-	if(resultz == noErr)
-		openError = DVDOpenMediaFile(&fsRef);
-	
-	NSLog(@"open error is %d", openError);
-	return openError == noErr;
+	[super initiatePlaybackWithResume:resume];
 }
 
 - (BOOL)setMedia:(BRBaseMediaAsset *)anAsset error:(NSError * *)error
 {
-	[asset release];
-	asset = [anAsset retain];
+	[imageAsset release];
+	imageAsset = [anAsset retain];
 	
 	return YES;
-	/*
-	NSURL *url = [NSURL URLWithString:[asset mediaURL]];
-	NSString *path = [[url path] stringByAppendingPathComponent:@"VIDEO_TS"];
-	NSLog(@"Going to play %@", path);
-	const char *cPath = [path fileSystemRepresentation];
-	
-	BOOL ret = [frameworkLoad openWithError:error];
-	NSLog(@"Framework usable is %d", ret);
-	if(!ret)
-		return NO;
-	ret = [self initializeFrameworkWithError:error];
-	NSLog(@"Initialize is %d", ret);
-	if(!ret)
-		return NO;
-	
-	FSRef fsRef;
-	OSStatus resultz = FSPathMakeRef((UInt8*)cPath, &fsRef, NULL);
-	NSLog(@"make path is %d", resultz);
-	OSStatus openError = resultz;
-	if(resultz == noErr)
-		openError = DVDOpenMediaFile(&fsRef);
-	
-	NSLog(@"open error is %d", openError);
-	return openError == noErr;
-
-	 */
 }
 
 - (BRBaseMediaAsset *)asset
 {
-	return asset;
+	return imageAsset;
 }
 
 - (void)stopPlayback
 {
-	NSLog(@"Stopping");
-	DVDUnregisterEventCallBack(eventCallbackID);
-	eventCallbackID = 0;
-	DVDStop();
-	DVDCloseMediaFile();
-	DVDCloseMediaVolume();
-	DVDSetVideoDisplay(kCGNullDirectDisplay);
-	DVDDispose();
+	[super stopPlayback];
 	[imageMount closeWithError:nil];
 }
 
@@ -224,7 +101,7 @@ static BOOL pauseOnPlay = NO;
 	return isoExt;
 }
 
-
+/* For the moment, the super's canPlay doesn't actually check validity of the VIDEO_TS since the ATV likes to return false on valid directories.
 - (BOOL)canPlay:(NSString *)path withError:(NSError **)error
 {
 	NSLog(@"Testing can play");
@@ -247,7 +124,7 @@ static BOOL pauseOnPlay = NO;
 		 
 		 
 		 
-		 */
+		 *
 		
 		NSLog(@"returning yes for canPlay in CMPISODVDPlayer");
 		return YES;
@@ -274,9 +151,9 @@ static BOOL pauseOnPlay = NO;
 																		  BRLocalizedString(@"Media isn't valid DVD", @"Failure to load media error message"), NSLocalizedDescriptionKey,
 																		  nil]];	
 	return isValid;
-	*/
+	*
 	
-}
+}*/
 
 - (NSString *)mountedPath {
     return [[mountedPath retain] autorelease];
@@ -288,8 +165,5 @@ static BOOL pauseOnPlay = NO;
         mountedPath = [value copy];
     }
 }
-
-
-
 
 @end

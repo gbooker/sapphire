@@ -27,17 +27,10 @@
 @interface CMPISODVDPlayer : CMPDVDPlayer{
 
 	CMPDVDImageAction	*imageMount;
-	NSString *mountedPath;
-	
+	NSString			*mountedPath;
+	BRBaseMediaAsset	*imageAsset;	
 }
 
 - (NSString *)mountedPath;
 - (void)setMountedPath:(NSString *)value;
-
-
-- (BOOL)openMediaWithError:(NSError * *)error;
-- (BOOL)canPlay:(NSString *)path withError:(NSError **)error;
-- (void)initiatePlaybackWithResume:(BOOL *)resume;
-- (void)stopPlayback;
-
 @end
