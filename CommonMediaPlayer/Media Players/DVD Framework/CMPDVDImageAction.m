@@ -1,57 +1,64 @@
-//
-//  CMPDVDImageAction.m
-//  CommonMediaPlayer
-//
-//  Created by blunt on 2/12/10.
-//  Copyright 2010 nito, LLC. All rights reserved.
-//
+/*
+ * CMPDVDImageAction.m
+ * CommonMediaPlayer
+ *
+ * Created by nito on Feb. 12 2010
+ * Copyright 2010 Common Media Player
+ * All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * Lesser General Public License as published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser
+ * General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this program; if
+ * not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 
+ * 02111-1307, USA.
+ */
 
 #import "CMPDVDImageAction.h"
+
+@interface CMPDVDImageAction ()
+- (NSString *)attachImage:(NSString *)irString;
+- (BOOL)detachImage:(NSString *)theImagePath;
+@end
 
 
 @implementation CMPDVDImageAction
 
-- (id)initWithPlayer:(id <CMPPlayer>)thePlayer andPath:(NSString *)thePath
+- (id)initWithPath:(NSString *)thePath
 {
 	self = [super init];
 	if(!self)
 		return self;
 	
-	mountedPath = thePath;
-	player = thePlayer;
+	mountedPath = [thePath retain];
 	return self;
 }
 
 - (id)initWithController:(id <CMPPlayerController>)controller andSettings:(NSDictionary *)settings
 {
-	return [super init];
-	
+	[self autorelease];
+	return nil;
 }
 
+- (void) dealloc
+{
+	[mountedPath release];
+	[imagePath release];
+	[super dealloc];
+}
 
 - (NSString *)imagePath {
     return [[imagePath retain] autorelease];
 }
 
-- (void)setImagePath:(NSString *)value {
-    if (imagePath != value) {
-        [imagePath release];
-        imagePath = [value copy];
-    }
-}
-
 - (NSString *)mountedPath {
     return [[mountedPath retain] autorelease];
 }
-
-- (void)setMountedPath:(NSString *)value {
-    if (mountedPath != value) {
-        [mountedPath release];
-        mountedPath = [value copy];
-    }
-}
-
-
 
 - (BOOL)openWithError:(NSError **)error
 {
@@ -61,13 +68,9 @@
 	if (mountDisc == nil)
 		return NO; //don't really know how to do NSError reports properly
 	
-	[self setMountedPath:mountDisc];
+	[mountedPath release];
+	mountedPath = [mountDisc retain];
 	NSLog(@"open with error returned path: %@", mountDisc);
-	
-	//if ([man fileExistsAtPath:[mountDisc stringByAppendingPathComponent:@"VIDEO_TS"]])
-	
-	[player setMountedPath:mountDisc];
-	
 	
 	return YES;
 	
@@ -76,10 +79,7 @@
 
 - (BOOL)closeWithError:(NSError **)error
 {
-
 	return [self detachImage:[self mountedPath]];
-	
-	//return [screenRelease closeWithError:error];
 }
 
 

@@ -2,7 +2,7 @@
  * CMPDVDImageAction.h
  * CommonMediaPlayer
  *
- * Created by nito on Feb. 3 2010
+ * Created by nito on Feb. 12 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -29,16 +29,9 @@
 
 	NSString *imagePath;
 	NSString *mountedPath;
-	id player;
 }
-- (id)initWithPlayer:(id <CMPPlayer>)thePlayer andPath:(NSString *)thePath;
+- (id)initWithPath:(NSString *)thePath;
 
 - (NSString *)imagePath;
-- (void)setImagePath:(NSString *)value;
-
 - (NSString *)mountedPath;
-- (void)setMountedPath:(NSString *)value;
-- (BOOL)openWithError:(NSError **)error;
-- (NSString *)attachImage:(NSString *)irString;
-- (BOOL)detachImage:(NSString *)theImagePath;
 @end

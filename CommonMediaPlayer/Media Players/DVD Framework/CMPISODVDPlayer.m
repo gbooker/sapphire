@@ -1,8 +1,8 @@
 /*
- * CMPDVDPlayer.m
+ * CMPISODVDPlayer.m
  * CommonMediaPlayer
  *
- * Created by Graham Booker on Feb. 2 2010
+ * Created by nito on Feb. 12 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -43,7 +43,6 @@
 - (void) dealloc
 {
 	[imageMount release];
-	[mountedPath release];
 	[super dealloc];
 }
 
@@ -53,7 +52,7 @@
 
 	NSURL *url = [NSURL URLWithString:[imageAsset mediaURL]];
 	NSString *path = [url path];
-	imageMount = [[CMPDVDImageAction alloc] initWithPlayer:self andPath:path];
+	imageMount = [[CMPDVDImageAction alloc] initWithPath:path];
 	//NSLog(@"imagePath: %@", path);
 	if (![imageMount openWithError:nil] == YES)
 	{
@@ -62,7 +61,8 @@
 	}
 	
 	//NSLog(@"mountedPath = %@", [self mountedPath]);
-	CMPBaseMediaAsset *realAsset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:path]];
+	NSString *mountedPath = [imageMount mountedPath];
+	CMPBaseMediaAsset *realAsset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:mountedPath]];
 	BOOL success = [super setMedia:realAsset error:nil];
 	[realAsset release];
 	if(!success)
@@ -151,16 +151,5 @@
 	*
 	
 }*/
-
-- (NSString *)mountedPath {
-    return [[mountedPath retain] autorelease];
-}
-
-- (void)setMountedPath:(NSString *)value {
-    if (mountedPath != value) {
-        [mountedPath release];
-        mountedPath = [value copy];
-    }
-}
 
 @end

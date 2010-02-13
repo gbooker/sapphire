@@ -1,8 +1,8 @@
 /*
- * CMPDVDPlayer.h
+ * CMPISODVDPlayer.h
  * CommonMediaPlayer
  *
- * Created by Graham Booker on Feb. 2 2010
+ * Created by nito on Feb. 12 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -19,18 +19,12 @@
  * 02111-1307, USA.
  */
 
-
-
 #import "CMPDVDPlayer.h"
+
 @class CMPDVDImageAction, CMPDVDPlayer;
 
 @interface CMPISODVDPlayer : CMPDVDPlayer{
-
 	CMPDVDImageAction	*imageMount;
-	NSString			*mountedPath;
 	BRBaseMediaAsset	*imageAsset;	
 }
-
-- (NSString *)mountedPath;
-- (void)setMountedPath:(NSString *)value;
 @end
