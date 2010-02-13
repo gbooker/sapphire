@@ -32,14 +32,13 @@
 
 @implementation CMPDVDOverlayWindow
 
-- (id)initWithContentRect:(NSRect)contentRect position:(CMPDVDOverlayPosition)aPosition overWindow:(int)windowID
+- (id)initWithContentRect:(NSRect)contentRect overWindow:(int)windowID
 {
 	self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
 	if(!self)
 		return self;
 	
 	screenRect = contentRect;
-	position = aPosition;
 	overWindowID = windowID;
 	[self setReleasedWhenClosed:NO];
 	
@@ -128,10 +127,11 @@
 
 - (id)initWithContentRect:(NSRect)contentRect position:(CMPDVDOverlayPosition)aPosition overWindow:(int)windowID
 {
-	self = [super initWithContentRect:contentRect position:aPosition overWindow:windowID];
+	self = [super initWithContentRect:contentRect overWindow:windowID];
 	if(!self)
 		return nil;
 	
+	position = aPosition;
 	textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
 	[[self contentView] addSubview:textField];
 	[textField setStringValue:@""];
@@ -221,9 +221,9 @@
 
 @implementation CMPDVDPlayerPlayHead
 
-- (id)initWithContentRect:(NSRect)contentRect position:(CMPDVDOverlayPosition)aPosition overWindow:(int)windowID
+- (id)initWithContentRect:(NSRect)contentRect overWindow:(int)windowID
 {
-	self = [super initWithContentRect:contentRect position:aPosition overWindow:windowID];
+	self = [super initWithContentRect:contentRect overWindow:windowID];
 	if(!self)
 		return self;
 	
@@ -435,7 +435,7 @@ void Interpolate (void* info, float const* inData, float* outData)
 
 - (id)initWithItems:(NSArray*)anItems contentRect:(NSRect)contentRect overWindow:(int)windowID
 {
-	self = [super initWithContentRect:contentRect position:0 overWindow:windowID];
+	self = [super initWithContentRect:contentRect overWindow:windowID];
 	if(!self)
 		return self;
 	
@@ -687,7 +687,7 @@ static int CreateEmptyWindow(CGRect myFrame)
 
 - (CMPDVDOverlayWindow *)addBlackShieldWindow
 {
-	CMPDVDOverlayWindow *ret = [[CMPDVDOverlayWindow alloc] initWithContentRect:[dvdWindow frame] position:CMPDVDOverlayUpperLeft overWindow:[dvdWindow windowNumber]];
+	CMPDVDOverlayWindow *ret = [[CMPDVDOverlayWindow alloc] initWithContentRect:[dvdWindow frame] overWindow:[dvdWindow windowNumber]];
 	
 	[overlays addObject:ret];
 	[ret release];
@@ -707,7 +707,7 @@ static int CreateEmptyWindow(CGRect myFrame)
 
 - (CMPDVDPlayerPlayHead *)addPlayheadOverlay
 {
-	CMPDVDPlayerPlayHead *ret = [[CMPDVDPlayerPlayHead alloc] initWithContentRect:[dvdWindow frame] position:CMPDVDOverlayLowerLeft overWindow:[dvdWindow windowNumber]];
+	CMPDVDPlayerPlayHead *ret = [[CMPDVDPlayerPlayHead alloc] initWithContentRect:[dvdWindow frame] overWindow:[dvdWindow windowNumber]];
 	
 	[overlays addObject:ret];
 	[ret release];

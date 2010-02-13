@@ -32,7 +32,6 @@ typedef enum {
 
 @interface CMPDVDOverlayWindow : NSWindow
 {
-	CMPDVDOverlayPosition	position;
 	NSRect					screenRect;
 	int						overWindowID;
 	float					initialOpacity, finalOpacity, fadeTime;
@@ -47,6 +46,7 @@ typedef enum {
 
 @interface CMPDVDTextView : CMPDVDOverlayWindow
 {
+	CMPDVDOverlayPosition	position;
 	NSTextField				*textField;
 }
 
