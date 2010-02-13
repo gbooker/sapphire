@@ -53,7 +53,7 @@
 	[self registerPlayer:[CMPDVDPlayer class] forType:CMPPlayerManagerFileTypeVideo_TS withExtensions:[NSArray arrayWithObject:@""]];
 	[knownControllers addObject:[CMPDVDPlayerController class]];
 
-	[self registerPlayer:[CMPISODVDPlayer class] forType:CMPPlayerManagerFileTypeVideo_TS withExtensions:[NSArray arrayWithObjects:@"iso", @"dmg", @"img", nil]];
+	[self registerPlayer:[CMPISODVDPlayer class] forType:CMPPlayerManagerFileTypeDVDImage withExtensions:[NSArray arrayWithObjects:@"iso", @"dmg", @"img", nil]];
 	
 	return self;
 }
