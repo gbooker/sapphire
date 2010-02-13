@@ -567,6 +567,13 @@ static NSTimer *timer = nil;
 			return [super brEventAction:event];
 	}
 	
+	if (inMenu)
+		supressStateDisplay = YES;
+	else {
+		supressStateDisplay = NO;
+	}
+
+	
 	if(!supressStateDisplay && overlayMode == CMPDVDPlayerControllerOverlayModeNormal)
 		[self showStateOverlay];
 	
