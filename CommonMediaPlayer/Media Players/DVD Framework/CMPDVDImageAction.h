@@ -19,25 +19,26 @@
  * 02111-1307, USA.
  */
 
-#import <Cocoa/Cocoa.h>
 #import "CMPActionController.h"
-#import "CMPISODVDPlayer.h"
-#import "CMPDVDImageAction.h"
 
 @class CMPActionController;
+
+@protocol CMPPlayer;
+
 @interface CMPDVDImageAction : NSObject <CMPActionController>{
 
 	NSString *imagePath;
 	NSString *mountedPath;
 	id player;
 }
+- (id)initWithPlayer:(id <CMPPlayer>)thePlayer andPath:(NSString *)thePath;
+
 - (NSString *)imagePath;
 - (void)setImagePath:(NSString *)value;
 
 - (NSString *)mountedPath;
 - (void)setMountedPath:(NSString *)value;
 - (BOOL)openWithError:(NSError **)error;
-- (id)initWithPlayer:(id <CMPPlayer>)thePlayer andPath:(NSString *)thePath;
 - (NSString *)attachImage:(NSString *)irString;
 - (BOOL)detachImage:(NSString *)theImagePath;
 @end
