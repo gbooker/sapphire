@@ -111,6 +111,8 @@
 	
 	NSData *outData;
 	outData = [hdih readDataToEndOfFile];
+	[hdip release];
+	
 	NSString *error;
 	NSPropertyListFormat format;
 	id plist;
