@@ -20,11 +20,9 @@
  */
 
 #import "CMPISODVDPlayer.h"
-#import <DVDPlayback/DVDPlayback.h>
-#import "CMPDVDFrameworkLoadAction.h"
-#import "CMPDVDPlayerController.h"
-#import <AudioUnit/AudioUnit.h>
 #import "CMPDVDImageAction.h"
+#import "CMPBaseMediaAsset.h"
+#import "CMPDVDPlayerController.h"
 
 @implementation CMPISODVDPlayer
 
@@ -33,16 +31,14 @@
 	return [NSSet setWithObject:[CMPDVDPlayerController class]];
 }
 
-- (id)init
+/*- (id)init
 {
 	self = [super init];
 	if(!self)
 		return self;
 	
-	imageMount = [[CMPDVDImageAction alloc] initWithPlayer:self andPath:path];
-	
 	return self;
-}
+}*/
 
 - (void) dealloc
 {
@@ -57,6 +53,7 @@
 
 	NSURL *url = [NSURL URLWithString:[imageAsset mediaURL]];
 	NSString *path = [url path];
+	imageMount = [[CMPDVDImageAction alloc] initWithPlayer:self andPath:path];
 	//NSLog(@"imagePath: %@", path);
 	if (![imageMount openWithError:nil] == YES)
 	{
@@ -66,7 +63,7 @@
 	
 	//NSLog(@"mountedPath = %@", [self mountedPath]);
 	CMPBaseMediaAsset *realAsset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:path]];
-	BOOL success = [super setMedia:realAsset withError:nil];
+	BOOL success = [super setMedia:realAsset error:nil];
 	[realAsset release];
 	if(!success)
 	{
