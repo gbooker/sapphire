@@ -415,6 +415,7 @@ void Interpolate (void* info, float const* inData, float* outData)
 	newFrame.origin.y = currentY;
 	[self setFrame:newFrame];
 	[[self superview] setNeedsDisplayInRect:frame];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)animateMoveToYDelta:(float)newY
@@ -522,6 +523,11 @@ void Interpolate (void* info, float const* inData, float* outData)
 	[myCIImage release];
 	
 	CIImage *result = [gaussianBlur valueForKey:@"outputImage"];
+	CIFilter *crop = [CIFilter filterWithName:@"CICrop"];
+	[crop setDefaults];
+	[crop setValue:result forKey:@"inputImage"];
+	[crop setValue:[CIVector vectorWithX:0 Y:0 Z:bounds.size.width W:bounds.size.height] forKey:@"inputRectangle"];
+	result = [crop valueForKey:@"outputImage"];
 	NSImage *resultAsNSImage;
 	if([result isKindOfClass:[CIImage class]])
 	{
@@ -532,14 +538,7 @@ void Interpolate (void* info, float const* inData, float* outData)
 	else
 		resultAsNSImage = (NSImage *)result;
 	
-	NSImage *finalImage = [[NSImage alloc] initWithSize:NSMakeSize(bounds.size.width, bounds.size.height)];
-	[finalImage lockFocus];
-	NSRect boundsAsNSRect = NSMakeRect(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
-	[resultAsNSImage drawInRect:boundsAsNSRect fromRect:boundsAsNSRect operation:NSCompositeCopy fraction:1.0];
-	[finalImage unlockFocus];
-	
-	[imageView setImage:finalImage];
-	[finalImage release];
+	[imageView setImage:resultAsNSImage];
 	
 	CGContextRelease(context);
 	CGColorSpaceRelease(colorspace);
