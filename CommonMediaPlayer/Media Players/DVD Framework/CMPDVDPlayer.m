@@ -577,6 +577,7 @@ static BOOL pauseOnPlay = NO;
 		DVDSetTime(kDVDTimeCodeElapsedSeconds, resumeTime, 0);
 		DVDPause();
 	}
+	DVDMute(false);
 	if(resume)
 		*resume = doingResume;
 	
@@ -627,16 +628,8 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 //					//Video Manager
 //				case kDVDVTSMDomain:
 //					//Video title set
-				case kDVDTTDomain:
-					//Title
-					if(pauseOnPlay)
-					{
-						NSLog(@"Telling the thing to pause!!!!");
-						DVDPause();
-						DVDMute(false);
-						pauseOnPlay = NO;
-					}
-					break;
+//				case kDVDTTDomain:
+//					//Title
 //				case kDVDAMGMDomain:
 //					//Audio manager menu (DVD-Audio only)
 //				case kDVDTTGRDomain:
