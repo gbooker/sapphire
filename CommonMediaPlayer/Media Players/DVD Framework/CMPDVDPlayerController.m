@@ -531,6 +531,7 @@ static NSTimer *timer = nil;
 			supressStateDisplay = YES;
 			break;
 		case kBREventRemoteActionPlay:
+		case kBREventRemoteActionPlayNew:
 			if(blurredMenu)
 			{
 				int selection = [blurredMenu selectedItem];
