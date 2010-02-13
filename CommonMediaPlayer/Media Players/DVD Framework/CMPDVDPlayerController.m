@@ -442,7 +442,7 @@ static NSTimer *timer = nil;
 	CMPDVDState state = [player state];
 	NSLog(@"State is %d and doing %d", state, action);
 	BOOL playingInSomeForm = (state == CMPDVDStatePlaying || state == CMPDVDStateScanningForward || state == CMPDVDStateScanningBackward || state == CMPDVDStatePlayingSlowForward || state == CMPDVDStatePlayingSlowBackward);
-	BOOL supressStateDisplay = NO;
+	BOOL supressStateDisplay = inMenu;
 	
 	switch (action) {
 		case kBREventRemoteActionSwipeRight:
@@ -566,13 +566,6 @@ static NSTimer *timer = nil;
 			NSLog(@"unknown %d", action);
 			return [super brEventAction:event];
 	}
-	
-	if (inMenu)
-		supressStateDisplay = YES;
-	else {
-		supressStateDisplay = NO;
-	}
-
 	
 	if(!supressStateDisplay && overlayMode == CMPDVDPlayerControllerOverlayModeNormal)
 		[self showStateOverlay];
