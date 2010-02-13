@@ -46,35 +46,14 @@
 	knownPlayers = [[NSMutableSet alloc] init];
 	knownControllers = [[NSMutableSet alloc] init];
 	playersForTypes = [[NSMutableDictionary alloc] init];
-	controllersForPlayerTypes = [[NSMutableDictionary alloc] init];
 	
-	[knownPlayers addObject:[CMPDVDPlayer class]];
-	[knownPlayers addObject:[CMPISODVDPlayer class]];
-	[knownControllers addObject:[CMPDVDPlayerController class]];
-//	[knownPlayers addObject:[CMPLeopardDVDPlayer class]];
+//	[self registerPlayer:[CMPLeopardDVDPlayer class] forType:CMPPlayerManagerFileTypeVideo_TS withExtensions:[NSArray arrayWithObject:@""]];
 //	[knownControllers addObject:[CMPLeopardDVDPlayerController class]];
-	
-	NSMutableArray *dvdPlayers = [[NSMutableArray alloc] initWithObjects:/*[CMPLeopardDVDPlayer class], */[CMPDVDPlayer class], nil];
-	NSMutableDictionary *dvdPlayerTypes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-										   dvdPlayers, @"",
-										   nil];
-	[playersForTypes setObject:dvdPlayerTypes forKey:[NSNumber numberWithInt:CMPPlayerManagerFileTypeVideo_TS]];
-	[dvdPlayerTypes release];
-	[dvdPlayers release];
-	
-	
-	NSMutableArray *isoPlayers = [[NSMutableArray alloc] initWithObjects:[CMPISODVDPlayer class], nil];
-	NSMutableDictionary *isoPlayerTypes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-										   isoPlayers, @"",
-										   nil];
-	
-	[playersForTypes setObject:isoPlayerTypes forKey:[NSNumber numberWithInt:CMPPlayerManagerFileTypeDVDImage]];
-	
-	[playersForTypes setObject:isoPlayerTypes forKey:@"iso"];
-	[playersForTypes setObject:isoPlayerTypes forKey:@"dmg"];
-	[playersForTypes setObject:isoPlayerTypes forKey:@"img"];
-	[isoPlayerTypes release];
-	[isoPlayers release];
+
+	[self registerPlayer:[CMPDVDPlayer class] forType:CMPPlayerManagerFileTypeVideo_TS withExtensions:[NSArray arrayWithObject:@""]];
+	[knownControllers addObject:[CMPDVDPlayerController class]];
+
+	[self registerPlayer:[CMPISODVDPlayer class] forType:CMPPlayerManagerFileTypeVideo_TS withExtensions:[NSArray arrayWithObjects:@"iso", @"dmg", @"img", nil]];
 	
 	return self;
 }
@@ -84,14 +63,46 @@
 	[knownPlayers release];
 	[knownControllers release];
 	[playersForTypes release];
-	[controllersForPlayerTypes release];
 	[super dealloc];
 }
 
-
 - (void)registerPlayer:(Class)player forTypes:(NSDictionary *)types
 {
+	NSEnumerator *typeEnum = [types keyEnumerator];
+	NSNumber *typeKey;
+	while((typeKey = [typeEnum nextObject]) != nil)
+	{
+		[self registerPlayer:player forType:[typeKey intValue] withExtensions:[types objectForKey:typeKey]];
+	}
+}
+
+- (void)registerPlayer:(Class)player forType:(CMPPlayerManagerFileType)type withExtensions:(NSArray *)extensions
+{
+	NSNumber *typeKey = [NSNumber numberWithInt:type];
+	NSMutableDictionary *typeDict = [playersForTypes objectForKey:typeKey];
+	if(typeDict == nil)
+	{
+		typeDict = [[NSMutableDictionary alloc] init];
+		[playersForTypes setObject:typeDict forKey:typeKey];
+		[typeDict release];
+	}
 	
+	NSEnumerator *extensionEnum = [extensions objectEnumerator];
+	NSString *extension;
+	while((extension = [extensionEnum nextObject]) != nil)
+	{
+		NSMutableArray *players = [typeDict objectForKey:extension];
+		if(players == nil)
+		{
+			players = [[NSMutableArray alloc] init];
+			[typeDict setObject:players forKey:extension];
+			[players release];
+		}
+		if(![players containsObject:player])
+			[players addObject:player];
+	}
+	if(![knownPlayers containsObject:player])
+		[knownPlayers addObject:player];
 }
 
 - (id <CMPPlayer>)playerForPath:(NSString *)path type:(CMPPlayerManagerFileType)type preferences:(NSDictionary *)preferences

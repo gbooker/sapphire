@@ -27,13 +27,13 @@
 	NSMutableSet			*knownPlayers;
 	NSMutableSet			*knownControllers;
 	NSMutableDictionary		*playersForTypes;	//Keys are types, values are dictionaries.  Resulting dictionaries are keyed by extension, default keyed by @"", values are NSArrays of classes which can handle this.
-	NSMutableDictionary		*controllersForPlayerTypes;
 }
 
 + (CMPPlayerManager *)sharedPlayerManager;
 
 //types is a dictionary with the key being the type above, and value is an array of extensions (empty array means any extension)
 - (void)registerPlayer:(Class)player forTypes:(NSDictionary *)types;
+- (void)registerPlayer:(Class)player forType:(CMPPlayerManagerFileType)type withExtensions:(NSArray *)extensions;
 //preferences are same formate as playersForTypes listed above
 - (id <CMPPlayer>)playerForPath:(NSString *)path type:(CMPPlayerManagerFileType)type preferences:(NSDictionary *)preferences;
 - (id <CMPPlayerController>)playerControllerForPlayer:(id <CMPPlayer>)player scene:(BRRenderScene *)scene preferences:(NSDictionary *)preferences;
