@@ -25,7 +25,7 @@
 #import "CMPDVDPlayerController.h"
 #import "CMPLeopardDVDPlayer.h"
 #import "CMPLeopardDVDPlayerController.h"
-
+#import "CMPISODVDPlayer.h"
 @implementation CMPPlayerManager
 
 + (CMPPlayerManager *)sharedPlayerManager
@@ -49,6 +49,7 @@
 	controllersForPlayerTypes = [[NSMutableDictionary alloc] init];
 	
 	[knownPlayers addObject:[CMPDVDPlayer class]];
+	[knownPlayers addObject:[CMPISODVDPlayer class]];
 	[knownControllers addObject:[CMPDVDPlayerController class]];
 //	[knownPlayers addObject:[CMPLeopardDVDPlayer class]];
 //	[knownControllers addObject:[CMPLeopardDVDPlayerController class]];
@@ -60,6 +61,20 @@
 	[playersForTypes setObject:dvdPlayerTypes forKey:[NSNumber numberWithInt:CMPPlayerManagerFileTypeVideo_TS]];
 	[dvdPlayerTypes release];
 	[dvdPlayers release];
+	
+	
+	NSMutableArray *isoPlayers = [[NSMutableArray alloc] initWithObjects:[CMPISODVDPlayer class], nil];
+	NSMutableDictionary *isoPlayerTypes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+										   isoPlayers, @"",
+										   nil];
+	
+	[playersForTypes setObject:isoPlayerTypes forKey:[NSNumber numberWithInt:CMPPlayerManagerFileTypeDVDImage]];
+	
+	[playersForTypes setObject:isoPlayerTypes forKey:@"iso"];
+	[playersForTypes setObject:isoPlayerTypes forKey:@"dmg"];
+	[playersForTypes setObject:isoPlayerTypes forKey:@"img"];
+	[isoPlayerTypes release];
+	[isoPlayers release];
 	
 	return self;
 }
@@ -87,7 +102,7 @@
 	NSDictionary *playersForExtension = [playersForTypes objectForKey:[NSNumber numberWithInt:type]];
 	if([ext length])
 	{
-		NSArray *specificPlayers = [playersForExtension objectForKey:ext];
+		NSArray *specificPlayers = [playersForExtension objectForKey:[ext lowercaseString]];
 		if([specificPlayers count])
 			[players addObjectsFromArray:specificPlayers];
 	}
