@@ -104,7 +104,8 @@ static UInt32						eventCallbackID = 0;
 	usable = [self initializeFrameworkWithError:error];
 	if(!usable)
 		return NO;
-	
+
+/* The ATV seems to return false for valid VIDEO_TS directories.  Not sure why, so skipping this check
 	const char *cPath = [[path stringByAppendingPathComponent:@"VIDEO_TS"] fileSystemRepresentation];
 	FSRef fsRef;
 	OSStatus resultz = FSPathMakeRef((UInt8*)cPath, &fsRef, NULL);
@@ -116,13 +117,13 @@ static UInt32						eventCallbackID = 0;
 		resultz = DVDIsValidMediaRef(&fsRef, &isValid);
 	
 	NSLog(@"Is valid is %d:%d", isValid, resultz);
-	isValid = 1;
 	
 	if(!isValid && error)
 		*error = [NSError errorWithDomain:CMPErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 																		  BRLocalizedString(@"Media isn't valid DVD", @"Failure to load media error message"), NSLocalizedDescriptionKey,
-																		  nil]];	
-	return isValid;
+																		  nil]];
+	return isValid;*/
+	return YES;
 }
 
 - (BOOL)setMedia:(BRBaseMediaAsset *)anAsset error:(NSError * *)error
