@@ -570,8 +570,8 @@ static BOOL pauseOnPlay = NO;
 {
 	DVDGetNumTitles(&titleCount);
 	BOOL doingResume = titleCount == 1 && resumeTime != 0;
-	DVDMute(true);
 	OSStatus playError = DVDPlay();
+	DVDMute(true);
 	if(doingResume)
 	{
 		pauseOnPlay = YES;
