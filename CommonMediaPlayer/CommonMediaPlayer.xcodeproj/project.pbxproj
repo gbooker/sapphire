@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		87E0033E11263CBF004FC2C7 /* CMPDVDImageAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */; };
+		87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */; };
+		87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */; };
+		87E0038C1126628B004FC2C7 /* CMPISODVDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0038A1126628B004FC2C7 /* CMPISODVDPlayer.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		F5001CBF1120939D001B52FE /* CMPOverlayModeAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F5001CBD1120939D001B52FE /* CMPOverlayModeAction.h */; };
@@ -58,6 +62,10 @@
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF5E0370ADEE00C91783 /* CommonMediaPlayer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMediaPlayer_Prefix.pch; sourceTree = "<group>"; };
+		87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDImageAction.h; sourceTree = "<group>"; };
+		87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImageAction.m; sourceTree = "<group>"; };
+		87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPISODVDPlayer.h; sourceTree = "<group>"; };
+		87E0038A1126628B004FC2C7 /* CMPISODVDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPISODVDPlayer.m; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CommonMediaPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonMediaPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -229,6 +237,10 @@
 		F50CCCF41118ED0000213966 /* DVD Framework */ = {
 			isa = PBXGroup;
 			children = (
+				87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */,
+				87E0038A1126628B004FC2C7 /* CMPISODVDPlayer.m */,
+				87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */,
+				87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */,
 				F50CCDF41118F8E500213966 /* CMPDVDWindowCreationAction.h */,
 				F50CCDF51118F8E500213966 /* CMPDVDWindowCreationAction.m */,
 				F50CCE271118FD9000213966 /* CMPDVDPlayer.h */,
@@ -287,6 +299,8 @@
 				F5001CBF1120939D001B52FE /* CMPOverlayModeAction.h in Headers */,
 				F5001CDA1120980E001B52FE /* CoreGraphicsServices.h in Headers */,
 				F5002A3011247ACC001B52FE /* BackRowUtils.h in Headers */,
+				87E0033E11263CBF004FC2C7 /* CMPDVDImageAction.h in Headers */,
+				87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +389,8 @@
 				F531CAE4111E2EF9005DF910 /* CMPLeopardDVDPlayer.m in Sources */,
 				F531CAFE111E305B005DF910 /* CMPLeopardDVDPlayerController.m in Sources */,
 				F5001CC01120939D001B52FE /* CMPOverlayModeAction.m in Sources */,
+				87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */,
+				87E0038C1126628B004FC2C7 /* CMPISODVDPlayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +444,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "General Headers/CommonMediaPlayer_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns/nitoTV.frappliance/Contents/Frameworks;
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -453,9 +469,9 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = CommonMediaPlayer_Prefix.pch;
+				GCC_PREFIX_HEADER = "General Headers/CommonMediaPlayer_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns/nitoTV.frappliance/Contents/Frameworks/;
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
