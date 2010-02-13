@@ -538,8 +538,6 @@ void Interpolate (void* info, float const* inData, float* outData)
 	[resultAsNSImage drawInRect:boundsAsNSRect fromRect:boundsAsNSRect operation:NSCompositeCopy fraction:1.0];
 	[finalImage unlockFocus];
 	
-	NSData *imageData = [finalImage TIFFRepresentation];
-	[imageData writeToFile:@"/Users/gbooker/Desktop/AAA.tiff" atomically:YES];
 	[imageView setImage:finalImage];
 	[finalImage release];
 	
