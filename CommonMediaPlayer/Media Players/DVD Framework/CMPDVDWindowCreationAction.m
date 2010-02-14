@@ -138,7 +138,7 @@
 	[textField setTextColor:[NSColor blueColor]];
 	[textField setBackgroundColor:[NSColor blackColor]];
 	NSFont *font = [textField font];
-	NSFont *newFont = [NSFont fontWithName:[font fontName] size:[font pointSize] * 4];
+	NSFont *newFont = [NSFont fontWithName:[font fontName] size:contentRect.size.height / 15];
 	[textField setFont:newFont];
 	[textField setBezeled:NO];
 	[textField setBordered:NO];
@@ -159,14 +159,15 @@
 	NSRect frameRect;
 	frameRect.size = [textField frame].size;
 	NSLog(@"Size is %fx%f", frameRect.size.width, frameRect.size.height);
+	float distanceFromEdge = screenRect.size.height / 15;
 	if(position == CMPDVDOverlayUpperLeft || position == CMPDVDOverlayUpperRight)
-		frameRect.origin.y = screenRect.size.height - frameRect.size.height - 50;
+		frameRect.origin.y = screenRect.size.height - frameRect.size.height - distanceFromEdge;
 	else
-		frameRect.origin.y = 50;
+		frameRect.origin.y = distanceFromEdge;
 	if(position == CMPDVDOverlayUpperRight || position == CMPDVDOverlayLowerRight)
-		frameRect.origin.x = screenRect.size.width - frameRect.size.width - 50;
+		frameRect.origin.x = screenRect.size.width - frameRect.size.width - distanceFromEdge;
 	else
-		frameRect.origin.x = 50;
+		frameRect.origin.x = distanceFromEdge;
 	[self setFrame:frameRect display:YES];	
 }
 
@@ -227,21 +228,24 @@
 	if(!self)
 		return self;
 	
-	int myWidth = contentRect.size.width-200;
-	elapsedField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, -2, 150, 50)];
+	float myWidth = contentRect.size.width * 27 / 32;
+	float textHeight = contentRect.size.height * 5 / 72;
+	float textWidth = textHeight * 3;
+	float textSize = contentRect.size.height / 20;
+	elapsedField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, (textSize-textHeight)/7, textWidth, textHeight)];
 	[[self contentView] addSubview:elapsedField];
 	[elapsedField setStringValue:@""];
 	[elapsedField setTextColor:[NSColor blueColor]];
 	[elapsedField setBackgroundColor:[NSColor blackColor]];
 	NSFont *font = [elapsedField font];
-	NSFont *newFont = [NSFont fontWithName:[font fontName] size:[font pointSize] * 3];
+	NSFont *newFont = [NSFont fontWithName:[font fontName] size:textSize];
 	[elapsedField setFont:newFont];
 	[elapsedField setBezeled:NO];
 	[elapsedField setBordered:NO];
 	[elapsedField setSelectable:NO];
 	[elapsedField setAlignment:NSRightTextAlignment];
 	
-	durationField = [[NSTextField alloc] initWithFrame:NSMakeRect(myWidth-150, -2, 150, 50)];
+	durationField = [[NSTextField alloc] initWithFrame:NSMakeRect(myWidth-textWidth, (textSize-textHeight)/7, textWidth, textHeight)];
 	[[self contentView] addSubview:durationField];
 	[durationField setStringValue:@""];
 	[durationField setTextColor:[NSColor blueColor]];
@@ -251,9 +255,9 @@
 	[durationField setBordered:NO];
 	[durationField setSelectable:NO];
 	
-	playView = [[CMPDVDPlayerPlayHeadView alloc] initWithFrame:NSMakeRect(150, 10, myWidth-300, 30)];
+	playView = [[CMPDVDPlayerPlayHeadView alloc] initWithFrame:NSMakeRect(textWidth, textHeight / 5, myWidth-textWidth*2, textHeight * 3 /5)];
 	[[self contentView] addSubview:playView];
-	[self setFrame:NSMakeRect(100, 100, myWidth, 50) display:NO];
+	[self setFrame:NSMakeRect(contentRect.size.width * 5 / 64, textHeight*2, myWidth, textHeight) display:NO];
 	
 	return self;
 }
@@ -354,15 +358,15 @@ void Interpolate (void* info, float const* inData, float* outData)
 {
 	NSRect frame = [self frame];
 	NSRect drawPath = frame;
-	drawPath.origin.x = 10;
-	drawPath.origin.y = 10;
-	drawPath.size.width -= 20;
-	drawPath.size.height -= 20;
+	drawPath.origin.x = frame.size.height/8;
+	drawPath.origin.y = frame.size.height/8;
+	drawPath.size.width -= frame.size.height/4;
+	drawPath.size.height -= frame.size.height/4;
 	NSBezierPath *path = [NSBezierPath bezierPathWithRect:drawPath];
 	
 	NSShadow *theShadow = [[NSShadow alloc] init];
 	[theShadow setShadowOffset:NSMakeSize(0, 0)];
-	[theShadow setShadowBlurRadius:20.0f];
+	[theShadow setShadowBlurRadius:frame.size.height/8];
 	[theShadow setShadowColor:[NSColor blueColor]];
 	[NSGraphicsContext saveGraphicsState];
 	[theShadow set];
@@ -446,18 +450,20 @@ void Interpolate (void* info, float const* inData, float* outData)
 	NSMutableArray *items = [[NSMutableArray alloc] init];
 	
 	int itemCount = [anItems count];
-	itemHeight = 60;
-	int itemWidth = 600;
+	itemHeight = contentRect.size.height / 12;
+	int itemWidth = itemHeight * 10;
 	int bottom = (contentRect.size.height - itemHeight * itemCount) / 2;
 	int left = (contentRect.size.width - itemWidth) / 2;
 	
-	selectionView = [[CMPDVDSelectionView alloc] initWithFrame:NSMakeRect(left, bottom + itemHeight * (itemCount-1) - 10, itemWidth, itemHeight+20)];
+	float inset = contentRect.size.height * 5 / 144;
+	float borderSize = contentRect.size.height / 72;
+	selectionView = [[CMPDVDSelectionView alloc] initWithFrame:NSMakeRect(left, bottom + itemHeight * (itemCount-1) - borderSize, itemWidth, itemHeight+borderSize*2)];
 	[[self contentView] addSubview:selectionView];
 	
 	NSFont *newFont = nil;
 	for(int i=0; i<itemCount; i++)
 	{
-		NSTextField *menuItem = [[NSTextField alloc] initWithFrame:NSMakeRect(left+25, bottom+itemHeight*(itemCount-1-i), itemWidth-25, itemHeight)];
+		NSTextField *menuItem = [[NSTextField alloc] initWithFrame:NSMakeRect(left+inset, bottom+itemHeight*(itemCount-1-i), itemWidth-inset, itemHeight)];
 		[menuItem setStringValue:[anItems objectAtIndex:i]];
 		[[self contentView] addSubview:menuItem];
 		[menuItem setTextColor:[NSColor whiteColor]];
@@ -468,7 +474,7 @@ void Interpolate (void* info, float const* inData, float* outData)
 		if(newFont == nil)
 		{
 			NSFont *font = [menuItem font];
-			newFont = [NSFont fontWithName:[font fontName] size:[font pointSize] * 3];
+			newFont = [NSFont fontWithName:[font fontName] size:contentRect.size.height / 20];
 		}
 		[menuItem setFont:newFont];
 		
