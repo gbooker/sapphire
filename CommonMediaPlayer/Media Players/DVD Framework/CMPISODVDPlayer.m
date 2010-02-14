@@ -106,8 +106,8 @@
 - (BOOL)canPlay:(NSString *)path withError:(NSError **)error
 {
 	if([super canPlay:path withError:error])
-	
-	return [CMPDVDImageAction isAvailable];
+		return [CMPDVDImageAction isAvailable];
+	return NO;
 }
 
 /* For the moment, the super's canPlay doesn't actually check validity of the VIDEO_TS since the ATV likes to return false on valid directories.
