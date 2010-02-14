@@ -520,8 +520,8 @@ void Interpolate (void* info, float const* inData, float* outData)
 		float py = bounds.size.height / 480;
 		float px = bounds.size.width / 720;
 		float divisor = MIN(py, px);
-		imageBounds.size.width /= divisor;
-		imageBounds.size.height /= divisor;
+		imageBounds.size.width = floorf(imageBounds.size.width / divisor);
+		imageBounds.size.height = floorf(imageBounds.size.height / divisor);
 	}
 	int bitmapSize = imageBounds.size.width *imageBounds.size.height * 4;
 	char *bitmap = malloc(bitmapSize);
