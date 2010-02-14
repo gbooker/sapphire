@@ -508,15 +508,24 @@ void Interpolate (void* info, float const* inData, float* outData)
 	//NSLog(@"Bounds is %fx%f - %fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
 	//	CGLGetCurrentContext()
 	NSLog(@"bounds is %fx%f-%fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
-	int bitmapSize = bounds.size.width *bounds.size.height * 4;
+	CGRect imageBounds = bounds;
+	if(bounds.size.height > 480 || bounds.size.width > 720)
+	{
+		float py = bounds.size.height / 480;
+		float px = bounds.size.width / 720;
+		float divisor = MIN(py, px);
+		imageBounds.size.width /= divisor;
+		imageBounds.size.height /= divisor;
+	}
+	int bitmapSize = imageBounds.size.width *imageBounds.size.height * 4;
 	char *bitmap = malloc(bitmapSize);
 	CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-	CGContextRef context = CGBitmapContextCreate(bitmap, bounds.size.width, bounds.size.height, 8, bounds.size.width * 4, colorspace, kCGImageAlphaNoneSkipFirst);
+	CGContextRef context = CGBitmapContextCreate(bitmap, imageBounds.size.width, imageBounds.size.height, 8, imageBounds.size.width * 4, colorspace, kCGImageAlphaNoneSkipFirst);
     // Copy the contents of the window to the graphic context
-	CGContextCopyWindowCaptureContentsToRect(context, bounds, cid, overWindowID, 0);	
+	CGContextCopyWindowCaptureContentsToRect(context, imageBounds, cid, overWindowID, 0);	
 	
 	NSData *bitmapData = [NSData dataWithBytesNoCopy:bitmap length:bitmapSize];
-	CIImage *myCIImage = [[CIImage alloc] initWithBitmapData:bitmapData bytesPerRow:bounds.size.width * 4 size:bounds.size format:kCIFormatARGB8 colorSpace:colorspace];
+	CIImage *myCIImage = [[CIImage alloc] initWithBitmapData:bitmapData bytesPerRow:imageBounds.size.width * 4 size:imageBounds.size format:kCIFormatARGB8 colorSpace:colorspace];
 	CIFilter *gaussianBlur = [CIFilter filterWithName:@"CIGaussianBlur"];
 	[gaussianBlur setDefaults];
 	[gaussianBlur setValue:myCIImage forKey:@"inputImage"];
@@ -526,7 +535,7 @@ void Interpolate (void* info, float const* inData, float* outData)
 	CIFilter *crop = [CIFilter filterWithName:@"CICrop"];
 	[crop setDefaults];
 	[crop setValue:result forKey:@"inputImage"];
-	[crop setValue:[CIVector vectorWithX:0 Y:0 Z:bounds.size.width W:bounds.size.height] forKey:@"inputRectangle"];
+	[crop setValue:[CIVector vectorWithX:0 Y:0 Z:imageBounds.size.width W:imageBounds.size.height] forKey:@"inputRectangle"];
 	result = [crop valueForKey:@"outputImage"];
 	NSImage *resultAsNSImage;
 	if([result isKindOfClass:[CIImage class]])
@@ -538,7 +547,10 @@ void Interpolate (void* info, float const* inData, float* outData)
 	else
 		resultAsNSImage = (NSImage *)result;
 	
+	[resultAsNSImage setScalesWhenResized:YES];
+	[resultAsNSImage setSize:NSMakeSize(bounds.size.width, bounds.size.height)];
 	[imageView setImage:resultAsNSImage];
+	[imageView setImageScaling:NSScaleProportionally];
 	
 	CGContextRelease(context);
 	CGColorSpaceRelease(colorspace);
