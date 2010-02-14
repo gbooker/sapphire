@@ -62,7 +62,7 @@
 
 - (BOOL)openWithError:(NSError **)error
 {
-	NSLog(@"open with error");
+	//NSLog(@"open with error");
 	NSString *mountDisc = [self attachImage:mountedPath];
 	//NSFileManager *man = [NSFileManager defaultManager];
 	if (mountDisc == nil)
@@ -70,8 +70,7 @@
 	
 	[mountedPath release];
 	mountedPath = [mountDisc retain];
-	NSLog(@"open with error returned path: %@", mountDisc);
-	
+	NSLog(@"%@ %s returned path: %@", self, _cmd, mountDisc);
 	return YES;
 	
 }
@@ -85,7 +84,7 @@
 
 - (NSString *)attachImage:(NSString *)irString
 {
-	NSLog(@"attachImage: %@", irString);
+	NSLog(@"%@ %s %@", self, _cmd, irString);
 	NSTask *irTask = [[NSTask alloc] init];
 	NSPipe *hdip = [[NSPipe alloc] init];
     NSFileHandle *hdih = [hdip fileHandleForReading];
@@ -188,6 +187,64 @@
 	return NO;
 }
 
++ (BOOL)isAvailable
+{
+	NSFileManager *man = [NSFileManager defaultManager];
+	NSString *mountUDF = @"/sbin/mount_udf";
+	if(![man fileExistsAtPath:mountUDF])
+	{
+		NSLog(@"/sbin/mount_udf missing! Mount ISO not available.");
+		return NO;
+	}
+	
+	return [CMPDVDImageAction kextCheckWithBundleID:@"com.apple.filesystems.udf"];
+}
+
++ (BOOL)kextCheckWithBundleID:(NSString *)bundleID
+{
+	//NSString *ksPath = [[NSBundle mainBundle] pathForResource:@"kextstat" ofType:@"" inDirectory:@"bin"];
+	NSString *ksPath = [[NSBundle bundleForClass:[CMPDVDImageAction class]] pathForResource:@"kextstat" ofType:@"" inDirectory:@"bin"];
+	//NSLog(@"ksPath: %@", ksPath);
+	if (ksPath == nil)
+	{
+		return NO;
+	}
+	NSTask *ksTask = [[NSTask alloc] init];
+    NSPipe *pipe = [[NSPipe alloc] init];
+    NSFileHandle *handle = [pipe fileHandleForReading];
+    NSData *outData;
+    NSString *temp = @"";
+    NSMutableArray *lineArray = [[NSMutableArray alloc] init];
+	[ksTask setStandardError:pipe];
+	[ksTask setStandardOutput:pipe];
+	[ksTask setLaunchPath:ksPath];
+	[ksTask setArguments:[NSArray arrayWithObjects:@"-b", bundleID, nil]];
+	[ksTask launch];
+	[ksTask waitUntilExit];
+	
+	while((outData = [handle readDataToEndOfFile]) && [outData length])
+    {
+        temp = [[NSString alloc] initWithData:outData encoding:NSASCIIStringEncoding];
+        [lineArray addObjectsFromArray:[temp componentsSeparatedByString:@"\n"]];
+        [temp release];
+    }
+	[pipe release];
+	//NSLog(@"lineArray: %@ count: %i", lineArray, [lineArray count]);
+	
+	if ([lineArray count] > 1)
+	{
+		NSLog(@"%@ loaded!", bundleID);
+		[lineArray release];
+		[ksTask release];
+		ksTask = nil;
+		return YES;
+	}
+	NSLog(@"%@ not loaded!", bundleID);
+	[lineArray release];
+	[ksTask release];
+	ksTask = nil;
+	return NO;
+}
 
 
 @end

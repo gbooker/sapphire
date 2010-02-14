@@ -11,6 +11,7 @@
 		87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */; };
 		87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */; };
 		87E0038C1126628B004FC2C7 /* CMPISODVDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0038A1126628B004FC2C7 /* CMPISODVDPlayer.m */; };
+		87E006C31127A05F004FC2C7 /* bin in Resources */ = {isa = PBXBuildFile; fileRef = 87E006C01127A05F004FC2C7 /* bin */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		F5001CBF1120939D001B52FE /* CMPOverlayModeAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F5001CBD1120939D001B52FE /* CMPOverlayModeAction.h */; };
@@ -66,6 +67,7 @@
 		87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImageAction.m; sourceTree = "<group>"; };
 		87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPISODVDPlayer.h; sourceTree = "<group>"; };
 		87E0038A1126628B004FC2C7 /* CMPISODVDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPISODVDPlayer.m; sourceTree = "<group>"; };
+		87E006C01127A05F004FC2C7 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* CommonMediaPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CommonMediaPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2F7E79907B2D74100F64583 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -159,6 +161,7 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				87E006C01127A05F004FC2C7 /* bin */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
 			);
@@ -368,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */,
+				87E006C31127A05F004FC2C7 /* bin in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

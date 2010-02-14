@@ -49,19 +49,24 @@
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {
 	//mount iso here
-
 	NSURL *url = [NSURL URLWithString:[imageAsset mediaURL]];
 	NSString *path = [url path];
+	if ([CMPDVDImageAction isAvailable] != YES)
+	{
+		NSLog(@"dvd iso mounting unavailable");
+		return;
+	}
 	imageMount = [[CMPDVDImageAction alloc] initWithPath:path];
-	//NSLog(@"imagePath: %@", path);
+	NSLog(@"imagePath: %@", path);
 	if (![imageMount openWithError:nil] == YES)
 	{
 		NSLog(@"fail");
 		return;
 	}
 	
-	//NSLog(@"mountedPath = %@", [self mountedPath]);
+	NSLog(@"mountedPath = %@", [imageMount mountedPath]);
 	NSString *mountedPath = [imageMount mountedPath];
+	
 	CMPBaseMediaAsset *realAsset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:mountedPath]];
 	BOOL success = [super setMedia:realAsset error:nil];
 	[realAsset release];

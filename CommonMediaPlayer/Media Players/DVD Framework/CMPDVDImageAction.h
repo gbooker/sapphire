@@ -34,4 +34,6 @@
 
 - (NSString *)imagePath;
 - (NSString *)mountedPath;
++ (BOOL)isAvailable;
++ (BOOL)kextCheckWithBundleID:(NSString *)bundleID;
 @end

@@ -202,24 +202,24 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
-				<string>87E0064011273798004FC2C7</string>
+				<string>87E007AB1127BE50004FC2C7</string>
 				<key>PBXProjectModuleLabel</key>
-				<string>CMPISODVDPlayer.h</string>
+				<string>NSFileManager.h</string>
 				<key>PBXSplitModuleInNavigatorKey</key>
 				<dict>
 					<key>Split0</key>
 					<dict>
 						<key>PBXProjectModuleGUID</key>
-						<string>87E0064111273798004FC2C7</string>
+						<string>87E007AC1127BE50004FC2C7</string>
 						<key>PBXProjectModuleLabel</key>
-						<string>CMPISODVDPlayer.h</string>
+						<string>NSFileManager.h</string>
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>87E0064311273798004FC2C7</string>
+						<string>878F1BD31127C2F8006B952B</string>
 						<key>history</key>
 						<array>
-							<string>87E0064211273798004FC2C7</string>
+							<string>87E007F41127C123004FC2C7</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -235,7 +235,87 @@
 				<key>PBXModuleWindowStatusBarHidden2</key>
 				<false/>
 				<key>RubberWindowFrame</key>
-				<string>70 131 1170 690 0 0 1440 878 </string>
+				<string>61 141 1170 690 0 0 1440 878 </string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>87E007B11127BE50004FC2C7</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>NSPathUtilities.h</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>87E007B21127BE50004FC2C7</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>NSPathUtilities.h</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>878F1BD41127C2F8006B952B</string>
+						<key>history</key>
+						<array>
+							<string>87E007F61127C123004FC2C7</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1170, 649}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>38 162 1170 690 0 0 1440 878 </string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Content</key>
+			<dict>
+				<key>PBXProjectModuleGUID</key>
+				<string>87E006F51127AA61004FC2C7</string>
+				<key>PBXProjectModuleLabel</key>
+				<string>CMPDVDPlayer.m</string>
+				<key>PBXSplitModuleInNavigatorKey</key>
+				<dict>
+					<key>Split0</key>
+					<dict>
+						<key>PBXProjectModuleGUID</key>
+						<string>87E006F61127AA61004FC2C7</string>
+						<key>PBXProjectModuleLabel</key>
+						<string>CMPDVDPlayer.m</string>
+						<key>_historyCapacity</key>
+						<integer>0</integer>
+						<key>bookmark</key>
+						<string>878F1BD51127C2F8006B952B</string>
+						<key>history</key>
+						<array>
+							<string>87E007F81127C123004FC2C7</string>
+						</array>
+					</dict>
+					<key>SplitCount</key>
+					<string>1</string>
+				</dict>
+				<key>StatusBarVisibility</key>
+				<true/>
+			</dict>
+			<key>Geometry</key>
+			<dict>
+				<key>Frame</key>
+				<string>{{0, 20}, {1170, 649}}</string>
+				<key>PBXModuleWindowStatusBarHidden2</key>
+				<false/>
+				<key>RubberWindowFrame</key>
+				<string>130 78 1170 690 0 0 1440 878 </string>
 			</dict>
 		</dict>
 		<dict>
@@ -256,10 +336,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>87E0064411273798004FC2C7</string>
+						<string>878F1BD61127C2F8006B952B</string>
 						<key>history</key>
 						<array>
-							<string>87E005BF1126B8BC004FC2C7</string>
+							<string>87E007F91127C123004FC2C7</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -282,46 +362,6 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
-				<string>87E005C11126B8BC004FC2C7</string>
-				<key>PBXProjectModuleLabel</key>
-				<string>CMPATVVersion.m</string>
-				<key>PBXSplitModuleInNavigatorKey</key>
-				<dict>
-					<key>Split0</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
-						<string>87E005C21126B8BC004FC2C7</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>CMPATVVersion.m</string>
-						<key>_historyCapacity</key>
-						<integer>0</integer>
-						<key>bookmark</key>
-						<string>87E0064511273798004FC2C7</string>
-						<key>history</key>
-						<array>
-							<string>87E005AE1126B803004FC2C7</string>
-						</array>
-					</dict>
-					<key>SplitCount</key>
-					<string>1</string>
-				</dict>
-				<key>StatusBarVisibility</key>
-				<true/>
-			</dict>
-			<key>Geometry</key>
-			<dict>
-				<key>Frame</key>
-				<string>{{0, 20}, {1170, 649}}</string>
-				<key>PBXModuleWindowStatusBarHidden2</key>
-				<false/>
-				<key>RubberWindowFrame</key>
-				<string>15 183 1170 690 0 0 1440 878 </string>
-			</dict>
-		</dict>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>PBXProjectModuleGUID</key>
 				<string>87E0057C1126B0C1004FC2C7</string>
 				<key>PBXProjectModuleLabel</key>
 				<string>CMPLeopardDVDPlayer.m</string>
@@ -336,10 +376,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>87E0064611273798004FC2C7</string>
+						<string>878F1BD71127C2F8006B952B</string>
 						<key>history</key>
 						<array>
-							<string>87E0057E1126B0C1004FC2C7</string>
+							<string>87E007FA1127C123004FC2C7</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -376,10 +416,10 @@
 						<key>_historyCapacity</key>
 						<integer>0</integer>
 						<key>bookmark</key>
-						<string>87E0064711273798004FC2C7</string>
+						<string>878F1BD81127C2F8006B952B</string>
 						<key>history</key>
 						<array>
-							<string>87E0054F1126AF81004FC2C7</string>
+							<string>87E007FB1127C123004FC2C7</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -470,7 +510,7 @@
 							<array>
 								<string>0867D691FE84028FC02AAC07</string>
 								<string>F50CCCF01118ECAD00213966</string>
-								<string>034768DFFF38A50411DB9C8B</string>
+								<string>089C1665FE841158C02AAC07</string>
 								<string>1C37FBAC04509CD000000102</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
@@ -515,7 +555,7 @@
 								<key>PBXProjectModuleGUID</key>
 								<string>87E0FF7111260961004FC2C7</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>CMPISODVDPlayer.m</string>
+								<string>CMPDVDImageAction.m</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -523,30 +563,30 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>87E0FF7211260961004FC2C7</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>CMPISODVDPlayer.m</string>
+										<string>CMPDVDImageAction.m</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>87E0063F11273798004FC2C7</string>
+										<string>878F1BD21127C2F8006B952B</string>
 										<key>history</key>
 										<array>
 											<string>87E0FF7311260961004FC2C7</string>
 											<string>87E0034511263CF3004FC2C7</string>
 											<string>87E0034911263CF3004FC2C7</string>
-											<string>87E004841126A225004FC2C7</string>
 											<string>87E004891126A225004FC2C7</string>
 											<string>87E0048A1126A225004FC2C7</string>
-											<string>87E004D91126A491004FC2C7</string>
 											<string>87E0050D1126A784004FC2C7</string>
-											<string>87E005A51126B533004FC2C7</string>
-											<string>87E005D41126BBCE004FC2C7</string>
 											<string>87E005D51126BBCE004FC2C7</string>
 											<string>87E0062B1126BF85004FC2C7</string>
 											<string>87E0062C1126BF85004FC2C7</string>
-											<string>87E0062D1126BF85004FC2C7</string>
 											<string>87E0062E1126BF85004FC2C7</string>
 											<string>87E0063D11273798004FC2C7</string>
-											<string>87E0063E11273798004FC2C7</string>
+											<string>87E0067C11274A1A004FC2C7</string>
+											<string>87E006CB1127A19F004FC2C7</string>
+											<string>87E006CC1127A19F004FC2C7</string>
+											<string>87E007D31127C057004FC2C7</string>
+											<string>87E007D41127C057004FC2C7</string>
+											<string>878F1BC81127C2AA006B952B</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -560,18 +600,18 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {934, 306}}</string>
+								<string>{{0, 0}, {934, 294}}</string>
 								<key>RubberWindowFrame</key>
 								<string>21 63 1361 792 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>306pt</string>
+							<string>294pt</string>
 						</dict>
 						<dict>
 							<key>Proportion</key>
-							<string>440pt</string>
+							<string>452pt</string>
 							<key>Tabs</key>
 							<array>
 								<dict>
@@ -587,7 +627,7 @@
 									<key>GeometryConfiguration</key>
 									<dict>
 										<key>Frame</key>
-										<string>{{10, 27}, {934, 413}}</string>
+										<string>{{10, 27}, {934, 425}}</string>
 										<key>RubberWindowFrame</key>
 										<string>21 63 1361 792 0 0 1440 878 </string>
 									</dict>
@@ -671,11 +711,11 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>87E0FF7611260961004FC2C7</string>
+				<string>878F18611127C22A006B952B</string>
 				<string>1CA23ED40692098700951B8B</string>
-				<string>87E0FF7711260961004FC2C7</string>
+				<string>878F18621127C22A006B952B</string>
 				<string>87E0FF7111260961004FC2C7</string>
-				<string>87E0FF7811260961004FC2C7</string>
+				<string>878F18631127C22A006B952B</string>
 				<string>1CA23EDF0692099D00951B8B</string>
 				<string>1CA23EE00692099D00951B8B</string>
 				<string>1CA23EE10692099D00951B8B</string>
@@ -847,9 +887,10 @@
 	<array>
 		<string>87E005801126B0C1004FC2C7</string>
 		<string>87E0057C1126B0C1004FC2C7</string>
-		<string>87E005C11126B8BC004FC2C7</string>
 		<string>87E005BD1126B8BC004FC2C7</string>
-		<string>87E0064011273798004FC2C7</string>
+		<string>87E006F51127AA61004FC2C7</string>
+		<string>87E007B11127BE50004FC2C7</string>
+		<string>87E007AB1127BE50004FC2C7</string>
 		<string>/Users/blunt/Projects/CommonMediaPlayer/CommonMediaPlayer.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
