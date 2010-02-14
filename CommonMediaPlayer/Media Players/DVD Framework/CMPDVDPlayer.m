@@ -126,6 +126,43 @@ static UInt32						eventCallbackID = 0;
 	return YES;
 }
 
++ (OSErr)getFSRefAtPath:(NSString*)sourceItem ref:(FSRef*)sourceRef
+{
+    OSErr    err;
+    BOOL    isSymLink;
+    id manager=[NSFileManager defaultManager];
+    NSDictionary *sourceAttribute = [manager fileAttributesAtPath:sourceItem
+													 traverseLink:NO];
+    isSymLink = ([sourceAttribute objectForKey:@"NSFileType"] ==
+				 NSFileTypeSymbolicLink);
+    if(isSymLink){
+        const char    *sourceParentPath;
+        FSRef        sourceParentRef;
+        HFSUniStr255    sourceFileName;
+        
+        sourceParentPath = (UInt8*)[[sourceItem
+									 stringByDeletingLastPathComponent] fileSystemRepresentation];
+        err = FSPathMakeRef(sourceParentPath, &sourceParentRef, NULL);
+        if(err == noErr){
+            [[sourceItem lastPathComponent]
+			 getCharacters:sourceFileName.unicode];
+            sourceFileName.length = [[sourceItem lastPathComponent] length];
+            if (sourceFileName.length == 0){
+                err = fnfErr;
+            }
+            else err = FSMakeFSRefUnicode(&sourceParentRef,
+										  sourceFileName.length, sourceFileName.unicode, kTextEncodingFullName,
+										  sourceRef);
+        }
+    }
+    else{
+        err = FSPathMakeRef([sourceItem fileSystemRepresentation],
+							sourceRef, NULL);
+    }
+    
+    return err;
+}
+
 - (BOOL)setMedia:(BRBaseMediaAsset *)anAsset error:(NSError * *)error
 {
 	[asset release];
@@ -146,7 +183,8 @@ static UInt32						eventCallbackID = 0;
 		return NO;
 
 	FSRef fsRef;
-	OSStatus resultz = FSPathMakeRef((UInt8*)cPath, &fsRef, NULL);
+	OSStatus resultz=[CMPDVDPlayer getFSRefAtPath:path ref:&fsRef];
+	//OSStatus resultz = FSPathMakeRef((UInt8*)cPath, &fsRef, NULL);
 	NSLog(@"make path is %d", resultz);
 	OSStatus openError = resultz;
 	if(resultz == noErr)

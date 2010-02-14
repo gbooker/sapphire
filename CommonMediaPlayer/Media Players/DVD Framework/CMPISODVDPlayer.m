@@ -51,11 +51,11 @@
 	//mount iso here
 	NSURL *url = [NSURL URLWithString:[imageAsset mediaURL]];
 	NSString *path = [url path];
-	if ([CMPDVDImageAction isAvailable] != YES)
-	{
-		NSLog(@"dvd iso mounting unavailable");
-		return;
-	}
+	//if ([CMPDVDImageAction isAvailable] != YES)
+//	{
+//		NSLog(@"dvd iso mounting unavailable");
+//		return;
+//	}
 	imageMount = [[CMPDVDImageAction alloc] initWithPath:path];
 	NSLog(@"imagePath: %@", path);
 	if (![imageMount openWithError:nil] == YES)
@@ -101,6 +101,13 @@
 {
 	NSArray *isoExt = [NSArray arrayWithObjects:@"iso", @"img", @"dmg", @"toast", nil];
 	return isoExt;
+}
+
+- (BOOL)canPlay:(NSString *)path withError:(NSError **)error
+{
+	if([super canPlay:path withError:error])
+	
+	return [CMPDVDImageAction isAvailable];
 }
 
 /* For the moment, the super's canPlay doesn't actually check validity of the VIDEO_TS since the ATV likes to return false on valid directories.
