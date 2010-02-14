@@ -136,7 +136,7 @@ static UInt32						eventCallbackID = 0;
     isSymLink = ([sourceAttribute objectForKey:@"NSFileType"] ==
 				 NSFileTypeSymbolicLink);
     if(isSymLink){
-        const char    *sourceParentPath;
+        const UInt8    *sourceParentPath;
         FSRef        sourceParentRef;
         HFSUniStr255    sourceFileName;
         
@@ -156,7 +156,7 @@ static UInt32						eventCallbackID = 0;
         }
     }
     else{
-        err = FSPathMakeRef([sourceItem fileSystemRepresentation],
+        err = FSPathMakeRef((UInt8 *)[sourceItem fileSystemRepresentation],
 							sourceRef, NULL);
     }
     
@@ -171,7 +171,6 @@ static UInt32						eventCallbackID = 0;
 	NSURL *url = [NSURL URLWithString:[asset mediaURL]];
 	NSString *path = [[url path] stringByAppendingPathComponent:@"VIDEO_TS"];
 	NSLog(@"Going to play %@", path);
-	const char *cPath = [path fileSystemRepresentation];
 	
 	BOOL ret = [frameworkLoad openWithError:error];
 	NSLog(@"Framework usable is %d", ret);
