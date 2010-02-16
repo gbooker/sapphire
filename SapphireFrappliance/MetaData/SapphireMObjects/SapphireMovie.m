@@ -297,7 +297,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 					SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not locate cast member %@ of movie %@", castName, self.title);
 			}
 			[castByName release];
-			NSArray *ret = [NSArray arrayWithArray:mutRet];
+			ret = [NSArray arrayWithArray:mutRet];
 			
 			[self setPrimitiveValue:ret forKey:ORDERED_CAST_KEY];
 		}
@@ -356,7 +356,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 					SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not locate genre %@ of movie %@", genreName, self.title);
 			}
 			[genreByName release];
-			NSArray *ret = [NSArray arrayWithArray:mutRet];			
+			ret = [NSArray arrayWithArray:mutRet];			
 			
 			[self setPrimitiveValue:ret forKey:ORDERED_GENRES_KEY];
 		}
