@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8768EBDC112A563800318F1A /* CMPDVDImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 8768EBDA112A563800318F1A /* CMPDVDImporter.h */; };
+		8768EBDD112A563800318F1A /* CMPDVDImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8768EBDB112A563800318F1A /* CMPDVDImporter.m */; };
+		8768EC49112A5E4200318F1A /* AGProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 8768EC47112A5E4200318F1A /* AGProcess.h */; };
+		8768EC4A112A5E4200318F1A /* AGProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 8768EC48112A5E4200318F1A /* AGProcess.m */; };
 		87E0033E11263CBF004FC2C7 /* CMPDVDImageAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */; };
 		87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */; };
 		87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */; };
@@ -63,6 +67,10 @@
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF5E0370ADEE00C91783 /* CommonMediaPlayer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMediaPlayer_Prefix.pch; sourceTree = "<group>"; };
+		8768EBDA112A563800318F1A /* CMPDVDImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDImporter.h; sourceTree = "<group>"; };
+		8768EBDB112A563800318F1A /* CMPDVDImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImporter.m; sourceTree = "<group>"; };
+		8768EC47112A5E4200318F1A /* AGProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGProcess.h; sourceTree = "<group>"; };
+		8768EC48112A5E4200318F1A /* AGProcess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGProcess.m; sourceTree = "<group>"; };
 		87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDImageAction.h; sourceTree = "<group>"; };
 		87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImageAction.m; sourceTree = "<group>"; };
 		87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPISODVDPlayer.h; sourceTree = "<group>"; };
@@ -171,6 +179,8 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				8768EC47112A5E4200318F1A /* AGProcess.h */,
+				8768EC48112A5E4200318F1A /* AGProcess.m */,
 				F50CCAC6111786E000213966 /* CMPPlayer.h */,
 				F50CCAC81117871400213966 /* CMPPlayerController.h */,
 				F50CCACA1117875B00213966 /* CMPTypesDefines.h */,
@@ -240,6 +250,8 @@
 		F50CCCF41118ED0000213966 /* DVD Framework */ = {
 			isa = PBXGroup;
 			children = (
+				8768EBDA112A563800318F1A /* CMPDVDImporter.h */,
+				8768EBDB112A563800318F1A /* CMPDVDImporter.m */,
 				87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */,
 				87E0038A1126628B004FC2C7 /* CMPISODVDPlayer.m */,
 				87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */,
@@ -304,6 +316,8 @@
 				F5002A3011247ACC001B52FE /* BackRowUtils.h in Headers */,
 				87E0033E11263CBF004FC2C7 /* CMPDVDImageAction.h in Headers */,
 				87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */,
+				8768EBDC112A563800318F1A /* CMPDVDImporter.h in Headers */,
+				8768EC49112A5E4200318F1A /* AGProcess.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,6 +409,8 @@
 				F5001CC01120939D001B52FE /* CMPOverlayModeAction.m in Sources */,
 				87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */,
 				87E0038C1126628B004FC2C7 /* CMPISODVDPlayer.m in Sources */,
+				8768EBDD112A563800318F1A /* CMPDVDImporter.m in Sources */,
+				8768EC4A112A5E4200318F1A /* AGProcess.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,6 +26,8 @@
 #import "CMPLeopardDVDPlayer.h"
 #import "CMPLeopardDVDPlayerController.h"
 #import "CMPISODVDPlayer.h"
+#import "CMPDVDImporter.h"
+
 @implementation CMPPlayerManager
 
 + (CMPPlayerManager *)sharedPlayerManager
@@ -54,6 +56,8 @@
 	[knownControllers addObject:[CMPDVDPlayerController class]];
 
 	[self registerPlayer:[CMPISODVDPlayer class] forType:CMPPlayerManagerFileTypeDVDImage withExtensions:[NSArray arrayWithObjects:@"iso", @"dmg", @"img", nil]];
+	
+	[self registerPlayer:[CMPDVDImporter class] forType:CMPPlayerManagerFileTypeDVDImport withExtensions:[NSArray arrayWithObject:@""]];
 	
 	return self;
 }

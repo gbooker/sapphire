@@ -1,8 +1,8 @@
 /*
- * CMPTypesDefines.h
+ * CMPISODVDPlayer.h
  * CommonMediaPlayer
  *
- * Created by Graham Booker on Feb. 1 2010
+ * Created by nito on Feb. 15 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -19,20 +19,15 @@
  * 02111-1307, USA.
  */
 
-typedef enum{
-	CMPPlayerManagerFileTypeQTCompatibleVideo = 0,
-	CMPPlayerManagerFileTypeVideo_TS = 1,
-	CMPPlayerManagerFileTypeDVDImage = 2,
-	CMPPlayerManagerFileTypeAudio = 3,
-	CMPPlayerManagerFileTypeDVDImport = 4,
-	CMPPlayerManagerFileTypeOther = 0xFFFF,
-} CMPPlayerManagerFileType;
+#import "CMPDVDPlayer.h"
+#import "AGProcess.h"
 
-typedef enum{
-	CMPPlayerManagerPlayerTypeQT = 0,
-	CMPPlayerManagerPlayerTypeDVDFramework = 1,
-	CMPPlayerManagerPlayerTypeExternalExecutable = 2,
-	CMPPlayerManagerPlayerTypeCustom = 0xFFFF,  //This means the controller must be matched by class names
-} CMPPlayerManagerPlayerType;
+@class CMPDVDPlayer;
 
-#define CMPErrorDomain @"CMPErrorDomain"
+@interface CMPDVDImporter : CMPDVDPlayer{
+	BRBaseMediaAsset	*imageAsset;	
+}
+- (AGProcess *) dvdImporting;
++ (NSString *)rdiskForPath:(NSString *)path;
+- (void) _postFinishedImportingNotification;
+@end

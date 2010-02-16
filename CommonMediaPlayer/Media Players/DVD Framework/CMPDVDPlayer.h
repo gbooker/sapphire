@@ -88,4 +88,6 @@ typedef enum {
 
 - (void)nextAudioStream;
 - (void)nextSubStream;
++ (BOOL)isVolume:(NSString *)theVolume;
++ (BOOL)isImage:(NSString *)theVolume;
 @end
