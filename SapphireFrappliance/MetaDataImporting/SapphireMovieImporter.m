@@ -283,10 +283,11 @@
 	if(fanart)
 		thumbs = [thumbs arrayByAddingObjectsFromArray:[fanart elementsForName:@"thumb"]];
 	
-	if([thumbs count] && [delegate canDisplayChooser])
+	BOOL canDisplay = [delegate canDisplayChooser];
+	if(canDisplay && [thumbs count])
 		[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
 	else
-		[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
+		[self completeWithState:state withStatus:ImportStateUpdated importComplete:canDisplay];
 }
 
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
