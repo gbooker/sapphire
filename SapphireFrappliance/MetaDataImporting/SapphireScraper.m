@@ -314,13 +314,18 @@ NSString *trimmedString(NSString *str)
 
 NSString *cleanedString(NSString *str)
 {
-	NSXMLDocument *doc = [[NSXMLDocument alloc] initWithXMLString:str options:NSXMLDocumentTidyHTML error:nil];
+	/*TV Rage doesn't understand that an & needs to be &amp; in the HTML, not just '&', so we have to work around yet another instance of their stupidity.  Decoding entities and then re-encoding them seems to be the safest way to do this*/
+	NSString *decoded = (NSString *)CFXMLCreateStringByUnescapingEntities(NULL, (CFStringRef)str, NULL);
+	NSString *reencoded = (NSString *)CFXMLCreateStringByEscapingEntities(NULL, (CFStringRef)decoded, NULL);
+	[decoded release];
+	NSXMLDocument *doc = [[NSXMLDocument alloc] initWithXMLString:reencoded options:NSXMLDocumentTidyHTML error:nil];
 	if(doc)
 	{
 		str = (NSString *)CFXMLCreateStringByEscapingEntities(NULL, (CFStringRef)[doc stringValue], NULL);
 		[str autorelease];
 		[doc release];
 	}
+	[reencoded release];
 	return trimmedString(str);
 }
 
