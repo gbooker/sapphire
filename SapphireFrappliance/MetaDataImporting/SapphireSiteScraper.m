@@ -134,7 +134,9 @@
 - (void)callDelegateSelector:(SEL)selector forConent:(NSString *)xmlResults
 {
 	NSError *error = nil;
-	NSXMLDocument *document = [[NSXMLDocument alloc] initWithXMLString:xmlResults options:0 error:&error];
+	NSXMLDocument *document = nil;
+	if([xmlResults length])
+		document = [[NSXMLDocument alloc] initWithXMLString:xmlResults options:0 error:&error];
 	
 	[finishedInvokation release];
 	finishedInvokation = [[NSInvocation invocationWithMethodSignature:[delegate methodSignatureForSelector:selector]] retain];
