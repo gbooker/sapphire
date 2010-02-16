@@ -1,5 +1,5 @@
 /*
- * CMPISODVDPlayer.h
+ * CMPDVDImporter.h
  * CommonMediaPlayer
  *
  * Created by nito on Feb. 15 2010
