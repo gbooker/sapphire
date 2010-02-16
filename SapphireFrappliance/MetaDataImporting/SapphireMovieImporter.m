@@ -451,7 +451,7 @@
 	{
 		if(!tran)
 			tran = [SapphireMovieTranslation createMovieTranslationWithName:movieTranslationString inContext:moc];
-		[tran setIMDBLink:[NSString stringWithFormat:@"/title/tt%d", searchIMDBNumber]];
+		[tran setIMDBLink:[NSString stringWithFormat:@"/title/tt%08d", searchIMDBNumber]];
 	}
 	if([tran IMDBLink] == nil)
 	{
