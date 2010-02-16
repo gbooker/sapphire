@@ -413,6 +413,12 @@
 	if(cancelled)
 		return;
 	
+	if(episodeList == nil)
+	{
+		/*Failed to get data, network likely, don't mark this as imported*/
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
 	NSMutableArray *infoArray;
 	int secondEp = state->secondEp;
 	if(secondEp)
@@ -441,6 +447,12 @@
 	if(cancelled)
 		return;
 	
+	if(details == nil)
+	{
+		/*Failed to get data, network likely, don't mark this as imported*/
+		[self completeWithState:tvState withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
 	int index = state->index;
 	NSXMLElement *root = [details rootElement];
 	NSString *epTitle = stringValueOfChild(root, @"title");
