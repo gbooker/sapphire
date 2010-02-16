@@ -126,6 +126,86 @@ static UInt32						eventCallbackID = 0;
 	return YES;
 }
 
++ (BOOL)isVolume:(NSString *)theVolume
+{
+	NSDictionary *attrs = [[NSFileManager defaultManager] fileAttributesAtPath:theVolume traverseLink:YES];
+	int fsType = [[attrs objectForKey:NSFileSystemFileNumber] intValue];
+	//NSLog(@"Fstype: %i", fsType);
+	//NSLog(@"attrs: %@", attrs);
+	BOOL isVolume = NO;
+	switch (fsType) {
+			
+		case 2: //is volume
+			NSLog(@"%@, is a volume!", [theVolume lastPathComponent]);
+			isVolume = YES;
+			break;
+		default:
+			NSLog(@"not a volume: %i, %@", fsType,[theVolume lastPathComponent]);
+			isVolume = NO;
+			break;
+	}
+	return isVolume;
+}
+
++ (BOOL)isImage:(NSString *)theVolume
+{
+	if (![self isVolume:theVolume])
+	{
+		NSLog(@"%@ is NOT a disc image", [theVolume lastPathComponent]);
+		return NO;
+	}
+	
+	
+	NSTask *hdiTask = [[NSTask alloc] init];
+	NSPipe *pipe = [[NSPipe alloc] init];
+	NSFileHandle *handle = [pipe fileHandleForReading];
+	[hdiTask setLaunchPath:@"/usr/bin/hdiutil"];
+	[hdiTask setArguments:[NSArray arrayWithObjects:@"info", @"-plist", nil]];
+	[hdiTask setStandardError:pipe];
+	[hdiTask setStandardOutput:pipe];
+	
+	[hdiTask launch];
+	[hdiTask waitUntilExit];
+	id vDict;
+	NSString *error;
+	NSPropertyListFormat format;
+	NSData *outData;
+	while((outData = [handle readDataToEndOfFile]) && [outData length])
+    {
+		
+		vDict = [NSPropertyListSerialization propertyListFromData:outData
+												 mutabilityOption:NSPropertyListImmutable
+														   format:&format
+												 errorDescription:&error];	
+	}
+	
+	[hdiTask release];
+	hdiTask = nil;
+	[pipe release];
+	pipe = nil;
+	
+	if (error == nil)
+	{
+		NSArray *imageArray = [vDict objectForKey:@"images"];
+		NSEnumerator *imageEnum = [imageArray objectEnumerator];
+		id currentObject;
+		while (currentObject = [imageEnum nextObject])
+		{
+			NSArray *plistArray = [currentObject objectForKey:@"system-entities"];
+			id currentItem = [plistArray objectAtIndex:0];
+			NSString *mountPath = [currentItem objectForKey:@"mount-point"];
+			if ([[mountPath lastPathComponent] isEqualToString:[theVolume lastPathComponent]])
+			{
+				NSLog(@"%@ is a disc image", [theVolume lastPathComponent]);
+				return YES;
+			}
+			
+		}
+	}
+	NSLog(@"%@ is NOT a disc image", [theVolume lastPathComponent]);
+	return NO;
+}
+
 + (OSErr)getFSRefAtPath:(NSString*)sourceItem ref:(FSRef*)sourceRef
 {
     OSErr    err;
