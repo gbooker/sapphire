@@ -91,6 +91,7 @@ typedef enum {
 - (CMPDVDPlayerPlayHead *)addPlayheadOverlay;
 - (CMPDVDBlurredMenu *)addBlurredMenuOverlayWithItems:(NSArray *)items;
 - (void)closeOverlay:(CMPDVDOverlayWindow *)overlay;
+- (void)closeOverlay:(CMPDVDOverlayWindow *)overlay withFade:(NSNumber *)fadeTimeNumber;
 - (void)closeAllOverlays;
 - (void)closeAllOverlaysWithFadeTime:(float)fadeTime;
 

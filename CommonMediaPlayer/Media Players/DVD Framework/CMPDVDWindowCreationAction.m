@@ -84,6 +84,9 @@
 
 - (void)displayWithFadeTime:(float)aFadeTime
 {
+	if(finalOpacity == 1)
+		//Already displayed
+		return;
 	//Same as above
 	if(![CMPATVVersion usingLeopard])
 		aFadeTime = ANIMATE_TIME_INTERVAL / 2;
@@ -742,7 +745,12 @@ static int CreateEmptyWindow(CGRect myFrame)
 
 - (void)closeOverlay:(CMPDVDOverlayWindow *)overlay
 {
-	[overlay close];
+	[self closeOverlay:overlay withFade:[NSNumber numberWithFloat:0]];
+}
+
+- (void)closeOverlay:(CMPDVDOverlayWindow *)overlay withFade:(NSNumber *)fadeTimeNumber
+{
+	[overlay closeWithFadeTime:fadeTimeNumber];
 	[overlays removeObject:overlay];
 }
 

@@ -140,9 +140,11 @@ static NSTimer *timer = nil;
 	[delegate release];
 	[windowCreation release];
 	[overlayDismiss invalidate];
+	[statusOverlay release];
 	[subtitlesOverlay release];
 	[audioOverlay release];
 	[chapterOverlay release];
+	[playheadOverlay release];
 	[blurredMenu release];
 	[super dealloc];
 }
@@ -186,7 +188,7 @@ static NSTimer *timer = nil;
 		[windowCreation performSelector:@selector(closeOverlay:) withObject:shield afterDelay:0.5];
 	}
 	else
-		[windowCreation closeOverlay:shield];
+		[windowCreation closeOverlay:shield withFade:[NSNumber numberWithFloat:0]];
 }
 
 - (void)playbackStopped
@@ -319,28 +321,57 @@ static NSTimer *timer = nil;
 	[windowCreation closeWithError:nil];
 }
 
-- (void)releaseAllOverlaysWithFadeTime:(float)fadeTime
+static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDVDOverlayWindow * *overlay, NSNumber *fadeTime)
 {
-	[windowCreation closeAllOverlaysWithFadeTime:fadeTime];
-	[subtitlesOverlay release];
-	subtitlesOverlay = nil;
-	[audioOverlay release];
-	audioOverlay = nil;
-	[chapterOverlay release];
-	chapterOverlay = nil;
-	overlayMode = CMPDVDPlayerControllerOverlayModeNormal;
+	CMPDVDOverlayWindow *actualOverlay = *overlay;
+	[windowCreation closeOverlay:actualOverlay withFade:fadeTime];
+	[actualOverlay release];
+	*overlay = nil;
 }
 
-- (void)dismissOverlaysWithFadeTime:(float)fadeTime
+- (void)overlayModeChangedWithFade:(float)fade
 {
-	[self releaseAllOverlaysWithFadeTime:fadeTime];
-	[overlayDismiss invalidate];
-	overlayDismiss = nil;
+	NSNumber *fadeTime = [NSNumber numberWithFloat:fade];
+	BOOL closeStatus = (statusOverlay != nil);
+	BOOL closeSubtitles = (subtitlesOverlay != nil);
+	BOOL closeAudio = (audioOverlay != nil);
+	BOOL closeChapter = (chapterOverlay != nil);
+	BOOL closePlayhead = (playheadOverlay != nil);
+	
+	switch (overlayMode) {
+		case CMPDVDPlayerControllerOverlayModeStatus:
+			closeStatus = NO;
+			closePlayhead = NO;
+			break;
+		case CMPDVDPlayerControllerOverlayModeSubAndAudio:
+			closeSubtitles = NO;
+			closeAudio = NO;
+			break;
+		case CMPDVDPlayerControllerOverlayModeChapters:
+			closeChapter = NO;
+			closePlayhead = NO;
+			break;
+		default:
+			break;
+	}
+	
+	if(closeStatus)
+		closeAndNilOverlay(windowCreation, &statusOverlay, fadeTime);
+	if(closeSubtitles)
+		closeAndNilOverlay(windowCreation, &subtitlesOverlay, fadeTime);
+	if(closeAudio)
+		closeAndNilOverlay(windowCreation, &audioOverlay, fadeTime);
+	if(closeChapter)
+		closeAndNilOverlay(windowCreation, &chapterOverlay, fadeTime);
+	if(closePlayhead)
+		closeAndNilOverlay(windowCreation, &playheadOverlay, fadeTime);
 }
 
 - (void)fadeOverlays
 {
-	[self dismissOverlaysWithFadeTime:0.5];
+	overlayDismiss = nil;
+	overlayMode = CMPDVDPlayerControllerOverlayModeNone;
+	[self overlayModeChangedWithFade:0.5];
 }
 
 - (void)resetOverlayTimerTo:(NSTimeInterval)time
@@ -351,54 +382,42 @@ static NSTimer *timer = nil;
 
 - (void)showPlayheadOverlay
 {
-	CMPDVDPlayerPlayHead *playhead = [windowCreation addPlayheadOverlay];
-	[playhead setPlayer:player];
-	[playhead displayWithFadeTime:0.1];
+	if(playheadOverlay)
+		return;
+	playheadOverlay = [[windowCreation addPlayheadOverlay] retain];
+	[playheadOverlay setPlayer:player];
+	[playheadOverlay displayWithFadeTime:0.1];
 }
 
-- (void)showSubAndAudioOverlays
+- (void)showSubAndAudioMode
 {
-	[self releaseAllOverlaysWithFadeTime:0];
+	overlayMode = CMPDVDPlayerControllerOverlayModeSubAndAudio;
+	[self overlayModeChangedWithFade:0];
 	
-	subtitlesOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
+	if(!subtitlesOverlay)
+		subtitlesOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
 	[subtitlesOverlay setText:[player currentSubFormat]];
 	[subtitlesOverlay displayWithFadeTime:0.25];
-	audioOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperRight] retain];
+	if(!audioOverlay)
+		audioOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperRight] retain];
 	[audioOverlay setText:[player currentAudioFormat]];
 	[audioOverlay displayWithFadeTime:0.25];
-	overlayMode = CMPDVDPlayerControllerOverlayModeSubAndAudio;
+	
 	[self resetOverlayTimerTo:10];
 }
 
-- (void)showChapterOverlay
+- (void)showChapterMode
 {
-	[self releaseAllOverlaysWithFadeTime:0];
-	chapterOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
+	overlayMode = CMPDVDPlayerControllerOverlayModeChapters;
+	[self overlayModeChangedWithFade:0];
+	
+	if(!chapterOverlay)
+		chapterOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
 	[chapterOverlay setText:[NSString stringWithFormat:@"Chapter %d/%d", [player currentChapter], [player chapters]]];
 	[chapterOverlay displayWithFadeTime:0.25];
 	[self showPlayheadOverlay];
-	overlayMode = CMPDVDPlayerControllerOverlayModeChapters;
+	
 	[self resetOverlayTimerTo:10];
-}
-
-- (void)setOverlayText:(NSString *)text inPosition:(CMPDVDOverlayPosition)position dismissingOthers:(BOOL)dismiss
-{
-	if(overlayMode != CMPDVDPlayerControllerOverlayModeNormal)
-		return;
-	if(dismiss)
-		[self releaseAllOverlaysWithFadeTime:0];
-	CMPDVDTextView *overlay = [windowCreation addTextOverlayInPosition:position];
-	[overlay setText:text];
-	[overlay displayWithFadeTime:0.25];
-	[self resetOverlayTimerTo:3];
-}
-
-- (void)showResumeOverlayWithDismiss:(BOOL)dismiss
-{
-	if(dismiss)
-		[self dismissOverlaysWithFadeTime:0];
-	blurredMenu = [[windowCreation addBlurredMenuOverlayWithItems:[NSArray arrayWithObjects:@"Resume Playback", @"Start From Beginning", @"Main Menu", nil]] retain];
-	[blurredMenu displayWithFadeTime:0.5];
 }
 
 - (NSString *)stringForPlayerState
@@ -422,10 +441,38 @@ static NSTimer *timer = nil;
 	return text;
 }
 
-- (void)showStateOverlay
+- (void)showStateMode
 {
-	[self setOverlayText:[self stringForPlayerState] inPosition:CMPDVDOverlayUpperLeft dismissingOthers:YES];
+	overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+	[self overlayModeChangedWithFade:0];
+	
+	if(!statusOverlay)
+		statusOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
+	[statusOverlay setText:[self stringForPlayerState]];
+	[statusOverlay displayWithFadeTime:0.25];
 	[self showPlayheadOverlay];
+	
+	[self resetOverlayTimerTo:3];
+}
+
+- (void)dismissOverlaysWithFadeTime:(float)fadeTime
+{
+	overlayMode = CMPDVDPlayerControllerOverlayModeNone;
+	[self overlayModeChangedWithFade:fadeTime];
+	
+	//Catch any others
+	[windowCreation closeAllOverlaysWithFadeTime:fadeTime];
+	
+	[overlayDismiss invalidate];
+	overlayDismiss = nil;
+}
+
+- (void)showResumeOverlayWithDismiss:(BOOL)dismiss
+{
+	if(dismiss)
+		[self dismissOverlaysWithFadeTime:0];
+	blurredMenu = [[windowCreation addBlurredMenuOverlayWithItems:[NSArray arrayWithObjects:@"Resume Playback", @"Start From Beginning", @"Main Menu", nil]] retain];
+	[blurredMenu displayWithFadeTime:0.5];
 }
 
 - (BOOL)brEventAction:(BREvent *)event
@@ -498,12 +545,12 @@ static NSTimer *timer = nil;
 				return [blurredMenu previousItem];
 			else if(inMenu)
 				[player doUserNavigation:CMPDVDPlayerNavigationUp];
-			else if(overlayMode == CMPDVDPlayerControllerOverlayModeNormal)
-				[self showSubAndAudioOverlays];
+			else if(overlayMode <= CMPDVDPlayerControllerOverlayModeStatus)
+				[self showSubAndAudioMode];
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeSubAndAudio)
-				overlayMode = CMPDVDPlayerControllerOverlayModeNormal;
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeChapters)
-				overlayMode = CMPDVDPlayerControllerOverlayModeNormal;
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 			else
 				;//Something else
 			break;
@@ -513,12 +560,12 @@ static NSTimer *timer = nil;
 				return [blurredMenu nextItem];
 			else if(inMenu)
 				[player doUserNavigation:CMPDVDPlayerNavigationDown];
-			else if(overlayMode == CMPDVDPlayerControllerOverlayModeNormal)
-				[self showChapterOverlay];
+			else if(overlayMode <= CMPDVDPlayerControllerOverlayModeStatus)
+				[self showChapterMode];
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeSubAndAudio)
-				overlayMode = CMPDVDPlayerControllerOverlayModeNormal;
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeChapters)
-				overlayMode = CMPDVDPlayerControllerOverlayModeNormal;
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 			else
 				;//Something else
 			break;
@@ -568,8 +615,8 @@ static NSTimer *timer = nil;
 			return [super brEventAction:event];
 	}
 	
-	if(!supressStateDisplay && overlayMode == CMPDVDPlayerControllerOverlayModeNormal)
-		[self showStateOverlay];
+	if(!supressStateDisplay && overlayMode <= CMPDVDPlayerControllerOverlayModeStatus)
+		[self showStateMode];
 	
 	return YES;
 }
