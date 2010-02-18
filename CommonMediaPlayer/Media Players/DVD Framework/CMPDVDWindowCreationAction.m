@@ -138,7 +138,7 @@
 	textField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 300, 300)];
 	[[self contentView] addSubview:textField];
 	[textField setStringValue:@""];
-	[textField setTextColor:[NSColor blueColor]];
+	[textField setTextColor:[NSColor colorWithDeviceHue:227.0f/360.0f saturation:.60f brightness:1 alpha:1]];
 	[textField setBackgroundColor:[NSColor blackColor]];
 	NSFont *font = [textField font];
 	NSFont *newFont = [NSFont fontWithName:[font fontName] size:contentRect.size.height / 15];
@@ -200,15 +200,16 @@
 	[path lineToPoint:NSMakePoint(width-height/2, 0)];
 	[path appendBezierPathWithArcWithCenter:NSMakePoint(width-height/2, height/2) radius:height/2 startAngle:270 endAngle:90];
 	[path closePath];
-	[[NSColor colorWithDeviceRed:0.25 green:0.25 blue:1 alpha:1] set];
+	[[NSColor colorWithDeviceHue:227.0f/360.0f saturation:.60f brightness:1 alpha:1] set];
 	[path fill];
 	
 	path = [NSBezierPath bezierPath];
 	float position = playHeadLocation * (width - height) + height/2;
-	[path moveToPoint:NSMakePoint(position, 0)];
-	[path lineToPoint:NSMakePoint(position-height/2, height/2)];
-	[path lineToPoint:NSMakePoint(position, height)];
-	[path lineToPoint:NSMakePoint(position+height/2, height/2)];
+	float border = height / 20;
+	[path moveToPoint:NSMakePoint(position, border)];
+	[path lineToPoint:NSMakePoint(position-height/2+border, height/2)];
+	[path lineToPoint:NSMakePoint(position, height-border)];
+	[path lineToPoint:NSMakePoint(position+height/2-border, height/2)];
 	[path closePath];
 	[[NSColor blackColor] set];
 	[path fill];
@@ -232,13 +233,14 @@
 		return self;
 	
 	float myWidth = contentRect.size.width * 27 / 32;
-	float textHeight = contentRect.size.height * 5 / 72;
+	float textHeight = contentRect.size.height * 3 / 72;
 	float textWidth = textHeight * 3;
-	float textSize = contentRect.size.height / 20;
+	float textBuffer = textHeight / 2;
+	float textSize = contentRect.size.height / 33;
 	elapsedField = [[NSTextField alloc] initWithFrame:NSMakeRect(0, (textSize-textHeight)/7, textWidth, textHeight)];
 	[[self contentView] addSubview:elapsedField];
 	[elapsedField setStringValue:@""];
-	[elapsedField setTextColor:[NSColor blueColor]];
+	[elapsedField setTextColor:[NSColor whiteColor]];
 	[elapsedField setBackgroundColor:[NSColor blackColor]];
 	NSFont *font = [elapsedField font];
 	NSFont *newFont = [NSFont fontWithName:[font fontName] size:textSize];
@@ -251,14 +253,14 @@
 	durationField = [[NSTextField alloc] initWithFrame:NSMakeRect(myWidth-textWidth, (textSize-textHeight)/7, textWidth, textHeight)];
 	[[self contentView] addSubview:durationField];
 	[durationField setStringValue:@""];
-	[durationField setTextColor:[NSColor blueColor]];
+	[durationField setTextColor:[NSColor whiteColor]];
 	[durationField setBackgroundColor:[NSColor blackColor]];
 	[durationField setFont:newFont];
 	[durationField setBezeled:NO];
 	[durationField setBordered:NO];
 	[durationField setSelectable:NO];
 	
-	playView = [[CMPDVDPlayerPlayHeadView alloc] initWithFrame:NSMakeRect(textWidth, textHeight / 5, myWidth-textWidth*2, textHeight * 3 /5)];
+	playView = [[CMPDVDPlayerPlayHeadView alloc] initWithFrame:NSMakeRect(textWidth + textBuffer, textHeight / 5, myWidth-textWidth*2-textBuffer*2, textHeight * 3 /5)];
 	[[self contentView] addSubview:playView];
 	[self setFrame:NSMakeRect(contentRect.size.width * 5 / 64, textHeight*2, myWidth, textHeight) display:NO];
 	

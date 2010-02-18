@@ -68,18 +68,20 @@ int main(int argc, const char *argv[])
 
 	NSApplicationLoad();
 	
-#if 0
-	CMPDVDPlayerPlayHead *playhead = [[CMPDVDPlayerPlayHead alloc] initWithContentRect:NSMakeRect(0, 0, 1440, 900) position:CMPDVDOverlayLowerLeft overWindow:0];
+#if 1
+	CMPDVDPlayerPlayHead *playhead = [[CMPDVDPlayerPlayHead alloc] initWithContentRect:NSMakeRect(0, 0, 1440, 900) overWindow:0];
 	
 	[playhead setPlayer:[[something alloc] init]];
 	[playhead makeKeyAndOrderFront:nil];
 #endif
 	
+#if 0
 	NSArray *items = [NSArray arrayWithObjects:@"Resume Playback", @"Start From Beginning", @"Main Menu", nil];
 	CMPDVDBlurredMenu *menu = [[CMPDVDBlurredMenu alloc] initWithItems:items contentRect:NSMakeRect(0, 0, 1440, 900) overWindow:0];
 	[menu makeKeyAndOrderFront:nil];
 	
 	[NSTimer scheduledTimerWithTimeInterval:.2 target:[[something alloc] init] selector:@selector(randomDirection:) userInfo:menu repeats:YES];
+#endif
 		
 	NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
 	while([currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
