@@ -166,8 +166,8 @@ static UInt32						eventCallbackID = 0;
 	
 	[hdiTask launch];
 	[hdiTask waitUntilExit];
-	id vDict;
-	NSString *error;
+	id vDict = nil;
+	NSString *error = nil;
 	NSPropertyListFormat format;
 	NSData *outData;
 	while((outData = [handle readDataToEndOfFile]) && [outData length])

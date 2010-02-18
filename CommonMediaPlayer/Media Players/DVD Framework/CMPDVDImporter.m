@@ -21,6 +21,12 @@
 
 #import "CMPDVDImporter.h"
 
+@interface NSObject (GrowlApplicationBridgeRoutines)
++ (void)setGrowlDelegate:(id)delegate;
++ (void) notifyWithTitle:(NSString *)title description:(NSString *)description notificationName:(NSString *)notifName iconData:(NSData *)iconData priority:(signed int)priority isSticky:(BOOL)isSticky clickContext:(id)clickContext;
+@end
+
+
 @implementation CMPDVDImporter
 
 
@@ -139,7 +145,7 @@
 	return nil;
 }
 
-- (BOOL)initiatePlaybackWithResume:(BOOL *)resume
+- (void)initiatePlaybackWithResume:(BOOL *)resume
 {
 	
 	NSURL *url = [NSURL URLWithString:[asset mediaURL]];
@@ -153,13 +159,10 @@
 	{
 		[currentTask terminate];
 		//if a dvd is already importing, we kill it
-		return NO;
 	}
 	[NSThread detachNewThreadSelector: @selector(importDVD:)
 							 toTarget: self
 						   withObject: dvdArray];
-	
-	return YES;
 }
 
 + (NSString *)rdiskForPath:(NSString *)path
@@ -199,9 +202,9 @@
 			mnt = nil;
 			[pip release];
 			pip = nil;
-			return rdisk;
-			
-		} else if([arr1 count] > 1)
+			break;
+		}
+		else if([arr1 count] > 1)
 		{
 			rdisk = [arr1 objectAtIndex:0];
 			NSArray *arc = [rdisk pathComponents];
@@ -210,10 +213,10 @@
 			mnt = nil;
 			[pip release];
 			pip = nil;
-			return rdisk;
-			
+			break;
 		}
 	}
+	[lineArray release];
     [mnt release];
 	mnt = nil;
 	[pip release];

@@ -466,8 +466,8 @@ AGGetMachTaskEvents(task_t task, int *faults, int *pageins, int *cow_faults, int
 
 - (void)doProcargs
 {       
-	id args = [NSMutableArray array];
-	id env = [NSMutableDictionary dictionary];
+	NSMutableArray *args = [NSMutableArray array];
+	NSMutableDictionary *env = [NSMutableDictionary dictionary];
 	int mib[3];
 
 	// make sure this is only executed once for an instance
@@ -604,7 +604,7 @@ AGGetMachTaskEvents(task_t task, int *faults, int *pageins, int *cow_faults, int
 				if (index != NSNotFound)
 					[env setObject:[string substringFromIndex:index + 1] forKey:[string substringToIndex:index]];
 			}
-			args = [args subarrayWithRange:NSMakeRange(0, i + 1)];
+			[args removeObjectsInRange:NSMakeRange(i+1, [args count]-(i+1))];
 		} else {
 			// we're using the older sysctl selector, so we just guess by looking for an '=' in the argument
 			int i;
@@ -615,7 +615,7 @@ AGGetMachTaskEvents(task_t task, int *faults, int *pageins, int *cow_faults, int
 					break;
 				[env setObject:[string substringFromIndex:index + 1] forKey:[string substringToIndex:index]];
 			}
-			args = [args subarrayWithRange:NSMakeRange(0, i + 1)];
+			[args removeObjectsInRange:NSMakeRange(i+1, [args count]-(i+1))];
 		}
 	} else {
 		parserFailure = YES;
