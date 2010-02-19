@@ -49,6 +49,7 @@
 		F595C4301119F79700C6C322 /* CMPDVDFrameworkLoadAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F595C42E1119F79700C6C322 /* CMPDVDFrameworkLoadAction.m */; };
 		F595C652111A70CD00C6C322 /* CMPBaseMediaAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = F595C650111A70CD00C6C322 /* CMPBaseMediaAsset.h */; };
 		F595C653111A70CD00C6C322 /* CMPBaseMediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = F595C651111A70CD00C6C322 /* CMPBaseMediaAsset.m */; };
+		F5FE4F18112E11D1007EC309 /* CMPDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F5FE4F17112E11D1007EC309 /* CMPDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		F595C42E1119F79700C6C322 /* CMPDVDFrameworkLoadAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDFrameworkLoadAction.m; sourceTree = "<group>"; };
 		F595C650111A70CD00C6C322 /* CMPBaseMediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPBaseMediaAsset.h; sourceTree = "<group>"; };
 		F595C651111A70CD00C6C322 /* CMPBaseMediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPBaseMediaAsset.m; sourceTree = "<group>"; };
+		F5FE4F17112E11D1007EC309 /* CMPDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +193,7 @@
 				F50CCDA91118F3B400213966 /* CMPATVVersion.m */,
 				F595C650111A70CD00C6C322 /* CMPBaseMediaAsset.h */,
 				F595C651111A70CD00C6C322 /* CMPBaseMediaAsset.m */,
+				F5FE4F17112E11D1007EC309 /* CMPDefines.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */,
 				8768EBDC112A563800318F1A /* CMPDVDImporter.h in Headers */,
 				8768EC49112A5E4200318F1A /* AGProcess.h in Headers */,
+				F5FE4F18112E11D1007EC309 /* CMPDefines.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +468,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "General Headers/CommonMediaPlayer_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_PREFIX_HEADER = Classes/CMPDefines.h;
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns/nitoTV.frappliance/Contents/Frameworks;
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -491,6 +497,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "General Headers/CommonMediaPlayer_Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_PREFIX_HEADER = Classes/CMPDefines.h;
+				INFOPLIST_PREPROCESS = YES;
 				INSTALL_PATH = /System/Library/CoreServices/Finder.app/Contents/PlugIns/nitoTV.frappliance/Contents/Frameworks/;
 				OTHER_LDFLAGS = (
 					"-undefined",

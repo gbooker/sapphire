@@ -39,3 +39,61 @@
 - (id <CMPPlayerController>)playerControllerForPlayer:(id <CMPPlayer>)player scene:(BRRenderScene *)scene preferences:(NSDictionary *)preferences;
 
 @end
+
+#ifdef FrameworkLoadDebug
+#define FrameworkLoadPrint(...) NSLog(__VA_ARGS__)
+#else
+#define FrameworkLoadPrint(...)
+#endif
+
+static inline BOOL needCopy(NSString *frameworkPath)
+{
+	NSFileManager *fm = [NSFileManager defaultManager];
+	BOOL isDir = NO;
+	FrameworkLoadPrint(@"Checking if dir exists");
+	if(![fm fileExistsAtPath:frameworkPath isDirectory:&isDir] || !isDir)
+		return YES;
+	
+	NSBundle *bundle = [NSBundle bundleWithPath:frameworkPath];
+	NSString *plistPath = [bundle pathForResource:@"Info" ofType:@"plist"];
+	NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+	
+	NSString *version = [plist objectForKey:@"CFBundleVersion"];
+	FrameworkLoadPrint(@"Version is %@:%d compared to %d", version, [version intValue], CMPVersion);
+	if([version intValue] < CMPVersion)
+		return YES;
+	
+	return NO;
+}
+
+static inline BOOL loadCMPFramework(NSString *frapPath)
+{
+	NSString *frameworkPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Frameworks/CommonMediaPlayer.framework"];
+	FrameworkLoadPrint(@"Path is at %@", frameworkPath);
+	BOOL neededCopy = needCopy(frameworkPath);
+	FrameworkLoadPrint(@"Need copy is %d", neededCopy);
+	if(neededCopy)
+	{
+		NSFileManager *fm = [NSFileManager defaultManager];
+		FrameworkLoadPrint(@"Going to copy %@", [frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"]);
+		BOOL success = [fm removeFileAtPath:frameworkPath handler:nil];
+		FrameworkLoadPrint(@"Delete success is %d", success);
+		success = [fm copyPath:[frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"] toPath:frameworkPath handler:nil];
+		FrameworkLoadPrint(@"Copy success is %d", success);
+		if(!success || needCopy(frameworkPath))
+			//We failed in our copy too!
+			return NO;
+	}
+	
+	NSBundle *framework = [NSBundle bundleWithPath:frameworkPath];
+	FrameworkLoadPrint(@"Bundle is %@", framework);
+	if([framework isLoaded] && neededCopy)
+	{
+		//We should restart here
+		FrameworkLoadPrint(@"Need to restart");
+		[[NSApplication sharedApplication] terminate:nil];
+	}
+	
+	FrameworkLoadPrint(@"Loading framework");
+	return [framework load];
+}

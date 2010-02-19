@@ -1,8 +1,8 @@
 /*
- * CMPTypesDefines.h
+ * CMPDefines.h
  * CommonMediaPlayer
  *
- * Created by Graham Booker on Feb. 1 2010
+ * Created by Graham Booker on Feb. 18 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -19,22 +19,6 @@
  * 02111-1307, USA.
  */
 
-#import "CMPDefines.h"
+//Note, only defines should ever be in this file!
 
-typedef enum{
-	CMPPlayerManagerFileTypeQTCompatibleVideo = 0,
-	CMPPlayerManagerFileTypeVideo_TS = 1,
-	CMPPlayerManagerFileTypeDVDImage = 2,
-	CMPPlayerManagerFileTypeAudio = 3,
-	CMPPlayerManagerFileTypeDVDImport = 4,
-	CMPPlayerManagerFileTypeOther = 0xFFFF,
-} CMPPlayerManagerFileType;
-
-typedef enum{
-	CMPPlayerManagerPlayerTypeQT = 0,
-	CMPPlayerManagerPlayerTypeDVDFramework = 1,
-	CMPPlayerManagerPlayerTypeExternalExecutable = 2,
-	CMPPlayerManagerPlayerTypeCustom = 0xFFFF,  //This means the controller must be matched by class names
-} CMPPlayerManagerPlayerType;
-
-#define CMPErrorDomain @"CMPErrorDomain"
+#define CMPVersion 1  //0x0000 0001
