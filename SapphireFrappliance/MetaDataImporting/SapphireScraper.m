@@ -314,19 +314,28 @@ NSString *trimmedString(NSString *str)
 
 NSString *cleanedString(NSString *str)
 {
+	NSMutableString *mutStr = [[NSMutableString alloc] init];
+	NSScanner *scanner = [NSScanner scannerWithString:str];
+	[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+	while(![scanner isAtEnd])
+	{
+		NSString *append = nil;
+		[scanner scanUpToString:@"<" intoString:&append];
+		if(append)
+			[mutStr appendString:append];
+		NSString *tag = nil;
+		[scanner scanUpToString:@">" intoString:&tag];
+		if([tag hasPrefix:@"<br"] && ([tag length] == 3 || [tag characterAtIndex:3] == ' ' || [tag characterAtIndex:3] == '/'))
+			[mutStr appendString:@"\n"];
+		[scanner scanString:@">" intoString:nil];
+	}
 	/*TV Rage doesn't understand that an & needs to be &amp; in the HTML, not just '&', so we have to work around yet another instance of their stupidity.  Decoding entities and then re-encoding them seems to be the safest way to do this*/
-	NSString *decoded = (NSString *)CFXMLCreateStringByUnescapingEntities(NULL, (CFStringRef)str, NULL);
+	NSString *decoded = (NSString *)CFXMLCreateStringByUnescapingEntities(NULL, (CFStringRef)mutStr, NULL);
 	NSString *reencoded = (NSString *)CFXMLCreateStringByEscapingEntities(NULL, (CFStringRef)decoded, NULL);
 	[decoded release];
-	NSXMLDocument *doc = [[NSXMLDocument alloc] initWithXMLString:reencoded options:NSXMLDocumentTidyHTML error:nil];
-	if(doc)
-	{
-		str = (NSString *)CFXMLCreateStringByEscapingEntities(NULL, (CFStringRef)[doc stringValue], NULL);
-		[str autorelease];
-		[doc release];
-	}
-	[reencoded release];
-	return trimmedString(str);
+	[mutStr release];
+	[reencoded autorelease];
+	return trimmedString(reencoded);
 }
 
 void bufferBooleanAttributeWithDefault(NSXMLElement *element, NSString *attributeName, BOOL defaultValue, BOOL *values)
