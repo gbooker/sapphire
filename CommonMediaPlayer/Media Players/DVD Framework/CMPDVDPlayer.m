@@ -1005,120 +1005,6 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	//currentScale = currentSize.height/nativeSize.height;
 }
 
-static BOOL findCorrectDescriptionForStream(AudioStreamID streamID, int sampleRate)
-{
-	OSStatus err;
-	UInt32 propertySize = 0;
-	err = AudioStreamGetPropertyInfo(streamID, 0, kAudioStreamPropertyPhysicalFormats, &propertySize, NULL);
-	
-	if(err != noErr || propertySize == 0)
-		return NO;
-	
-	AudioStreamBasicDescription *descs = malloc(propertySize);
-	if(descs == NULL)
-		return NO;
-	
-	int formatCount = propertySize / sizeof(AudioStreamBasicDescription);
-	err = AudioStreamGetProperty(streamID, 0, kAudioStreamPropertyPhysicalFormats, &propertySize, descs);
-	
-	if(err != noErr)
-	{
-		free(descs);
-		return NO;
-	}
-	
-	int i;
-	BOOL ret = NO;
-	for(i=0; i<formatCount; i++)
-	{
-		if (descs[i].mBitsPerChannel == 16 && descs[i].mFormatID == kAudioFormatLinearPCM)
-		{
-			if(descs[i].mSampleRate == sampleRate)
-			{
-				err = AudioStreamSetProperty(streamID, NULL, 0, kAudioStreamPropertyPhysicalFormat, sizeof(AudioStreamBasicDescription), descs + i);
-				if(err != noErr)
-					continue;
-				ret = YES;
-				break;
-			}
-		}
-	}
-	free(descs);
-	return ret;
-}
-
-static BOOL setupDevice(AudioDeviceID devID, int sampleRate)
-{
-	OSStatus err;
-	UInt32 propertySize = 0;
-	err = AudioDeviceGetPropertyInfo(devID, 0, FALSE, kAudioDevicePropertyStreams, &propertySize, NULL);
-	
-	if(err != noErr || propertySize == 0)
-		return NO;
-	
-	AudioStreamID *streams = malloc(propertySize);
-	if(streams == NULL)
-		return NO;
-	
-	int streamCount = propertySize / sizeof(AudioStreamID);
-	err = AudioDeviceGetProperty(devID, 0, FALSE, kAudioDevicePropertyStreams, &propertySize, streams);
-	if(err != noErr)
-	{
-		free(streams);
-		return NO;
-	}
-	
-	int i;
-	BOOL ret = NO;
-	for(i=0; i<streamCount; i++)
-	{
-		if(findCorrectDescriptionForStream(streams[i], sampleRate))
-		{
-			ret = YES;
-			break;
-		}
-	}
-	free(streams);
-	return ret;
-}
-
-static BOOL setupAudioOutput(int sampleRate)
-{
-	OSErr err;
-	UInt32 propertySize = 0;
-	
-	err = AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &propertySize, NULL);
-	if(err != noErr || propertySize == 0)
-		return NO;
-	
-	AudioDeviceID *devs = malloc(propertySize);
-	if(devs == NULL)
-		return NO;
-	
-	err = AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &propertySize, devs);
-	if(err != noErr)
-	{
-		free(devs);
-		return NO;
-	}
-	
-	int i, devCount = propertySize/sizeof(AudioDeviceID);
-	BOOL ret = NO;
-	for(i=0; i<devCount; i++)
-	{
-		if(setupDevice(devs[i], sampleRate))
-		{
-			err = AudioHardwareSetProperty(kAudioHardwarePropertyDefaultOutputDevice, sizeof(AudioDeviceID), devs + i);
-			if(err != noErr)
-				continue;
-			ret = YES;
-			break;
-		}
-	}
-	free(devs);
-	return ret;
-}
-
 - (BOOL)initializeFrameworkWithError:(NSError **)error
 {
 	OSStatus result = DVDInitialize();
@@ -1194,7 +1080,6 @@ static BOOL setupAudioOutput(int sampleRate)
 	}
 	if(result == noErr)
 	{
-		setupAudioOutput(48000);
 		DVDAudioMode audioMode = 0;
 		//See if we can go SPDIF
 		OSStatus SPDIFresult = DVDGetAudioOutputModeCapabilities(&audioMode);
