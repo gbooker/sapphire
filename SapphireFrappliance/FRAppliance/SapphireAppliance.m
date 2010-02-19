@@ -28,6 +28,8 @@
 #import "SapphireSettings.h"
 
 #import <SapphireCompatClasses/BackRowUtils.h>
+#define FrameworkLoadDebug
+#import <CommonMediaPlayer/CMPPlayerManager.h>
 
 #define TV_SHOW_IDENTIFIER	@"tv-shows"
 #define MOVIES_IDENTIFIER	@"movies"
@@ -68,6 +70,7 @@
 	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
 	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks"];
 	SapphireLoadFramework(frameworkPath);
+	loadCMPFramework(myBundlePath);
 	Class cls = NSClassFromString( @"BRFeatureManager" );
 	if ( cls == Nil )
 		return;

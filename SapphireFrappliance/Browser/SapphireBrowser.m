@@ -60,13 +60,6 @@ static BOOL is10Version = NO;
 
 @implementation SapphireBrowser
 
-+ (void)initialize
-{
-	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
-	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"];
-	[[NSBundle bundleWithPath:frameworkPath] load];
-}
-
 - (id) initWithScene: (BRRenderScene *) scene metaData:(id <SapphireDirectory>)meta
 {
 	if([super initWithScene:scene] == nil)
