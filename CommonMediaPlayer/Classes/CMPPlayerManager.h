@@ -19,6 +19,7 @@
  * 02111-1307, USA.
  */
 
+#import <Security/Security.h>
 #import "CMPTypesDefines.h"
 
 @protocol CMPPlayerController, CMPPlayer;
@@ -67,6 +68,16 @@ static inline BOOL needCopy(NSString *frameworkPath)
 	return NO;
 }
 
+static BOOL createDirectoryTree(NSFileManager *fm, NSString *directory)
+{
+	BOOL isDir;
+	if([fm fileExistsAtPath:directory isDirectory:&isDir] && isDir)
+		return YES;
+	if(!createDirectoryTree(fm, [directory stringByDeletingLastPathComponent]))
+	   return NO;
+	return [fm createDirectoryAtPath:directory attributes:nil];
+}
+
 static inline BOOL loadCMPFramework(NSString *frapPath)
 {
 	NSString *frameworkPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Frameworks/CommonMediaPlayer.framework"];
@@ -76,10 +87,51 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 	if(neededCopy)
 	{
 		NSFileManager *fm = [NSFileManager defaultManager];
-		FrameworkLoadPrint(@"Going to copy %@", [frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"]);
+		NSString *frameworkInFrap = [frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"];
+		FrameworkLoadPrint(@"Going to copy %@", frameworkInFrap);
 		BOOL success = [fm removeFileAtPath:frameworkPath handler:nil];
 		FrameworkLoadPrint(@"Delete success is %d", success);
-		success = [fm copyPath:[frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"] toPath:frameworkPath handler:nil];
+		success = YES;
+		NSString *frameworksDir = [frameworkPath stringByDeletingLastPathComponent];
+		BOOL isDir;
+		if([fm fileExistsAtPath:frameworksDir isDirectory:&isDir] && isDir)
+		{
+			//Check permissions
+			NSDictionary *attributes = [fm fileAttributesAtPath:frameworksDir traverseLink:YES];
+			if([[attributes objectForKey:NSFileOwnerAccountID] intValue] == 0)
+			{
+				//Owned by root
+				AuthorizationItem authItems[2] = {
+					{kAuthorizationEnvironmentUsername, strlen("frontrow"), "frontrow", 0},
+					{kAuthorizationEnvironmentPassword, strlen("frontrow"), "frontrow", 0},
+				};
+				AuthorizationEnvironment environ = {2, authItems};
+				AuthorizationItem rightSet[] = {{kAuthorizationRightExecute, 0, NULL, 0}};
+				AuthorizationRights rights = {1, rightSet};
+				AuthorizationRef auth;
+				OSStatus result = AuthorizationCreate(&rights, &environ, kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights, &auth);
+				if(result == errAuthorizationSuccess)
+				{
+					char *command = "chown frontrow \"$FWDIR\"";
+					setenv("FWDIR", [frameworksDir fileSystemRepresentation], 1);
+					char *arguments[] = {"-c", command, NULL};
+					result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+					unsetenv("FWDIR");
+				}
+				if(result != errAuthorizationSuccess)
+				{
+					success = NO;
+					FrameworkLoadPrint(@"Failed to correct permissions on Frameworks directory");
+				}
+				AuthorizationFree(auth, kAuthorizationFlagDefaults);
+				int status;
+				wait(&status);
+			}
+		}
+		else
+			success = createDirectoryTree(fm, frameworksDir);
+		FrameworkLoadPrint(@"Creation of dir is %d", success);
+		success = [fm copyPath:frameworkInFrap toPath:frameworkPath handler:nil];
 		FrameworkLoadPrint(@"Copy success is %d", success);
 		if(!success || needCopy(frameworkPath))
 			//We failed in our copy too!
