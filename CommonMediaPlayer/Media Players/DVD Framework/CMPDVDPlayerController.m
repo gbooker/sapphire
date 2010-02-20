@@ -159,9 +159,14 @@ static NSTimer *timer = nil;
 {
 	NSNumber *resume = [settings objectForKey:CMPPlayerResumeTimeKey];
 	if(resume != nil)
-	{
 		[player setResumeTime:[resume intValue]];
-	}
+
+	CFBooleanRef passthroughValue = kCFBooleanFalse;
+	NSNumber *passthrough = [settings objectForKey:CMPPlayerUsePassthroughDeviceKey];
+	if([passthrough boolValue])
+		passthroughValue = kCFBooleanTrue;
+	
+	CFPreferencesSetAppValue(CFSTR("engageCAC3Device"), passthroughValue, CFSTR("com.cod3r.ac3passthroughdevice"));
 }
 
 - (void)setPlaybackDelegate:(id <CMPPlayerControllerDelegate>)aDelegate

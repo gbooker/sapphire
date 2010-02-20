@@ -65,3 +65,4 @@
 #define CMPPlayerAudioFormatKey @"audio format"
 #define CMPPlayerResumeTimeKey @"resume"
 #define CMPPlayerDurationTimeKey @"duration"
+#define CMPPlayerUsePassthroughDeviceKey @"usePassthroughDevice"
