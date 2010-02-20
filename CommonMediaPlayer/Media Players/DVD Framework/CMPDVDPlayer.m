@@ -685,6 +685,19 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 static BOOL pauseOnPlay = NO;
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {
+	DVDAudioMode audioMode = 0;
+	//See if we can go SPDIF
+	OSStatus SPDIFresult = DVDGetAudioOutputModeCapabilities(&audioMode);
+	NSLog(@"SPDIF get is %d with mode %d", SPDIFresult, audioMode);
+	if(audioMode & kDVDAudioModeSPDIF)
+	{
+		//Engage the SPDIF interface
+		SPDIFresult = DVDSetAudioOutputMode(kDVDAudioModeSPDIF);
+		NSLog(@"Set to SPDIF with result %d", SPDIFresult);
+		SPDIFresult = DVDSetSPDIFDataOutDevice(0);
+		NSLog(@"Set SPDIF device with result %d", SPDIFresult);
+	}	
+	
 	DVDGetNumTitles(&titleCount);
 	BOOL doingResume = titleCount == 1 && resumeTime != 0;
 	OSStatus playError = DVDPlay();
@@ -1077,21 +1090,6 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 			
 			//[[self stack] pushController:aController];
 			return NO;
-	}
-	if(result == noErr)
-	{
-		DVDAudioMode audioMode = 0;
-		//See if we can go SPDIF
-		OSStatus SPDIFresult = DVDGetAudioOutputModeCapabilities(&audioMode);
-		NSLog(@"SPDIF get is %d with mode %d", SPDIFresult, audioMode);
-		if(audioMode & kDVDAudioModeSPDIF)
-		{
-			//Engage the SPDIF interface
-			SPDIFresult = DVDSetAudioOutputMode(kDVDAudioModeSPDIF);
-			NSLog(@"Set to SPDIF with result %d", SPDIFresult);
-			SPDIFresult = DVDSetSPDIFDataOutDevice(0);
-			NSLog(@"Set SPDIF device with result %d", SPDIFresult);
-		}
 	}
 	return result == noErr;
 }

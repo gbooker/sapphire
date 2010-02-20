@@ -166,7 +166,9 @@ static NSTimer *timer = nil;
 	if([passthrough boolValue])
 		passthroughValue = kCFBooleanTrue;
 	
-	CFPreferencesSetAppValue(CFSTR("engageCAC3Device"), passthroughValue, CFSTR("com.cod3r.ac3passthroughdevice"));
+	CFStringRef devDomain = CFSTR("com.cod3r.ac3passthroughdevice");
+	CFPreferencesSetAppValue(CFSTR("engageCAC3Device"), passthroughValue, devDomain);
+	CFPreferencesAppSynchronize(devDomain);
 }
 
 - (void)setPlaybackDelegate:(id <CMPPlayerControllerDelegate>)aDelegate
