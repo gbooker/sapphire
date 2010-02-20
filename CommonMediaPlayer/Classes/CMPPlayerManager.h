@@ -30,6 +30,7 @@
 }
 
 + (CMPPlayerManager *)sharedPlayerManager;
++ (int)version;
 
 //types is a dictionary with the key being the type above, and value is an array of extensions (empty array means any extension)
 - (void)registerPlayer:(Class)player forTypes:(NSDictionary *)types;

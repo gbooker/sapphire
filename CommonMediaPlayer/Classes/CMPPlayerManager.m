@@ -39,6 +39,11 @@
 	return shared;
 }
 
++ (int)version
+{
+	return CMPVersion;
+}
+
 - (id) init
 {
 	self = [super init];
