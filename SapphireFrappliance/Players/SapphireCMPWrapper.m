@@ -22,6 +22,7 @@
 #import <CommonMediaPlayer/CMPPlayerManager.h>
 #import "SapphireFileMetaData.h"
 #import "SapphireMetaDataSupport.h"
+#import "SapphireSettings.h"
 
 @implementation SapphireCMPWrapper
 
@@ -41,12 +42,17 @@
 	id <CMPPlayer> player = [playerManager playerForPath:aFile.path type:playerType preferences:nil];
 	
 	controller = [[playerManager playerControllerForPlayer:player scene:scene preferences:nil] retain];
+	
+	NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+	
 	NSNumber *resumeTime = file.resumeTime;
 	if(resumeTime != nil)
-	{
-		NSDictionary *settings = [NSDictionary dictionaryWithObject:resumeTime forKey:CMPPlayerResumeTimeKey];
-		[controller setPlaybackSettings:settings];
-	}
+		[settings setObject:resumeTime forKey:CMPPlayerResumeTimeKey];
+	
+	[settings setObject:[NSNumber numberWithInt:[[SapphireSettings sharedSettings] useAC3Passthrough]] forKey:CMPPlayerUsePassthroughDeviceKey];
+	[controller setPlaybackSettings:settings];
+	[settings release];
+
 	[controller setPlaybackDelegate:self];
 
 	return self;
