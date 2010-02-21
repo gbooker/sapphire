@@ -183,6 +183,7 @@
 	
 	//XXX Prefs
 	id <CMPPlayerController> controller = [[(Class)[goodControllers anyObject] alloc] initWithScene:scene player:player];
+	[controller setPlaybackSettings:preferences];
 	return [controller autorelease];
 }
 
