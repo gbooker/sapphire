@@ -28,7 +28,10 @@
 #import "SapphireSettings.h"
 
 #import <SapphireCompatClasses/BackRowUtils.h>
+#ifdef DEBUG
 #define FrameworkLoadDebug
+#define FrameworkAlwaysCopy
+#endif
 #import <CommonMediaPlayer/CMPPlayerManager.h>
 
 #define TV_SHOW_IDENTIFIER	@"tv-shows"
