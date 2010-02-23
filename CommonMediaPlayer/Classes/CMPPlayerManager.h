@@ -155,7 +155,11 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 {
 	NSString *frameworkPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Frameworks/CommonMediaPlayer.framework"];
 	FrameworkLoadPrint(@"Path is at %@", frameworkPath);
+#ifdef FrameworkAlwaysCopy
+	BOOL neededCopy = YES;
+#else
 	BOOL neededCopy = needCopy(frameworkPath);
+#endif
 	FrameworkLoadPrint(@"Need copy is %d", neededCopy);
 	if(neededCopy)
 	{
