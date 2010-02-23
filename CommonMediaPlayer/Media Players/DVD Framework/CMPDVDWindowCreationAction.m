@@ -161,7 +161,7 @@
 	[textField sizeToFit];
 	NSRect frameRect;
 	frameRect.size = [textField frame].size;
-	NSLog(@"Size is %fx%f", frameRect.size.width, frameRect.size.height);
+	//NSLog(@"Size is %fx%f", frameRect.size.width, frameRect.size.height);
 	float distanceFromEdge = screenRect.size.height / 15;
 	if(position == CMPDVDOverlayUpperLeft || position == CMPDVDOverlayUpperRight)
 		frameRect.origin.y = screenRect.size.height - frameRect.size.height - distanceFromEdge;
@@ -518,7 +518,7 @@ void Interpolate (void* info, float const* inData, float* outData)
 	CGSGetWindowBounds(cid, overWindowID, &bounds);
 	//NSLog(@"Bounds is %fx%f - %fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
 	//	CGLGetCurrentContext()
-	NSLog(@"bounds is %fx%f-%fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
+	//NSLog(@"bounds is %fx%f-%fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
 	CGRect imageBounds = bounds;
 	if(bounds.size.height > 480 || bounds.size.width > 720)
 	{

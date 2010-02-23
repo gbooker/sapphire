@@ -130,7 +130,7 @@
 	if([genericPlayers count])
 		[players addObjectsFromArray:genericPlayers];
 
-	NSLog(@"List of players is %@", players);
+	//NSLog(@"List of players is %@", players);
 	NSEnumerator *playerEnum = [players objectEnumerator];
 	Class playerClass;
 	id <CMPPlayer> player = nil;
@@ -138,19 +138,19 @@
 	{
 		player = [[playerClass alloc] init];
 		
-		NSLog(@"Testing %@", player);
+		//NSLog(@"Testing %@", player);
 		BOOL canPlay = [player canPlay:path withError:nil];
-		NSLog(@"can play is %d", canPlay);
+		//NSLog(@"can play is %d", canPlay);
 		if(canPlay)
 		{
 			CMPBaseMediaAsset *asset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:path]];
 			canPlay &= [player setMedia:asset error:nil];
-			NSLog(@"Set asset is %d", canPlay);
+			//NSLog(@"Set asset is %d", canPlay);
 			[asset release];
 		}
 		if(canPlay)
 		{
-			NSLog(@"Using Player");
+			//NSLog(@"Using Player");
 			[player retain];
 			break;
 		}
@@ -179,7 +179,7 @@
 			[goodControllers addObject:controllerClass];
 	}
 	
-	NSLog(@"Controllers is %@", goodControllers);
+	//NSLog(@"Controllers is %@", goodControllers);
 	
 	//XXX Prefs
 	id <CMPPlayerController> controller = [[(Class)[goodControllers anyObject] alloc] initWithScene:scene player:player];

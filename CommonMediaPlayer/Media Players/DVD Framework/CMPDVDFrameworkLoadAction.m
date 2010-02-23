@@ -181,8 +181,8 @@
 				*error = [NSError errorWithDomain:CMPErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 																				  BRLocalizedString(@"Failed to load DVD Framework", @"Failure to load error message"), NSLocalizedDescriptionKey,
 																				  nil]];
-			else
-				NSLog(@"Loaded framework");
+			//else
+				//NSLog(@"Loaded framework");
 		}
 	}
 	

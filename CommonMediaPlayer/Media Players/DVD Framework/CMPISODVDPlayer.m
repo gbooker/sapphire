@@ -57,14 +57,14 @@
 //		return;
 //	}
 	imageMount = [[CMPDVDImageAction alloc] initWithPath:path];
-	NSLog(@"imagePath: %@", path);
+	//NSLog(@"imagePath: %@", path);
 	if (![imageMount openWithError:nil] == YES)
 	{
-		NSLog(@"fail");
+		NSLog(@"failed to mount image");
 		return;
 	}
 	
-	NSLog(@"mountedPath = %@", [imageMount mountedPath]);
+	//NSLog(@"mountedPath = %@", [imageMount mountedPath]);
 	NSString *mountedPath = [imageMount mountedPath];
 	
 	CMPBaseMediaAsset *realAsset = [[CMPBaseMediaAsset alloc] initWithMediaURL:[NSURL fileURLWithPath:mountedPath]];

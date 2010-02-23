@@ -73,6 +73,7 @@ static UInt32						eventCallbackID = 0;
 {
 	[asset release];
 	[frameworkLoad release];
+	[stopTimer invalidate];
 	[super dealloc];
 }
 
@@ -94,12 +95,12 @@ static UInt32						eventCallbackID = 0;
 
 - (BOOL)canPlay:(NSString *)path withError:(NSError **)error
 {
-	NSLog(@"Testing can play");
+	//NSLog(@"Testing can play");
 	BOOL usable = [frameworkLoad openWithError:error];
 	if(!usable)
 		return NO;
 	
-	NSLog(@"Usable from %@ says %d", frameworkLoad, usable);
+	//NSLog(@"Usable from %@ says %d", frameworkLoad, usable);
 	
 	usable = [self initializeFrameworkWithError:error];
 	if(!usable)
@@ -136,11 +137,11 @@ static UInt32						eventCallbackID = 0;
 	switch (fsType) {
 			
 		case 2: //is volume
-			NSLog(@"%@, is a volume!", [theVolume lastPathComponent]);
+			//NSLog(@"%@, is a volume!", [theVolume lastPathComponent]);
 			isVolume = YES;
 			break;
 		default:
-			NSLog(@"not a volume: %i, %@", fsType,[theVolume lastPathComponent]);
+			//NSLog(@"not a volume: %i, %@", fsType,[theVolume lastPathComponent]);
 			isVolume = NO;
 			break;
 	}
@@ -196,7 +197,7 @@ static UInt32						eventCallbackID = 0;
 			NSString *mountPath = [currentItem objectForKey:@"mount-point"];
 			if ([[mountPath lastPathComponent] isEqualToString:[theVolume lastPathComponent]])
 			{
-				NSLog(@"%@ is a disc image", [theVolume lastPathComponent]);
+				//NSLog(@"%@ is a disc image", [theVolume lastPathComponent]);
 				return YES;
 			}
 			
@@ -250,26 +251,26 @@ static UInt32						eventCallbackID = 0;
 	
 	NSURL *url = [NSURL URLWithString:[asset mediaURL]];
 	NSString *path = [[url path] stringByAppendingPathComponent:@"VIDEO_TS"];
-	NSLog(@"Going to play %@", path);
+	//NSLog(@"Going to play %@", path);
 	
 	BOOL ret = [frameworkLoad openWithError:error];
-	NSLog(@"Framework usable is %d", ret);
+	//NSLog(@"Framework usable is %d", ret);
 	if(!ret)
 		return NO;
 	ret = [self initializeFrameworkWithError:error];
-	NSLog(@"Initialize is %d", ret);
+	//NSLog(@"Initialize is %d", ret);
 	if(!ret)
 		return NO;
 
 	FSRef fsRef;
 	OSStatus resultz=[CMPDVDPlayer getFSRefAtPath:path ref:&fsRef];
 	//OSStatus resultz = FSPathMakeRef((UInt8*)cPath, &fsRef, NULL);
-	NSLog(@"make path is %d", resultz);
+	//NSLog(@"make path is %d", resultz);
 	OSStatus openError = resultz;
 	if(resultz == noErr)
 		openError = DVDOpenMediaFile(&fsRef);
 	
-	NSLog(@"open error is %d", openError);
+	//NSLog(@"open error is %d", openError);
 	return openError == noErr;
 }
 
@@ -387,7 +388,7 @@ static UInt32						eventCallbackID = 0;
 
 - (void)goToMenu
 {
-	NSLog(@"Going to Menu");
+	//NSLog(@"Going to Menu");
 	if(DVDGoToMenu(kDVDMenuRoot) != noErr)
 	{
 		//Go to beginning if there's no root menu
@@ -398,13 +399,13 @@ static UInt32						eventCallbackID = 0;
 
 - (void)play
 {
-	NSLog(@"Playing");
+	//NSLog(@"Playing");
 	DVDPlay();
 }
 
 - (void)pause
 {
-	NSLog(@"Pausing");
+	//NSLog(@"Pausing");
 	DVDPause();
 }
 
@@ -469,13 +470,13 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 
 - (void)incrementScanRate
 {
-	NSLog(@"Incrementing scan rate");
+	//NSLog(@"Incrementing scan rate");
 	//Really increment in terms of forward direction
 	DVDScanRate outRate;
 	DVDScanDirection outDirection;
 	
 	DVDGetScanRate(&outRate, &outDirection);
-	NSLog(@"Scan rate in currently %d:%d", outDirection, outRate);
+	//NSLog(@"Scan rate in currently %d:%d", outDirection, outRate);
 	DVDScanRate newRate;
 	if(outDirection == kDVDScanDirectionForward)
 		newRate = incrementedNewRate(outRate);
@@ -487,19 +488,19 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 		outDirection = (outDirection == kDVDScanDirectionForward) ? kDVDScanDirectionBackward : kDVDScanDirectionForward;
 		newRate = outRate;
 	}
-	NSLog(@"Scan rate in now %d:%d", outDirection, newRate);
+	//NSLog(@"Scan rate in now %d:%d", outDirection, newRate);
 	DVDScan(newRate, outDirection);
 }
 
 - (void)decrementScanRate
 {
-	NSLog(@"Decrementing scan rate");
+	//NSLog(@"Decrementing scan rate");
 	//Really decrement in terms of forward direction
 	DVDScanRate outRate;
 	DVDScanDirection outDirection;
 	
 	DVDGetScanRate(&outRate, &outDirection);
-	NSLog(@"Scan rate in currently %d:%d", outDirection, outRate);
+	//NSLog(@"Scan rate in currently %d:%d", outDirection, outRate);
 	DVDScanRate newRate;
 	if(outDirection == kDVDScanDirectionForward)
 		newRate = decrementedNewRate(outRate);
@@ -511,7 +512,7 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 		outDirection = (outDirection == kDVDScanDirectionForward) ? kDVDScanDirectionBackward : kDVDScanDirectionForward;
 		newRate = outRate;
 	}
-	NSLog(@"Scan rate in now %d:%d", outDirection, newRate);
+	//NSLog(@"Scan rate in now %d:%d", outDirection, newRate);
 	DVDScan(newRate, outDirection);
 }
 
@@ -624,13 +625,13 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 
 - (void)nextChapter
 {
-	NSLog(@"Going to next chapter");
+	//NSLog(@"Going to next chapter");
 	DVDNextChapter();
 }
 
 - (void)previousChapter
 {
-	NSLog(@"Going to previous chapter");
+	//NSLog(@"Going to previous chapter");
 	DVDPreviousChapter();
 }
 
@@ -688,14 +689,14 @@ static BOOL pauseOnPlay = NO;
 	DVDAudioMode audioMode = 0;
 	//See if we can go SPDIF
 	OSStatus SPDIFresult = DVDGetAudioOutputModeCapabilities(&audioMode);
-	NSLog(@"SPDIF get is %d with mode %d", SPDIFresult, audioMode);
+	//NSLog(@"SPDIF get is %d with mode %d", SPDIFresult, audioMode);
 	if(audioMode & kDVDAudioModeSPDIF)
 	{
 		//Engage the SPDIF interface
 		SPDIFresult = DVDSetAudioOutputMode(kDVDAudioModeSPDIF);
-		NSLog(@"Set to SPDIF with result %d", SPDIFresult);
+		//NSLog(@"Set to SPDIF with result %d", SPDIFresult);
 		SPDIFresult = DVDSetSPDIFDataOutDevice(0);
-		NSLog(@"Set SPDIF device with result %d", SPDIFresult);
+		//NSLog(@"Set SPDIF device with result %d", SPDIFresult);
 	}	
 	
 	DVDGetNumTitles(&titleCount);
@@ -726,7 +727,7 @@ static BOOL pauseOnPlay = NO;
 
 - (void)stopPlayback
 {
-	NSLog(@"Stopping");
+	//NSLog(@"Stopping");
 	DVDUnregisterEventCallBack(eventCallbackID);
 	eventCallbackID = 0;
 	DVDStop();
@@ -838,6 +839,18 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	[controller playbackStopped];
 }
 
+- (void)stopTimerFire
+{
+	stopTimer = nil;
+	[controller playbackStopped];
+}
+
+- (void)resetStopTimer
+{
+	[stopTimer invalidate];
+	stopTimer = [NSTimer scheduledTimerWithTimeInterval:5*60 target:self selector:@selector(stopTimerFire) userInfo:nil repeats:NO];
+}
+
 - (void)titleChanged
 {
 	UInt16 frames;
@@ -846,6 +859,7 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 
 - (void)titleTimeChanged
 {
+	[self performSelectorOnMainThread:@selector(resetStopTimer) withObject:nil waitUntilDone:NO];
 	UInt16 frames;
 	UInt32 time = 0;
 	DVDGetTime(kDVDTimeCodeElapsedSeconds, &time, &frames);
@@ -1021,7 +1035,7 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 - (BOOL)initializeFrameworkWithError:(NSError **)error
 {
 	OSStatus result = DVDInitialize();
-	NSLog(@"DVDInitialize: %d", result);
+	//NSLog(@"DVDInitialize: %d", result);
 	DVDEventCode eventCodes[] = {
 		kDVDEventDisplayMode, 
 		kDVDEventError,
@@ -1042,7 +1056,7 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 									   sizeof(eventCodes)/sizeof(DVDEventCode), 
 									   (UInt32)self, 
 									   &eventCallbackID);
-	NSLog(@"DVD Register Callbacks: %d", result);
+	//NSLog(@"DVD Register Callbacks: %d", result);
 	switch(result)
 	{
 			

@@ -123,7 +123,7 @@
 		
 	{
 		
-		NSLog(error);
+		NSLog(@"%@", error);
 		
 		[error release];
 		[irTask release];

@@ -82,12 +82,12 @@ static NSTimer *timer = nil;
 	while(layer != nil)
 	{
 //		[layer setOpaque:NO];
-		NSLog(@"Layer is %@ with %d children", layer, [[layer sublayers] count]);
+		//NSLog(@"Layer is %@ with %d children", layer, [[layer sublayers] count]);
 		id superlayer = [layer superlayer];
 		//		if(count < 6)
 //		[layer setOpacity:opacity];
 		[layer setBackgroundColor:clear];
-		NSLog(@"Set opacity of %d layer", count);
+		//NSLog(@"Set opacity of %d layer", count);
 		layer = superlayer;
 		count++;
 	}
@@ -242,7 +242,7 @@ static NSTimer *timer = nil;
 	if(!dvdWindow)
 		return;
 	CGSGetWindowBounds(cid, dvdWindow, &bounds);
-	NSLog(@"Bounds is %fx%f - %fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
+	//NSLog(@"Bounds is %fx%f - %fx%f", bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
 //	CGLGetCurrentContext()
 	char *bitmap = malloc(bounds.size.width *bounds.size.height * 4);
 	CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
@@ -484,7 +484,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 
 - (BOOL)brEventAction:(BREvent *)event
 {
-	NSLog(@"Got event %@", event);
+	//NSLog(@"Got event %@", event);
 	BREventRemoteAction action = [CMPATVVersion remoteActionForEvent:event];
 	if(![player playing])
 		return [super brEventAction:event];
@@ -494,7 +494,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	
 	BOOL inMenu = [player inMenu];
 	CMPDVDState state = [player state];
-	NSLog(@"State is %d and doing %d", state, action);
+	//NSLog(@"State is %d and doing %d", state, action);
 	BOOL playingInSomeForm = (state == CMPDVDStatePlaying || state == CMPDVDStateScanningForward || state == CMPDVDStateScanningBackward || state == CMPDVDStatePlayingSlowForward || state == CMPDVDStatePlayingSlowBackward);
 	BOOL supressStateDisplay = inMenu;
 	

@@ -54,6 +54,7 @@ typedef enum {
 	UInt32						resumeTime;
 	UInt32						titleDuration;
 	UInt32						currentElapsedTime;
+	NSTimer						*stopTimer;
 }
 
 - (void)setController:(CMPDVDPlayerController *)controller;
