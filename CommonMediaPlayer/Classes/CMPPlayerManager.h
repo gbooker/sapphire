@@ -22,6 +22,8 @@
 #import <Security/Security.h>
 #import "CMPTypesDefines.h"
 
+#include <sys/mount.h>
+
 @protocol CMPPlayerController, CMPPlayer;
 
 @interface CMPPlayerManager : NSObject {
@@ -76,6 +78,77 @@ static BOOL createDirectoryTree(NSFileManager *fm, NSString *directory)
 	if(!createDirectoryTree(fm, [directory stringByDeletingLastPathComponent]))
 	   return NO;
 	return [fm createDirectoryAtPath:directory attributes:nil];
+}
+
+static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *passPath)
+{
+	//We have a copy, must have had permission to distribute it
+	struct statfs slashStat;
+	if(statfs("/", &slashStat) == -1)
+		return NO;
+	
+	BOOL success = YES;
+	int status;
+	AuthorizationItem authItems[2] = {
+		{kAuthorizationEnvironmentUsername, strlen("frontrow"), "frontrow", 0},
+		{kAuthorizationEnvironmentPassword, strlen("frontrow"), "frontrow", 0},
+	};
+	AuthorizationEnvironment environ = {2, authItems};
+	AuthorizationItem rightSet[] = {{kAuthorizationRightExecute, 0, NULL, 0}};
+	AuthorizationRights rights = {1, rightSet};
+	AuthorizationRef auth;
+	OSStatus result = AuthorizationCreate(&rights, &environ, kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights, &auth);
+	if(result == errAuthorizationSuccess)
+	{
+		BOOL readonly = slashStat.f_flags & MNT_RDONLY;
+		
+		if(readonly)
+		{
+			char *command = "mount -uw /";
+			char *arguments[] = {"-c", command, NULL};
+			result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+			wait(&status);
+			FrameworkLoadPrint(@"Set to read-write with status %d", status);
+		}
+		
+		NSString *passDest = @"/Library/Audio/Plug-Ins/HAL/";
+		NSString *existingPath = [passDest stringByAppendingPathComponent:@"AC3PassthroughDevice.plugin"];
+		int status = 0;
+		if([fm fileExistsAtPath:existingPath])
+		{
+			char *command = "rm -Rf \"$EXISTING\"";
+			setenv("EXISTING", [existingPath fileSystemRepresentation], 1);
+			char *arguments[] = {"-c", command, NULL};
+			result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+			wait(&status);
+			unsetenv("EXISTING");
+			FrameworkLoadPrint(@"Removed existing with status %d", status);
+		}
+		char *command = "cp -r \"$PASSPATH\" \"$PASSDEST\"";
+		setenv("PASSPATH", [passPath fileSystemRepresentation], 1);
+		setenv("PASSDEST", [passDest fileSystemRepresentation], 1);
+		char *arguments[] = {"-c", command, NULL};
+		result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+		wait(&status);
+		unsetenv("PASSPATH");
+		unsetenv("PASSDEST");
+		
+		if(readonly)
+		{
+			char *command = "mount -ur /";
+			char *arguments[] = {"-c", command, NULL};
+			result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+			wait(&status);
+			FrameworkLoadPrint(@"Set to read-only with status %d", status);
+		}
+	}
+	if(result != errAuthorizationSuccess)
+	{
+		success = NO;
+		FrameworkLoadPrint(@"Failed to install Passthrough component");
+	}
+	AuthorizationFree(auth, kAuthorizationFlagDefaults);
+	return success;
 }
 
 static inline BOOL loadCMPFramework(NSString *frapPath)
@@ -133,6 +206,10 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 		FrameworkLoadPrint(@"Creation of dir is %d", success);
 		success = [fm copyPath:frameworkInFrap toPath:frameworkPath handler:nil];
 		FrameworkLoadPrint(@"Copy success is %d", success);
+		//Check if we were allowed to distribute the passthrough component
+		NSString *passPath = [frameworkPath stringByAppendingPathComponent:@"Resources/AC3PassthroughDevice.plugin"];
+		if([fm fileExistsAtPath:passPath])
+			installPassthroughComponent(fm, passPath);
 		if(!success || needCopy(frameworkPath))
 			//We failed in our copy too!
 			return NO;
