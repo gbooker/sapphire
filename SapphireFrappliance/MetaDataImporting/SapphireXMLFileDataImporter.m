@@ -98,7 +98,11 @@ static NSDictionary *xmlMultiAttributes = nil;
 	/*Get the file*/
 	/*Check for XML file*/
 	BOOL xmlPathIsDir = NO;
-	NSString *xmlFilePath=[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
+	NSString *extLessPath = path;
+	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+		extLessPath = [extLessPath stringByDeletingPathExtension];
+
+	NSString *xmlFilePath=[extLessPath stringByAppendingPathExtension:@"xml"];
 	SapphireXMLData *xml = [metaData xmlData];
 	if(![fm fileExistsAtPath:xmlFilePath isDirectory:&xmlPathIsDir] || xmlPathIsDir)
 	{

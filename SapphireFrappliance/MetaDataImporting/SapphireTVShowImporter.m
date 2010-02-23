@@ -285,7 +285,7 @@
 		/*Bring up the prompt*/
 		SapphireShowChooser *chooser = [[SapphireShowChooser alloc] initWithScene:[delegate chooserScene]];
 		[chooser setShows:shows];
-		[chooser setFileName:[NSString stringByCroppingDirectoryPath:state->path toLength:3]];		
+		[chooser setFileName:[NSString stringByCroppingDirectoryPath:state->path toLength:3]];
 		[chooser setListTitle:BRLocalizedString(@"Select Show Title", @"Prompt the user for showname with a file")];
 		/*And display prompt*/
 		[delegate displayChooser:chooser forImporter:self withContext:state];
@@ -592,6 +592,10 @@
 	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
 		return ImportStateNotUpdated;
 	//	NSArray *pathComponents = [path pathComponents];
+	NSString *extLessPath = path;
+	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+		extLessPath = [extLessPath stringByDeletingPathExtension];
+
 	NSString *fileName = [path lastPathComponent];
 	
 	/*Check regexes to see if this is a tv show*/
@@ -703,7 +707,7 @@
 	if([tran showPath] == nil)
 	{
 		BOOL nfoPathIsDir = NO;
-		NSString *nfoFilePath=[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"nfo"];
+		NSString *nfoFilePath=[extLessPath stringByAppendingPathExtension:@"nfo"];
 		NSString *showPath = nil;
 		if([[NSFileManager defaultManager] fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] && !nfoPathIsDir)
 			showPath = [self showPathFromNfoFilePath:nfoFilePath];

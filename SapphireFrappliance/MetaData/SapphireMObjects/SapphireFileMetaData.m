@@ -230,8 +230,8 @@ static NSSet *secondaryFiles;
 		{
 			self.fileClassValue = FILE_CLASS_TV_SHOW;
 			NSString *epCoverPath = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:[ep path]];
-			NSString *oldBasePath = [[epCoverPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:[self.path lastPathComponent]];
-			NSString *oldCoverPath = searchCoverArtExtForPath([oldBasePath stringByDeletingPathExtension]);
+			NSString *oldBasePath = [[epCoverPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:[self fileName]];
+			NSString *oldCoverPath = searchCoverArtExtForPath(oldBasePath);
 			if(oldCoverPath != nil)
 			{
 				NSString *newPath = [epCoverPath stringByAppendingPathExtension:[oldCoverPath pathExtension]];
@@ -250,8 +250,8 @@ static NSSet *secondaryFiles;
 		{
 			self.fileClassValue = FILE_CLASS_MOVIE;
 			NSString *movieCoverPath = [movie coverArtPath];
-			NSString *oldBasePath = [[[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:@"@MOVIES"] stringByAppendingPathComponent:[self.path lastPathComponent]];
-			NSString *oldCoverPath = searchCoverArtExtForPath([oldBasePath stringByDeletingPathExtension]);
+			NSString *oldBasePath = [[[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:@"@MOVIES"] stringByAppendingPathComponent:[self fileName]];
+			NSString *oldCoverPath = searchCoverArtExtForPath(oldBasePath);
 			if(oldCoverPath != nil)
 			{
 				NSString *newPath = [movieCoverPath stringByAppendingPathExtension:[oldCoverPath pathExtension]];
@@ -351,7 +351,7 @@ static NSSet *secondaryFiles;
 		return YES;
 	
 	//Check XML
-	NSString *xmlFilePath=[[self.path stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"];
+	NSString *xmlFilePath=[[self extensionlessPath] stringByAppendingPathExtension:@"xml"];
 	SapphireXMLData *xml = self.xmlData;
 	NSDictionary *xmlProps = [fm fileAttributesAtPath:xmlFilePath traverseLink:YES];
 	
@@ -590,7 +590,7 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 - (void)setToResetImportDecisions
 {
 	NSManagedObjectContext *moc = [self managedObjectContext];
-	NSString *lowerFileName = [[self.path lastPathComponent] lowercaseString];
+	NSString *lowerFileName = [[self fileName] lowercaseString];
 
 	SapphireEpisode *ep = self.tvEpisode;
 	if(ep != nil)
@@ -612,7 +612,7 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 		lookupName = [[[self.path stringByDeletingLastPathComponent] lastPathComponent] lowercaseString];
 	else
 		lookupName = lowerFileName;
-	SapphireMovieTranslation *movieTran = [SapphireMovieTranslation movieTranslationWithName:[lookupName stringByDeletingPathExtension] inContext:moc];
+	SapphireMovieTranslation *movieTran = [SapphireMovieTranslation movieTranslationWithName:lookupName inContext:moc];
 	if(movieTran != nil)
 	{
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Deleting Movie import translation for %@", movieTran.name);
@@ -650,9 +650,7 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 - (NSString *)coverArtPath
 {
 	/*Find cover art for the current file in the "Cover Art" dir */
-	NSString *subPath = [self path];
-	if([self fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
-		subPath = [subPath stringByDeletingPathExtension];
+	NSString *subPath = [self extensionlessPath];
 	
 	NSString *fileName = [subPath lastPathComponent];
 	NSString * myArtPath=nil;
@@ -736,16 +734,19 @@ static NSString *movingToPath = @"To";
 	NSLog(@"new parent set");
 	[SapphireMetaDataSupport save:[self managedObjectContext]];
 	NSLog(@"Save done");
-	NSString *extLessPath = [oldPath stringByDeletingPathExtension];
+	NSString *extLessPath = [self extensionlessPath];
 	NSEnumerator *secondaryExtEnum = [secondaryFiles objectEnumerator];
 	NSString *extension;
+	NSString *newExtlessPath = newPath;
+	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+		newExtlessPath = [newExtlessPath stringByDeletingPathExtension];
 	
 	while((extension = [secondaryExtEnum nextObject]) != nil)
 	{
 		NSString *secondaryPath = [extLessPath stringByAppendingPathExtension:extension];
 		if([fm fileExistsAtPath:secondaryPath])
 		{
-			NSString *newSecondaryPath = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:extension];
+			NSString *newSecondaryPath = [newExtlessPath stringByAppendingPathExtension:extension];
 			if(newParent != nil)
 			{
 				moving = YES;
@@ -766,7 +767,7 @@ static NSString *movingToPath = @"To";
 	NSString *coverArtPath = searchCoverArtExtForPath(extLessPath);
 	if(coverArtPath != nil)
 	{
-		NSString *newCoverArtPath = [[newPath stringByDeletingPathExtension] stringByAppendingPathExtension:[coverArtPath pathExtension]];
+		NSString *newCoverArtPath = [newExtlessPath stringByAppendingPathExtension:[coverArtPath pathExtension]];
 		if(newParent != nil)
 		{
 			moving = YES;
@@ -799,7 +800,8 @@ static NSString *movingToPath = @"To";
 	if(componentCount != 1)
 		return BRLocalizedString(@"A File name should not contain any '/' characters", @"Error indicating that filenames cannot contain / characters");
 	NSString *oldPath = [self path];
-	newFilename = [newFilename stringByAppendingPathExtension:[oldPath pathExtension]];
+	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+		newFilename = [newFilename stringByAppendingPathExtension:[oldPath pathExtension]];
 	NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newFilename];
 	if([oldPath isEqualToString:newPath])
 		return nil;
@@ -855,6 +857,24 @@ static NSString *movingToPath = @"To";
 	NSLog(@"Going to rename %@ to %@", [self path], mutStr);
 	
 	return [self rename:[mutStr autorelease]];
+}
+
+- (NSString *)fileName
+{
+	NSString *ret = [self.path lastPathComponent];
+	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+		ret = [ret stringByDeletingPathExtension];
+	
+	return ret;
+}
+
+- (NSString *)extensionlessPath
+{
+	NSString *ret = self.path;
+	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+		ret = [ret stringByDeletingPathExtension];
+	
+	return ret;
 }
 
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;

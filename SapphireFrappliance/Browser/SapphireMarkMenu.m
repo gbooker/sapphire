@@ -288,7 +288,7 @@ static NSString *movingPath = nil;
 			nil];
 		
 		NSString *prettyName = [fileMeta prettyName];
-		if(prettyName != nil && [[[[fileMeta path] lastPathComponent] stringByDeletingPathExtension] caseInsensitiveCompare:prettyName] != NSOrderedSame)
+		if(prettyName != nil && [[fileMeta fileName] caseInsensitiveCompare:prettyName] != NSOrderedSame)
 		{
 			[marks insertObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
@@ -468,7 +468,7 @@ static NSString *movingPath = nil;
 		
 		NSString *savePath = [[joinList objectAtIndex:0] path];
 		BOOL hasmovExt = [[savePath pathExtension] isEqualToString:@"mov"];
-		NSString *base = [savePath stringByDeletingPathExtension];
+		NSString *base = [[joinList objectAtIndex:0] extensionlessPath];
 		if([[base lowercaseString] hasSuffix:@" part 1"])
 			base = [base substringToIndex:[base length] - 7];
 		if(hasmovExt)
@@ -749,7 +749,7 @@ static NSString *movingPath = nil;
 			case COMMAND_RENAME:
 			{
 				NSString *title = [NSString stringWithFormat:BRLocalizedString(@"Rename %@", @"Rename a file, directory, or collection, argument is path"), [fileMeta path]];
-				NSString *oldName = [[[fileMeta path] lastPathComponent] stringByDeletingPathExtension];
+				NSString *oldName = [fileMeta fileName];
 				
 				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[fileMeta methodSignatureForSelector:@selector(rename:)]];
 				[invoke setSelector:@selector(rename:)];

@@ -31,6 +31,7 @@
 #import "SapphireApplianceController.h"
 #import "SapphireURLLoader.h"
 #import "SapphireScraper.h"
+#import "NSString-Extensions.h"
 
 @interface SapphireMovieImportStateData : SapphireImportStateData
 {
@@ -156,8 +157,7 @@
 	{
 		SapphireFileMetaData *metaData = state->file;
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
-		NSString *lookupName = [[state->lookupName lowercaseString] stringByDeletingPathExtension];
-		SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:lookupName inContext:moc];
+		SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
 		[tran setIMDBLink:[[movies objectAtIndex:0] objectForKey:movieTranslationLinkKey]];
 		[self getMovieResultsForState:state translation:tran];
 	}
@@ -166,7 +166,7 @@
 		/*Bring up the prompt*/
 		SapphireMovieChooser *chooser = [[SapphireMovieChooser alloc] initWithScene:[delegate chooserScene]];
 		[chooser setMovies:movies];
-		[chooser setFileName:state->lookupName];		
+		[chooser setFileName:[NSString stringByCroppingDirectoryPath:state->path toLength:3]];
 		[chooser setListTitle:BRLocalizedString(@"Select Movie Title", @"Prompt the user for title of movie")];
 		/*And display prompt*/
 		[delegate displayChooser:chooser forImporter:self withContext:state];
@@ -264,10 +264,9 @@
 	if(movieTitle)
 		[infoIMDB setObject:movieTitle forKey:META_MOVIE_TITLE_KEY];
 	
-	NSString *movieTranslationString = [[state->lookupName lowercaseString] stringByDeletingPathExtension];
 	SapphireFileMetaData *metaData = state->file;
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
-	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:movieTranslationString inContext:moc];
+	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 	SapphireMovie *movie = [SapphireMovie movieWithDictionary:infoIMDB inContext:moc];
 	if(movie == nil)
 	{
@@ -341,7 +340,7 @@
 		else
 		{
 			[posterChooser setPosters:previews];
-			[posterChooser setFileName:state->lookupName];
+			[posterChooser setFileName:[NSString stringByCroppingDirectoryPath:state->path toLength:3]];
 			[posterChooser setFile:state->file];
 			[posterChooser setListTitle:BRLocalizedString(@"Select Movie Poster", @"Prompt the user for poster selection")];
 			[delegate displayChooser:posterChooser forImporter:self withContext:state];
@@ -429,13 +428,16 @@
 	if(![self isMovieCandidate:metaData])
 		return ImportStateNotUpdated;
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Going to movie import %@", path);
-	NSString *fileName = [path lastPathComponent];
+	NSString *extLessPath = path;
+	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+		extLessPath = [extLessPath stringByDeletingPathExtension];
+	
 	/*choose between file or directory name for lookup */
 	NSString *lookupName;
 	if([[SapphireSettings sharedSettings] dirLookup])
-		lookupName = [[path stringByDeletingLastPathComponent] lastPathComponent];
+		lookupName = [[[path stringByDeletingLastPathComponent] lastPathComponent] lowercaseString];
 	else
-		lookupName = fileName;
+		lookupName = [[extLessPath lastPathComponent] lowercaseString];
 	
 	SapphireSiteMovieScraper *siteScraper = [[[SapphireSiteMovieScraper alloc] initWithMovieScraper:scraper delegate:self loader:[SapphireApplianceController urlLoader]] autorelease];
 	SapphireMovieImportStateData *state = [[[SapphireMovieImportStateData alloc] initWithFile:metaData atPath:path scraper:siteScraper] autorelease];
@@ -443,21 +445,20 @@
 	/*Get the movie title*/
 	NSString *movieDataLink = nil ;
 	/*Check to see if we know this movie*/
-	NSString *movieTranslationString = [[lookupName lowercaseString] stringByDeletingPathExtension];
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie %@", movieTranslationString);
+	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie %@", state->lookupName);
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
-	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:movieTranslationString inContext:moc];
+	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 	int searchIMDBNumber = [metaData searchIMDBNumber];
 	if(searchIMDBNumber > 0)
 	{
 		if(!tran)
-			tran = [SapphireMovieTranslation createMovieTranslationWithName:movieTranslationString inContext:moc];
+			tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
 		[tran setIMDBLink:[NSString stringWithFormat:@"/title/tt%08d", searchIMDBNumber]];
 	}
 	if([tran IMDBLink] == nil)
 	{
 		BOOL nfoPathIsDir = NO;
-		NSString *nfoFilePath=[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"nfo"];
+		NSString *nfoFilePath=[extLessPath stringByAppendingPathExtension:@"nfo"];
 		NSString *moviePath = nil;
 		if([[NSFileManager defaultManager] fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] && !nfoPathIsDir)
 			moviePath = [self moviePathFromNfoFilePath:nfoFilePath];
@@ -471,8 +472,7 @@
 				return ImportStateNotUpdated;
 			
 			/*Look for a year in the title*/
-			NSString *searchStr = [lookupName stringByDeletingPathExtension];
-			NSScanner *titleYearScanner = [NSScanner scannerWithString:searchStr];
+			NSScanner *titleYearScanner = [NSScanner scannerWithString:state->lookupName];
 			NSString *normalTitle = nil;
 			int year = 0;
 			BOOL success = YES;
@@ -485,7 +485,7 @@
 			NSString *yearStr = nil;
 			if(!success)
 			{
-				normalTitle = searchStr;
+				normalTitle = state->lookupName;
 			}
 			else
 				yearStr = [NSString stringWithFormat:@"%d", year];
@@ -536,8 +536,7 @@
 	{
 		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
 		NSManagedObjectContext *moc = [state->file managedObjectContext];
-		NSString *filename = [[[movieChooser fileName] lowercaseString] stringByDeletingPathExtension];
-		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:filename inContext:moc];
+		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 		if([tran IMDBLink])
 		{
 			[self getMovieResultsForState:state translation:tran];
@@ -547,9 +546,8 @@
 	else if([chooser isKindOfClass:[SapphirePosterChooser class]])
 	{
 		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
-		NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
 		NSManagedObjectContext *moc = [state->file managedObjectContext];
-		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:filename inContext:moc];
+		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 		if([[tran selectedPoster] link])
 		{
 			[self saveMoviePosterAtURL:[[tran selectedPoster] link] forTranslation:tran];
@@ -584,8 +582,7 @@
 		{
 			/*They selected a movie title, save the translation and write it*/
 			NSDictionary *movie = [[movieChooser movies] objectAtIndex:selection];
-			NSString *filename = [[[movieChooser fileName] lowercaseString] stringByDeletingPathExtension];
-			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:filename inContext:moc];
+			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
 			/* Add IMDB Key */
 			[tran setIMDBLink:[movie objectForKey:movieTranslationLinkKey]];
 			/*We can resume now*/
@@ -604,8 +601,7 @@
 			[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		else
 		{
-			NSString *filename = [[[posterChooser fileName] lowercaseString] stringByDeletingPathExtension];
-			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:filename inContext:moc];
+			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
 			[tran setSelectedPosterIndexValue:selectedPoster];
 			[self saveMoviePosterAtURL:[[tran posterAtIndex:selectedPoster] link] forTranslation:tran];
 			[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
