@@ -28,6 +28,7 @@ typedef enum {
 	CMPDVDPlayerControllerOverlayModeStatus,
 	CMPDVDPlayerControllerOverlayModeSubAndAudio,
 	CMPDVDPlayerControllerOverlayModeChapters,
+	CMPDVDPlayerControllerOverlayModeZoom,
 } CMPDVDPlayerControllerOverlayMode;
 
 @interface CMPDVDPlayerController : BRMenuController <CMPPlayerController> {
@@ -44,6 +45,7 @@ typedef enum {
 	CMPDVDTextView						*subtitlesOverlay;
 	CMPDVDTextView						*audioOverlay;
 	CMPDVDTextView						*chapterOverlay;
+	CMPDVDTextView						*zoomOverlay;
 	CMPDVDPlayerPlayHead				*playheadOverlay;
 	CMPDVDBlurredMenu					*blurredMenu;
 }

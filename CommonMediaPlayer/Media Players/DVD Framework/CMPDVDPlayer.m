@@ -683,6 +683,17 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 		DVDSetSubPictureStream(streamNum+1);
 }
 
+- (void)setZoomLevel:(CMPDVDZoomLevel)level
+{
+	zoomLevel = level;
+	[self updateVideoBounds];
+}
+
+- (CMPDVDZoomLevel)zoomLevel
+{
+	return zoomLevel;
+}
+
 static BOOL pauseOnPlay = NO;
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {
@@ -729,6 +740,8 @@ static BOOL pauseOnPlay = NO;
 {
 	//NSLog(@"Stopping");
 	DVDUnregisterEventCallBack(eventCallbackID);
+	[stopTimer invalidate];
+	stopTimer = nil;
 	eventCallbackID = 0;
 	DVDStop();
 	DVDCloseMediaFile();
@@ -867,65 +880,6 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 		currentElapsedTime = time;
 }
 
-- (int)aspectRatios
-{
-	DVDAspectRatio aspectRatio = kDVDAspectRatioUninitialized;
-	DVDGetAspectRatio (&aspectRatio);
-	
-	
-	switch (aspectRatio) {
-		case kDVDAspectRatio4x3:
-		case kDVDAspectRatio4x3PanAndScan:
-			return 0; //4:3
-			break;
-		case kDVDAspectRatio16x9:
-		case kDVDAspectRatioLetterBox:
-			return 1; //16:9
-			break;
-	}
-	
-	return 0;
-}
-
-- (void)update1080iBoundsWithSize:(NSSize)nativeSize
-{
-	int aspect = [self aspectRatios];
-	
-	//float var = (nativeSize.width/nativeSize.height);
-	//NSRect frame = [win frame];
-	CGDirectDisplayID display = [(BRDisplayManager *)[BRDisplayManager sharedInstance] display];
-    CGRect frame = CGDisplayBounds( display );
-    frame.size.width = CGDisplayPixelsWide( display );
-    frame.size.height = CGDisplayPixelsHigh( display );
-	
-	CGSize currentSize;
-	currentSize.width = frame.size.width;
-	currentSize.height = frame.size.height;
-	Rect qdRect;
-	
-	switch (aspect)
-	{
-		case 0: //4:3
-			//NSLog(@"4:3");
-			qdRect.left = 125;
-			qdRect.right = 1155;
-			qdRect.top = 0;
-			qdRect.bottom = 1080;
-			
-			break;
-			
-		case 1: //16:9
-			//NSLog(@"16:9");
-			qdRect.left = 0;
-			qdRect.right = frame.size.width;
-			qdRect.top = 0;
-			qdRect.bottom = 1080;
-			break;
-			
-	}
-	DVDSetVideoBounds(&qdRect);
-}
-
 - (NSSize)size
 {
 	DVDAspectRatio aspectRatio = kDVDAspectRatioUninitialized;
@@ -972,64 +926,58 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
     frame.size.height = CGDisplayPixelsHigh( display );
 	
 	NSSize currentSize;
-	currentSize.width = frame.size.width;
-	currentSize.height = frame.size.height;
-	
 	if([shortString isEqualToString:@"1080i"])
 	{
-		//NSLog(@"width = %f", (float)frame.size.width);
-		//NSLog(@"height = %f", (float)frame.size.height);
-		[self update1080iBoundsWithSize:nativeSize];
-		return;
-	}
-	
-	//NSRect content = [[win contentView] bounds];
-	
-	Rect qdRect;
-	float resizeScale = 1.0;
-	if(NSEqualSizes(currentSize , nativeSize))
-	{
-		//NSLog(@"one");
-		qdRect.left = 0;
-		qdRect.right = frame.size.width;
-		qdRect.bottom = frame.size.height;
-		qdRect.top = 0;
-	}
-	else if(currentSize.width/currentSize.height > nativeSize.width/nativeSize.height)
-	{
-		//NSLog(@"two");
-		resizeScale = currentSize.height/nativeSize.height;
-		//NSLog(@"resizeScale: %f", resizeScale);
-		qdRect.left = currentSize.width/2 - (nativeSize.width * resizeScale)/2;
-		//NSLog(@"qdRect.left: %d", qdRect.left);
-		qdRect.right = currentSize.width/2 + (nativeSize.width * resizeScale)/2;
-		qdRect.bottom = frame.size.height;
-		qdRect.top = 0;
-		//NSLog(@"qdRect.left: %d right: %d top: %d bottom: %d", qdRect.left,qdRect.right,qdRect.top, qdRect.bottom);
+		currentSize.width = 1280;
+		currentSize.height = 1080;
 	}
 	else
 	{
-		//NSLog(@"three");
-		resizeScale = currentSize.width/nativeSize.width;
-		qdRect.left = 0;
-		qdRect.right = frame.size.width;
-		qdRect.bottom = frame.size.height - currentSize.height/2 + (nativeSize.height * resizeScale)/2;
-		qdRect.top = frame.size.height - currentSize.height/2 - (nativeSize.height * resizeScale)/2;
+		currentSize.width = frame.size.width;
+		currentSize.height = frame.size.height;
 	}
 	
-	//qdRect.left = 0;
-	//qdRect.right = frame.size.width;
-	//qdRect.bottom = frame.size.height;
-	//qdRect.top = 0;
+	NSRect rect;
+	if(NSEqualSizes(currentSize, nativeSize))
+	{
+		rect.size = currentSize;
+	}
+	else if(currentSize.width/currentSize.height > nativeSize.width/nativeSize.height)
+	{
+		float resizeScale = currentSize.height/nativeSize.height;
+		rect.size.width = nativeSize.width * resizeScale;
+		rect.size.height = currentSize.height;
+	}
+	else
+	{
+		float resizeScale = currentSize.width/nativeSize.width;
+		frame.size.height = nativeSize.height * resizeScale;
+		frame.size.width = currentSize.width;
+	}
 	
-	//NSLog(@"4: DVDSetVideoBounds");
+	switch (zoomLevel) {
+		case CMPDVDZoomLetterBoxInFullFrame:
+			rect.size.width *= 4.0f/3.0f;
+			rect.size.height *= 4.0f/3.0f;
+			break;
+		case CMPDVDZoom2x:
+			rect.size.width *= 2.0f;
+			rect.size.height *= 2.0f;
+			break;
+		default:
+			break;
+	}
+	
+	rect.origin.x = (currentSize.width - rect.size.width)/2;
+	rect.origin.y = (currentSize.height - rect.size.height)/2;
+	
+	Rect qdRect;
+	qdRect.left = rect.origin.x;
+	qdRect.right = rect.origin.x + rect.size.width;
+	qdRect.top = rect.origin.y;
+	qdRect.bottom = rect.origin.y + rect.size.height;
+	
 	DVDSetVideoBounds(&qdRect);
-	//[self display];
-	//if(result) {
-	//NSLog(@"DVDSetVideoBounds returned %d", result);
-	//}
-	
-	//currentScale = currentSize.height/nativeSize.height;
 }
 
 - (BOOL)initializeFrameworkWithError:(NSError **)error

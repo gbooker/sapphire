@@ -43,6 +43,13 @@ typedef enum {
 	CMPDVDStatePlayingSlowBackward,	// playing less than 1x	
 } CMPDVDState;
 
+typedef enum {
+	CMPDVDZoomNormal,
+	CMPDVDZoomLetterBoxInFullFrame,
+	CMPDVDZoom2x,
+	CMPDVDZoomLevelCount,
+} CMPDVDZoomLevel;
+
 @class CMPDVDPlayerController, CMPDVDFrameworkLoadAction;
 
 @interface CMPDVDPlayer : NSObject <CMPPlayer>{
@@ -55,6 +62,7 @@ typedef enum {
 	UInt32						titleDuration;
 	UInt32						currentElapsedTime;
 	NSTimer						*stopTimer;
+	CMPDVDZoomLevel				zoomLevel;
 }
 
 - (void)setController:(CMPDVDPlayerController *)controller;
@@ -89,6 +97,8 @@ typedef enum {
 
 - (void)nextAudioStream;
 - (void)nextSubStream;
+- (void)setZoomLevel:(CMPDVDZoomLevel)level;
+- (CMPDVDZoomLevel)zoomLevel;
 + (BOOL)isVolume:(NSString *)theVolume;
 + (BOOL)isImage:(NSString *)theVolume;
 @end

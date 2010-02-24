@@ -144,6 +144,7 @@ static NSTimer *timer = nil;
 	[subtitlesOverlay release];
 	[audioOverlay release];
 	[chapterOverlay release];
+	[zoomOverlay release];
 	[playheadOverlay release];
 	[blurredMenu release];
 	[super dealloc];
@@ -343,6 +344,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	BOOL closeSubtitles = (subtitlesOverlay != nil);
 	BOOL closeAudio = (audioOverlay != nil);
 	BOOL closeChapter = (chapterOverlay != nil);
+	BOOL closeZoom = (zoomOverlay != nil);
 	BOOL closePlayhead = (playheadOverlay != nil);
 	
 	switch (overlayMode) {
@@ -358,6 +360,9 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 			closeChapter = NO;
 			closePlayhead = NO;
 			break;
+		case CMPDVDPlayerControllerOverlayModeZoom:
+			closeZoom = NO;
+			break;
 		default:
 			break;
 	}
@@ -370,6 +375,8 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 		closeAndNilOverlay(windowCreation, &audioOverlay, fadeTime);
 	if(closeChapter)
 		closeAndNilOverlay(windowCreation, &chapterOverlay, fadeTime);
+	if(closeZoom)
+		closeAndNilOverlay(windowCreation, &zoomOverlay, fadeTime);
 	if(closePlayhead)
 		closeAndNilOverlay(windowCreation, &playheadOverlay, fadeTime);
 }
@@ -413,6 +420,11 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	[self resetOverlayTimerTo:10];
 }
 
+- (NSString *)chapterString
+{
+	return [NSString stringWithFormat:@"Chapter %d/%d", [player currentChapter], [player chapters]];
+}
+
 - (void)showChapterMode
 {
 	overlayMode = CMPDVDPlayerControllerOverlayModeChapters;
@@ -420,9 +432,33 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	
 	if(!chapterOverlay)
 		chapterOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
-	[chapterOverlay setText:[NSString stringWithFormat:@"Chapter %d/%d", [player currentChapter], [player chapters]]];
+	[chapterOverlay setText:[self chapterString]];
 	[chapterOverlay displayWithFadeTime:0.25];
 	[self showPlayheadOverlay];
+	
+	[self resetOverlayTimerTo:10];
+}
+
+- (NSString *)zoomModeString
+{
+	switch ([player zoomLevel]) {
+		case CMPDVDZoomLetterBoxInFullFrame:
+			return @"Zoom: 4/3x";
+		case CMPDVDZoom2x:
+			return @"Zoom: 2x";
+	}
+	return @"Zoom: None";
+}
+
+- (void)showZoomMode
+{
+	overlayMode = CMPDVDPlayerControllerOverlayModeZoom;
+	[self overlayModeChangedWithFade:0];
+	
+	if(!zoomOverlay)
+		zoomOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperRight] retain];
+	[zoomOverlay setText:[self zoomModeString]];
+	[zoomOverlay displayWithFadeTime:0.25];
 	
 	[self resetOverlayTimerTo:10];
 }
@@ -514,7 +550,13 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeChapters)
 			{
 				[player nextChapter];
-				[chapterOverlay setText:[NSString stringWithFormat:@"Chapter %d/%d", [player currentChapter], [player chapters]]];
+				[chapterOverlay setText:[self chapterString]];
+				[self resetOverlayTimerTo:10];
+			}
+			else if(overlayMode == CMPDVDPlayerControllerOverlayModeZoom)
+			{
+				[player setZoomLevel:([player zoomLevel] + 1) % CMPDVDZoomLevelCount];
+				[zoomOverlay setText:[self zoomModeString]];
 				[self resetOverlayTimerTo:10];
 			}
 			else if(playingInSomeForm)
@@ -537,9 +579,11 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeChapters)
 			{
 				[player previousChapter];
-				[chapterOverlay setText:[NSString stringWithFormat:@"Chapter %d/%d", [player currentChapter], [player chapters]]];
+				[chapterOverlay setText:[self chapterString]];
 				[self resetOverlayTimerTo:10];
 			}
+			else if(overlayMode == CMPDVDPlayerControllerOverlayModeZoom)
+				;
 			else if(playingInSomeForm)
 				[player decrementScanRate];
 			else
@@ -555,6 +599,8 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 			else if(overlayMode <= CMPDVDPlayerControllerOverlayModeStatus)
 				[self showSubAndAudioMode];
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeSubAndAudio)
+				[self showZoomMode];
+			else if(overlayMode == CMPDVDPlayerControllerOverlayModeZoom)
 				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeChapters)
 				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
@@ -571,6 +617,8 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 				[self showChapterMode];
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeSubAndAudio)
 				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			else if(overlayMode == CMPDVDPlayerControllerOverlayModeZoom)
+				[self showSubAndAudioMode];
 			else if(overlayMode == CMPDVDPlayerControllerOverlayModeChapters)
 				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 			else
