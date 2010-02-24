@@ -37,8 +37,11 @@
 {
 @public
 	SapphireSiteMovieScraper	*siteScraper;
+	SapphireMovieTranslation	*translation;
 }
 - (id)initWithFile:(SapphireFileMetaData *)aFile atPath:(NSString *)aPath scraper:(SapphireSiteMovieScraper *)siteScaper;
+- (void)setTranslation:(SapphireMovieTranslation *)aTranslation;
+- (SapphireMovieTranslation *)createTranslationInContext:(NSManagedObjectContext *)moc;
 @end
 
 @implementation SapphireMovieImportStateData
@@ -57,7 +60,21 @@
 - (void)dealloc
 {
 	[siteScraper release];
+	[translation release];
 	[super dealloc];
+}
+
+- (void)setTranslation:(SapphireMovieTranslation *)aTranslation
+{
+	[translation autorelease];
+	translation = [aTranslation retain];
+}
+
+- (SapphireMovieTranslation *)createTranslationInContext:(NSManagedObjectContext *)moc
+{
+	SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:lookupName inContext:moc];
+	[self setTranslation:tran];
+	return tran;
 }
 
 @end
@@ -65,8 +82,8 @@
 
 
 @interface SapphireMovieImporter ()
-- (void)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran;
-- (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
+- (void)getMovieResultsForState:(SapphireMovieImportStateData *)state;
+- (void)getMoviePostersForState:(SapphireMovieImportStateData *)state thumbElements:(NSArray *)thumbElements;
 - (void)saveMoviePosterAtURL:(NSString *)url forTranslation:(SapphireMovieTranslation *)tran;
 - (void)completeWithState:(SapphireMovieImportStateData *)state withStatus:(ImportState)status importComplete:(BOOL)importComplete;
 @end
@@ -157,9 +174,9 @@
 	{
 		SapphireFileMetaData *metaData = state->file;
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
-		SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
+		SapphireMovieTranslation *tran = [state createTranslationInContext:moc];
 		[tran setIMDBLink:[[movies objectAtIndex:0] objectForKey:movieTranslationLinkKey]];
-		[self getMovieResultsForState:state translation:tran];
+		[self getMovieResultsForState:state];
 	}
 	else
 	{
@@ -175,8 +192,9 @@
 	[movies release];
 }
 
-- (void)getMovieResultsForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran
+- (void)getMovieResultsForState:(SapphireMovieImportStateData *)state
 {
+	SapphireMovieTranslation *tran = state->translation;
 	NSString *link = [tran IMDBLink];
 	SapphireSiteMovieScraper *siteScraper = state->siteScraper;
 	[siteScraper setObject:state];
@@ -266,7 +284,6 @@
 	
 	SapphireFileMetaData *metaData = state->file;
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
-	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 	SapphireMovie *movie = [SapphireMovie movieWithDictionary:infoIMDB inContext:moc];
 	if(movie == nil)
 	{
@@ -274,7 +291,7 @@
 		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		return;
 	}
-	[tran setMovie:movie];
+	[state->translation setMovie:movie];
 	[metaData setMovie:movie];
 	
 	NSArray *thumbs = [root elementsForName:@"thumb"];
@@ -284,14 +301,15 @@
 	
 	BOOL canDisplay = [delegate canDisplayChooser];
 	if(canDisplay && [thumbs count])
-		[self getMoviePostersForState:state translation:tran thumbElements:thumbs];
+		[self getMoviePostersForState:state thumbElements:thumbs];
 	else
 		[self completeWithState:state withStatus:ImportStateUpdated importComplete:canDisplay];
 }
 
-- (void)getMoviePostersForState:(SapphireMovieImportStateData *)state translation:(SapphireMovieTranslation *)tran thumbElements:(NSArray *)thumbElements;
+- (void)getMoviePostersForState:(SapphireMovieImportStateData *)state thumbElements:(NSArray *)thumbElements;
 {
 	NSMutableArray *previews = [NSMutableArray arrayWithCapacity:[thumbElements count]];
+	SapphireMovieTranslation *tran = state->translation;
 	if([thumbElements count])
 	{
 		int index = 0;
@@ -328,7 +346,12 @@
 			[previews addObject:link];
 		}
 	}
-	if([previews count])
+	if([tran selectedPoster])
+	{
+		[self saveMoviePosterAtURL:[[tran selectedPoster] link] forTranslation:tran];
+		[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
+	}
+	else if([previews count])
 	{
 		SapphirePosterChooser *posterChooser = [[SapphirePosterChooser alloc] initWithScene:[delegate chooserScene]];
 		if(![posterChooser okayToDisplay] || [[SapphireSettings sharedSettings] autoSelection])
@@ -448,11 +471,12 @@
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie %@", state->lookupName);
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
+	[state setTranslation:tran];
 	int searchIMDBNumber = [metaData searchIMDBNumber];
 	if(searchIMDBNumber > 0)
 	{
 		if(!tran)
-			tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
+			tran = [state createTranslationInContext:moc];
 		[tran setIMDBLink:[NSString stringWithFormat:@"/title/tt%08d", searchIMDBNumber]];
 	}
 	if([tran IMDBLink] == nil)
@@ -464,7 +488,11 @@
 			moviePath = [self moviePathFromNfoFilePath:nfoFilePath];
 		
 		if([moviePath length])
+		{
+			if(tran == nil)
+				tran = [state createTranslationInContext:moc];
 			[tran setIMDBLink:moviePath];
+		}
 		else
 		{
 			if(![delegate canDisplayChooser])
@@ -503,9 +531,12 @@
 	if(movie != nil)
 	{	
 		[metaData setMovie:movie];
-		return ImportStateUpdated;
+		if([tran selectedPoster] != nil)
+			return ImportStateUpdated;
+		[self getMoviePostersForState:state thumbElements:[NSArray array]];
+		return ImportStateBackground;
 	}
-	[self getMovieResultsForState:state translation:tran];
+	[self getMovieResultsForState:state];
 	return ImportStateBackground;
 }
 
@@ -537,9 +568,11 @@
 		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
 		NSManagedObjectContext *moc = [state->file managedObjectContext];
 		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
+		if(tran)
+			[state setTranslation:tran];
 		if([tran IMDBLink])
 		{
-			[self getMovieResultsForState:state translation:tran];
+			[self getMovieResultsForState:state];
 			return NO;
 		}
 	}
@@ -547,7 +580,7 @@
 	{
 		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
 		NSManagedObjectContext *moc = [state->file managedObjectContext];
-		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
+		SapphireMovieTranslation *tran = state->translation;
 		if([[tran selectedPoster] link])
 		{
 			[self saveMoviePosterAtURL:[[tran selectedPoster] link] forTranslation:tran];
@@ -582,11 +615,11 @@
 		{
 			/*They selected a movie title, save the translation and write it*/
 			NSDictionary *movie = [[movieChooser movies] objectAtIndex:selection];
-			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
+			SapphireMovieTranslation *tran = [state createTranslationInContext:moc];
 			/* Add IMDB Key */
 			[tran setIMDBLink:[movie objectForKey:movieTranslationLinkKey]];
 			/*We can resume now*/
-			[self getMovieResultsForState:state translation:tran];
+			[self getMovieResultsForState:state];
 		}
 		[SapphireMetaDataSupport save:moc];
 	}
@@ -601,12 +634,11 @@
 			[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		else
 		{
-			SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:state->lookupName inContext:moc];
+			SapphireMovieTranslation *tran = state->translation;
 			[tran setSelectedPosterIndexValue:selectedPoster];
-			[self saveMoviePosterAtURL:[[tran posterAtIndex:selectedPoster] link] forTranslation:tran];
+			[self saveMoviePosterAtURL:[[tran selectedPoster] link] forTranslation:tran];
 			[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
 		}
-		posterChooser = nil;
 		[SapphireMetaDataSupport save:moc];
 	}
 	else
