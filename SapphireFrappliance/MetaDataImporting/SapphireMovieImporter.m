@@ -314,6 +314,13 @@
 	{
 		int index = 0;
 		NSManagedObjectContext *moc = [tran managedObjectContext];
+		//Redoing posters, get rid of old ones
+		[tran setSelectedPosterIndex:nil];
+		NSEnumerator *posterEnum = [[tran postersSet] objectEnumerator];
+		SapphireMoviePoster *poster;
+		while((poster = [posterEnum nextObject]) != nil)
+			[moc deleteObject:poster];
+		
 		NSEnumerator *thumbEnum = [thumbElements objectEnumerator];
 		NSXMLElement *thumb;
 		NSMutableSet *posterSet = [NSMutableSet setWithCapacity:[thumbElements count]];
@@ -468,7 +475,28 @@
 	/*Get the movie title*/
 	NSString *movieDataLink = nil ;
 	/*Check to see if we know this movie*/
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie %@", state->lookupName);
+	
+	/*Look for a year in the title*/
+	NSScanner *titleYearScanner = [NSScanner scannerWithString:state->lookupName];
+	NSString *normalTitle = nil;
+	int year = 0;
+	BOOL success = YES;
+	success &= [titleYearScanner scanUpToString:@"(" intoString:&normalTitle];
+	NSString *junk = nil;
+	success &= [titleYearScanner scanString:@"(" intoString:nil];
+	success &= [titleYearScanner scanInt:&year];
+	success &= [titleYearScanner scanString:@")" intoString:nil];
+	
+	NSString *yearStr = nil;
+	if(success)
+	{
+		yearStr = [NSString stringWithFormat:@"%d", year];
+		if([normalTitle hasSuffix:@" "])
+		   normalTitle = [normalTitle substringToIndex:[normalTitle length]-1];
+		[state setLookupName:normalTitle];
+	}
+	
+	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie \"%@\"", state->lookupName);
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 	[state setTranslation:tran];
@@ -499,30 +527,11 @@
 			/*There is no data menu, background import. So we can't ask user, skip*/
 				return ImportStateNotUpdated;
 			
-			/*Look for a year in the title*/
-			NSScanner *titleYearScanner = [NSScanner scannerWithString:state->lookupName];
-			NSString *normalTitle = nil;
-			int year = 0;
-			BOOL success = YES;
-			success &= [titleYearScanner scanUpToString:@"(" intoString:&normalTitle];
-			NSString *junk = nil;
-			success &= [titleYearScanner scanString:@"(" intoString:nil];
-			success &= [titleYearScanner scanInt:&year];
-			success &= [titleYearScanner scanString:@")" intoString:nil];
-			
-			NSString *yearStr = nil;
-			if(!success)
-			{
-				normalTitle = state->lookupName;
-			}
-			else
-				yearStr = [NSString stringWithFormat:@"%d", year];
-			
-			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Searching for %@ with year %@", normalTitle, yearStr);
+			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Searching for %@ with year %@", state->lookupName, yearStr);
 			
 			/*Ask the user what movie this is*/
 			[siteScraper setObject:state];
-			[siteScraper searchForMovieName:normalTitle year:yearStr];
+			[siteScraper searchForMovieName:state->lookupName year:yearStr];
 			return ImportStateBackground;
 		}
 	}
