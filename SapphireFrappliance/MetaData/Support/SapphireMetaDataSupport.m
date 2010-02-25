@@ -323,14 +323,14 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	}
 	if(error != nil)
 	{
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Save error \"%@\"", error);
+		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Save error \"%@\"", error);
 		NSArray *details = [[error userInfo] objectForKey:@"NSDetailedErrors"];
 		if(details != nil)
 		{
 			NSEnumerator *errorEnum = [details objectEnumerator];
 			NSError *aError;
 			while((aError = [errorEnum nextObject]) != nil)
-				SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"One error is %@: %@", aError, [aError userInfo]);
+				SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"One error is %@: %@", aError, [aError userInfo]);
 		}
 		NSException *underlying = [[error userInfo] objectForKey:@"NSUnderlyingException"];
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Underlying is %@ %@ %@ %@", underlying, [underlying name], [underlying reason], [underlying userInfo]);
