@@ -30,8 +30,10 @@
  * This class provides a menu and maching icons to display posters for the user to choose.
  */
 @interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate, SapphireChooser> {
+	BOOL					displayed;		/*!< @brief YES if currently displayed, NO otherwise*/
 	NSMutableArray			*posters;		/*!< @brief The array of poster urls and after loaded, the NSImages*/
 	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
+	NSMutableArray			*posterData;	/*!< @brief The data for the poster images*/
 	NSString				*fileName;		/*!< @brief The movie filename*/
 	NSString				*movieTitle;	/*!< @brief The title of the movie*/
 	SapphireChooserChoice	selection;		/*!< @brief The user's selection*/
