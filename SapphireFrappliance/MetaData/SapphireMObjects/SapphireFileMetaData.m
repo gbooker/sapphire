@@ -427,7 +427,8 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 		/*We did an update*/
 		updated=TRUE ;
 		NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
-		NSString *path;
+		NSString *path = [file path];
+		NSString *modifiedPath = path;
 		NSFileManager *fm = [NSFileManager defaultManager];
 		
 		if([file fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS)
@@ -440,14 +441,12 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 				NSString *lowerFile = [file lowercaseString];
 				if([lowerFile hasSuffix:@".ifo"] && ![[lowerFile lastPathComponent] isEqualToString:@"video_ts.ifo"])
 				{
-					path = [vtsPath stringByAppendingPathComponent:file];
+					modifiedPath = [vtsPath stringByAppendingPathComponent:file];
 					break;
 				}
 			}
 		}
-		else
-			path = [file path];
-		NSDictionary *props = [fm fileAttributesAtPath:path traverseLink:YES];
+		NSDictionary *props = [fm fileAttributesAtPath:modifiedPath traverseLink:YES];
 		int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
 		/*Set modified, size, and version*/
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:META_FILE_MODIFIED_KEY];
