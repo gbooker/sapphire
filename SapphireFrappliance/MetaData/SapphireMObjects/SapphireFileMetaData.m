@@ -323,7 +323,26 @@ static NSSet *secondaryFiles;
 - (BOOL) needsUpdating
 {
 	/*Check modified date*/
-	NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:self.path traverseLink:YES];
+	NSString *path = nil;
+	NSFileManager *fm = [NSFileManager defaultManager];
+	if([self fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS)
+	{
+		NSString *vtsPath = [self.path stringByAppendingPathComponent:@"VIDEO_TS"];
+		NSEnumerator *fileEnum = [[fm directoryContentsAtPath:vtsPath] objectEnumerator];
+		NSString *file;
+		while((file = [fileEnum nextObject]) != nil)
+		{
+			NSString *lowerFile = [file lowercaseString];
+			if([lowerFile hasSuffix:@".ifo"] && ![[lowerFile lastPathComponent] isEqualToString:@"video_ts.ifo"])
+			{
+				path = [vtsPath stringByAppendingPathComponent:file];
+				break;
+			}
+		}
+	}
+	else
+		path = self.path;
+	NSDictionary *props = [fm fileAttributesAtPath:path traverseLink:YES];
 	int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
 	
 	if(props == nil)
@@ -510,12 +529,21 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 		else if([file fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS)
 		{
 			SapphireVideoTsParser *dvd = [[SapphireVideoTsParser alloc] initWithPath:path];
-			
-			[fileMeta setObject:[dvd videoFormatsString ] forKey:META_FILE_VIDEO_DESC_KEY];
-			[fileMeta setObject:[dvd audioFormatsString ] forKey:META_FILE_AUDIO_DESC_KEY];
-			[fileMeta setObject:[dvd subtitlesString    ] forKey:META_FILE_SUBTITLES_KEY ];
-			[fileMeta setObject:[dvd mainFeatureDuration] forKey:META_FILE_DURATION_KEY  ];
-			[fileMeta setObject:[dvd totalSize          ] forKey:META_FILE_SIZE_KEY      ];
+			id description = [dvd videoFormatsString];
+			if(description)
+				[fileMeta setObject:description forKey:META_FILE_VIDEO_DESC_KEY];
+			description = [dvd audioFormatsString];
+			if(description)
+				[fileMeta setObject:description forKey:META_FILE_AUDIO_DESC_KEY];
+			description = [dvd mainFeatureDuration];
+			if(description)
+				[fileMeta setObject:description forKey:META_FILE_DURATION_KEY];
+			description = [dvd totalSize];
+			if(description)
+				[fileMeta setObject:description forKey:META_FILE_SIZE_KEY];
+			description = [dvd subtitlesString];
+			if(description)
+				[fileMeta setObject:description forKey:META_FILE_SUBTITLES_KEY ];
 			
 			[dvd release];
 		} // VIDEO_TS
