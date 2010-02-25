@@ -230,8 +230,9 @@
 	cancelled = YES;
 }
 
-- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(SapphireTVShowImportStateData *)state
+- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(id)stateObj
 {
+	SapphireTVShowImportStateData *state = (SapphireTVShowImportStateData *)stateObj;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 	if(cancelled)
 		return;
@@ -306,7 +307,6 @@
 	if(!fetchShowData)
 	{
 		NSString *coverArtPath = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"@TV/%@/cover.jpg", [show name]]];
-		BOOL isDir = NO;
 		if(![[NSFileManager defaultManager] fileExistsAtPath:coverArtPath])
 			fetchShowData = YES;
 	}
@@ -324,8 +324,9 @@
 	}
 }
 
-- (void)retrievedShowDetails:(NSXMLDocument *)details forObject:(SapphireTVShowImportStateData *)state
+- (void)retrievedShowDetails:(NSXMLDocument *)details forObject:(id)stateObj
 {
+	SapphireTVShowImportStateData *state = (SapphireTVShowImportStateData *)stateObj;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 	if(cancelled)
 		return;
@@ -407,8 +408,9 @@
 		[self completedEpisode:nil forState:state atIndex:index];
 }
 
-- (void)retrievedEpisodeList:(NSXMLDocument *)episodeList forObject:(SapphireTVShowImportStateData *)state
+- (void)retrievedEpisodeList:(NSXMLDocument *)episodeList forObject:(id)stateObj
 {
+	SapphireTVShowImportStateData *state = (SapphireTVShowImportStateData *)stateObj;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 	if(cancelled)
 		return;
@@ -440,8 +442,9 @@
 	[siteScraper getEpisodeDetailsAtURL:url forEpisodeID:epState->epID];
 }
 
-- (void)retrievedEpisodeDetails:(NSXMLDocument *)details forObject:(SapphireSingleTVShowEpisodeImportStateData *)state
+- (void)retrievedEpisodeDetails:(NSXMLDocument *)details forObject:(id)stateObj
 {
+	SapphireSingleTVShowEpisodeImportStateData *state = (SapphireSingleTVShowEpisodeImportStateData *)stateObj;
 	SapphireTVShowImportStateData *tvState = state->state;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 	if(cancelled)
@@ -524,7 +527,8 @@
 	[infoArray replaceObjectAtIndex:index withObject:dict];
 	if(state->episodesCompleted == [infoArray count])
 	{
-		for(int i=0; i<[infoArray count]; i++)
+		int i;
+		for(i=0; i<[infoArray count]; i++)
 		{
 			if(![[infoArray objectAtIndex:i] count])
 			{
@@ -771,8 +775,9 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireTVShowImportStateData *)state
+- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
 {
+	SapphireTVShowImportStateData *state = (SapphireTVShowImportStateData *)context;
 	/*Check for a match done earlier*/
 	NSManagedObjectContext *moc = [state->file managedObjectContext];
 	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:state->lookupName inContext:moc];
@@ -785,8 +790,9 @@
 	return YES;
 }
 
-- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)aChooser withContext:(SapphireTVShowImportStateData *)state;
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)aChooser withContext:(id)context
 {
+	SapphireTVShowImportStateData *state = (SapphireTVShowImportStateData *)context;
 	if(![aChooser isKindOfClass:[SapphireShowChooser class]])
 		return;
 	SapphireShowChooser *chooser = (SapphireShowChooser *)aChooser;

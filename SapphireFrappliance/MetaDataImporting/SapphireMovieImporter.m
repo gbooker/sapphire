@@ -96,7 +96,6 @@
 	if(!self)
 		return self;
 	
-	NSError *error = nil;
 	scraper = [[SapphireScraper scrapperWithName:@"IMDb.com"] retain];
 	
 	return self;
@@ -119,8 +118,9 @@
 	cancelled = YES;
 }
 
-- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(SapphireMovieImportStateData *)state
+- (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(id)stateObj
 {
+	SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)stateObj;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 	if(cancelled)
 		return;
@@ -205,8 +205,9 @@
 	[siteScraper getMovieDetailsAtURL:fullURL forMovieID:[link lastPathComponent]];
 }
 
-- (void)retrievedMovieDetails:(NSXMLDocument *)details forObject:(SapphireMovieImportStateData *)state
+- (void)retrievedMovieDetails:(NSXMLDocument *)details forObject:(id)stateObj
 {
+	SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)stateObj;
 	[state->siteScraper setObject:nil];	//Avoid retain loop
 
 	if(cancelled)
@@ -472,8 +473,6 @@
 	SapphireSiteMovieScraper *siteScraper = [[[SapphireSiteMovieScraper alloc] initWithMovieScraper:scraper delegate:self loader:[SapphireApplianceController urlLoader]] autorelease];
 	SapphireMovieImportStateData *state = [[[SapphireMovieImportStateData alloc] initWithFile:metaData atPath:path scraper:siteScraper] autorelease];
 	[state setLookupName:lookupName];
-	/*Get the movie title*/
-	NSString *movieDataLink = nil ;
 	/*Check to see if we know this movie*/
 	
 	/*Look for a year in the title*/
@@ -482,7 +481,6 @@
 	int year = 0;
 	BOOL success = YES;
 	success &= [titleYearScanner scanUpToString:@"(" intoString:&normalTitle];
-	NSString *junk = nil;
 	success &= [titleYearScanner scanString:@"(" intoString:nil];
 	success &= [titleYearScanner scanInt:&year];
 	success &= [titleYearScanner scanString:@")" intoString:nil];
@@ -570,11 +568,11 @@
 	return BRLocalizedString(@"Start Fetching Data", @"Button");
 }
 
-- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireMovieImportStateData *)state
+- (BOOL)stillNeedsDisplayOfChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
 {
+	SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)context;
 	if([chooser isKindOfClass:[SapphireMovieChooser class]])
 	{
-		SapphireMovieChooser *movieChooser = (SapphireMovieChooser *)chooser;
 		NSManagedObjectContext *moc = [state->file managedObjectContext];
 		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 		if(tran)
@@ -587,8 +585,6 @@
 	}
 	else if([chooser isKindOfClass:[SapphirePosterChooser class]])
 	{
-		SapphirePosterChooser *posterChooser = (SapphirePosterChooser *)chooser;
-		NSManagedObjectContext *moc = [state->file managedObjectContext];
 		SapphireMovieTranslation *tran = state->translation;
 		if([[tran selectedPoster] link])
 		{
@@ -600,8 +596,9 @@
 	return YES;
 }
 
-- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(SapphireMovieImportStateData *)state
+- (void)exhumedChooser:(BRLayerController <SapphireChooser> *)chooser withContext:(id)context
 {
+	SapphireMovieImportStateData *state = (SapphireMovieImportStateData *)context;
 	/*See if it was a movie chooser*/
 	if([chooser isKindOfClass:[SapphireMovieChooser class]])
 	{

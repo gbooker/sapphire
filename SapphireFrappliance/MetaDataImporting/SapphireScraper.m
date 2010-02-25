@@ -227,7 +227,8 @@ static NSDictionary *scraperPaths = nil;
 
 - (void)clearBuffers
 {
-	for(int i=0; i<SCRAPER_BUFFER_COUNT; i++)
+	int i;
+	for(i=0; i<SCRAPER_BUFFER_COUNT; i++)
 	{	
 		[scraperBuffers[i] release];
 		scraperBuffers[i] = nil;
@@ -242,7 +243,8 @@ static NSDictionary *scraperPaths = nil;
 
 - (void)clearStorchMatches
 {
-	for(int i=0; i<SCRAPER_MATCH_COUNT; i++)
+	int i;
+	for(i=0; i<SCRAPER_MATCH_COUNT; i++)
 	{
 		[storedMatches[i] release];
 		storedMatches[i] = nil;
@@ -285,8 +287,8 @@ static NSDictionary *scraperPaths = nil;
 	NSXMLElement *rootSetting = [doc rootElement];
 	NSArray *settingDescs = [rootSetting elementsForName:@"setting"];
 	
-	int count = [settingDescs count];
-	for(int i=0; i<count; i++)
+	int count = [settingDescs count], i;
+	for(i=0; i<count; i++)
 	{
 		[self parseSetting:[settingDescs objectAtIndex:i]];
 	}
@@ -340,8 +342,9 @@ NSString *cleanedString(NSString *str)
 
 void bufferBooleanAttributeWithDefault(NSXMLElement *element, NSString *attributeName, BOOL defaultValue, BOOL *values)
 {
+	int i;
 	if(defaultValue)
-		for(int i=0; i<SCRAPER_MATCH_COUNT; i++)
+		for(i=0; i<SCRAPER_MATCH_COUNT; i++)
 			values[i] = YES;
 	else
 		memset(values, 0, sizeof(BOOL)*SCRAPER_MATCH_COUNT);
@@ -351,7 +354,7 @@ void bufferBooleanAttributeWithDefault(NSXMLElement *element, NSString *attribut
 	{
 		NSArray *valueStrings = [attr componentsSeparatedByString:@","];
 		int count = [valueStrings count];
-		for(int i=0; i<count; i++)
+		for(i=0; i<count; i++)
 		{
 			int index = [[valueStrings objectAtIndex:i] intValue];
 			if(index > 0 && index <= SCRAPER_MATCH_COUNT)
@@ -574,7 +577,8 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	int count = [regexChildren count];
 	if(count)
 	{
-		for(int i=0; i<count; i++)
+		int i;
+		for(i=0; i<count; i++)
 			[self parseElement:[regexChildren objectAtIndex:i]];
 	}
 	
@@ -609,8 +613,8 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	
 	NSXMLElement *functionElement = [elements objectAtIndex:0];
 	elements = [functionElement elementsForName:@"RegExp"];
-	int count = [elements count];
-	for(int i=0; i<count; i++)
+	int count = [elements count], i;
+	for(i=0; i<count; i++)
 	{
 		[self parseElement:[elements objectAtIndex:i]];
 	}
