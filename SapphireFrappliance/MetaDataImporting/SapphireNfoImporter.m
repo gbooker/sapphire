@@ -47,7 +47,11 @@
 	/*Get the file*/
 	/*Check for NFO file*/
 	BOOL nfoPathIsDir = NO;
-	NSString *nfoFilePath=[[path stringByDeletingPathExtension] stringByAppendingPathExtension:@"nfo"];
+	NSString *extLessPath = path;
+	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+		extLessPath = [extLessPath stringByDeletingPathExtension];
+	
+	NSString *nfoFilePath=[extLessPath stringByAppendingPathExtension:@"nfo"];
 	if(![fm fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] || nfoPathIsDir)
 		return ImportStateNotUpdated;
 	

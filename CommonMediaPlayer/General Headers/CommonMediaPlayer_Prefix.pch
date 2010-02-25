@@ -1,0 +1,9 @@
+//
+// Prefix header for all source files of the 'CommonMediaPlayer' target in the 'CommonMediaPlayer' project.
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+	#import <BackRow/BackRow.h>
+	#import "BackRowUtils.h"
+#endif

@@ -28,6 +28,11 @@
 #import "SapphireSettings.h"
 
 #import <SapphireCompatClasses/BackRowUtils.h>
+#ifdef DEBUG
+//#define FrameworkLoadDebug
+#define FrameworkAlwaysCopy
+#endif
+#import <CommonMediaPlayer/CMPPlayerManager.h>
 
 #define TV_SHOW_IDENTIFIER	@"tv-shows"
 #define MOVIES_IDENTIFIER	@"movies"
@@ -60,14 +65,21 @@
 - (id)downsampledImageForMaxSize:(NSSize )size;
 @end
 
+static NSString *initialError = nil;
 
 @implementation SapphireAppliance
+
+BOOL usingCategories = NO;
 
 + (void) initialize
 {
 	NSString *myBundlePath = [[NSBundle bundleForClass:[self class]] bundlePath];
 	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks"];
 	SapphireLoadFramework(frameworkPath);
+	if(!loadCMPFramework(myBundlePath))
+		initialError = BRLocalizedString(@"Error loading common player framework.  Continuing is not recomended", @"Error string for loading common player framework");
+	else if([CMPPlayerManager version] != CMPVersion)
+		initialError = BRLocalizedString(@"Common player framework is newer than expected.  You may wish to check if a newer version of Sapphire is available.  You may attempt to continue if you like.", @"Warning string for common player framework being newer than Sapphire");
 	Class cls = NSClassFromString( @"BRFeatureManager" );
 	if ( cls == Nil )
 		return;
@@ -155,6 +167,12 @@ static SapphireApplianceController *mainCont = nil;
 
 - (id) applianceControllerWithScene: (id) scene
 {
+	if(initialError && !usingCategories)
+	{
+		BRAlertController *controller = [SapphireFrontRowCompat alertOfType:0 titled:@"Error" primaryText:@"Framework Error" secondaryText:initialError withScene:nil];
+		initialError = nil;
+		return controller;
+	}
 	// this function is called when your item is selected on the main menu
 	@try {
 		if([SapphireApplianceController upgradeNeeded])
@@ -179,6 +197,7 @@ static SapphireApplianceController *mainCont = nil;
 -(id)applianceCategories {
 	NSMutableArray *categories = [NSMutableArray array];
 	
+	usingCategories = YES;
 	if([SapphireApplianceController upgradeNeeded])
 	{
 		categories = [NSArray arrayWithObject:
@@ -228,6 +247,12 @@ static SapphireApplianceController *mainCont = nil;
 
 -(id)controllerForIdentifier:(id)ident
 {
+	if(initialError)
+	{
+		BRAlertController *controller = [SapphireFrontRowCompat alertOfType:0 titled:@"Error" primaryText:@"Framework Error" secondaryText:initialError withScene:nil];
+		initialError = nil;
+		return controller;
+	}
 	NSString *identifier = (NSString *)ident;
 	if([identifier isEqualToString:UPGRADE_IDENTIFIER])
 	{

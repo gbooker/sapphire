@@ -63,6 +63,7 @@
 		F50040110D1998FA003FEA08 /* SapphireLeopardFileEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */; };
 		F50044160D19A268003FEA08 /* LeopardOnly.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F5003FF90D19980B003FEA08 /* LeopardOnly.framework */; };
 		F506593110B22EC800D0F1FE /* SapphireTVDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F506593010B22EC800D0F1FE /* SapphireTVDirectory.m */; };
+		F50CCEEE1119E3E300213966 /* CommonMediaPlayer.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = F50CCEEC1119E3BD00213966 /* CommonMediaPlayer.framework */; };
 		F51BFC1B0D26ACAD00E22363 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F56A19480C3170870022918E /* AppKit.framework */; };
 		F51BFC1C0D26ACAD00E22363 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
 		F51BFEFF0C8CB85D00709A5E /* SapphireCollectionSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = F51BFEFE0C8CB85D00709A5E /* SapphireCollectionSettings.m */; };
@@ -102,6 +103,7 @@
 		F571B7AE0E9C360500B7FD9D /* NSManagedObject-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F571B7AD0E9C360500B7FD9D /* NSManagedObject-Extensions.m */; };
 		F58AAF7A0ECFB04F0071CF4B /* SapphireLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = F58AAF790ECFB04F0071CF4B /* SapphireLogging.m */; };
 		F58C52230F13B18F00DE7A65 /* SapphireTextEntryController.m in Sources */ = {isa = PBXBuildFile; fileRef = F58C52220F13B18F00DE7A65 /* SapphireTextEntryController.m */; };
+		F595C614111A679D00C6C322 /* SapphireCMPWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F595C613111A679D00C6C322 /* SapphireCMPWrapper.m */; };
 		F59B29D10D9E8C6E002D5DBD /* NSArray-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5FB82E30D18065F0018E4C9 /* NSArray-Extensions.m */; };
 		F59BB9180DF43C3E00EC11A2 /* SapphireMetaDataUpgrading.m in Sources */ = {isa = PBXBuildFile; fileRef = F59BB9170DF43C3E00EC11A2 /* SapphireMetaDataUpgrading.m */; };
 		F59BBB1C0DF4E2B900EC11A2 /* SapphireFilteredFileDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = F59BBB1B0DF4E2B900EC11A2 /* SapphireFilteredFileDirectory.m */; };
@@ -218,6 +220,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		F500272411235751001B52FE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50CCEE71119E3BD00213966 /* CommonMediaPlayer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F500271A11235732001B52FE;
+			remoteInfo = UIDebug;
+		};
 		F50044110D19A242003FEA08 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
@@ -231,6 +240,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = F5B4186D0D0B29D800BDD361;
 			remoteInfo = "Complete Sapphire";
+		};
+		F50CCEEB1119E3BD00213966 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50CCEE71119E3BD00213966 /* CommonMediaPlayer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = CommonMediaPlayer;
+		};
+		F50CCEF11119E3EE00213966 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F50CCEE71119E3BD00213966 /* CommonMediaPlayer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = CommonMediaPlayer;
 		};
 		F532EC470E44FBC900DBEE13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -404,6 +427,7 @@
 				F532ED840E45426800DBEE13 /* SapphireTakeTwoCompatClasses.framework in CopyFiles */,
 				F59FEEFD0ED85FEF0052012E /* SapphireTakeTwoPointTwoCompatClasses.framework in CopyFiles */,
 				F54A38ED109F43C600DCC808 /* SapphireTakeThreeCompatClasses.framework in CopyFiles */,
+				F50CCEEE1119E3E300213966 /* CommonMediaPlayer.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,6 +456,7 @@
 		F500400F0D1998FA003FEA08 /* SapphireLeopardFileEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireLeopardFileEvents.m; sourceTree = "<group>"; };
 		F506592F10B22EC800D0F1FE /* SapphireTVDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTVDirectory.h; sourceTree = "<group>"; };
 		F506593010B22EC800D0F1FE /* SapphireTVDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTVDirectory.m; sourceTree = "<group>"; };
+		F50CCEE71119E3BD00213966 /* CommonMediaPlayer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CommonMediaPlayer.xcodeproj; path = ../CommonMediaPlayer/CommonMediaPlayer.xcodeproj; sourceTree = SOURCE_ROOT; };
 		F5185B400D1344D700712020 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SapphireCompatibilityClasses.xcodeproj; path = ../SapphireCompatibilityClasses/SapphireCompatibilityClasses.xcodeproj; sourceTree = "<group>"; };
 		F51BFEFD0C8CB85D00709A5E /* SapphireCollectionSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCollectionSettings.h; sourceTree = "<group>"; };
@@ -493,6 +518,8 @@
 		F58AAF960ECFB1F20071CF4B /* Sapphire_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sapphire_Prefix.pch; sourceTree = "<group>"; };
 		F58C52210F13B18F00DE7A65 /* SapphireTextEntryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTextEntryController.h; sourceTree = "<group>"; };
 		F58C52220F13B18F00DE7A65 /* SapphireTextEntryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTextEntryController.m; sourceTree = "<group>"; };
+		F595C612111A679D00C6C322 /* SapphireCMPWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireCMPWrapper.h; sourceTree = "<group>"; };
+		F595C613111A679D00C6C322 /* SapphireCMPWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireCMPWrapper.m; sourceTree = "<group>"; };
 		F59BB9160DF43C3E00EC11A2 /* SapphireMetaDataUpgrading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireMetaDataUpgrading.h; sourceTree = "<group>"; };
 		F59BB9170DF43C3E00EC11A2 /* SapphireMetaDataUpgrading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireMetaDataUpgrading.m; sourceTree = "<group>"; };
 		F59BBB1A0DF4E2B900EC11A2 /* SapphireFilteredFileDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireFilteredFileDirectory.h; sourceTree = "<group>"; };
@@ -746,6 +773,7 @@
 				F5F515B710DD8A31006B9DED /* pcre */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 				F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */,
+				F50CCEE71119E3BD00213966 /* CommonMediaPlayer.xcodeproj */,
 				F532EC3B0E44FB8100DBEE13 /* main_debug.m */,
 				F5BA7E6E0EE336A900A5C679 /* main_rescanDir.m */,
 			);
@@ -840,6 +868,15 @@
 				F500400A0D1998B4003FEA08 /* SapphireLeopardOnly.m */,
 			);
 			path = Leopard;
+			sourceTree = "<group>";
+		};
+		F50CCEE81119E3BD00213966 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F50CCEEC1119E3BD00213966 /* CommonMediaPlayer.framework */,
+				F500272511235751001B52FE /* UIDebug */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		F56B6D8F0C34713400E934AA /* Browser */ = {
@@ -946,6 +983,8 @@
 				F53420550DC2F17F00498822 /* SapphireVideoPlayerController.m */,
 				F5505DC51040864D0064D392 /* SapphireAudioNowPlayingController.h */,
 				F5505DC61040864D0064D392 /* SapphireAudioNowPlayingController.m */,
+				F595C612111A679D00C6C322 /* SapphireCMPWrapper.h */,
+				F595C613111A679D00C6C322 /* SapphireCMPWrapper.m */,
 			);
 			path = Players;
 			sourceTree = "<group>";
@@ -1201,6 +1240,7 @@
 				F585A9C70D74EA810043AB22 /* PBXTargetDependency */,
 				F59FEEFC0ED85FE50052012E /* PBXTargetDependency */,
 				F54A38EC109F43B900DCC808 /* PBXTargetDependency */,
+				F50CCEF21119E3EE00213966 /* PBXTargetDependency */,
 			);
 			name = Sapphire;
 			productInstallPath = /System/Library/CoreServices/Finder.app/Contents/PlugIns;
@@ -1296,6 +1336,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = F50CCEE81119E3BD00213966 /* Products */;
+					ProjectRef = F50CCEE71119E3BD00213966 /* CommonMediaPlayer.xcodeproj */;
+				},
+				{
 					ProductGroup = F5EBE6D80D4A775400042BA0 /* Products */;
 					ProjectRef = F51BFD2D0D26BDF300E22363 /* SapphireCompatibilityClasses.xcodeproj */;
 				},
@@ -1315,6 +1359,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		F500272511235751001B52FE /* UIDebug */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = UIDebug;
+			remoteRef = F500272411235751001B52FE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F50CCEEC1119E3BD00213966 /* CommonMediaPlayer.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CommonMediaPlayer.framework;
+			remoteRef = F50CCEEB1119E3BD00213966 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F54A38E8109F43A600DCC808 /* SapphireTakeThreeCompatClasses.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1534,6 +1592,7 @@
 				F5F5156B10DD7BA2006B9DED /* SapphireScraper.m in Sources */,
 				F5F515EA10DD8B21006B9DED /* SapphireSiteScraper.m in Sources */,
 				F542052810E6D1FE007B0D3A /* SapphireNfoImporter.m in Sources */,
+				F595C614111A679D00C6C322 /* SapphireCMPWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1582,6 +1641,11 @@
 			isa = PBXTargetDependency;
 			target = F5B4186D0D0B29D800BDD361 /* Complete Sapphire */;
 			targetProxy = F5038FA60DE7AB600046C674 /* PBXContainerItemProxy */;
+		};
+		F50CCEF21119E3EE00213966 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CommonMediaPlayer;
+			targetProxy = F50CCEF11119E3EE00213966 /* PBXContainerItemProxy */;
 		};
 		F532EC480E44FBC900DBEE13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1731,6 +1795,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_CFLAGS = "-DDEBUG";
 				PREBINDING = NO;
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 				SYMROOT = ../build;
@@ -1834,15 +1899,20 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = FRAppliance/Sapphire_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/pcre\"",
+				);
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
@@ -1883,9 +1953,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = FRAppliance/Sapphire_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/pcre\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -1902,9 +1981,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = FRAppliance/Sapphire_Prefix.pch;
 				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/pcre\"",
+				);
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,

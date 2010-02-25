@@ -23,7 +23,7 @@
 // These methods are not part of the public interface for the parser.
 // Instead of declaring them in the header, we declare them here in a category that extends the class.
 
-@interface SapphireVideoTsParser (InternalMethods)
+@interface SapphireVideoTsParser ()
 
 /*!
  * @brief Open the main featre IFO at a given location
@@ -75,7 +75,7 @@ static const unsigned int VtsMax_Subpictures         = 32;
 #define vts_VideoResolution(attrs)                   ( attrs[1] & 0x38)
 #define vts_VideoIsWidescreen(attrs)                 ( attrs[0] & 0x0c)
 
-#define vts_AudioIsDTS(attrs)                        ((attrs[0] & 0xe0) == 0x0c)
+#define vts_AudioIsDTS(attrs)                        ((attrs[0] & 0xe0) == 0xc0)
 #define vts_AudioIsSurround(attrs)                   ( attrs[0] & 0x02)
 #define vts_AudioIsCommentary(attrs)                 ( attrs[5] >    1)
 #define vts_AudioSupportsDolbyDecoding(attrs)        ( attrs[7] & 0x80)
@@ -99,12 +99,9 @@ static const unsigned int VtsMax_Subpictures         = 32;
  */
 static NSString *languageFromEncodedChars( const char firstChar, const char secondChar )
 {
-	static NSLocale *currentLocale = nil;
+	NSLocale *currentLocale = [NSLocale currentLocale];
 	const char       langCode[]    = { firstChar, secondChar, 0 };
 	
-	if( currentLocale == nil )
-		currentLocale = [NSLocale currentLocale];
-
 	return [currentLocale displayNameForKey:NSLocaleLanguageCode
 									  value:[NSString stringWithCString:langCode encoding:NSASCIIStringEncoding]];
 }
@@ -318,9 +315,6 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 
 		audio = commaSeparatedStringFromCollection( audioList );
 	}
-
-	if( audio == nil )
-		audio = BRLocalizedString( @"Not specified", @"No Audio information available for a DVD" );;
 }
 
 -(void) parseSubtitles
@@ -354,9 +348,6 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 
 		subtitles = commaSeparatedStringFromCollection( subtitleList );
 	}
-
-	if( subtitles == nil )
-		subtitles = BRLocalizedString( @"None", @"No Subtitle information available for a DVD" );
 }
 
 -(void) parseDuration

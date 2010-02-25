@@ -41,6 +41,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 @interface SapphirePosterChooser ()
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData;
 - (void)loadPoster:(int)index;
+- (void)reloadPosterWithData:(NSData *)data atIndex:(int)intIndex;
 @end
 
 @implementation SapphirePosterChooser
@@ -92,6 +93,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 //    [posterMarch setIconSource: nil];  //This throws an exception
 	[posters release];
 	[posterLayers release];
+	[posterData release];
 	[fileName release];
 	[movieTitle release];
 	[fileInfoText release];
@@ -186,6 +188,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	int i, count = [posters count];
 	posterLayers = [posters mutableCopy];
+	posterData = [[NSMutableArray alloc] initWithCapacity:[posters count]];
+	NSNull *nsnull = [NSNull null];
+	for(i=0; i<count; i++)
+		[posterData addObject:nsnull];
 	for(i=0; i<count; i++)
 		[self loadPoster:i];
 	[posterMarch reload];
@@ -201,12 +207,19 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	NSString *posterURL = [posters objectAtIndex:index];
 	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
-	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(reloadPosterWithData:atIndex:) object:[NSNumber numberWithInt:index] withPriority:YES];
+	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(gotPosterData:atIndex:) object:[NSNumber numberWithInt:index] withPriority:YES];
 }
 
-- (void)reloadPosterWithData:(NSData *)data atIndex:(NSNumber *)index;
+- (void)gotPosterData:(NSData *)data atIndex:(NSNumber *)index;
 {
-	int intIndex = [index intValue];
+	if(displayed)
+		[self reloadPosterWithData:data atIndex:[index intValue]];
+	else
+		[posterData replaceObjectAtIndex:[index intValue] withObject:data];
+}
+
+- (void)reloadPosterWithData:(NSData *)data atIndex:(int)intIndex;
+{
 	[posterLayers replaceObjectAtIndex:intIndex withObject:[self getPosterLayerForData:data]];
 	NSImage *image = [[NSImage alloc] initWithData:data];
 	if(image == nil)
@@ -538,6 +551,14 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[self doMyLayout];
 	[[self list] reload];
 	[super wasPushed];
+	displayed = YES;
+	int i, count = [posterData count];
+	for(i=0; i<count; i++)
+	{
+		id obj = [posterData objectAtIndex:i];
+		if([obj isKindOfClass:[NSData class]])
+			[self reloadPosterWithData:obj atIndex:i];
+	}
 }
 
 - (void)wasPopped

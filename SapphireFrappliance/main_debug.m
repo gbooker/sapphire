@@ -42,6 +42,19 @@
 #import "SapphireXMLData.h"
 #import "SapphireMovieDirectory.h"
 
+//#define TESTING_UPGRADE
+//#define LISTING_MOVIES
+//#define TESTING_XML_IMPORT
+//#define TESTING_FILE_SCANNING
+//#define TESTING_UPDATED_VALUES
+//#define TESTING_DIRECTORY_RESCAN
+//#define TESTING_AUTO_PRUNING
+#define TESTING_MOVIE_IMPORT
+//#define TESTING_TV_SHOW_IMPORT
+//#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
+//#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
+//#define TESTING_TV_IMPORT_THROUGH_XML
+
 void overrideApplicationSupportdir(NSString *override);
 
 @interface TestFileScanning : NSObject <SapphireMetaDataScannerDelegate>
@@ -150,7 +163,7 @@ static BOOL completedImports = YES;
 
 - (BOOL)canDisplayChooser
 {
-	return NO;
+	return YES;
 }
 
 - (id)chooserScene
@@ -160,6 +173,8 @@ static BOOL completedImports = YES;
 
 - (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
 {
+	[chooser itemSelected:1];
+	[importer exhumedChooser:chooser withContext:context];
 }
 
 @end
@@ -180,7 +195,6 @@ int main(int argc, char *argv[])
 	}
 	
 //	overrideApplicationSupportdir([NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Frontrow"]);
-//#define TESTING_UPGRADE
 #ifdef TESTING_UPGRADE
 	{
 		SapphireMetaDataUpgrading *upgrade = [[SapphireMetaDataUpgrading alloc] init];
@@ -201,7 +215,6 @@ int main(int argc, char *argv[])
 	TestImportManager *importManager = [[TestImportManager alloc] init];
 	
 	//Debug code goes here:
-//#define LISTING_MOVIES
 #ifdef LISTING_MOVIES
 	{
 		NSArray *allMovies = doFetchRequest(SapphireMovieName, moc, nil);
@@ -217,7 +230,6 @@ int main(int argc, char *argv[])
 		}		
 	}
 #endif
-//#define TESTING_XML_IMPORT
 #ifdef TESTING_XML_IMPORT
 	{
 		NSString *path = @"/Users/gbooker/Movies/MovieTests/Little Eistiens: Our Big Huge Adventure (2005).avi";
@@ -229,7 +241,6 @@ int main(int argc, char *argv[])
 		[importer release];		
 	}
 #endif
-//#define TESTING_FILE_SCANNING
 #ifdef TESTING_FILE_SCANNING
 	{
 		NSMutableArray *collections = [[SapphireCollectionDirectory allCollectionsInContext:moc] mutableCopy];
@@ -245,7 +256,6 @@ int main(int argc, char *argv[])
 			;		
 	}
 #endif
-//#define TESTING_UPDATED_VALUES
 #ifdef TESTING_UPDATED_VALUES
 	{
 		NSString *path = @"/Users/gbooker/Movies/Little Einsteins.avi";
@@ -259,7 +269,6 @@ int main(int argc, char *argv[])
 		[allImporter release];
 	}
 #endif
-//#define TESTING_DIRECTORY_RESCAN
 #ifdef TESTING_DIRECTORY_RESCAN
 	{
 		SapphireMovie *movie = [SapphireMovie movieWithTitle:@"Little Eistiens: Our Big Huge Adventure" inContext:moc];
@@ -270,7 +279,6 @@ int main(int argc, char *argv[])
 		[dir reloadDirectoryContents];
 	}
 #endif
-//#define TESTING_AUTO_PRUNING
 #ifdef TESTING_AUTO_PRUNING
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/MovieTests/Little Einsteins.avi" inContext:moc];
@@ -292,27 +300,25 @@ int main(int argc, char *argv[])
 		NSLog(@"Movies: %@\nShows: %@\nCast: %@\nGenres: %@\nDirectors: %@", allMovies, allShows, allCast, allGenres, allDirectors);
 	}
 #endif
-#define TESTING_MOVIE_IMPORT
 #ifdef TESTING_MOVIE_IMPORT
 	{
-		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/MovieTests/FIFTH_ELEMENT.mov" inContext:moc];
+		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/MovieTests/FIFTH_ELEMENT.mov" inContext:moc];
 		SapphireMovieImporter *import = [[SapphireMovieImporter alloc] init];
 		[file setToReimportFromMaskValue:IMPORT_TYPE_MOVIE_MASK];
+		[file setToResetImportDecisions];
 		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 	}
 #endif
-//#define TESTING_TV_SHOW_IMPORT
 #ifdef TESTING_TV_SHOW_IMPORT
 	{
-		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Doctor Who (2005) S03ES1 Voyage of the Damned.avi" inContext:moc];
+		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Doctor Who (2005) S03ES1 Voyage of the Damned.avi" inContext:moc];
 		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
 		[file setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
 		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 	}
 #endif
-//#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 #ifdef TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E01-E02.avi" inContext:moc];
@@ -327,7 +333,6 @@ int main(int argc, char *argv[])
 		[import release];
 	}
 #endif
-//#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 #ifdef TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 	{
 		SapphireMovieDirectory *movieDir = [[SapphireMovieDirectory alloc] init];
@@ -336,7 +341,6 @@ int main(int argc, char *argv[])
 		[movieDir release];
 	}
 #endif
-//#define TESTING_TV_IMPORT_THROUGH_XML
 #ifdef TESTING_TV_IMPORT_THROUGH_XML
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/life on mars.avi" inContext:moc];

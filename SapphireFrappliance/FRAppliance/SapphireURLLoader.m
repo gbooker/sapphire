@@ -131,7 +131,8 @@
 
 - (int)cancelForTarget:(id)target
 {
-	for(int i=0; i<[informers count]; i++)
+	int i;
+	for(i=0; i<[informers count]; i++)
 	{
 		NSInvocation *invoke = [informers objectAtIndex:i];
 		if([invoke target] == target)

@@ -190,6 +190,16 @@ typedef enum {
 - (NSString *)renameToPrettyName;
 
 /*!
+ * @brief Return the filename, minus the path extension
+ */
+- (NSString *)fileName;
+
+/*!
+ * @brief Return the path, minus the path extension
+ */
+- (NSString *)extensionlessPath;
+
+/*!
  * @brief Get the overridden show name
  *
  * Sometimes TVRage's information is horribly wrong (such as Firefly) and it would be a pain to correct.  This allows the user to provide a show name to override what is in the filename.

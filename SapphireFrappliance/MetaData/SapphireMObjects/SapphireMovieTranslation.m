@@ -44,8 +44,12 @@
 
 - (SapphireMoviePoster *)selectedPoster
 {
+	NSNumber *index = self.selectedPosterIndex;
+	if(index == nil)
+		return nil;
+	
 	NSArray *allPosters = [self.postersSet allObjects];
-	NSPredicate *indexSearch = [NSPredicate predicateWithFormat:@"index = %d", self.selectedPosterIndexValue];
+	NSPredicate *indexSearch = [NSPredicate predicateWithFormat:@"index = %d", [index intValue]];
 	allPosters = [allPosters filteredArrayUsingPredicate:indexSearch];
 	if(![allPosters count])
 		return nil;
