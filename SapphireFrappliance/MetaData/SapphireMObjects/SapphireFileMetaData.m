@@ -427,9 +427,27 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 		/*We did an update*/
 		updated=TRUE ;
 		NSMutableDictionary *fileMeta = [NSMutableDictionary dictionary];
-		NSString *path = [file path];
+		NSString *path;
+		NSFileManager *fm = [NSFileManager defaultManager];
 		
-		NSDictionary *props = [[NSFileManager defaultManager] fileAttributesAtPath:path traverseLink:YES];
+		if([file fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS)
+		{
+			NSString *vtsPath = [[file path] stringByAppendingPathComponent:@"VIDEO_TS"];
+			NSEnumerator *fileEnum = [[fm directoryContentsAtPath:vtsPath] objectEnumerator];
+			NSString *file;
+			while((file = [fileEnum nextObject]) != nil)
+			{
+				NSString *lowerFile = [file lowercaseString];
+				if([lowerFile hasSuffix:@".ifo"] && ![[lowerFile lastPathComponent] isEqualToString:@"video_ts.ifo"])
+				{
+					path = [vtsPath stringByAppendingPathComponent:file];
+					break;
+				}
+			}
+		}
+		else
+			path = [file path];
+		NSDictionary *props = [fm fileAttributesAtPath:path traverseLink:YES];
 		int modTime = [[props objectForKey:NSFileModificationDate] timeIntervalSince1970];
 		/*Set modified, size, and version*/
 		[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:META_FILE_MODIFIED_KEY];
