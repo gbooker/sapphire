@@ -65,7 +65,7 @@
 
 
 
-@interface CMPDownloadController : NSObject <CMPInstaller>
+@interface CMPDownloadController : NSObject
 {
 	int		padding[16];
     BRHeaderControl *       _header;
@@ -94,9 +94,6 @@
 - (void) cancelDownload;
 - (void) deleteDownload;
 
-// stack callbacks
-- (void) wasPushed;
-- (void) willBePopped;
 - (BOOL) isNetworkDependent;
 
 - (void) setTitle: (NSString *) title;
@@ -108,19 +105,6 @@
 - (float) percentDownloaded;
 
 - (void) storeResumeData;
-
-// NSURLDownload delegate methods
-- (void) download: (NSURLDownload *) download
-   decideDestinationWithSuggestedFilename: (NSString *) filename;
-- (void) download: (NSURLDownload *) download didFailWithError: (NSError *) error;
-- (void) download: (NSURLDownload *) download didReceiveDataOfLength: (unsigned) length;
-- (void) download: (NSURLDownload *) download didReceiveResponse: (NSURLResponse *) response;
-- (BOOL) download: (NSURLDownload *) download
-   shouldDecodeSourceDataOfMIMEType: (NSString *) encodingType;
-- (void) download: (NSURLDownload *) download
-   willResumeWithResponse: (NSURLResponse *) response
-                 fromByte: (long long) startingByte;
-- (void) downloadDidFinish: (NSURLDownload *) download;
 
 - (void)popTop;
 - (void)installUpdate:(NSString *)outputPath;

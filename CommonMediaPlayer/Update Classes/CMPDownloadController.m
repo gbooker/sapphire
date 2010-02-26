@@ -28,6 +28,14 @@
 
 #define myDomain			(CFStringRef)@"??"
 
+@interface CMPDownloadController ()
++ (NSString *)atvVersion;
+@end
+
+@interface BRThemeInfo (SpecialAdditions)
+- (id)CMPParagraphTextAttributes;
+@end
+
 static NSString * const kDefaultURLString = @"nada";
 
 @implementation CMPDownloadController
@@ -473,7 +481,7 @@ static NSString * const kDefaultURLString = @"nada";
 	
 }
 
-- (void)installer:(id <CMPInstaller>)installer didEndWithSettings:(NSDictionary *)settings
+- (void)installer:(CMPInstaller *)installer didEndWithSettings:(NSDictionary *)settings
 {
 	[installer autorelease];
 	

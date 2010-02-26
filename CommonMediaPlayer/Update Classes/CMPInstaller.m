@@ -46,7 +46,7 @@
 {
 	//NSLog(@"%@ %s", self, _cmd);
 	
-	[[BRAppManager sharedApplication] terminate];
+	[[NSApplication sharedApplication] terminate:nil];
 	AGProcess *finder = [AGProcess processForCommand:@"Finder"];
 	if (finder != nil)
 	{

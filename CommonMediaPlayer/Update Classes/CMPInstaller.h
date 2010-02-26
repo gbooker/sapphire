@@ -23,12 +23,11 @@
 #import "CMPPlayerController.h"
 #import "CMPDefines.h"
 
-@interface CMPInstaller : NSObject <CMPInstaller> {
-	
+@protocol CMPInstallerDelegate;
+
+@interface CMPInstaller : NSObject{
 	NSString *_zipFile;
 	id <CMPInstallerDelegate>	delegate;
-	
-	
 }
 
 -(void)setDelegate:(id <CMPInstallerDelegate>)theDelegate;
@@ -38,3 +37,7 @@
 -(id)initWithUpdate:(NSString *)updatePath;
 - (BOOL)unzipFile:(NSString *)theFile toPath:(NSString *)newPath;
 @end
+
+@protocol CMPInstallerDelegate <NSObject> 
+- (void)installer:(CMPInstaller *)installer didEndWithSettings:(NSDictionary *)settings; 
+@end 
