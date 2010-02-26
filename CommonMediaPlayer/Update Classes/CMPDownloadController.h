@@ -62,10 +62,9 @@
 
 @class BRControllerStack, NSMutableDictionary;
 
+@protocol CMPInstallerDelegate;
 
-
-
-@interface CMPDownloadController : NSObject
+@interface CMPDownloadController : NSObject <CMPInstallerDelegate>
 {
 	int		padding[16];
     BRHeaderControl *       _header;
