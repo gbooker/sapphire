@@ -170,7 +170,7 @@
 		/* We tried to import but found nothing - mark this file to be skipped on future imports */
 		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:YES];
 	}
-	if([[SapphireSettings sharedSettings] autoSelection])
+	else if([[SapphireSettings sharedSettings] autoSelection])
 	{
 		SapphireFileMetaData *metaData = state->file;
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
