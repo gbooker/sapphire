@@ -124,7 +124,7 @@ static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *pass
 			unsetenv("EXISTING");
 			FrameworkLoadPrint(@"Removed existing with status %d", status);
 		}
-		char *command = "cp -r \"$PASSPATH\" \"$PASSDEST\"";
+		char *command = "cp -R \"$PASSPATH\" \"$PASSDEST\"";
 		setenv("PASSPATH", [passPath fileSystemRepresentation], 1);
 		setenv("PASSDEST", [passDest fileSystemRepresentation], 1);
 		char *arguments[] = {"-c", command, NULL};
