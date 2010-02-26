@@ -921,9 +921,6 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	NSSize nativeSize = [self size];
 	//NSRect frame = [win frame];
 	CGDirectDisplayID display = [(BRDisplayManager *)[BRDisplayManager sharedInstance] display];
-    CGRect frame = CGDisplayBounds( display );
-    frame.size.width = CGDisplayPixelsWide( display );
-    frame.size.height = CGDisplayPixelsHigh( display );
 	
 	NSSize currentSize;
 	if([shortString isEqualToString:@"1080i"])
@@ -933,8 +930,8 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	}
 	else
 	{
-		currentSize.width = frame.size.width;
-		currentSize.height = frame.size.height;
+		currentSize.width = CGDisplayPixelsWide(display);
+		currentSize.height = CGDisplayPixelsHigh(display);
 	}
 	
 	NSRect rect;
@@ -951,8 +948,8 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	else
 	{
 		float resizeScale = currentSize.width/nativeSize.width;
-		frame.size.height = nativeSize.height * resizeScale;
-		frame.size.width = currentSize.width;
+		rect.size.height = nativeSize.height * resizeScale;
+		rect.size.width = currentSize.width;
 	}
 	
 	switch (zoomLevel) {
@@ -967,7 +964,7 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 		default:
 			break;
 	}
-	
+
 	rect.origin.x = (currentSize.width - rect.size.width)/2;
 	rect.origin.y = (currentSize.height - rect.size.height)/2;
 	
