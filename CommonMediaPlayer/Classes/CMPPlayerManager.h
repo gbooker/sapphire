@@ -151,6 +151,8 @@ static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *pass
 	return success;
 }
 
+
+
 static inline BOOL loadCMPFramework(NSString *frapPath)
 {
 	NSString *frameworkPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Frameworks/CommonMediaPlayer.framework"];
@@ -218,6 +220,8 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 			//We failed in our copy too!
 			return NO;
 	}
+
+	
 	
 	NSBundle *framework = [NSBundle bundleWithPath:frameworkPath];
 	FrameworkLoadPrint(@"Bundle is %@", framework);

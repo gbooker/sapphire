@@ -27,6 +27,7 @@
 #import "CMPLeopardDVDPlayerController.h"
 #import "CMPISODVDPlayer.h"
 #import "CMPDVDImporter.h"
+#import "CMPInstaller.h"
 
 @implementation CMPPlayerManager
 
@@ -49,7 +50,18 @@
 	self = [super init];
 	if (self == nil)
 		return self;
+	/*
 	
+	 This was some testing code to get it to check for updates and to override showing the players to try and force a download and
+	 install, this didn't work out because my download class basis has the superclass of BRController, and since we link to headers
+	 that are older than dirt, BRController doesn't exist, and every single workaround i pushed towards miserably failed.
+	 
+	if ([CMPInstaller checkForUpdate])
+	{
+		return nil;
+	}
+	 
+	*/
 	knownPlayers = [[NSMutableSet alloc] init];
 	knownControllers = [[NSMutableSet alloc] init];
 	playersForTypes = [[NSMutableDictionary alloc] init];
@@ -63,6 +75,7 @@
 	[self registerPlayer:[CMPISODVDPlayer class] forType:CMPPlayerManagerFileTypeDVDImage withExtensions:[NSArray arrayWithObjects:@"iso", @"dmg", @"img", nil]];
 	
 	[self registerPlayer:[CMPDVDImporter class] forType:CMPPlayerManagerFileTypeDVDImport withExtensions:[NSArray arrayWithObject:@""]];
+	
 	
 	return self;
 }

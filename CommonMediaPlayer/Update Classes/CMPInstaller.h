@@ -1,8 +1,8 @@
 /*
- * CMPDefines.h
+ * CMPInstaller.h
  * CommonMediaPlayer
  *
- * Created by Graham Booker on Feb. 18 2010
+ * Created by nito on Feb. 25 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -19,6 +19,22 @@
  * 02111-1307, USA.
  */
 
-//Note, only defines should ever be in this file!
 
-#define CMPVersion 3  //0x0000 0001
+#import "CMPPlayerController.h"
+#import "CMPDefines.h"
+
+@interface CMPInstaller : NSObject <CMPInstaller> {
+	
+	NSString *_zipFile;
+	id <CMPInstallerDelegate>	delegate;
+	
+	
+}
+
+-(void)setDelegate:(id <CMPInstallerDelegate>)theDelegate;
+
++ (void)killFinder;
++ (BOOL)checkForUpdate;
+-(id)initWithUpdate:(NSString *)updatePath;
+- (BOOL)unzipFile:(NSString *)theFile toPath:(NSString *)newPath;
+@end

@@ -1,8 +1,8 @@
 /*
- * CMPDefines.h
+ * CMPProgressBarControl.h
  * CommonMediaPlayer
  *
- * Created by Graham Booker on Feb. 18 2010
+ * Created by nito on Feb. 25 2010
  * Copyright 2010 Common Media Player
  * All rights reserved.
  *
@@ -19,6 +19,36 @@
  * 02111-1307, USA.
  */
 
-//Note, only defines should ever be in this file!
+#import <Foundation/Foundation.h>
+#import <BackRow/BRControl.h>
 
-#define CMPVersion 3  //0x0000 0001
+@class BRRenderLayer, BRProgressBarWidget;
+
+@interface CMPProgressBarControl : BRControl
+{
+	int padding[16];
+    //BRRenderLayer *         _layer;
+    BRProgressBarWidget *   _widget;
+    float                   _maxValue;
+    float                   _minValue;
+}
+
+- (id) init;
+- (void) dealloc;
+
+- (void) setFrame: (NSRect) frame;
+//- (BRRenderLayer *) layer;
+
+- (void) setMaxValue: (float) maxValue;
+- (float) maxValue;
+
+- (void) setMinValue: (float) minValue;
+- (float) minValue;
+
+- (void) setCurrentValue: (float) currentValue;
+- (float) currentValue;
+
+- (void) setPercentage: (float) percentage;
+- (float) percentage;
+
+@end
