@@ -21,16 +21,6 @@
 
 #import "CMPTypesDefines.h"
 
-@protocol CMPInstaller;
-
-@protocol CMPInstallerDelegate <NSObject>
-
-- (void)installer:(id <CMPInstaller>)installer didEndWithSettings:(NSDictionary *)settings;
-
-
-@end
-
-
 @protocol CMPPlayer, CMPPlayerController;
 
 /*!
@@ -40,7 +30,7 @@
  */
 @protocol CMPPlayerControllerDelegate <NSObject>
 
-- (void)controller:(id <CMPPlayerController>)controlle:(NSDictionary *)settings;
+- (void)controller:(id <CMPPlayerController>)controller didEndWithSettings:(NSDictionary *)settings;
 /*!
  * Information about the controller; currently no info is defined
  */
@@ -70,9 +60,6 @@
 - (id <CMPPlayerControllerDelegate>)delegate;
 
 @end
-
-
-
 
 #define CMPPlayerAudioSampleRateKey @"sample rate"
 #define CMPPlayerAudioFormatKey @"audio format"
