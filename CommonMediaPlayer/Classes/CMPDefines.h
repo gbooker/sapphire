@@ -21,4 +21,4 @@
 
 //Note, only defines should ever be in this file!
 
-#define CMPVersion 1  //0x0000 0001
+#define CMPVersion 2  //0x0000 0001
