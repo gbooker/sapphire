@@ -45,6 +45,11 @@
 	return CMPVersion;
 }
 
++ (int)apiVersion
+{
+	return CMPAPIVersion;
+}
+
 - (id) init
 {
 	self = [super init];

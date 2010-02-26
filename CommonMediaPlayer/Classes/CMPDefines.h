@@ -21,4 +21,5 @@
 
 //Note, only defines should ever be in this file!
 
-#define CMPVersion 3  //0x0000 0001
+#define CMPVersion 3  //Full Version Number
+#define CMPAPIVersion 1 //API version 1
