@@ -65,7 +65,8 @@
 - (id)downsampledImageForMaxSize:(NSSize )size;
 @end
 
-static NSString *initialError = nil;
+static NSString *initialMessage = nil;
+static NSString *initialMessageType = nil;
 
 @implementation SapphireAppliance
 
@@ -77,9 +78,16 @@ BOOL usingCategories = NO;
 	NSString *frameworkPath = [myBundlePath stringByAppendingPathComponent:@"Contents/Frameworks"];
 	SapphireLoadFramework(frameworkPath);
 	if(!loadCMPFramework(myBundlePath))
-		initialError = BRLocalizedString(@"Error loading common player framework.  Continuing is not recomended", @"Error string for loading common player framework");
-	else if([CMPPlayerManager version] != CMPVersion)
-		initialError = BRLocalizedString(@"Common player framework is newer than expected.  You may wish to check if a newer version of Sapphire is available.  You may attempt to continue if you like.", @"Warning string for common player framework being newer than Sapphire");
+	{
+		initialMessage = BRLocalizedString(@"Error loading common player framework.  Continuing is not recomended", @"Error string for loading common player framework");
+		initialMessageType = BRLocalizedString(@"Error", @"Error");
+		
+	}
+	else if([CMPPlayerManager apiVersion] != CMPAPIVersion)
+	{
+		initialMessage = BRLocalizedString(@"Common player framework is newer than expected.  You may wish to check if a newer version of Sapphire is available.  You may attempt to continue if you like.", @"Warning string for common player framework being newer than Sapphire");
+		initialMessageType = BRLocalizedString(@"Warning", @"Warning");
+	}
 	Class cls = NSClassFromString( @"BRFeatureManager" );
 	if ( cls == Nil )
 		return;
@@ -167,10 +175,11 @@ static SapphireApplianceController *mainCont = nil;
 
 - (id) applianceControllerWithScene: (id) scene
 {
-	if(initialError && !usingCategories)
+	if(initialMessage && !usingCategories)
 	{
-		BRAlertController *controller = [SapphireFrontRowCompat alertOfType:0 titled:@"Error" primaryText:@"Framework Error" secondaryText:initialError withScene:nil];
-		initialError = nil;
+		BRAlertController *controller = [SapphireFrontRowCompat alertOfType:0 titled:initialMessageType primaryText:@"Framework Issue" secondaryText:initialMessage withScene:nil];
+		initialMessage = nil;
+		initialMessageType = nil;
 		return controller;
 	}
 	// this function is called when your item is selected on the main menu
@@ -247,10 +256,11 @@ static SapphireApplianceController *mainCont = nil;
 
 -(id)controllerForIdentifier:(id)ident
 {
-	if(initialError)
+	if(initialMessage)
 	{
-		BRAlertController *controller = [SapphireFrontRowCompat alertOfType:0 titled:@"Error" primaryText:@"Framework Error" secondaryText:initialError withScene:nil];
-		initialError = nil;
+		BRAlertController *controller = [SapphireFrontRowCompat alertOfType:0 titled:initialMessageType primaryText:@"Framework Issue" secondaryText:initialMessage withScene:nil];
+		initialMessage = nil;
+		initialMessageType = nil;
 		return controller;
 	}
 	NSString *identifier = (NSString *)ident;
