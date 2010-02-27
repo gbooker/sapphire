@@ -740,9 +740,9 @@ static BOOL pauseOnPlay = NO;
 {
 	//NSLog(@"Stopping");
 	DVDUnregisterEventCallBack(eventCallbackID);
+	eventCallbackID = 0;
 	[stopTimer invalidate];
 	stopTimer = nil;
-	eventCallbackID = 0;
 	DVDStop();
 	DVDCloseMediaFile();
 	DVDCloseMediaVolume();
@@ -860,6 +860,8 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 
 - (void)resetStopTimer
 {
+	if(!eventCallbackID)
+		return;
 	[stopTimer invalidate];
 	stopTimer = [NSTimer scheduledTimerWithTimeInterval:5*60 target:self selector:@selector(stopTimerFire) userInfo:nil repeats:NO];
 }
