@@ -19,7 +19,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0b7.8 (SVN_REVISION)</string>
+	<string>1.0b7.8.1 (SVN_REVISION)</string>
 	<key>FRApplianceCategoryDescriptors</key>
 	<array>
 		<dict>
