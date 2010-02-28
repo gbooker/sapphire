@@ -113,8 +113,20 @@ static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *pass
 		}
 		
 		NSString *passDest = @"/Library/Audio/Plug-Ins/HAL/";
-		NSString *existingPath = [passDest stringByAppendingPathComponent:@"AC3PassthroughDevice.plugin"];
 		int status = 0;
+		NSString *passDest = @"/Library/Audio/Plug-Ins/HAL/";
+		if (![fm fileExistsAtPath:passDest])
+		{
+			char *command = "mkdir -p \"$HALPATH\"";
+			setenv("HALPATH", [passDest fileSystemRepresentation], 1);
+			char *arguments[] = {"-c", command, NULL};
+			result = AuthorizationExecuteWithPrivileges(auth, "/bin/sh", kAuthorizationFlagDefaults, arguments, NULL);
+			wait(&status);
+			unsetenv("HALPATH");
+			FrameworkLoadPrint(@"Created HAL path with status %d", status);
+		}
+		NSString *existingPath = [passDest stringByAppendingPathComponent:@"AC3PassthroughDevice.plugin"];
+
 		if([fm fileExistsAtPath:existingPath])
 		{
 			char *command = "rm -Rf \"$EXISTING\"";
