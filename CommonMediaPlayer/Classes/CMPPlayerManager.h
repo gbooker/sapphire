@@ -114,7 +114,6 @@ static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *pass
 		
 		NSString *passDest = @"/Library/Audio/Plug-Ins/HAL/";
 		int status = 0;
-		NSString *passDest = @"/Library/Audio/Plug-Ins/HAL/";
 		if (![fm fileExistsAtPath:passDest])
 		{
 			char *command = "mkdir -p \"$HALPATH\"";
