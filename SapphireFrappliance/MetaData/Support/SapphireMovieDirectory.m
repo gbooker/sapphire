@@ -93,9 +93,9 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	/*Define the static virtual directories*/
 	NSPredicate *allPred = [NSPredicate predicateWithFormat:@"movie != nil"];
 	SapphireFilteredFileDirectory *all = [[SapphireFilteredFileDirectory alloc] initWithPredicate:allPred Context:moc];
-	SapphireEntityDirectory *cast = [[SapphireEntityDirectory alloc] initWithEntityFetch:castEntityFetch inContext:moc];
-	SapphireEntityDirectory *director = [[SapphireEntityDirectory alloc] initWithEntityFetch:directorEntityFetch inContext:moc];
 	SapphireEntityDirectory *genre = [[SapphireEntityDirectory alloc] initWithEntityFetch:genreEntityFetch inContext:moc];
+	SapphireEntityDirectory *director = [[SapphireEntityDirectory alloc] initWithEntityFetch:directorEntityFetch inContext:moc];
+	SapphireEntityDirectory *cast = [[SapphireEntityDirectory alloc] initWithEntityFetch:castEntityFetch inContext:moc];
 	NSPredicate *top250Pred = [NSPredicate predicateWithFormat:@"movie.imdbTop250Ranking != 0"];
 	SapphireFilteredFileDirectory *top250 = [[SapphireFilteredFileDirectory alloc] initWithPredicate:top250Pred Context:moc];
 	NSPredicate *oscarPred = [NSPredicate predicateWithFormat:@"movie.oscarsWon != 0"];
@@ -103,18 +103,18 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 
 	originalSubDirs = [[NSArray alloc] initWithObjects:
 					   all,
-					   cast,
-					   director,
 					   genre,
+					   director,
+					   cast,
 					   top250,
 					   oscar,
 					   nil];
 	
 	originalNames = [[NSArray alloc] initWithObjects:
 					 BRLocalizedString( @"All Movies", @"Select all movies" ),
-					 BRLocalizedString( @"By Cast", @"Select movies based on cast members" ),
-					 BRLocalizedString( @"By Director", @"Select movies based on director" ),
 					 BRLocalizedString( @"By Genre", @"Select movies based on genre" ),
+					 BRLocalizedString( @"By Director", @"Select movies based on director" ),
+					 BRLocalizedString( @"By Cast", @"Select movies based on cast members" ),
 					 BRLocalizedString( @"IMDB Top 250", @"Show movies in IMDb Top 250 only" ),
 					 BRLocalizedString( @"Academy Award Winning", @"Show Oscar winning movies only" ),
 					 nil];
@@ -132,15 +132,15 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	[all setPath:VIRTUAL_DIR_ALL_PATH];
 	[all setCoverArtPath:moviePath];
 	[all setFileSorters:[NSArray arrayWithObjects:titleSort, dateSort, imdbRatingSort, nil]];
-	[cast setPath:VIRTUAL_DIR_CAST_PATH];
-	[cast setCoverArtPath:moviePath];
-	[cast setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.#cast != nil"]];
-	[director setPath:VIRTUAL_DIR_DIRECTOR_PATH];
-	[director setCoverArtPath:moviePath];
-	[director setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.directors != nil"]];
 	[genre setPath:VIRTUAL_DIR_GENRE_PATH];
 	[genre setCoverArtPath:moviePath];
 	[genre setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.genres != nil"]];
+	[director setPath:VIRTUAL_DIR_DIRECTOR_PATH];
+	[director setCoverArtPath:moviePath];
+	[director setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.directors != nil"]];
+	[cast setPath:VIRTUAL_DIR_CAST_PATH];
+	[cast setCoverArtPath:moviePath];
+	[cast setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.#cast != nil"]];
 	[top250 setPath:VIRTUAL_DIR_TOP250_PATH];
 	[top250 setCoverArtPath:moviePath];
 	[top250 setFileSorters:[NSArray arrayWithObjects:imdbRankSort, titleSort, dateSort, imdbRatingSort, nil]];
@@ -151,9 +151,9 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	Basic_Directory_Function_Inits
 
 	[all release];
-	[cast release];
-	[director release];
 	[genre release];
+	[director release];
+	[cast release];
 	[top250 release];
 	[oscar release];
 	return self;
