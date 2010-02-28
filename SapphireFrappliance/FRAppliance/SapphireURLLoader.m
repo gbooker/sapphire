@@ -19,6 +19,7 @@
  */
 
 #import "SapphireURLLoader.h"
+#import "NSFileManager-Extensions.h"
 
 #define MAX_WORKERS		10
 
@@ -84,8 +85,10 @@
 	id loadedObject = [self loadedObject];
 	while((invoke = [invokeEnum nextObject]) != nil)
 	{
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[invoke setArgument:&loadedObject atIndex:2];
 		[invoke invoke];
+		[pool drain];
 	}
 	[informers release];
 	informers = nil;
@@ -402,6 +405,7 @@
 
 - (void)saveDataAtURL:(NSString *)url toFile:(NSString *)path
 {
+	[[NSFileManager defaultManager] constructPath:[path stringByDeletingLastPathComponent]];
 	[self loadDataURL:url withTarget:self selector:@selector(saveData:toFile:) object:path];
 }
 

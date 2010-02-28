@@ -570,6 +570,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 
 - (int)parseElement:(NSXMLElement *)element
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *regexChildren = nil;
 	NSString *value = nil;
 	NSString *conditional = nil;
@@ -601,6 +602,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 		input = scraperBuffers[0];
 	
 	[self parseExpression:element withInput:input intoDest:result andAppend:append];
+	[pool drain];
 	
 	return result;
 }
@@ -619,7 +621,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 		[self parseElement:[elements objectAtIndex:i]];
 	}
 	int dest = integerAttributeWithDefault(functionElement, @"dest", 1);
-	NSString *ret = scraperBuffers[dest - 1];
+	NSString *ret = [[scraperBuffers[dest - 1] retain] autorelease];
 	if(booleanAttributeWithDefault(functionElement, @"clearbuffers", YES))
 		[self clearBuffers];
 	
