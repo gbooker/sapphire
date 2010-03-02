@@ -214,8 +214,10 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	if(displayed)
 		[self reloadPosterWithData:data atIndex:[index intValue]];
-	else
+	else if(data != nil)
 		[posterData replaceObjectAtIndex:[index intValue] withObject:data];
+	else
+		[posterData replaceObjectAtIndex:[index intValue] withObject:[NSData data]];
 }
 
 - (void)reloadPosterWithData:(NSData *)data atIndex:(int)intIndex;
