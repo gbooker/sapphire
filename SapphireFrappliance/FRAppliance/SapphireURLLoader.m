@@ -20,6 +20,7 @@
 
 #import "SapphireURLLoader.h"
 #import "NSFileManager-Extensions.h"
+#import "SapphireApplianceController.h"
 
 #define MAX_WORKERS		10
 
@@ -80,20 +81,27 @@
 
 - (void)tellInformers
 {
-	NSEnumerator *invokeEnum = [informers objectEnumerator];
-	NSInvocation *invoke;
-	id loadedObject = [self loadedObject];
-	while((invoke = [invokeEnum nextObject]) != nil)
-	{
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		[invoke setArgument:&loadedObject atIndex:2];
-		[invoke invoke];
-		[pool drain];
+	@try {
+		NSEnumerator *invokeEnum = [informers objectEnumerator];
+		NSInvocation *invoke;
+		id loadedObject = [self loadedObject];
+		while((invoke = [invokeEnum nextObject]) != nil)
+		{
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+			[invoke setArgument:&loadedObject atIndex:2];
+			[invoke invoke];
+			[pool drain];
+		}
 	}
-	[informers release];
-	informers = nil;
-	[url release];
-	url = nil;
+	@catch (NSException * e) {
+		[SapphireApplianceController logException:e];
+	}
+	@finally {
+		[informers release];
+		informers = nil;
+		[url release];
+		url = nil;		
+	}
 }
 
 - (void)realLoadData
