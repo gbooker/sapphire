@@ -157,6 +157,7 @@
     [unzipTask launch];
 	[unzipTask waitUntilExit];
 	int theTerm = [unzipTask terminationStatus];
+	[unzipTask release];
 	//NSLog(@"helperTask terminated with status: %i",theTerm);
 	if (theTerm != 0)
 	{
