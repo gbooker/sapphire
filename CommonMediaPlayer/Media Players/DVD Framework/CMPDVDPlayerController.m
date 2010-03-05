@@ -320,6 +320,11 @@ static NSTimer *timer = nil;
 		[endSettings setObject:[NSNumber numberWithDouble:elapsed] forKey:CMPPlayerResumeTimeKey];
 	if(duration != 0.0)
 		[endSettings setObject:[NSNumber numberWithDouble:duration] forKey:CMPPlayerDurationTimeKey];
+
+	CFStringRef devDomain = CFSTR("com.cod3r.ac3passthroughdevice");
+	CFPreferencesSetAppValue(CFSTR("engageCAC3Device"), NULL, devDomain);
+	CFPreferencesAppSynchronize(devDomain);
+	
 	[delegate controller:self didEndWithSettings:endSettings];
 	[delegate autorelease];
 	delegate = nil;
