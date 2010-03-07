@@ -23,6 +23,7 @@
 
 @interface CMPScreenReleaseAction : NSObject <CMPActionController>{
 	int		screensaverTimeout;
+	NSTimer	*activityTimer;
 }
 
 @end

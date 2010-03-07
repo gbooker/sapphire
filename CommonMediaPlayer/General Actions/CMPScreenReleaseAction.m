@@ -202,6 +202,18 @@ typedef void CARenderer;
 
 @implementation CMPScreenReleaseAction
 
+- (id)initWithController:(id <CMPPlayerController>)controller andSettings:(NSDictionary *)settings
+{
+	return [super init];
+}
+
+- (void)dealloc
+{
+	[activityTimer invalidate];
+	[super dealloc];
+}
+
+
 - (BOOL)releaseAllDisplaysWithoutFadeWithError:(NSError **)error
 { 
 	if ([CMPATVVersion atvVersion] >= CMPATVVersion3)
@@ -293,26 +305,12 @@ typedef void CARenderer;
 	}
 }
 
-- (void)disableScreenSaver
+- (void)activityTimerFire
 {
-	Class cls = NSClassFromString(@"ATVScreenSaverManager");
-	if(cls != nil)
-	{
-		Class cls2 = NSClassFromString(@"ATVSettingsFacade");
-		
-		screensaverTimeout = [[cls2 singleton] screenSaverTimeout];
-		[[cls2 singleton] setScreenSaverTimeout:-1];
-		[[cls singleton] _updateActivity:nil];
-	}
-	else if(cls == nil)
-	{
-		cls = NSClassFromString(@"BRScreenSaverManager");
-		if(cls != nil)
-		{
-			screensaverTimeout = [[BRSettingsFacade settingsFacade] screenSaverTimeout];
-			[[BRSettingsFacade settingsFacade] setScreenSaverTimeout:-1];
-		}
-	}
+	if([CMPATVVersion usingLeopard])
+		UpdateSystemActivity(UsrActivity);
+	[BRBackgroundTaskManager holdOffBackgroundTasks];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"BRUserActionNotification" object:nil];
 }
 
 - (void)captureAllDisplays
@@ -358,31 +356,6 @@ typedef void CARenderer;
         NSLog(@"BRDisplayManager: Unable to hide cursor");
 }
 
-- (void)resetScreenSaver
-{
-	Class cls = NSClassFromString(@"ATVScreenSaverManager");
-	if(cls != nil)
-	{
-		Class cls2 = NSClassFromString(@"ATVSettingsFacade");
-		[[cls2 singleton] setScreenSaverTimeout:screensaverTimeout];
-		[[cls singleton] _updateActivity:nil];
-	}
-	else if(cls == nil)
-	{
-		cls = NSClassFromString(@"BRScreenSaverManager");
-		if(cls != nil)
-		{
-			[[BRSettingsFacade settingsFacade] setScreenSaverTimeout:screensaverTimeout];
-			[[cls sharedInstance] updateActivity];
-		}
-	} 
-}
-
-- (id)initWithController:(id <CMPPlayerController>)controller andSettings:(NSDictionary *)settings
-{
-	return [super init];
-}
-
 - (BOOL)openWithError:(NSError **)error
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName: @"BRDisplayManagerStopRenderingNotification" object: [BRDisplayManager sharedInstance]];
@@ -393,7 +366,11 @@ typedef void CARenderer;
 		[self goOffline];
 	
 	if(success)
-		[self disableScreenSaver];
+	{
+		[activityTimer invalidate];
+		activityTimer = [NSTimer scheduledTimerWithTimeInterval:24 target:self selector:@selector(activityTimerFire) userInfo:nil repeats:YES];
+		[self activityTimerFire];
+	}
 	
 	return success;
 }
@@ -410,7 +387,8 @@ typedef void CARenderer;
 		[[NSNotificationCenter defaultCenter] postNotificationName: @"BRDisplayManagerRenderingSizeChanged" object: [BRDisplayManager sharedInstance]];
 	}
 	
-	[self resetScreenSaver];
+	[activityTimer invalidate];
+	activityTimer = nil;
 	
 	return YES;
 }
