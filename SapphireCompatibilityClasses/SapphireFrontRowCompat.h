@@ -73,6 +73,7 @@ typedef enum {
 	SapphireFrontRowCompatATVVersion2Dot3,
 	SapphireFrontRowCompatATVVersion2Dot4,
 	SapphireFrontRowCompatATVVersion3,
+	SapphireFrontRowCompatATVVersion302,
 } SapphireFrontRowCompatATVVersion;
 
 /*!

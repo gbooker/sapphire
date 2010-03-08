@@ -33,6 +33,18 @@ enum {
 	kBREventRemoteActionTake3SwipeDown,
 };
 
+//Take 3.0.2 Remote Actions
+
+enum {
+	kBREventRemoteActionTake302TouchBegin = 30,
+	kBREventRemoteActionTake302TouchMove,
+	kBREventRemoteActionTake302TouchEnd,
+	kBREventRemoteActionTake302SwipeLeft,
+	kBREventRemoteActionTake302SwipeRight,
+	kBREventRemoteActionTake302SwipeUp,
+	kBREventRemoteActionTake302SwipeDown,
+};
+
 /*Yes, this is the wrong class, but otherwise gcc gripes about BRImage class not existing; this removes warnings so no harm*/
 @interface SapphireFrontRowCompat (compat)
 + (id)imageWithPath:(NSString *)path;
@@ -138,6 +150,12 @@ static BOOL usingATypeOfTakeThree = NO;
 	{	
 		atvVersion = SapphireFrontRowCompatATVVersion3;
 		usingATypeOfTakeThree = YES;
+		NSDictionary *finderDict = [[NSBundle mainBundle] infoDictionary];
+		NSString *bundleVersion = [finderDict objectForKey: @"CFBundleVersion"];
+		//NSLog(@"appletversion: %@",  theVersion);
+		
+		if([bundleVersion compare:@"3.0.2" options:NSNumericSearch] != NSOrderedAscending)
+			atvVersion = SapphireFrontRowCompatATVVersion302;
 	}
 }
 
@@ -581,6 +599,22 @@ static BOOL usingATypeOfTakeThree = NO;
 
 + (BREventRemoteAction)remoteActionForEvent:(BREvent *)event
 {
+	if(atvVersion >= SapphireFrontRowCompatATVVersion302)
+	{
+		BREventRemoteAction action = [event remoteAction];
+		switch (action) {
+			case kBREventRemoteActionTake302TouchEnd:
+			case kBREventRemoteActionTake302SwipeLeft:
+			case kBREventRemoteActionTake302SwipeRight:
+			case kBREventRemoteActionTake302SwipeUp:
+			case kBREventRemoteActionTake302SwipeDown:
+				return action - 2;
+				break;
+			default:
+				return action;
+				break;
+		}
+	}
 	if(atvVersion >= SapphireFrontRowCompatATVVersion3)
 	{
 		BREventRemoteAction action = [event remoteAction];
