@@ -40,8 +40,9 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 @interface SapphirePosterChooser ()
 - (BRBlurryImageLayer *)getPosterLayerForData:(NSData *)thePosterData;
-- (void)loadPoster:(int)index;
-- (void)reloadPosterWithData:(NSData *)data atIndex:(int)intIndex;
+- (void)loadPosters;
+- (void)loadPosterWithURL:(int)index;
+- (void)reloadPosterWithDataAtIndex:(int)intIndex;
 @end
 
 @implementation SapphirePosterChooser
@@ -92,8 +93,6 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
     [posterMarch removeFromSuperlayer];
 //    [posterMarch setIconSource: nil];  //This throws an exception
 	[posters release];
-	[posterLayers release];
-	[posterData release];
 	[fileName release];
 	[movieTitle release];
 	[fileInfoText release];
@@ -156,16 +155,22 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 
 #pragma mark List of posters
 
+- (void)freePosterMarch
+{
+	[posterMarch release];
+	posterMarch = nil;
+}
+
 - (void)setPosters:(NSArray *)posterList
 {
 	posters = [posterList mutableCopy];
 	if([posters count] > 5)
+		[self freePosterMarch];
+	else
 	{
-		[posterMarch release];
-		posterMarch = nil;
+		[posterMarch setIconSource: self];
 	}
 	[self loadPosters];
-    [posterMarch setIconSource: self];
 	[[self list] setDatasource:self];
 }
 
@@ -173,10 +178,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 {
 	posters = [posterList retain];
 
-	[posterMarch release];
-	posterMarch = nil;
-
-	[[self list] setDatasource: self];
+	[self freePosterMarch];
+	[[self list] setDatasource:self];
 }
 
 - (NSArray *)posters
@@ -187,13 +190,8 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 - (void)loadPosters
 {
 	int i, count = [posters count];
-	posterLayers = [posters mutableCopy];
-	posterData = [[NSMutableArray alloc] initWithCapacity:[posters count]];
-	NSNull *nsnull = [NSNull null];
 	for(i=0; i<count; i++)
-		[posterData addObject:nsnull];
-	for(i=0; i<count; i++)
-		[self loadPoster:i];
+		[self loadPosterWithURL:i];
 	[posterMarch reload];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
@@ -203,31 +201,26 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
  *
  * @param The index of the poster to load
  */
-- (void)loadPoster:(int)index;
+- (void)loadPosterWithURL:(int)index;
 {
 	NSString *posterURL = [posters objectAtIndex:index];
-	[posterLayers replaceObjectAtIndex:index withObject:[self getPosterLayerForData:nil]];
 	[[SapphireApplianceController urlLoader] loadDataURL:posterURL withTarget:self selector:@selector(gotPosterData:atIndex:) object:[NSNumber numberWithInt:index] withPriority:YES];
 }
 
 - (void)gotPosterData:(NSData *)data atIndex:(NSNumber *)index;
 {
-	if(displayed)
-		[self reloadPosterWithData:data atIndex:[index intValue]];
-	else if(data != nil)
-		[posterData replaceObjectAtIndex:[index intValue] withObject:data];
+	if(data != nil)
+		[posters replaceObjectAtIndex:[index intValue] withObject:data];
 	else
-		[posterData replaceObjectAtIndex:[index intValue] withObject:[NSData data]];
+		[posters replaceObjectAtIndex:[index intValue] withObject:[NSData data]];
+	if(displayed && posterMarch)
+		[self reloadPosterWithDataAtIndex:[index intValue]];
 }
 
-- (void)reloadPosterWithData:(NSData *)data atIndex:(int)intIndex;
+- (void)reloadPosterWithDataAtIndex:(int)intIndex;
 {
-	[posterLayers replaceObjectAtIndex:intIndex withObject:[self getPosterLayerForData:data]];
-	NSImage *image = [[NSImage alloc] initWithData:data];
-	if(image == nil)
-		image = [errorNSImage retain];
-	[posters replaceObjectAtIndex:intIndex withObject:image];
-	[image release];
+	NSData *data = [posters objectAtIndex:intIndex];
+	[posters replaceObjectAtIndex:intIndex withObject:[self getPosterLayerForData:data]];
 	[posterMarch _updateIcons];
 	if([self getSelection] == intIndex)
 		[self resetPreviewController];
@@ -366,20 +359,23 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 }
 - (long)iconCount
 {
-	return [posterLayers count];
+	return [posters count];
 }
 
 - (NSDictionary *)iconInfoAtIndex:(long)index
 {
-	return [NSDictionary dictionaryWithObject:[posterLayers objectAtIndex:index] forKey:@"icon"];
+	id poster = [posters objectAtIndex:index];
+	if([poster isKindOfClass:[NSString class]] || [poster isKindOfClass:[NSData class]])
+		poster = defaultImage;
+	return [NSDictionary dictionaryWithObject:poster forKey:@"icon"];
 }
 
 - (id)iconAtIndex:(long)index
 {
-    if ( index >= [posterLayers count] )
+    if ( index >= [posters count] )
         return nil;
 	
-    return [posterLayers objectAtIndex:index];
+    return [posters objectAtIndex:index];
 }
 
 
@@ -409,8 +405,19 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		SapphireMedia *asset = [[SapphireMedia alloc] initWithMediaURL:[NSURL fileURLWithPath:@"none"]];
 		id poster = [posters objectAtIndex:row];
 		
-		if(![poster isKindOfClass:[NSString class]])
+		if([poster isKindOfClass:[NSImage class]])
 			[asset setImage:poster];
+		else if([poster isKindOfClass:[NSData class]])
+		{
+			NSImage *image = [[NSImage alloc] initWithData:poster];
+			if(image)
+			{
+				[asset setImage:image];
+				[image release];
+			}
+			else
+				[asset setImage:errorNSImage];
+		}
 		else
 			[asset setImage:defaultNSImage];
 		
@@ -554,12 +561,15 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[[self list] reload];
 	[super wasPushed];
 	displayed = YES;
-	int i, count = [posterData count];
-	for(i=0; i<count; i++)
+	if(posterMarch)
 	{
-		id obj = [posterData objectAtIndex:i];
-		if([obj isKindOfClass:[NSData class]])
-			[self reloadPosterWithData:obj atIndex:i];
+		int i, count = [posters count];
+		for(i=0; i<count; i++)
+		{
+			id obj = [posters objectAtIndex:i];
+			if([obj isKindOfClass:[NSData class]])
+				[self reloadPosterWithDataAtIndex:i];
+		}
 	}
 }
 

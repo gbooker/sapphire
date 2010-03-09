@@ -31,9 +31,7 @@
  */
 @interface SapphirePosterChooser : SapphireMediaMenuController <BRIconSourceProtocol, BRMenuListItemProvider, SapphireLayoutDelegate, SapphireChooser> {
 	BOOL					displayed;		/*!< @brief YES if currently displayed, NO otherwise*/
-	NSMutableArray			*posters;		/*!< @brief The array of poster urls and after loaded, the NSImages*/
-	NSMutableArray			*posterLayers;	/*!< @brief The image layers of posters*/
-	NSMutableArray			*posterData;	/*!< @brief The data for the poster images*/
+	NSMutableArray			*posters;		/*!< @brief The array of poster urls, NSImages, NSData, or BlurredImages*/
 	NSString				*fileName;		/*!< @brief The movie filename*/
 	NSString				*movieTitle;	/*!< @brief The title of the movie*/
 	SapphireChooserChoice	selection;		/*!< @brief The user's selection*/
@@ -74,18 +72,6 @@
  * @param posterList The cover art to choose from specified as image objects
  */
 - (void)setPosterImages:(NSArray *)posterList;
-
-/*!
- * @brief The list of posters to choose from
- *
- * @return The list of posters to choose from
- */
-- (NSArray *)posters;
-
-/*!
- * @brief Loads the posters from disk
- */
-- (void)loadPosters;
 
 /*!
  * @brief Sets the filename to display
