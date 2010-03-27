@@ -163,7 +163,7 @@
 	}
 	[moc release];
 	[self performSelectorOnMainThread:@selector(finished) withObject:nil waitUntilDone:NO];
-	[pool release];
+	[pool drain];
 }
 
 - (void)wasPushed

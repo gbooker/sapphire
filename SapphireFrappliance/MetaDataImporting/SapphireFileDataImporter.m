@@ -81,12 +81,14 @@
 
 - (void)realInformComplete:(NSArray *)status
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString *path = [status objectAtIndex:1];
 	NSNumber *fileUpdated = [status objectAtIndex:0];
 	ImportState state = ImportStateNotUpdated;
 	if([fileUpdated boolValue])
 		state = ImportStateUpdated;
 	[delegate backgroundImporter:self completedImportOnPath:path withState:state];
+	[pool drain];
 }
 
 - (oneway void)informComplete:(BOOL)fileUpdated onPath:(NSString *)path

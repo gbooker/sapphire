@@ -55,6 +55,6 @@ int main(int argc, char *argv[])
 			ret = 1;
 		}
 	}
-	[pool release];
+	[pool drain];
 	return ret;
 }

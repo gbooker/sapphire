@@ -553,13 +553,13 @@ BRMusicNowPlayingController *musicController = nil;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	if(![[NSFileManager defaultManager] isDirectory:dirPath])
 	{
-		[pool release];
+		[pool drain];
 		return;
 	}
 	
 	if(![dirPath isAbsolutePath])
 	{
-		[pool release];
+		[pool drain];
 		return;
 	}
 	

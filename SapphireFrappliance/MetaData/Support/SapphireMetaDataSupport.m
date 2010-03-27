@@ -716,7 +716,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	}
 	[moc setUndoManager:nil];
 	[undo release];
-	[pool release];
+	[pool drain];
 }
 
 @end
