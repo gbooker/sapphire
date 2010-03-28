@@ -512,7 +512,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	
 	bufferBooleanAttributeWithDefault(expressionElement, @"trim", NO, trim);
 	
-	NSString *result = @"";
+	NSMutableString *result = [@"" mutableCopy];
 	int match[30];
 	int offset = 0;
 	const char *inputStr = [input UTF8String];
@@ -533,7 +533,7 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 				addToResult = NO;
 		}
 		if(addToResult)
-			result = [result stringByAppendingString:replacementString];
+			[result appendString:replacementString];
 		if(!repeat)
 			break;
 		offset = match[1];
@@ -541,14 +541,16 @@ int integerAttributeWithDefault(NSXMLElement *element, NSString *attributeName, 
 	
 	pcre_free(reg);
 	
+	NSString *final = result;
 	if(append)
 	{	
 		NSString *orig = scraperBuffers[dest - 1];
 		if(orig != nil)
-			result = [orig stringByAppendingString:result];
+			final = [orig stringByAppendingString:final];
 	}
-	if([result length])
-		[self setBuffer:dest-1 toString:result];
+	if([final length])
+		[self setBuffer:dest-1 toString:final];
+	[result release];
 }
 
 - (BOOL)checkCondition:(NSString *)condition
