@@ -750,6 +750,18 @@ static BOOL pauseOnPlay = NO;
 	DVDDispose();
 }
 
+- (BOOL)useStopTimer {
+    return useStopTimer;
+}
+
+- (void)setUseStopTimer:(BOOL)value {
+    if (useStopTimer != value) {
+        useStopTimer = value;
+    }
+}
+
+
+
 static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UInt32 inEventData2, UInt32 inRefCon)
 {
 	if(!eventCallbackID)
@@ -854,8 +866,13 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 
 - (void)stopTimerFire
 {
-	stopTimer = nil;
-	[controller playbackStopped];
+	
+	if([self useStopTimer])
+	{
+		stopTimer = nil;
+		[controller playbackStopped];
+	}
+		
 }
 
 - (void)resetStopTimer
@@ -863,7 +880,11 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	if(!eventCallbackID)
 		return;
 	[stopTimer invalidate];
-	stopTimer = [NSTimer scheduledTimerWithTimeInterval:5*60 target:self selector:@selector(stopTimerFire) userInfo:nil repeats:NO];
+	if([self useStopTimer])
+	{
+		stopTimer = [NSTimer scheduledTimerWithTimeInterval:5*60 target:self selector:@selector(stopTimerFire) userInfo:nil repeats:NO];
+	}
+	
 }
 
 - (void)titleChanged
@@ -874,7 +895,11 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 
 - (void)titleTimeChanged
 {
-	[self performSelectorOnMainThread:@selector(resetStopTimer) withObject:nil waitUntilDone:NO];
+	if ([self useStopTimer])
+	{
+		[self performSelectorOnMainThread:@selector(resetStopTimer) withObject:nil waitUntilDone:NO];
+	}
+	
 	UInt16 frames;
 	UInt32 time = 0;
 	DVDGetTime(kDVDTimeCodeElapsedSeconds, &time, &frames);

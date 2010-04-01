@@ -159,9 +159,17 @@ static NSTimer *timer = nil;
 - (void)setPlaybackSettings:(NSDictionary *)settings
 {
 	NSNumber *resume = [settings objectForKey:CMPPlayerResumeTimeKey];
+	
 	if(resume != nil)
 		[player setResumeTime:[resume intValue]];
 
+	BOOL stopValue = TRUE;
+	NSNumber *useStopTimer = [settings objectForKey:CMPPlayerUseStopTimer];
+	if(![useStopTimer boolValue])
+		stopValue = FALSE;
+	
+	[player setUseStopTimer:stopValue];
+	
 	CFBooleanRef passthroughValue = kCFBooleanFalse;
 	NSNumber *passthrough = [settings objectForKey:CMPPlayerUsePassthroughDeviceKey];
 	if([passthrough boolValue])
@@ -315,7 +323,7 @@ static NSTimer *timer = nil;
 	NSMutableDictionary *endSettings = [[NSMutableDictionary alloc] init];
 	double elapsed = [player elapsedPlaybackTime];
 	double duration = [player trackDuration];
-	
+	NSLog(@"duration: %d, elapsed: %d", elapsed, duration);
 	if(elapsed != 0.0)
 		[endSettings setObject:[NSNumber numberWithDouble:elapsed] forKey:CMPPlayerResumeTimeKey];
 	if(duration != 0.0)

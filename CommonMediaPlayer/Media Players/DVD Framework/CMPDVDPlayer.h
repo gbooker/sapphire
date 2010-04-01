@@ -63,7 +63,11 @@ typedef enum {
 	UInt32						currentElapsedTime;
 	NSTimer						*stopTimer;
 	CMPDVDZoomLevel				zoomLevel;
+	BOOL						useStopTimer;
 }
+
+- (BOOL)useStopTimer;
+- (void)setUseStopTimer:(BOOL)value;
 
 - (void)setController:(CMPDVDPlayerController *)controller;
 

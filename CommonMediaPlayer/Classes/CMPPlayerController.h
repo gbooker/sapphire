@@ -66,3 +66,4 @@
 #define CMPPlayerResumeTimeKey @"resume"
 #define CMPPlayerDurationTimeKey @"duration"
 #define CMPPlayerUsePassthroughDeviceKey @"usePassthroughDevice"
+#define CMPPlayerUseStopTimer @"useStopTimer"
