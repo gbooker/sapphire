@@ -764,6 +764,7 @@ static NSString *movingPath = nil;
 				if(error != nil)
 					replaceController = [[[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"Short message indicating error condition") longError:error] autorelease];
 			}
+				break;
 			case COMMAND_CUT_PATH:
 				[movingPath release];
 				movingPath = [[fileMeta path] retain];
