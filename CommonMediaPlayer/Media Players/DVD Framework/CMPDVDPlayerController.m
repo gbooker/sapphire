@@ -324,9 +324,9 @@ static NSTimer *timer = nil;
 	double elapsed = [player elapsedPlaybackTime];
 	double duration = [player trackDuration];
 	NSLog(@"duration: %d, elapsed: %d", elapsed, duration);
-	if(elapsed != 0.0)
+	if(elapsed >= 0.0)
 		[endSettings setObject:[NSNumber numberWithDouble:elapsed] forKey:CMPPlayerResumeTimeKey];
-	if(duration != 0.0)
+	if(duration >= 0.0)
 		[endSettings setObject:[NSNumber numberWithDouble:duration] forKey:CMPPlayerDurationTimeKey];
 
 	CFStringRef devDomain = CFSTR("com.cod3r.ac3passthroughdevice");

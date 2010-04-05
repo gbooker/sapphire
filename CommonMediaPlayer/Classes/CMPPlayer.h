@@ -29,6 +29,7 @@
 
 + (NSSet *)knownControllers;
 
+//The elapsed and duration will be negative if they cannot be evaluated.
 - (double)elapsedPlaybackTime;
 - (double)trackDuration;
 //This shoud only return an error if there is an error in the player's ability to work.  If the player is functioning but can't play this particular file, the error should not be set.

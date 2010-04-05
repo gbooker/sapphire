@@ -64,6 +64,8 @@ static UInt32						eventCallbackID = 0;
 		return self;
 	
 	frameworkLoad = [[CMPDVDFrameworkLoadAction alloc] initWithController:nil andSettings:nil];
+	currentElapsedTime = -1;
+	titleDuration = -1;
 	
 	return self;
 }
@@ -80,7 +82,7 @@ static UInt32						eventCallbackID = 0;
 - (double)elapsedPlaybackTime
 {
 	if(titleCount != 1)
-		return 0.0;
+		return -1;
 	
 	return currentElapsedTime;
 }
@@ -88,7 +90,7 @@ static UInt32						eventCallbackID = 0;
 - (double)trackDuration
 {
 	if(titleCount != 1)
-		return 0.0;
+		return -1;
 
 	return titleDuration;
 }
@@ -891,6 +893,10 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 {
 	UInt16 frames;
 	DVDGetTime(kDVDTimeCodeTitleDurationSeconds, &titleDuration, &frames);
+	if(titleDuration != 0)
+		currentElapsedTime = 0;
+	else
+		titleDuration = -1;
 }
 
 - (void)titleTimeChanged
