@@ -634,7 +634,17 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 - (void)previousChapter
 {
 	//NSLog(@"Going to previous chapter");
-	DVDPreviousChapter();
+	UInt32 elapsed;
+	UInt16 frames;
+	DVDGetTime(kDVDTimeCodeChapterElapsedSeconds, &elapsed, &frames);
+	if(elapsed < 2)
+		DVDPreviousChapter();
+	else
+	{
+		UInt16 chapter;
+		DVDGetChapter(&chapter);
+		DVDSetChapter(chapter);
+	}
 }
 
 - (void)nextFrame
