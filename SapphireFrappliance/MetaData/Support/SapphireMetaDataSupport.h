@@ -77,6 +77,13 @@ NSString *searchCoverArtExtForPath(NSString *path);
 + (void)setMainContext:(NSManagedObjectContext *)moc;
 
 /*!
+ * @brief Gets the main context
+ *
+ * @return The main context
+ */
++ (NSManagedObjectContext *)mainContext;
+
+/*!
  * @brief Was the DB locked in last save?
  *
  * @return YES if it was locked, NO otherwise

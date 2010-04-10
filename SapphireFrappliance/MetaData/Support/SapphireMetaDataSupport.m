@@ -423,6 +423,16 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	[[SapphireMetaDataSupport sharedInstance] setMainContext:moc];
 }
 
+- (NSManagedObjectContext *)mainContext
+{
+	return mainMoc;
+}
+
++ (NSManagedObjectContext *)mainContext
+{
+	return [[SapphireMetaDataSupport sharedInstance] mainContext];
+}
+
 - (BOOL)wasLocked
 {
 	return locked;
