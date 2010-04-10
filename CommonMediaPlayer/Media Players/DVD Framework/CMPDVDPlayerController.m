@@ -542,6 +542,9 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 		return NO;
 	
 	BOOL inMenu = [player inMenu];
+	if ([player chapters] == 0) //some weird dvds dont know the have a root menu when they are on an initial menu.
+		inMenu = true;
+	
 	CMPDVDState state = [player state];
 	//NSLog(@"State is %d and doing %d", state, action);
 	BOOL playingInSomeForm = (state == CMPDVDStatePlaying || state == CMPDVDStateScanningForward || state == CMPDVDStateScanningBackward || state == CMPDVDStatePlayingSlowForward || state == CMPDVDStatePlayingSlowBackward);
