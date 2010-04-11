@@ -1,0 +1,724 @@
+/* Marks the directory to be a collection */
+"                    as a Collection" = "                    als een Collectie";
+
+/* Marks the directory to no longer be a collection */
+"                    to Not be a Collection" = "                    niet als een Collectie";
+
+/* Mark whole directory to delete the metadata */
+"            Clear Metadata" = "            Wis metadata";
+
+/* Mark whole directory as favorite */
+"            Favorite" = "            Favoriet";
+
+/* Mark whole directory as not favorite */
+"            Not Favorite" = "            Geen favoriet";
+
+/* Mark whole directory to re-fetch its movie data */
+"            Refetch Movie Data" = "            Haal film metadata op";
+
+/* Mark whole directory to re-fetch its tv data */
+"            Refetch TV Data" = "            Haal TV gegevens op";
+
+/* Mark whole directory to reset import decisions */
+"            Reset Import Decisions" = "            Reset import keuzen";
+
+/* Mark whole directory as unwatched */
+"            Unwatched" = "            Onbekeken";
+
+/* Mark a file to delete the metadata */
+"        Clear Metadata" = "        Wis metadata";
+
+/* Mark file as not a favorite */
+"        Favorite" = "        Favoriet";
+
+/* Mark file as a favorite */
+"        Not Favorite" = "        Not favoriet";
+
+/* Mark file to re-fetch its movie data */
+"        Refetch Movie Data" = "        Haal film metadata op";
+
+/* Mark file to re-fetch its tv data */
+"        Refetch TV Data" = "        Haal TV gegevens op";
+
+/* Mark a file to reset import decisions */
+"        Reset Import Decisions" = "        Reset import keuzen";
+
+/* Conduct a scan of the directory for new files */
+"     < Scan for new files >" = "     < Scan voor nieuwe bestanden >";
+
+/*      Clear */
+"     Clear" = "     Wis";
+
+/*      Selected Files */
+"     Selected Files" = "     Geselecteerde bestanden";
+
+/*      This File and Complete */
+"     This File and Complete" = "     Dit bestand en compleet";
+
+/* Hide movie/show chooser menu item */
+"  Auto-Select Movies/Shows" = "  Auto-Select films/shows";
+
+/* Start Poster Chooser menu item */
+"  Choose Movie Posters" = "  Kies film afbeeldingen";
+
+/* Delete Collections menu item */
+"  Delete Collections" = "  Wis collecties";
+
+/* Disable the anonymous reporting for aid in future features */
+"  Disable Anonymous Reporting" = "  Deactiveer anonieme rapporten";
+
+/* Don't Import Collections menu item */
+"  Don't Import Collections" = "  Importeer geen collecties";
+
+/* Enable AC3 Passthrough menu item */
+"  Enable AC3 Passthrough" = "  Activeer AC3 Passthrough";
+
+/* Don't rescan directories upon entry and used cached data */
+"  Fast Directory Switching" = "  Snelle directory omschakeling";
+
+/* Display only Favorite Files */
+"  Favorite Files" = "  Favoriete bestanden";
+
+/* Fetch Movie Data menu item */
+"  Fetch Movie Data" = "  Haal film gegevens op";
+
+/* Fetch TV Show Data menu item */
+"  Fetch TV Show Data" = "  Haal TV show gegevens op";
+
+/* Hide perian audio info menu item */
+"  Hide Audio Info" = "  Verberg audio informatie";
+
+/* Hide Collections menu item */
+"  Hide Collections" = "  Verberg collecties";
+
+/* Hide poster chooser menu item */
+"  Hide Poster Chooser" = "  Verberg film afbeeldingen kiezer";
+
+/* Hide show summary menu item */
+"  Hide Show Spoilers" = "  Verberg show spoilers";
+
+/* Hide the ui quitter menu item */
+"  Hide UI Quit" = "  Verberg afsluiten UI";
+
+/* Hide perian video info menu item */
+"  Hide Video Info" = "  Verberg video informatie";
+
+/* All Importer Menu Item */
+"  Import All Data" = "  Importeer alle data";
+
+/* No comment provided by engineer. */
+"  Movies" = "  Films";
+
+/* Populate File Data menu item */
+"  Populate File Data" = "  Vul bestandsgegevens";
+
+/* UI Quit */
+"  Reset the thing already" = "  Reset UI";
+
+/* Settings Menu Item */
+"  Settings" = "  Instellingen";
+
+/* Skip Favorite shows menu item */
+"  Skip \"Favorite Shows\" filter" = "  Sla \"Favoriete shows\" filter over";
+
+/* Skip Top shows menu item */
+"  Skip \"Top Shows\" filter" = "  Sla \"Top shows\" filter over";
+
+/* Skip Unwatched shows menu item */
+"  Skip \"Unwatched Shows\" filter" = "  Sla \"Onbekeken shows\" filter over";
+
+/* No comment provided by engineer. */
+"  TV Shows" = "  TV shows";
+
+/* Display only Unwatched Files */
+"  Unwatched Files" = "  Onbekeken bestanden";
+
+/* Use directory names instead of filenames for movie lookup */
+"  Use Directory Lookup" = "  Gebruik directory zoeken";
+
+/* No comment provided by engineer. */
+" Movies" = " Films";
+
+/* Settings Menu Item */
+" Settings" = " Instellingen";
+
+/* No comment provided by engineer. */
+" TV Shows" = " TV shows";
+
+/* Could not find file; parameter is moving file */
+"%@ Seems to be missing" = "%@ lijkt zoek te zijn";
+
+/* Empty directory */
+"< EMPTY >" = "< LEEG >";
+
+/* Mark a file that is not a movie in the movie chooser */
+"<This is Not a Movie>" = "<Dit is geen film>";
+
+/* Mark an episode as not a TV show in the show chooser */
+"<This is not a TV Show>" = "<Dit is geen TV show>";
+
+/* No comment provided by engineer. */
+"A Directory name should not contain any '/' characters" = "Een directorynaam mag geen '/' letters bevatten";
+
+/* No comment provided by engineer. */
+"A File name should not contain any '/' characters" = "Een bestandsnaam mag geen '/' letters bevatten";
+
+/* Show Oscar winning movies only */
+"Academy Award Winning" = "Heeft Academy Award gewonnen";
+
+/* The group metadata import complete */
+"All available metadata has been imported" = "Alle beschikbare metadata is ge•mporteerd";
+
+/* The Movie import is complete */
+"All available Movie data has been imported" = "Alle beschikbare film metadata is ge•mporteerd";
+
+/* The TV Show import complete */
+"All available TV Show data has been imported" = "Alle beschikbare TV shows metadata is ge•mporteerd";
+
+/* Select all movies */
+"All Movies" = "Alle films";
+
+/* Delete Collections description */
+"Allows the user to specify which collections should be delete along with its data.  Use this for collections which will never be used again." = "Stelt de gebruikers in staat te kiezen welke collectie gewist kan worden incl. data.";
+
+/* Hide Collections description */
+"Allows the user to specify which collections should be hidden from Sapphire's main menu." = "Stelt de gebruiker in staat te kiezen welke collecties niet zichtbaar moeten zijn van Sapphire's hoofdmenu.";
+
+/* Don't Import Collections description */
+"Allows the user to specify which collections should be skipped when importing meta data." = "Stelt de gebruiker in staat te kiezen welke collecties overgeslagen moeten worden wanneer er metadata ge•mporteerd wordt.";
+
+/* parameter is file/dir that is being deleted */
+"Are you sure you wish to delete %@?" = "Weet u zeker dat u %@ wilt wissen?";
+
+/* First audio track details */
+"Audio" = "Audio";
+
+/* Second audio track details */
+"Audio2" = "Audio2";
+
+/* [Sort] By Awards Won */
+"By Awards Won" = "Op awards gewonnen";
+
+/* Select movies based on cast members */
+"By Cast" = "Op cast";
+
+/* [Sort] By Date */
+"By Date" = "Op datum";
+
+/* Select movies based on director */
+"By Director" = "Op regisseur";
+
+/* [Sort] By Episode number */
+"By Episode" = "Op aflevering";
+
+/* Select movies based on genre */
+"By Genre" = "Op genre";
+
+/* [Sort] By IMDB Rank */
+"By IMDB Rank" = "Op IMDB ranking";
+
+/* [Sort] By IMDB Rating */
+"By IMDB Rating" = "Op IMDB waardering";
+
+/* [Sort] By Movie Title */
+"By Movie Title" = "Op filmtitel";
+
+/* Cancel */
+"Cancel" = "Annuleer";
+
+/* Cancel the import process */
+"Cancel Import" = "Annuleer import";
+
+/* Movie cast */
+"Cast" = "Cast";
+
+/* Change artwork */
+"Change artwork" = "Verander hoes";
+
+/* Start Poster Chooser description */
+"Choose Movie Posters" = "Kies filmafbeelding";
+
+/* No comment provided by engineer. */
+"Collections" = "Collecties";
+
+/* Unknown error renaming file/directory; parameter is name */
+"Could not delete %@.  Is the filesystem read-only?" = "Kan %@ niet wissen.  Is het bstandssysteem read-only?";
+
+/* Unknown error renaming file/directory; parameter is extension, name */
+"Could not move %@ file for %@.  Is the filesystem read-only?" = "Kan bestand %1$@ niet hernoemen naar %2$@.  Is het bestandssysteem read-only?";
+
+/* Unknown error renaming file/directory; parameter is name */
+"Could not move %@.  Is the filesystem read-only?" = "Kan %@ niet verplaatsen.  Is het bestandssysteem read-only?";
+
+/* Unknown error renaming file/directory; parameter is name */
+"Could not move cover art for %@.  Is the filesystem read-only?" = "Kan cover art voor %@ niet verplaatsen.  Is het bestandssysteem read-only?";
+
+/* Unknown error renaming file/directory; parameter is name */
+"Could not move to %@.  Is the filesystem read-only?" = "Kan niet naar %@ verplaatsen.  Is het bestandssysteem read-only?";
+
+/* Delete Collections Menu Title */
+"Delete Collections" = "Wis collecties";
+
+/* Marks this directory to be deleted */
+"Delete Directory" = "Wis directory";
+
+/* No comment provided by engineer. */
+"Delete Directory?" = "Directory wissen?";
+
+/* No comment provided by engineer. */
+"Delete Error" = "Wis fout";
+
+/* Marks this file to be deleted */
+"Delete File" = "Wis bestand";
+
+/* No comment provided by engineer. */
+"Delete File?" = "Wis bestand?";
+
+/* No comment provided by engineer. */
+"Deletes this directory and its contents" = "Wis deze directory en alle inhoud";
+
+/* No comment provided by engineer. */
+"Deletes this file" = "Wis dit bestand";
+
+/* Director */
+"Director" = "Director";
+
+/* Display All Files (no filtering) */
+"Display All Files" = "Toon alle bestanden";
+
+/* Track duration */
+"Duration" = "Lengte";
+
+/* No comment provided by engineer. */
+"Edit the display name for this collection" = "Pas de naam aan voor deze collectie";
+
+/* No comment provided by engineer. */
+"Edit the name for this directory" = "Pas de naam aan voor deze directory";
+
+/* Episode in metadata display */
+"Episode" = "Aflevering";
+
+/* No comment provided by engineer. */
+"Error" = "Fout";
+
+/* Title */
+"Fetch Movie Data" = "Ophalen filmgegevens";
+
+/* Title */
+"Fetch TV Show Data" = "Ophalen TVshow gegevens";
+
+/* Current TV Show import process format, filename */
+"Fetching For: %@" = "Ophalen gegevens voor: %@";
+
+/* File Not Present title */
+"File Not Present" = "Bestand niet aanwezig";
+
+/* Import progress format, current and the max */
+"Finished Processing: %0.0f / %0.0f" = "Klaar met verwerken: %1$.0f / %2$.0f";
+
+/* Movie genres */
+"Genres" = "Genres";
+
+/* Getting artwork selection */
+"Getting artwork selection" = "Ophalen artwork selectie";
+
+/* Hide Collections Menu Title */
+"Hide Collections" = "Verberg collecties";
+
+/* IMDb rating */
+"IMDB" = "IMDB";
+
+/* Show movies in IMDb Top 250 only */
+"IMDB Top 250" = "IMDB Top 250";
+
+/* Title */
+"Import All Data" = "Importeer alle gegevens";
+
+/* The import is complete */
+"Import Complete" = "Import compleet";
+
+/* The import is starting */
+"Initializing..." = "Initialisatie...";
+
+/*      Selected Files */
+"Join Selected Files" = "Voeg geselecteerde bestanden samen";
+
+/* Join To Other Files */
+"Join To Other Files" = "Voeg toe aan andere bestanden";
+
+/* No comment provided by engineer. */
+"Joining Files" = "JBestanden samenvoegen";
+
+/* No comment provided by engineer. */
+"Main Menu" = "Hoofdmenu";
+
+/* Mark whole directory as watched */
+"Mark All as Watched" = "Markeer alles als Bekeken";
+
+/* Mark file as unwatched */
+"Mark as Unwatched" = "Markeer alles als Niet bekeken";
+
+/* Mark file as watched */
+"Mark as Watched" = "Markeer als bekeken";
+
+/* Marks this directory to be no longer be skipped during import */
+"Mark Directory For Importing" = "Markeer directory voor import";
+
+/* Marks this directory to be skipped during import */
+"Mark this Directory to Skip Import" = "Markeer deze directory om over te slaan bij import";
+
+/* parameter is last component of path, second is last path component of destination */
+"Move %@ to %@" = "Verplaats %1$@ naar %2$@";
+
+/* Rename file description */
+"Move a file to another name" = "Hernoem bestand";
+
+/* Marks this directory to be moved */
+"Move Directory" = "Verplaats directory";
+
+/* Marks this file to be moved */
+"Move File" = "Verplaats bestand";
+
+/* No comment provided by engineer. */
+"Move this directory.  Select destination later." = "Verplaats deze directory.  Selecteer bestemming later.";
+
+/* No comment provided by engineer. */
+"Move this file.  Select destination later." = "Verplaats dit bestand.  Selecteer bestemming later.";
+
+/* Move File to within this directory */
+"Move to Here" = "Verplaats hier naar toe";
+
+/* Movies Menu Item */
+"Movies" = "Films";
+
+/* parameter is file/dir that is being moved */
+"Moving %@" = "Verplaatsen %@";
+
+/* No comment provided by engineer. */
+"Moving Error" = "Verplaats fout";
+
+/* No comment provided by engineer. */
+"No pretty name to construct" = "Geen goede naam";
+
+/* No Subtitle information available for a DVD */
+"None" = "Geen";
+
+/* No Audio information available for a DVD */
+"Not specified" = "Niet aangegeven";
+
+/* OK */
+"OK" = "OK";
+
+/* parameter is filename */
+"Opening %@" = "Openen %@";
+
+/* Title */
+"Populate File Data" = "Vul bestandsdata";
+
+/* Do a file metadata import */
+"Populate Show Data" = "Vul showdata";
+
+/* No comment provided by engineer. */
+"Read Error" = "Leesfout";
+
+/* Reload images */
+"Refresh" = "Ververs";
+
+/* Refresh the artwork selection */
+"Refresh the artwork selection" = "Ververs artwork selectie";
+
+/* Rename a file, argument is path
+   Rename a collection, argument is path */
+"Rename %@" = "Hernoem %@";
+
+/* No comment provided by engineer. */
+"Rename all files to a pretty name for those which a pretty name exists" = "Hernoem alle bestanden waarvoor een correcte naam bestaat";
+
+/* Rename all files to a pretty name */
+"Rename all Files to Pretty Name" = "Hernoem alle bestanden naar een correcte naam";
+
+/* Rename a collection */
+"Rename this Collection" = "Hernoem deze collectie";
+
+/* Rename a directory */
+"Rename this Directory" = "Hernoem deze directory";
+
+/* Rename a file */
+"Rename this file" = "Hernoem dit bestand";
+
+/* Parameter is new name */
+"Rename to \"%@\"" = "Hernoem naar \"%@\"";
+
+/* No comment provided by engineer. */
+"Rename to Pretty Name" = "Hernoem naar correcte naam";
+
+/* Season / Episode in metadata display */
+"S/E" = "S/A";
+
+/* Main Menu item name */
+"Sapphire" = "Sapphire";
+
+/* Mark directory as favorite description */
+"Sapphire will add this directory as favorite." = "Sapphire voegt deze directory als favoriet toe.";
+
+/* Mark directory as favorite description */
+"Sapphire will add this file as a favorite." = "Sapphire voegt dit bestand als favoriet toe.";
+
+/* End text after import of files is complete */
+"Sapphire will continue to import new files as it encounters them.  You may initiate this import again at any time, and any new or changed files will be imported" = "Sapphire voegt bestanden toe als het deze tegenkomt. U kunt deze import op elke willekeurige tijd opnieuw starten en elke nieuwe of veranderde bestand wordt ge•mporteerd";
+
+/* Favorite filtering description */
+"Sapphire will filter files to display only favorite files" = "Sapphire filtert bestanden om alleen favorite bestanden te tonen";
+
+/* Unwatched filtering description */
+"Sapphire will filter files to display only unwatched files" = "Sapphire filtert bestanden om alleen onbekeken bestanden te tonen";
+
+/* No filtering description */
+"Sapphire will not filter files, but instead display all files" = "Sapphire filtert niet maar zal alle bestanden tonen";
+
+/* Mark directory as not favorite */
+"Sapphire will remove this directory from favorites." = "Sapphire verwijdert deze directory uit favorieten.";
+
+/* Mark directory as not favorite */
+"Sapphire will remove this file from favorites." = "Sapphire verwijdert dit bestand uit favorieten.";
+
+/* Mark directory as unwatched description */
+"Sapphire will save this directory as unwatched." = "Sapphire slaat deze directory als onbekeken op.";
+
+/* Mark directory watched description */
+"Sapphire will save this directory as watched." = "Sapphire slaat deze directory als bekeken op.";
+
+/* Mark directory watched description */
+"Sapphire will save this file as unwatched." = "Sapphire slaat dit bestand als onbekeken op.";
+
+/* Mark directory watched description */
+"Sapphire will save this file as watched." = "Sapphire slaat dit bestand als bekeken op.";
+
+/* No comment provided by engineer. */
+"Save Error" = "Fout bij opslaanr";
+
+/* parameter is save path */
+"Saving Joined File to %@" = "Sla samengevoegd bestand op als %@";
+
+/* Current scan import process format, directory */
+"Scanning Directory: %@" = "Scannen directory: %@";
+
+/* Season in metadata display */
+"Season" = "Seizoen";
+
+/* No comment provided by engineer. */
+"Select artwork using images from the file" = "Kies artwork door afbeeldingen uit het bestand te gebruiken";
+
+/* Select cover art */
+"Select cover art" = "Kies cover art";
+
+/* Prompt the user for poster selection */
+"Select Movie Poster" = "Kies filmafbeelding";
+
+/* Prompt the user for title of movie */
+"Select Movie Title" = "Kies filmtitel";
+
+/* Prompt the user for showname with a file */
+"Select Show Title" = "Kies showtitel";
+
+/* Settings Menu Item */
+"Settings" = "Instellingen";
+
+/* Track size */
+"Size" = "Grootte";
+
+/* Skip Top shows description */
+"Skip \"Top Shows\" filter" = "Sla \"Top shows\" filter over";
+
+/* Skip Collections Menu Title */
+"Skip Collections" = "Sla collecties over";
+
+/* Sort by Date description */
+"Sort by Date.  With TV Episodes, this is Air Date.  With Movies, this is Premier Date." = "Sorteer op datum.  Bij TV afleveringen is dit uitzenddatum. Bij fils is dit premieredatum.";
+
+/* Sort by Episode Order description */
+"Sort by Episode Order." = "Sorteer op volgorde aflevering.";
+
+/* Sort by IMDB Top 250 Rank description */
+"Sort by IMDB Top 250 Rank." = "Sorteer op IMDB Top 250 volgorde.";
+
+/* Sort by IMDB User Rating description */
+"Sort by IMDB User Rating." = "Sorteer op IMDB gebruikerswaardering.";
+
+/* Sort by Movie Title description */
+"Sort by Movie Title." = "Sorteer op filmtitel.";
+
+/* Sort by Number of Awards Won description */
+"Sort by Number of Awards Won." = "Sorteer op gewonnen Awards.";
+
+/* Button */
+"Start Fetching Data" = "Start data ophalen";
+
+/* Button */
+"Start Importing Data" = "Start importeren data";
+
+/* Button */
+"Start Populating Data" = "Start invullen data";
+
+/* Button */
+"Start Populating XML Data" = "Start invullen XML Data";
+
+/* Track subtitles */
+"Subtitles" = "Ondertiteling";
+
+/* Mark Directory For Importing description */
+"Tells Sapphire it's okay to import from this directory." = "Geeft Sapphire aan dat er uit deze directory ge•mporteerd kan worden.";
+
+/* Enable movie/show chooser description */
+"Tells Sapphire skip the TV Show and Movie choosers when importing and make selections automatically." = "Geeft Sapphire aan om TVshow en filmkiezers over te slaan bij importeren en automatisch selecties te maken.";
+
+/* Fetch Movie Data description */
+"Tells Sapphire that for every Movie, gather more information from the internet." = "Geeft Sapphire aan om voor elke film gegevens van internet te halen.";
+
+/* Fetch TV Show Data description */
+"Tells Sapphire that for every TV episode, gather more information about this episode from the internet." = "Geeft Sapphire aan om voor elke TV episode gegevens van internet te halen.";
+
+/* Skip Favorite shows description */
+"Tells Sapphire that when changing filter settings, skip over the favorite shows filter." = "Geeft Sapphire aan om bij verandering van flterinstellingen het favoriete showsfilter over te slaan.";
+
+/* Skip Unwatched shows description */
+"Tells Sapphire that when changing filter settings, skip over the unwatched shows filter." = "Geeft Sapphire aan om bij verandering van flterinstellingen het onbekeken showsfilter over te slaan.";
+
+/* Fast Directory Switching description */
+"Tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files." = "Geeft Sapphire aan om bij gebruik van een filter de reeds geladen data te gebruiken bij het inrichten van directories, in plaats van de gegevens in de directories zelf.";
+
+/* Enable AC3 Passthrough description */
+"Tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 and DTS output." = "Geeft Sapphire aan dat u een AC3 decoder heeft en dat alle audio gegevens moeten worden doorgegeven aan de decoder (passthrough). op deze manier krijgt u 5.1 en DTS geluid.";
+
+/* Enable Directory lookup description */
+"Tells Sapphire that you want to use directory names instead of file names for identifying movies." = "Geeft Sapphire aan dat u directorynamen in plaats van bestandsnamen wilt gebruiken bij films.";
+
+/* Marks the directory to be a collection description */
+"Tells Sapphire to add this directory to the Collections list." = "Geeft Sapphire aan om deze directory toe te voegen aan de collectieslijst.";
+
+/* Hide poster chooser description */
+"Tells Sapphire to automatically choose posters for movies instead of asking the user to choose one." = "Geeft Sapphire aan om automatisch filmafbeeldingen te kiezen i.p.v. dit de gebruiker te vragen.";
+
+/* clear file join list description */
+"Tells Sapphire to clear the file join list." = "Geeft Saphire aan om de samenvoeglijst te wissen.";
+
+/* Join Marked Files description */
+"Tells Sapphire to complete the file join." = "Geeft Sapphire aan bestandssamenvoeging uit te voeren.";
+
+/* Hide perian audio info description */
+"Tells Sapphire to disable the display of audio codec and sample rate information." = "Geeft Sapphire aan om het tonen van de audio codec en sample rate informatie te deactiveren.";
+
+/* Hide show summary description */
+"Tells Sapphire to disable the display of the show's synopsis." = "Geeft Sapphire aan om de show samenvatting te deactiveren";
+
+/* Hide perian video info description */
+"Tells Sapphire to disable the display of video codec, resolution, and color depth information." = "Geeft Sapphire aan om het tonen van de audio codec, de resolutie en kleurdiepte informatie te deactiveren.";
+
+/* Delete collections setting description */
+"Tells Sapphire to erase all knowledge of files in this collection." = "Geeft Sapphire aan om alle data van bestanden in deze collectie te wissen.";
+
+/* Populate File Data description */
+"Tells Sapphire to examine all files, and remember the file size, length and other information that can be gathered from the file itself." = "Geeft Sapphire aan om bestanden te onderzoeken en de bestandsgrootte, -lengte en alle ander informatie uit het bestand op te slaan.";
+
+/* Mark directory to reset import decisions description */
+"Tells Sapphire to forget import decisions made on files in this directory." = "Geeft Sapphire aan om alle importkeuzen m.b.t. bestanden uit deze directory te wissen.";
+
+/* Mark a file to reset import decisions description */
+"Tells Sapphire to forget import decisions made on this file." = "Geeft Sapphire aan om alle importkeuzen m.b.t. dit bestand te wissen.";
+
+/* Hide the ui quitter description */
+"Tells Sapphire to hide the main menu element forcing FrontRow to quit." = "Geeft Sapphire aan om het hoofdmenu item te verbergen zodat FrontRow afsluit.";
+
+/* Hide collections setting description */
+"Tells Sapphire to hide this collection on the main menu." = "Geeft Sapphire aan om deze collectie te verbergen in het hoofdmenu.";
+
+/* Import collections setting description */
+"Tells Sapphire to ignore this collection when running any import tool." = "Geeft Sapphire aan om deze collectie te negeren wanneer er een importprogramma loopt.";
+
+/* Disable the anonymous reporting description */
+"Tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use." = "Geeft Sapphire aan om geen anonieme informatie door te geven over het gebruik. Anonieme informatie geeft ons de mogelijkheid de plug-in te verbeteren.";
+
+/* Mark whole directory to re-fetch its movie data */
+"Tells Sapphire to refetch Movie metadata for this directory the next time an import is run." = "Geeft Sapphire aan om film metadata op te halen voor dit bestand bij de volgende import.";
+
+/* Mark file to refetch movie description */
+"Tells Sapphire to refetch Movie metadata for this file the next time an import is run." = "Geeft Sapphire aan om film metadata op te halen voor deze directory bij de volgende import.";
+
+/* Mark directory to refetch tv data description */
+"Tells Sapphire to refetch TV Show metadata for this directory the next time an import is run." = "Geeft Sapphire aan om TVshow metadata op te halen voor deze directory bij de volgende import.";
+
+/* Mark file to refetch tv data description */
+"Tells Sapphire to refetch TV Show metadata for this file the next time an import is run." = "Geeft Sapphire aan om TVshow metadata op te halen voor dit bestand bij de volgende import.";
+
+/* Mark directory to delete metadata description */
+"Tells Sapphire to remove all metadata for this directory." = "Geeft Sapphire aan om alle metadata van deze directory te verwijderen.";
+
+/* Mark file to delete metadata description */
+"Tells Sapphire to remove all metadata for this file." = "Geeft Sapphire aan om alle metadata van deze bestanden te verwijderen.";
+
+/* Marks the directory to no longer be a collection description */
+"Tells Sapphire to remove this directory from the Collections list." = "Geeft Sapphire aan om deze directory te verwijderen van de lijst collecties.";
+
+/* Mark this Directory to Skip Import description */
+"Tells Sapphire to skip this directory when importing." = "Geeft Sapphire aan om deze directory over te slaan bij importeren.";
+
+/* Mark file and join description */
+"Tells Sapphire to use this file to complete the joined list." = "Geeft Sapphire aan om dit bestand te gebruiken om de samenvoeglijst te completeren.";
+
+/* Mark file to be joined description */
+"Tells Sapphire you wish to add this file to a list of files to be joined. The files will be joined in the order they were added to the list." = "Geeft Sapphire aan dat u dit bestand wilt toevoegen aan de lijst bestanden die moeten worden samengevoegd. De bestanden worden samengevoegd in de volgorde waarin ze op de lijst voorkomen.";
+
+/* File not present error string */
+"The File %@ is not present.  Either a drive is not mounted or your metadata has not been imported recently" = "Bestand %@ bestaat niet.  Of een schijf is niet gemount of uw metadata is niet recent ge•mporteerd";
+
+/* Name taken on a file/directory rename; parameter is name */
+"The name %@ is already taken" = "Deze naam %@ bestaat al";
+
+/* Description of the movie import */
+"This tool will attempt to fetch information about your Movie files from the Internet (IMDB/IMPAwards).  This procedure may take quite some time and could ask you questions.  You may cancel at any time." = "Deze keuze haalt informatie op over uw films van het internet (IMDB/IMPAwards),  mogelijk worden u vragen gesteld.  U kunt het op elk moment onderbreken.";
+
+/* Description of the movie import */
+"This tool will attempt to fetch information about your TV shows files from the Internet (TVRage).  This procedure may take quite some time and could ask you questions.  You may cancel at any time." = "Deze keuze haalt informatie op over uw TVshows van het internet (TVRage),  mogelijk worden u vragen gesteld.  U kunt het op elk moment onderbreken.";
+
+/* Description of all meta import */
+"This tool will import all the metadata it can find.  This procedure may take quite some time and could ask you questions.  You may cancel at any time." = "Deze keuze importeert alle metadata die het kan vinden, mogelijk worden u vragen gesteld.  U kunt het op elk moment onderbreken";
+
+/* Description of the import processes */
+"This tool will populate Sapphire's File data.  This procedure may take a while, but you may cancel at any time." = "Deze keuze vult Sapphire's bestandsgegevens. Dit kan even duren maar u kunt het op elk moment onderbreken.";
+
+/* TV Shows Menu Item */
+"TV Shows" = "TVshows";
+
+/* Import complete format with number updated */
+"Updated %0.0f Entries." = "%0.0f items ge-update.";
+
+/* No comment provided by engineer. */
+"Upgrade Metadata" = "Upgrade metadata";
+
+/* No comment provided by engineer. */
+"Upgrading Collection Prefs" = "Upgraden collectie voorkeuren";
+
+/* No comment provided by engineer. */
+"Upgrading Complete; Press Menu to Go Back" = "Upgraden gereed; Kies Menu om terug te gaan";
+
+/* No comment provided by engineer. */
+"Upgrading Joined Files" = "Upgraden samengevoegde bestanden";
+
+/* No comment provided by engineer. */
+"Upgrading Metadata" = "Upgraden metadata";
+
+/* No comment provided by engineer. */
+"Upgrading Movie Translations" = "Upgraden film vertaling";
+
+/* No comment provided by engineer. */
+"Upgrading TV Translations" = "Upgraden TV vertaling";
+
+/* First video track details */
+"Video" = "Video";
+
+/* Second video track details */
+"Video2" = "Video2";
+
+/* The import is complete, just waiting on background processes */
+"Waiting for background import to complete" = "Wachten op afronden importproces";
+

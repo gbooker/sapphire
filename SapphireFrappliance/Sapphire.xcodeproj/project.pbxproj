@@ -638,6 +638,7 @@
 		F5CE69550D45732C003C4B2D /* SapphireXMLFileDataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireXMLFileDataImporter.m; sourceTree = "<group>"; };
 		F5CE69640D4575DC003C4B2D /* SapphireAllFileDataImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireAllFileDataImporter.h; sourceTree = "<group>"; };
 		F5CE69650D4575DC003C4B2D /* SapphireAllFileDataImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireAllFileDataImporter.m; sourceTree = "<group>"; };
+		F5D0917711715D1C00D17E59 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F5D0DEB40C331D76007652B2 /* SapphireTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTheme.h; sourceTree = "<group>"; };
 		F5D0DEB50C331D76007652B2 /* SapphireTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireTheme.m; sourceTree = "<group>"; };
 		F5D909180DB520B900F12E12 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
@@ -1331,6 +1332,7 @@
 				German,
 				Spanish,
 				Italian,
+				Dutch,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* ApplianceBase */;
 			projectDirPath = "";
@@ -1721,6 +1723,7 @@
 				F5FC58B51039F63600042296 /* German */,
 				F5FC58B61039F6A500042296 /* Spanish */,
 				F5FC58BD1039F84400042296 /* Italian */,
+				F5D0917711715D1C00D17E59 /* Dutch */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
