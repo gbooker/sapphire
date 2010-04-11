@@ -233,6 +233,13 @@
 	NSArray		*completeCast	= arrayStringValueOfXPath(root, @"actor/name");
 	NSString	*movieTitle		= stringValueOfChild(root, @"title");
 	
+	if([movieTitle rangeOfString:@"Request Limit Reached"].location != NSNotFound)
+	{
+		/*IMDB said we hit them too much; abort this data*/
+		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
+		return;
+	}
+	
 	NSString *mpaaRating = nil;
 	if([mpaaStr hasPrefix:@"Rated"])
 	{
