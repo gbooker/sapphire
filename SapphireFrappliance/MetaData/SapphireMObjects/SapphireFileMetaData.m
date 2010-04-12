@@ -749,6 +749,7 @@ static NSString *movingToPath = @"To";
 - (NSString *)moveToPath:(NSString *)newPath pathForMoveError:(NSString *)errorPath inDir:(SapphireDirectoryMetaData *)newParent
 {
 	NSString *oldPath = [[[self path] retain] autorelease];
+	NSString *extLessPath = [self extensionlessPath];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	if([fm fileExistsAtPath:newPath])
 		return [NSString stringWithFormat:BRLocalizedString(@"The name %@ is already taken", @"Name taken on a file/directory rename; parameter is name"), [newPath lastPathComponent]];
@@ -779,7 +780,6 @@ static NSString *movingToPath = @"To";
 	NSLog(@"new parent set");
 	[SapphireMetaDataSupport save:[self managedObjectContext]];
 	NSLog(@"Save done");
-	NSString *extLessPath = [self extensionlessPath];
 	NSEnumerator *secondaryExtEnum = [secondaryFiles objectEnumerator];
 	NSString *extension;
 	NSString *newExtlessPath = newPath;
