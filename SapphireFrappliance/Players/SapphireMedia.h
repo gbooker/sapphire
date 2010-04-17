@@ -18,6 +18,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+@class SapphireFileMetaData;
 
 /*!
  * @brief A media asset class to provied custom resume times and cover art
@@ -28,6 +29,8 @@
 	unsigned int		resumeTime;		/*!< @brief The resume time to use, 0 to use super*/
 	NSString			*imagePath;		/*!< @brief The cover art path to use, nil to use super*/
 	NSImage				*coverart;		/*!< @brief The cover art as image data */
+	NSString			*title;			/*!< @brief The title for the metadata */
+	NSString			*summary;		/*!< @brief The description for the metadata */
 }
 
 /*!
@@ -58,5 +61,12 @@
  * param[in] image The cover art as an NSImage object
  */
 - (void)setImage:(NSImage *)image;
+
+/*!
+ * @brief Sets the metadata for the media so it can create the information overlay
+ *
+ * @param file The file metadata
+ */
+- (void)setFileMetaData:(SapphireFileMetaData *)file;
 
 @end

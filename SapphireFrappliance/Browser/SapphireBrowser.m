@@ -570,6 +570,7 @@ static BOOL is10Version = NO;
 		NSURL *url = [NSURL fileURLWithPath:path];
 		SapphireMedia *asset  =[[SapphireMedia alloc] initWithMediaURL:url];
 		[asset setResumeTime:[currentPlayFile resumeTimeValue]];
+		[asset setFileMetaData:currentPlayFile];
 		
 		/*Get the player*/
 		SapphireVideoPlayer *player = [[SapphireVideoPlayer alloc] init];

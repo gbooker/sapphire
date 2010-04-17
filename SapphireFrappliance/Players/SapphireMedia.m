@@ -19,6 +19,7 @@
  */
 
 #import "SapphireMedia.h"
+#import "SapphireFileMetaData.h"
 #import "NSImage-Extensions.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
@@ -41,6 +42,8 @@
 {
 	[imagePath release];
 	[coverart release];
+	[title release];
+	[summary release];
 	[super dealloc];
 }
 
@@ -69,6 +72,23 @@
 {
 	[coverart release];
 	coverart = [image retain];
+}
+
+- (void)setFileMetaData:(SapphireFileMetaData *)file
+{
+	NSArray *order;
+	NSDictionary *dict = [file getDisplayedMetaDataInOrder:&order];
+	summary = [[dict objectForKey:META_DESCRIPTION_KEY] retain];
+	if(summary == nil)
+		summary = [[dict objectForKey:META_SUMMARY_KEY] retain];
+	if(summary != nil)
+		[self setObject:summary forKey:@"mediaSummary"];
+	
+	title = [[file prettyName] retain];
+	if(title == nil)
+		title = [[file fileName] retain];
+	if(title != nil)
+		[self setObject:title forKey:@"title"];
 }
 
 - (id)mediaType
@@ -102,6 +122,16 @@
 	}
 
 	return nil;
+}
+
+- (NSString *)title
+{
+	return title;
+}
+
+- (NSString *)mediaSummary
+{
+	return summary;
 }
 
 @end
