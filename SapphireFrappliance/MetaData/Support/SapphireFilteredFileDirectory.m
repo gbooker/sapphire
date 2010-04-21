@@ -117,12 +117,7 @@
 {
 	[entities removeAllObjects];
 	[entityLookup removeAllObjects];
-	NSPredicate *myPred;
-	if(filterPredicate != nil)
-		myPred = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:filterPredicate, fetchPredicate, nil]];
-	else
-		myPred = fetchPredicate;
-	NSMutableArray *objects = [doFetchRequest(SapphireFileMetaDataName, moc, myPred) mutableCopy];
+	NSMutableArray *objects = [[self metaFiles] mutableCopy];
 	[SapphireFileSorter sortFiles:objects withSorter:sortMethod inAllowedSorts:sorters];
 	int i, count = [objects count];
 	for(i=0; i<count; i++)
