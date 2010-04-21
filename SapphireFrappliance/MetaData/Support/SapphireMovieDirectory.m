@@ -96,9 +96,9 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	SapphireEntityDirectory *genre = [[SapphireEntityDirectory alloc] initWithEntityFetch:genreEntityFetch inContext:moc];
 	SapphireEntityDirectory *director = [[SapphireEntityDirectory alloc] initWithEntityFetch:directorEntityFetch inContext:moc];
 	SapphireEntityDirectory *cast = [[SapphireEntityDirectory alloc] initWithEntityFetch:castEntityFetch inContext:moc];
-	NSPredicate *top250Pred = [NSPredicate predicateWithFormat:@"movie.imdbTop250Ranking != 0"];
+	NSPredicate *top250Pred = [NSPredicate predicateWithFormat:@"movie != nil AND movie.imdbTop250Ranking != 0"];
 	SapphireFilteredFileDirectory *top250 = [[SapphireFilteredFileDirectory alloc] initWithPredicate:top250Pred Context:moc];
-	NSPredicate *oscarPred = [NSPredicate predicateWithFormat:@"movie.oscarsWon != 0"];
+	NSPredicate *oscarPred = [NSPredicate predicateWithFormat:@"movie != nil AND movie.oscarsWon != 0"];
 	SapphireFilteredFileDirectory *oscar = [[SapphireFilteredFileDirectory alloc] initWithPredicate:oscarPred Context:moc];
 
 	originalSubDirs = [[NSArray alloc] initWithObjects:
