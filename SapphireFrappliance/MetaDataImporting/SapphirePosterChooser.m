@@ -222,7 +222,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	NSData *data = [posters objectAtIndex:intIndex];
 	[posters replaceObjectAtIndex:intIndex withObject:[self getPosterLayerForData:data]];
 	[posterMarch _updateIcons];
-	if([self getSelection] == intIndex)
+	if(intIndex == 0 || [self getSelection] == intIndex)
 		[self resetPreviewController];
 	[SapphireFrontRowCompat renderScene:[self scene]];
 }
