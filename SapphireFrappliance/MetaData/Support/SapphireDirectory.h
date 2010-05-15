@@ -28,6 +28,7 @@ extern NSString *VIRTUAL_DIR_TOP250_PATH;
 extern NSString *VIRTUAL_DIR_OSCAR_PATH;
 
 @class SapphireFileMetaData;
+@protocol SapphireMetaData;
 
 /*!
  * @brief A protocol for the SapphireMetaData to inform its delegate of updates to data
@@ -102,14 +103,12 @@ extern NSString *VIRTUAL_DIR_OSCAR_PATH;
 - (oneway void)informComplete:(BOOL)updated onPath:(NSString *)path;
 @end
 
-@protocol SapphireMetaDataProtocol;
-
 /*!
  * @brief A protocol for a directory
  *
  * This protocol provides a method by which metadata directories can be used without regard as to whether they are real or virtual
  */
-@protocol SapphireDirectory <SapphireMetaDataProtocol>
+@protocol SapphireDirectory <SapphireMetaData>
 
 /*!
  * @brief Get the delegate for the metadata

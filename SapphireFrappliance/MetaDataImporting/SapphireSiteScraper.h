@@ -18,7 +18,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class SapphireMovieScraper, SapphireTVShowScraper, SapphireURLLoader;
+@class SapphireMovieScraper, SapphireTVShowScraper, SapphireURLLoader, SapphireScraper;
 
 @protocol SapphireSiteScraperDelegate <NSObject>
 - (void)retrievedSearchResuls:(NSXMLDocument *)results forObject:(id)object;
@@ -45,6 +45,7 @@
 }
 
 - (id)initWithDelegate:(id <SapphireSiteScraperDelegate>)aDelegate loader:(SapphireURLLoader *)loader;
+- (SapphireScraper *)scraper;
 - (void)setObject:(id)object;
 - (void)scanForURLs:(NSXMLDocument *)document;
 

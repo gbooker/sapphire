@@ -117,10 +117,8 @@ static NSSet *secondaryFiles;
 
 + (SapphireFileMetaData *)fileWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc
 {
-	SapphireMetaData *meta = [SapphireMetaData metaDataWithPath:path inContext:moc];
-	if([meta isKindOfClass:[SapphireFileMetaData class]])
-		return (SapphireFileMetaData *)meta;
-	return nil;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"path == %@", path];
+	return (SapphireFileMetaData *)doSingleFetchRequest(SapphireFileMetaDataName, moc, predicate);
 }
 
 + (SapphireFileMetaData *)internalCreateFileWithPath:(NSString *)path parent:(SapphireDirectoryMetaData *)parent inContext:(NSManagedObjectContext *)moc
@@ -153,9 +151,10 @@ static NSSet *secondaryFiles;
 	return [SapphireFileMetaData internalCreateFileWithPath:path parent:parent inContext:moc];
 }
 
-+ (NSDictionary *)upgradeV1FilesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withMovies:(NSDictionary *)movieLookup directories:(NSDictionary *)dirLookup
++ (NSDictionary *)upgradeFilesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withMovies:(NSDictionary *)movieLookup directories:(NSDictionary *)dirLookup
 {
 	NSMutableDictionary *lookup = [NSMutableDictionary dictionary];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *files = doFetchRequest(SapphireFileMetaDataName, oldMoc, nil);
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	NSManagedObject *oldFile;
@@ -174,18 +173,32 @@ static NSSet *secondaryFiles;
 		newFile.hasVideo = [oldFile valueForKey:@"hasVideo"];
 		newFile.importTypeValue = [[oldFile valueForKey:@"importType"] intValue] & ~IMPORT_TYPE_XML_MASK;
 		newFile.modified = [oldFile valueForKey:@"modified"];
+		newFile.added = [oldFile valueForKey:@"modified"];
 		newFile.resumeTime = [oldFile valueForKey:@"resumeTime"];
 		newFile.sampleRate = [oldFile valueForKey:@"sampleRate"];
 		newFile.size = [oldFile valueForKey:@"size"];
 		newFile.subtitlesDescription = [oldFile valueForKey:@"subtitlesDescription"];
 		newFile.videoDescription = [oldFile valueForKey:@"videoDescription"];
 		newFile.watched = [oldFile valueForKey:@"watched"];
-		NSNumber *oldMovieNumber = [oldFile valueForKeyPath:@"movie.imdbNumber"];
-		if(oldMovieNumber != nil)
-			newFile.movie = [movieLookup objectForKey:oldMovieNumber];
+		NSManagedObject *oldMovie = [oldFile valueForKey:@"movie"];
+		if(oldMovie != nil)
+		{
+			NSNumber *oldMovieNumber = [oldMovie valueForKey:@"imdbNumber"];
+			SapphireMovie *movie = nil;
+			if(oldMovieNumber != nil)
+				movie = [movieLookup objectForKey:oldMovieNumber];
+			if(movie == nil)
+			{
+				NSString *oldMovieName = [oldMovie valueForKey:@"title"];
+				if(oldMovieName != nil)
+					movie = [movieLookup objectForKey:oldMovieName];
+			}
+			newFile.movie = movie;
+		}
 		
 		[lookup setObject:newFile forKey:path];
 	}
+	[pool drain];
 	return lookup;
 }
 
@@ -238,6 +251,7 @@ static NSSet *secondaryFiles;
 				NSFileManager *fm = [NSFileManager defaultManager];
 				[fm movePath:oldCoverPath toPath:newPath handler:nil];
 			}
+			[(NSMutableDictionary *)[defer objectForKey:@"TV Shows"] setObject:ep.tvShow forKey:[value objectForKey:META_SHOW_IDENTIFIER_KEY]];
 		}
 		self.importTypeValue |= IMPORT_TYPE_TVSHOW_MASK;
 	}
@@ -663,6 +677,26 @@ BOOL updateMetaData(SapphireFileMetaData *file)
 		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Deleting Movie import translation for %@", movieTran.name);
 		[moc deleteObject:movieTran];
 	}
+	NSScanner *titleYearScanner = [NSScanner scannerWithString:lookupName];
+	NSString *normalTitle = nil;
+	int year = 0;
+	BOOL success = YES;
+	success &= [titleYearScanner scanUpToString:@"(" intoString:&normalTitle];
+	success &= [titleYearScanner scanString:@"(" intoString:nil];
+	success &= [titleYearScanner scanInt:&year];
+	success &= [titleYearScanner scanString:@")" intoString:nil];
+	
+	if(success)
+	{
+		if([normalTitle hasSuffix:@" "])
+			normalTitle = [normalTitle substringToIndex:[normalTitle length]-1];
+		movieTran = [SapphireMovieTranslation movieTranslationWithName:normalTitle inContext:moc];
+		if(movieTran != nil)
+		{
+			SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Deleting Movie import translation for %@", movieTran.name);
+			[moc deleteObject:movieTran];
+		}
+	}	
 	
 	[self setToReimportFromMaskValue:IMPORT_TYPE_ALL_MASK];
 }

@@ -30,9 +30,10 @@ static NSArray *allowedSorts = nil;
 	return ret;
 }
 
-+ (NSDictionary *)upgradeV1GenresFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
++ (NSDictionary *)upgradeGenresVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
 {
 	NSMutableDictionary *lookup = [NSMutableDictionary dictionary];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *oldGenres = doFetchRequest(SapphireGenreName, oldMoc, nil);
 	NSEnumerator *genreEnum = [oldGenres objectEnumerator];
 	NSManagedObject *oldGenre;
@@ -44,6 +45,7 @@ static NSArray *allowedSorts = nil;
 		newGenre.sortMethod = [oldGenre valueForKey:@"sortMethod"];
 		[lookup setObject:newGenre forKey:name];
 	}
+	[pool drain];
 	return lookup;
 }
 

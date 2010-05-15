@@ -24,6 +24,7 @@
 
 NSString *tvShowTranslationNameKey = @"name";
 NSString *tvShowTranslationLinkKey = @"Link";
+NSString *tvShowTranslationItemIDKey = @"itemID";
 
 @interface SapphireShowChooser ()
 - (void)doMyLayout;

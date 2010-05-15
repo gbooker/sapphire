@@ -7,46 +7,17 @@
 
 
 
-- (NSDate*)airDate {
-	[self willAccessValueForKey:@"airDate"];
-	NSDate *result = [self primitiveValueForKey:@"airDate"];
-	[self didAccessValueForKey:@"airDate"];
+- (NSString*)episodeTitle {
+	[self willAccessValueForKey:@"episodeTitle"];
+	NSString *result = [self primitiveValueForKey:@"episodeTitle"];
+	[self didAccessValueForKey:@"episodeTitle"];
 	return result;
 }
 
-- (void)setAirDate:(NSDate*)value_ {
-	[self willChangeValueForKey:@"airDate"];
-	[self setPrimitiveValue:value_ forKey:@"airDate"];
-	[self didChangeValueForKey:@"airDate"];
-}
-
-
-
-
-
-
-- (NSNumber*)episodeNumber {
-	[self willAccessValueForKey:@"episodeNumber"];
-	NSNumber *result = [self primitiveValueForKey:@"episodeNumber"];
-	[self didAccessValueForKey:@"episodeNumber"];
-	return result;
-}
-
-- (void)setEpisodeNumber:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"episodeNumber"];
-	[self setPrimitiveValue:value_ forKey:@"episodeNumber"];
-	[self didChangeValueForKey:@"episodeNumber"];
-}
-
-
-
-- (short)episodeNumberValue {
-	NSNumber *result = [self episodeNumber];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setEpisodeNumberValue:(short)value_ {
-	[self setEpisodeNumber:[NSNumber numberWithShort:value_]];
+- (void)setEpisodeTitle:(NSString*)value_ {
+	[self willChangeValueForKey:@"episodeTitle"];
+	[self setPrimitiveValue:value_ forKey:@"episodeTitle"];
+	[self didChangeValueForKey:@"episodeTitle"];
 }
 
 
@@ -83,6 +54,24 @@
 
 
 
+- (NSDate*)airDate {
+	[self willAccessValueForKey:@"airDate"];
+	NSDate *result = [self primitiveValueForKey:@"airDate"];
+	[self didAccessValueForKey:@"airDate"];
+	return result;
+}
+
+- (void)setAirDate:(NSDate*)value_ {
+	[self willChangeValueForKey:@"airDate"];
+	[self setPrimitiveValue:value_ forKey:@"airDate"];
+	[self didChangeValueForKey:@"airDate"];
+}
+
+
+
+
+
+
 - (NSString*)episodeDescription {
 	[self willAccessValueForKey:@"episodeDescription"];
 	NSString *result = [self primitiveValueForKey:@"episodeDescription"];
@@ -101,18 +90,49 @@
 
 
 
-- (NSString*)episodeTitle {
-	[self willAccessValueForKey:@"episodeTitle"];
-	NSString *result = [self primitiveValueForKey:@"episodeTitle"];
-	[self didAccessValueForKey:@"episodeTitle"];
+- (NSNumber*)episodeNumber {
+	[self willAccessValueForKey:@"episodeNumber"];
+	NSNumber *result = [self primitiveValueForKey:@"episodeNumber"];
+	[self didAccessValueForKey:@"episodeNumber"];
 	return result;
 }
 
-- (void)setEpisodeTitle:(NSString*)value_ {
-	[self willChangeValueForKey:@"episodeTitle"];
-	[self setPrimitiveValue:value_ forKey:@"episodeTitle"];
-	[self didChangeValueForKey:@"episodeTitle"];
+- (void)setEpisodeNumber:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"episodeNumber"];
+	[self setPrimitiveValue:value_ forKey:@"episodeNumber"];
+	[self didChangeValueForKey:@"episodeNumber"];
 }
+
+
+
+- (short)episodeNumberValue {
+	NSNumber *result = [self episodeNumber];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setEpisodeNumberValue:(short)value_ {
+	[self setEpisodeNumber:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
+	return result;
+}
+
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
+}
+
+
 
 
 

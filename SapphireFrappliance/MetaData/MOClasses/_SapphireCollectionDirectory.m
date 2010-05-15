@@ -7,24 +7,6 @@
 
 
 
-- (NSString*)name {
-	[self willAccessValueForKey:@"name"];
-	NSString *result = [self primitiveValueForKey:@"name"];
-	[self didAccessValueForKey:@"name"];
-	return result;
-}
-
-- (void)setName:(NSString*)value_ {
-	[self willChangeValueForKey:@"name"];
-	[self setPrimitiveValue:value_ forKey:@"name"];
-	[self didChangeValueForKey:@"name"];
-}
-
-
-
-
-
-
 
 
 - (NSNumber*)isMount {
@@ -56,28 +38,35 @@
 
 
 
-- (NSNumber*)hidden {
-	[self willAccessValueForKey:@"hidden"];
-	NSNumber *result = [self primitiveValueForKey:@"hidden"];
-	[self didAccessValueForKey:@"hidden"];
+- (NSString*)name {
+	[self willAccessValueForKey:@"name"];
+	NSString *result = [self primitiveValueForKey:@"name"];
+	[self didAccessValueForKey:@"name"];
 	return result;
 }
 
-- (void)setHidden:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"hidden"];
-	[self setPrimitiveValue:value_ forKey:@"hidden"];
-	[self didChangeValueForKey:@"hidden"];
+- (void)setName:(NSString*)value_ {
+	[self willChangeValueForKey:@"name"];
+	[self setPrimitiveValue:value_ forKey:@"name"];
+	[self didChangeValueForKey:@"name"];
 }
 
 
 
-- (BOOL)hiddenValue {
-	NSNumber *result = [self hidden];
-	return result ? [result boolValue] : 0;
+
+
+
+- (NSData*)mountInformationData {
+	[self willAccessValueForKey:@"mountInformationData"];
+	NSData *result = [self primitiveValueForKey:@"mountInformationData"];
+	[self didAccessValueForKey:@"mountInformationData"];
+	return result;
 }
 
-- (void)setHiddenValue:(BOOL)value_ {
-	[self setHidden:[NSNumber numberWithBool:value_]];
+- (void)setMountInformationData:(NSData*)value_ {
+	[self willChangeValueForKey:@"mountInformationData"];
+	[self setPrimitiveValue:value_ forKey:@"mountInformationData"];
+	[self didChangeValueForKey:@"mountInformationData"];
 }
 
 
@@ -143,18 +132,49 @@
 
 
 
-- (NSData*)mountInformationData {
-	[self willAccessValueForKey:@"mountInformationData"];
-	NSData *result = [self primitiveValueForKey:@"mountInformationData"];
-	[self didAccessValueForKey:@"mountInformationData"];
+- (NSNumber*)hidden {
+	[self willAccessValueForKey:@"hidden"];
+	NSNumber *result = [self primitiveValueForKey:@"hidden"];
+	[self didAccessValueForKey:@"hidden"];
 	return result;
 }
 
-- (void)setMountInformationData:(NSData*)value_ {
-	[self willChangeValueForKey:@"mountInformationData"];
-	[self setPrimitiveValue:value_ forKey:@"mountInformationData"];
-	[self didChangeValueForKey:@"mountInformationData"];
+- (void)setHidden:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"hidden"];
+	[self setPrimitiveValue:value_ forKey:@"hidden"];
+	[self didChangeValueForKey:@"hidden"];
 }
+
+
+
+- (BOOL)hiddenValue {
+	NSNumber *result = [self hidden];
+	return result ? [result boolValue] : 0;
+}
+
+- (void)setHiddenValue:(BOOL)value_ {
+	[self setHidden:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
+	return result;
+}
+
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
+}
+
+
 
 
 

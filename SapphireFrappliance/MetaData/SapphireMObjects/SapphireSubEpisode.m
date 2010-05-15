@@ -74,7 +74,7 @@
 	return ret;		
 }
 
-+ (void)upgradeV1SubEpisode:(NSManagedObject *)oldEp toContext:(NSManagedObjectContext *)newMoc inEpisode:(SapphireEpisode *)ep
++ (void)upgradeSubEpisodeVersion:(int)version from:(NSManagedObject *)oldEp toContext:(NSManagedObjectContext *)newMoc inEpisode:(SapphireEpisode *)ep
 {
 	SapphireSubEpisode *newEp = [NSEntityDescription insertNewObjectForEntityForName:SapphireSubEpisodeName inManagedObjectContext:newMoc];
 	newEp.absoluteEpisodeNumber = [oldEp valueForKey:@"absoluteEpisodeNumber"];

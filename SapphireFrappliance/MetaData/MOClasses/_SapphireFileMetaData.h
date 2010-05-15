@@ -2,34 +2,44 @@
 // Make changes to SapphireFileMetaData.h instead.
 
 #import <CoreData/CoreData.h>
-#import "SapphireMetaData.h"
 
 
-@class SapphireDirectoryMetaData;
-
-@class SapphireMovie;
-
-@class SapphireXMLData;
-
-@class SapphireJoinedFile;
-
-@class SapphireJoinedFile;
 
 @class SapphireFileSymLink;
 
+@class SapphireJoinedFile;
+
+@class SapphireJoinedFile;
+
+@class SapphireXMLData;
+
+@class SapphireDirectoryMetaData;
+
 @class SapphireEpisode;
 
+@class SapphireMovie;
 
-@interface _SapphireFileMetaData : SapphireMetaData {}
+
+@interface _SapphireFileMetaData : NSManagedObject {}
 
 
-- (NSNumber*)favorite;
-- (void)setFavorite:(NSNumber*)value_;
+- (NSNumber*)hasVideo;
+- (void)setHasVideo:(NSNumber*)value_;
 
-- (BOOL)favoriteValue;
-- (void)setFavoriteValue:(BOOL)value_;
+- (BOOL)hasVideoValue;
+- (void)setHasVideoValue:(BOOL)value_;
 
-//- (BOOL)validateFavorite:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateHasVideo:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSNumber*)audioFormatID;
+- (void)setAudioFormatID:(NSNumber*)value_;
+
+- (int)audioFormatIDValue;
+- (void)setAudioFormatIDValue:(int)value_;
+
+//- (BOOL)validateAudioFormatID:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -43,37 +53,37 @@
 
 
 
-- (NSString*)audioDescription;
-- (void)setAudioDescription:(NSString*)value_;
+- (NSString*)subtitlesDescription;
+- (void)setSubtitlesDescription:(NSString*)value_;
 
-//- (BOOL)validateAudioDescription:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSNumber*)duration;
-- (void)setDuration:(NSNumber*)value_;
-
-- (float)durationValue;
-- (void)setDurationValue:(float)value_;
-
-//- (BOOL)validateDuration:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateSubtitlesDescription:(id*)value_ error:(NSError**)error_;
 
 
 
-- (NSNumber*)hasVideo;
-- (void)setHasVideo:(NSNumber*)value_;
+- (NSNumber*)resumeTime;
+- (void)setResumeTime:(NSNumber*)value_;
 
-- (BOOL)hasVideoValue;
-- (void)setHasVideoValue:(BOOL)value_;
+- (int)resumeTimeValue;
+- (void)setResumeTimeValue:(int)value_;
 
-//- (BOOL)validateHasVideo:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateResumeTime:(id*)value_ error:(NSError**)error_;
 
 
 
-- (NSString*)videoDescription;
-- (void)setVideoDescription:(NSString*)value_;
+- (NSNumber*)fileClass;
+- (void)setFileClass:(NSNumber*)value_;
 
-//- (BOOL)validateVideoDescription:(id*)value_ error:(NSError**)error_;
+- (short)fileClassValue;
+- (void)setFileClassValue:(short)value_;
+
+//- (BOOL)validateFileClass:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSString*)path;
+- (void)setPath:(NSString*)value_;
+
+//- (BOOL)validatePath:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -87,13 +97,35 @@
 
 
 
-- (NSNumber*)resumeTime;
-- (void)setResumeTime:(NSNumber*)value_;
+- (NSNumber*)favorite;
+- (void)setFavorite:(NSNumber*)value_;
 
-- (int)resumeTimeValue;
-- (void)setResumeTimeValue:(int)value_;
+- (BOOL)favoriteValue;
+- (void)setFavoriteValue:(BOOL)value_;
 
-//- (BOOL)validateResumeTime:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateFavorite:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSNumber*)watched;
+- (void)setWatched:(NSNumber*)value_;
+
+- (BOOL)watchedValue;
+- (void)setWatchedValue:(BOOL)value_;
+
+//- (BOOL)validateWatched:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+- (NSNumber*)duration;
+- (void)setDuration:(NSNumber*)value_;
+
+- (float)durationValue;
+- (void)setDurationValue:(float)value_;
+
+//- (BOOL)validateDuration:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -117,13 +149,17 @@
 
 
 
-- (NSNumber*)watched;
-- (void)setWatched:(NSNumber*)value_;
+- (NSString*)videoDescription;
+- (void)setVideoDescription:(NSString*)value_;
 
-- (BOOL)watchedValue;
-- (void)setWatchedValue:(BOOL)value_;
+//- (BOOL)validateVideoDescription:(id*)value_ error:(NSError**)error_;
 
-//- (BOOL)validateWatched:(id*)value_ error:(NSError**)error_;
+
+
+- (NSDate*)added;
+- (void)setAdded:(NSDate*)value_;
+
+//- (BOOL)validateAdded:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -134,61 +170,18 @@
 
 
 
-- (NSNumber*)audioFormatID;
-- (void)setAudioFormatID:(NSNumber*)value_;
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
 
-- (int)audioFormatIDValue;
-- (void)setAudioFormatIDValue:(int)value_;
-
-//- (BOOL)validateAudioFormatID:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
 
 
 
-- (NSNumber*)fileClass;
-- (void)setFileClass:(NSNumber*)value_;
+- (NSString*)audioDescription;
+- (void)setAudioDescription:(NSString*)value_;
 
-- (short)fileClassValue;
-- (void)setFileClassValue:(short)value_;
+//- (BOOL)validateAudioDescription:(id*)value_ error:(NSError**)error_;
 
-//- (BOOL)validateFileClass:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSString*)subtitlesDescription;
-- (void)setSubtitlesDescription:(NSString*)value_;
-
-//- (BOOL)validateSubtitlesDescription:(id*)value_ error:(NSError**)error_;
-
-
-
-
-- (SapphireDirectoryMetaData*)parent;
-- (void)setParent:(SapphireDirectoryMetaData*)value_;
-//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
-
-
-
-- (SapphireMovie*)movie;
-- (void)setMovie:(SapphireMovie*)value_;
-//- (BOOL)validateMovie:(id*)value_ error:(NSError**)error_;
-
-
-
-- (SapphireXMLData*)xmlData;
-- (void)setXmlData:(SapphireXMLData*)value_;
-//- (BOOL)validateXmlData:(id*)value_ error:(NSError**)error_;
-
-
-
-- (SapphireJoinedFile*)joinedFile;
-- (void)setJoinedFile:(SapphireJoinedFile*)value_;
-//- (BOOL)validateJoinedFile:(id*)value_ error:(NSError**)error_;
-
-
-
-- (SapphireJoinedFile*)joinedToFile;
-- (void)setJoinedToFile:(SapphireJoinedFile*)value_;
-//- (BOOL)validateJoinedToFile:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -200,9 +193,39 @@
 
 
 
+- (SapphireJoinedFile*)joinedToFile;
+- (void)setJoinedToFile:(SapphireJoinedFile*)value_;
+//- (BOOL)validateJoinedToFile:(id*)value_ error:(NSError**)error_;
+
+
+
+- (SapphireJoinedFile*)joinedFile;
+- (void)setJoinedFile:(SapphireJoinedFile*)value_;
+//- (BOOL)validateJoinedFile:(id*)value_ error:(NSError**)error_;
+
+
+
+- (SapphireXMLData*)xmlData;
+- (void)setXmlData:(SapphireXMLData*)value_;
+//- (BOOL)validateXmlData:(id*)value_ error:(NSError**)error_;
+
+
+
+- (SapphireDirectoryMetaData*)parent;
+- (void)setParent:(SapphireDirectoryMetaData*)value_;
+//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
+
+
+
 - (SapphireEpisode*)tvEpisode;
 - (void)setTvEpisode:(SapphireEpisode*)value_;
 //- (BOOL)validateTvEpisode:(id*)value_ error:(NSError**)error_;
+
+
+
+- (SapphireMovie*)movie;
+- (void)setMovie:(SapphireMovie*)value_;
+//- (BOOL)validateMovie:(id*)value_ error:(NSError**)error_;
 
 
 @end

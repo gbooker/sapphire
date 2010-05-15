@@ -22,6 +22,9 @@
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "SapphireMetaDataSupport.h"
 #import "SapphireApplianceController.h"
+#import "SapphireApplianceController.h"
+#import "SapphireTVTranslation.h"
+#import "SapphireSettings.h"
 
 @implementation SapphireMetaDataUpgrading
 
@@ -96,19 +99,35 @@
 	[self performSelectorOnMainThread:@selector(realSetCurrentFile:) withObject:file waitUntilDone:YES];
 }
 
+- (void)cleanup
+{
+	NSManagedObjectContext *moc = [SapphireMetaDataSupport mainContext];
+	if(!moc)
+		return;
+	
+	[SapphireTVTranslation cancelShowIDFetchInContext:moc];
+	[SapphireMetaDataSupport save:moc];
+	[SapphireMetaDataSupport setMainContext:nil];
+}
+
 - (void)finished
 {
+	[self cleanup];
+	if([SapphireApplianceController upgradeNeeded])
+		[self setCurrentFile:BRLocalizedString(@"Upgrading Needs to Be Run Again; Press Menu to Go Back and Run", @"Upgrade progress indicator stating Sapphire is done upgrading and user should press menu")];
+	else
+		[self setCurrentFile:BRLocalizedString(@"Upgrading Complete; Press Menu to Go Back", @"Upgrade progress indicator stating Sapphire is done upgrading and user should press menu")];
 	if(![SapphireFrontRowCompat usingATypeOfTakeTwo])
 		[[self stack] popController];
 }
 
-- (NSManagedObjectContext *)newV1Moc:(NSString *)storeFile
+- (NSManagedObjectContext *)newMoc:(NSString *)storeFile withVersion:(NSString *)version
 {
 	NSURL *storeUrl = [NSURL fileURLWithPath:storeFile];
 	NSError *error = nil;
 	
 	NSString *mopath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Sapphire" ofType:@"momd"];
-	mopath = [mopath stringByAppendingPathComponent:@"SapphireV1.mom"];
+	mopath = [mopath stringByAppendingPathComponent:[NSString stringWithFormat:@"Sapphire%@.mom", version]];
 	NSURL *mourl = [NSURL fileURLWithPath:mopath];
 	NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mourl];
 	
@@ -133,18 +152,47 @@
 	return retmoc;	
 }
 
+- (void)doTVTranslations:(NSManagedObjectContext *)moc
+{
+	SapphireURLLoader *loader = [SapphireApplianceController urlLoader];
+	[loader addDelegate:self];
+	remainingURLs = [loader loadingURLCount];
+	[SapphireTVTranslation fetchShowIDsInContext:moc];
+	if(remainingURLs)
+		[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Upgrading Requires Network Queries %d left", @"Upgrade progress indicator stating Sapphire is upgrading with network info.  Parameter is number of URLs remaining"), remainingURLs]];
+	else
+		[self finished];
+}
+
 - (void)doUpgrade:(id)obj
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *v1StoreFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireData"];
+	NSString *v3StoreFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV3"];
 	NSFileManager *fm = [NSFileManager defaultManager];
+	
+	BOOL v3Existed = [fm fileExistsAtPath:v3StoreFile];
+	NSString *v1StoreFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireData"];
+	NSString *v2StoreFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV2"];
 	NSManagedObjectContext *moc = [SapphireApplianceController newManagedObjectContextForFile:nil withOptions:nil];
+	SapphireSettings *settings = [[SapphireSettings alloc] initWithScene:[self scene] settingsPath:[applicationSupportDir() stringByAppendingPathComponent:@"settings.plist"] context:moc];
 	@try {
-		if([fm fileExistsAtPath:v1StoreFile])
+		if(v3Existed)
 		{
-			NSManagedObjectContext *oldContext = [self newV1Moc:v1StoreFile];
+			//Likely the TV Translations failed due to network; try again
+			//Will be done later
+		}
+		else if([fm fileExistsAtPath:v2StoreFile])
+		{
+			NSManagedObjectContext *oldContext = [self newMoc:v2StoreFile withVersion:@"V2"];
 			if(oldContext != nil)
-				[SapphireMetaDataSupport importV1Store:oldContext intoContext:moc withDisplay:self];
+				[SapphireMetaDataSupport importVersion:2 store:oldContext intoContext:moc withDisplay:self];
+			[oldContext release];
+		}
+		else if([fm fileExistsAtPath:v1StoreFile])
+		{
+			NSManagedObjectContext *oldContext = [self newMoc:v1StoreFile withVersion:@"V1"];
+			if(oldContext != nil)
+				[SapphireMetaDataSupport importVersion:1 store:oldContext intoContext:moc withDisplay:self];
 			[oldContext release];
 		}
 		else
@@ -154,15 +202,14 @@
 		}
 		[SapphireMetaDataSupport setMainContext:moc];
 		[SapphireMetaDataSupport save:moc];
-		[SapphireMetaDataSupport setMainContext:nil];
-		[self setCurrentFile:BRLocalizedString(@"Upgrading Complete; Press Menu to Go Back", @"Upgrade progress indicator stating Sapphire is done upgrading and user should press menu")];
-		
+		[self performSelectorOnMainThread:@selector(doTVTranslations:) withObject:moc waitUntilDone:NO];
 	}
 	@catch (NSException * e) {
 		[SapphireApplianceController logException:e];
 	}
 	[moc release];
-	[self performSelectorOnMainThread:@selector(finished) withObject:nil waitUntilDone:NO];
+	[SapphireSettings relinquishSettings];
+	[settings release];
 	[pool drain];
 }
 
@@ -171,6 +218,32 @@
 	[super wasPushed];
 	[SapphireFrontRowCompat setSpinner:spinner toSpin:YES];
 	[NSThread detachNewThreadSelector:@selector(doUpgrade:) toTarget:self withObject:nil];
+}
+
+- (void)wasPopped
+{
+	[super wasPopped];
+	[self cleanup];
+}
+
+- (void)urlLoaderFinisedResource:(SapphireURLLoader *)loader
+{
+	remainingURLs--;
+	if(!remainingURLs)
+	{
+		[self performSelector:@selector(finished) withObject:nil afterDelay:0.0];
+	}
+	else
+		[self setCurrentFile:[NSString stringWithFormat:BRLocalizedString(@"Upgrading Requires Network Queries %d left", @"Upgrade progress indicator stating Sapphire is upgrading with network info.  Parameter is number of URLs remaining"), remainingURLs]];
+}
+
+- (void)urlLoaderCancelledResource:(SapphireURLLoader *)loader
+{
+}
+
+- (void)urlLoaderAddedResource:(SapphireURLLoader *)loader
+{
+	remainingURLs++;
 }
 
 @end

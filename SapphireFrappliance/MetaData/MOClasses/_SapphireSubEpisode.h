@@ -11,20 +11,10 @@
 @interface _SapphireSubEpisode : NSManagedObject {}
 
 
-- (NSDate*)airDate;
-- (void)setAirDate:(NSDate*)value_;
+- (NSString*)episodeTitle;
+- (void)setEpisodeTitle:(NSString*)value_;
 
-//- (BOOL)validateAirDate:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSNumber*)episodeNumber;
-- (void)setEpisodeNumber:(NSNumber*)value_;
-
-- (short)episodeNumberValue;
-- (void)setEpisodeNumberValue:(short)value_;
-
-//- (BOOL)validateEpisodeNumber:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateEpisodeTitle:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -38,6 +28,13 @@
 
 
 
+- (NSDate*)airDate;
+- (void)setAirDate:(NSDate*)value_;
+
+//- (BOOL)validateAirDate:(id*)value_ error:(NSError**)error_;
+
+
+
 - (NSString*)episodeDescription;
 - (void)setEpisodeDescription:(NSString*)value_;
 
@@ -45,10 +42,22 @@
 
 
 
-- (NSString*)episodeTitle;
-- (void)setEpisodeTitle:(NSString*)value_;
+- (NSNumber*)episodeNumber;
+- (void)setEpisodeNumber:(NSNumber*)value_;
 
-//- (BOOL)validateEpisodeTitle:(id*)value_ error:(NSError**)error_;
+- (short)episodeNumberValue;
+- (void)setEpisodeNumberValue:(short)value_;
+
+//- (BOOL)validateEpisodeNumber:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
+
 
 
 

@@ -119,8 +119,8 @@
 
 - (NSString *)title
 {
-	NSString *title = [movie attributeForKey:QTMovieDisplayNameAttribute];
-	return title;
+	NSString *fileTitle = [movie attributeForKey:QTMovieDisplayNameAttribute];
+	return fileTitle;
 }
 
 - (NSString *)primaryCollectionTitle

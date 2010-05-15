@@ -11,13 +11,6 @@
 @interface _SapphireCollectionDirectory : NSManagedObject {}
 
 
-- (NSString*)name;
-- (void)setName:(NSString*)value_;
-
-//- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
-
-
-
 
 
 - (NSNumber*)isMount;
@@ -30,13 +23,17 @@
 
 
 
-- (NSNumber*)hidden;
-- (void)setHidden:(NSNumber*)value_;
+- (NSString*)name;
+- (void)setName:(NSString*)value_;
 
-- (BOOL)hiddenValue;
-- (void)setHiddenValue:(BOOL)value_;
+//- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
 
-//- (BOOL)validateHidden:(id*)value_ error:(NSError**)error_;
+
+
+- (NSData*)mountInformationData;
+- (void)setMountInformationData:(NSData*)value_;
+
+//- (BOOL)validateMountInformationData:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -60,10 +57,22 @@
 
 
 
-- (NSData*)mountInformationData;
-- (void)setMountInformationData:(NSData*)value_;
+- (NSNumber*)hidden;
+- (void)setHidden:(NSNumber*)value_;
 
-//- (BOOL)validateMountInformationData:(id*)value_ error:(NSError**)error_;
+- (BOOL)hiddenValue;
+- (void)setHiddenValue:(BOOL)value_;
+
+//- (BOOL)validateHidden:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
+
 
 
 

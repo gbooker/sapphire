@@ -7,24 +7,6 @@
 
 
 
-- (NSString*)IMPLink {
-	[self willAccessValueForKey:@"IMPLink"];
-	NSString *result = [self primitiveValueForKey:@"IMPLink"];
-	[self didAccessValueForKey:@"IMPLink"];
-	return result;
-}
-
-- (void)setIMPLink:(NSString*)value_ {
-	[self willChangeValueForKey:@"IMPLink"];
-	[self setPrimitiveValue:value_ forKey:@"IMPLink"];
-	[self didChangeValueForKey:@"IMPLink"];
-}
-
-
-
-
-
-
 - (NSNumber*)selectedPosterIndex {
 	[self willAccessValueForKey:@"selectedPosterIndex"];
 	NSNumber *result = [self primitiveValueForKey:@"selectedPosterIndex"];
@@ -53,59 +35,6 @@
 
 
 
-
-- (NSString*)name {
-	[self willAccessValueForKey:@"name"];
-	NSString *result = [self primitiveValueForKey:@"name"];
-	[self didAccessValueForKey:@"name"];
-	return result;
-}
-
-- (void)setName:(NSString*)value_ {
-	[self willChangeValueForKey:@"name"];
-	[self setPrimitiveValue:value_ forKey:@"name"];
-	[self didChangeValueForKey:@"name"];
-}
-
-
-
-
-
-
-- (NSString*)IMDBLink {
-	[self willAccessValueForKey:@"IMDBLink"];
-	NSString *result = [self primitiveValueForKey:@"IMDBLink"];
-	[self didAccessValueForKey:@"IMDBLink"];
-	return result;
-}
-
-- (void)setIMDBLink:(NSString*)value_ {
-	[self willChangeValueForKey:@"IMDBLink"];
-	[self setPrimitiveValue:value_ forKey:@"IMDBLink"];
-	[self didChangeValueForKey:@"IMDBLink"];
-}
-
-
-
-
-
-
-	
-
-- (SapphireMovie*)movie {
-	[self willAccessValueForKey:@"movie"];
-	SapphireMovie *result = [self primitiveValueForKey:@"movie"];
-	[self didAccessValueForKey:@"movie"];
-	return result;
-}
-
-- (void)setMovie:(SapphireMovie*)value_ {
-	[self willChangeValueForKey:@"movie"];
-	[self setPrimitiveValue:value_ forKey:@"movie"];
-	[self didChangeValueForKey:@"movie"];
-}
-
-	
 
 	
 - (void)addPosters:(NSSet*)value_ {
@@ -139,6 +68,23 @@
 - (NSMutableSet*)postersSet {
 	return [self mutableSetValueForKey:@"posters"];
 }
+	
+
+	
+
+- (SapphireMovie*)movie {
+	[self willAccessValueForKey:@"movie"];
+	SapphireMovie *result = [self primitiveValueForKey:@"movie"];
+	[self didAccessValueForKey:@"movie"];
+	return result;
+}
+
+- (void)setMovie:(SapphireMovie*)value_ {
+	[self willChangeValueForKey:@"movie"];
+	[self setPrimitiveValue:value_ forKey:@"movie"];
+	[self didChangeValueForKey:@"movie"];
+}
+
 	
 
 @end

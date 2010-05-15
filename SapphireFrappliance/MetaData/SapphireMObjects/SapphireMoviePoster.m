@@ -12,11 +12,14 @@
 	return ret;
 }
 
-+ (SapphireMoviePoster *)upgradeV1MoviePoster:(NSManagedObject *)oldTran toTranslation:(SapphireMovieTranslation *)translation
++ (SapphireMoviePoster *)upgradeMoviePosterVersion:(int)version from:(NSManagedObject *)oldTran toTranslation:(SapphireMovieTranslation *)translation
 {
 	NSManagedObjectContext *newMoc = [translation managedObjectContext];
 	SapphireMoviePoster *ret = [NSEntityDescription insertNewObjectForEntityForName:SapphireMoviePosterName inManagedObjectContext:newMoc];
-	ret.link = [oldTran valueForKey:@"link"];
+	NSString *link = [oldTran valueForKey:@"link"];
+	if(![link hasPrefix:@"http://"])
+		link = [@"http://www.IMPAwards.com" stringByAppendingString:link];
+	ret.link = link;
 	ret.index = [oldTran valueForKey:@"index"];
 	ret.movieTranslation = translation;
 	return ret;

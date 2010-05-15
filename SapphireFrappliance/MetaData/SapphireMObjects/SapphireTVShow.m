@@ -17,31 +17,21 @@ static NSArray *allowedSorts = nil;
 	allowedSorts = [[NSArray alloc] initWithObjects:[SapphireTVEpisodeSorter sharedInstance], [SapphireDateSorter sharedInstance], nil];
 }
 
-+ (SapphireTVShow *)show:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc
++ (SapphireTVShow *)show:(NSString *)show inContext:(NSManagedObjectContext *)moc
 {
 	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"name == %@", show];
 	SapphireTVShow *ret = (SapphireTVShow *)doSingleFetchRequest(SapphireTVShowName, moc, predicate);
 	if(ret != nil)
-	{
-		if(ret.showPath == nil)
-			ret.showPath = showPath;
 		return ret;
-	}
 	
 	ret = [NSEntityDescription insertNewObjectForEntityForName:SapphireTVShowName inManagedObjectContext:moc];
 	ret.name = show;
-	ret.showPath = showPath;
 	return ret;
 }
 
-+ (SapphireTVShow *)showWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc
++ (void)upgradeShowsVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
 {
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"showPath == %@", path];
-	return (SapphireTVShow *)doSingleFetchRequest(SapphireTVShowName, moc, predicate);
-}
-
-+ (void)upgradeV1ShowsFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
-{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *oldShows = doFetchRequest(SapphireTVShowName, oldMoc, nil);
 	NSEnumerator *showEnum = [oldShows objectEnumerator];
 	NSManagedObject *oldShow;
@@ -50,23 +40,23 @@ static NSArray *allowedSorts = nil;
 		SapphireTVShow *newShow = [NSEntityDescription insertNewObjectForEntityForName:SapphireTVShowName inManagedObjectContext:newMoc];
 		newShow.name = [oldShow valueForKey:@"name"];
 		newShow.showDescription = [oldShow valueForKey:@"showDescription"];
-		newShow.showID = [oldShow valueForKey:@"showID"];
-		newShow.showPath = [oldShow valueForKey:@"showPath"];
 		
 		NSEnumerator *translationEnum = [[oldShow valueForKey:@"translations"] objectEnumerator];
 		NSManagedObject *translation;
 		while((translation = [translationEnum nextObject]) != nil)
 		{
-			[SapphireTVTranslation upgradeV1TVTranslation:translation toShow:newShow];
+			[SapphireTVTranslation upgradeTVTranslationVersion:version from:translation toShow:newShow];
 		}
 		
 		NSEnumerator *seasonEnum = [[oldShow valueForKey:@"seasons"] objectEnumerator];
 		NSManagedObject *season;
 		while((season = [seasonEnum nextObject]) != nil)
 		{
-			[SapphireSeason upgradeV1Season:season toShow:newShow]; 
+			[SapphireSeason upgradeSeasonVersion:version from:season toShow:newShow]; 
 		}
 	}
+	[SapphireTVTranslation upgradeShowLessTVTranslationsVersion:version fromContext:oldMoc toContext:newMoc];
+	[pool drain];
 }
 
 + (NSArray *)sortMethods

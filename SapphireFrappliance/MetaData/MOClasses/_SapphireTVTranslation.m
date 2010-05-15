@@ -7,35 +7,17 @@
 
 
 
-- (NSString*)name {
-	[self willAccessValueForKey:@"name"];
-	NSString *result = [self primitiveValueForKey:@"name"];
-	[self didAccessValueForKey:@"name"];
+- (NSString*)episodeListURL {
+	[self willAccessValueForKey:@"episodeListURL"];
+	NSString *result = [self primitiveValueForKey:@"episodeListURL"];
+	[self didAccessValueForKey:@"episodeListURL"];
 	return result;
 }
 
-- (void)setName:(NSString*)value_ {
-	[self willChangeValueForKey:@"name"];
-	[self setPrimitiveValue:value_ forKey:@"name"];
-	[self didChangeValueForKey:@"name"];
-}
-
-
-
-
-
-
-- (NSString*)showPath {
-	[self willAccessValueForKey:@"showPath"];
-	NSString *result = [self primitiveValueForKey:@"showPath"];
-	[self didAccessValueForKey:@"showPath"];
-	return result;
-}
-
-- (void)setShowPath:(NSString*)value_ {
-	[self willChangeValueForKey:@"showPath"];
-	[self setPrimitiveValue:value_ forKey:@"showPath"];
-	[self didChangeValueForKey:@"showPath"];
+- (void)setEpisodeListURL:(NSString*)value_ {
+	[self willChangeValueForKey:@"episodeListURL"];
+	[self setPrimitiveValue:value_ forKey:@"episodeListURL"];
+	[self didChangeValueForKey:@"episodeListURL"];
 }
 
 

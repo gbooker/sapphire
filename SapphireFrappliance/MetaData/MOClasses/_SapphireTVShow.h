@@ -15,23 +15,6 @@
 @interface _SapphireTVShow : SapphireCategoryDirectory {}
 
 
-- (NSString*)showDescription;
-- (void)setShowDescription:(NSString*)value_;
-
-//- (BOOL)validateShowDescription:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSNumber*)showID;
-- (void)setShowID:(NSNumber*)value_;
-
-- (int)showIDValue;
-- (void)setShowIDValue:(int)value_;
-
-//- (BOOL)validateShowID:(id*)value_ error:(NSError**)error_;
-
-
-
 - (NSString*)name;
 - (void)setName:(NSString*)value_;
 
@@ -39,10 +22,10 @@
 
 
 
-- (NSString*)showPath;
-- (void)setShowPath:(NSString*)value_;
+- (NSString*)showDescription;
+- (void)setShowDescription:(NSString*)value_;
 
-//- (BOOL)validateShowPath:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateShowDescription:(id*)value_ error:(NSError**)error_;
 
 
 

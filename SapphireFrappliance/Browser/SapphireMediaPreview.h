@@ -27,9 +27,8 @@ extern NSString *AUDIO2_DESC_LABEL_KEY;
 extern NSString *VIDEO2_DESC_LABEL_KEY;
 extern NSString *SUBTITLE_LABEL_KEY;
 
-@class SapphireMetaData, SapphireDirectoryMetaData;
-@protocol SapphireMetaDataProtocol, SapphireDirectory;
-
+@class SapphireDirectoryMetaData;
+@protocol SapphireDirectory, SapphireMetaData;
 
 /*!
  * @brief A subclass of BRMetadataPreviewController for our own preview
@@ -40,9 +39,9 @@ extern NSString *SUBTITLE_LABEL_KEY;
  */
 @interface SapphireMediaPreview : BRMetadataPreviewController{
 	int		padding[32];	/*!< @brief The classes are of different sizes.  This padding prevents a class compiled with one size to overlap when used with a class of a different size*/	
-	id <SapphireMetaDataProtocol>	meta;			/*!< @brief The metadata to display in the preview*/
-	id <SapphireDirectory>			dirMeta;		/*!< @brief The directory containing the metadata*/
-	BOOL							imageOnly;		/*!< @brief Sets preview to only display the image (like in poster choosers)*/
+	id <SapphireMetaData>	meta;			/*!< @brief The metadata to display in the preview*/
+	id <SapphireDirectory>	dirMeta;		/*!< @brief The directory containing the metadata*/
+	BOOL					imageOnly;		/*!< @brief Sets preview to only display the image (like in poster choosers)*/
 }
 
 /*!
@@ -53,7 +52,7 @@ extern NSString *SUBTITLE_LABEL_KEY;
  * @param newMeta The metadata for the file or directory
  * @param dir The directory which contains this metadata
  */
-- (void)setMetaData:(id <SapphireMetaDataProtocol>)newMeta inMetaData:(id <SapphireDirectory>)dir;
+- (void)setMetaData:(id <SapphireMetaData>)newMeta inMetaData:(id <SapphireDirectory>)dir;
 - (void)setUtilityData:(NSMutableDictionary *)newMeta;
 - (void)setImageOnly:(BOOL)imageOnly;
 

@@ -5,10 +5,10 @@
 @interface SapphireEpisode : _SapphireEpisode {
 	NSArray			*sortedSubEpisodes;
 }
-+ (SapphireEpisode *)episodeFrom:(int)ep to:(int)lastEp inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc;
-+ (SapphireEpisode *)episodeTitle:(NSString *)title inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc;
++ (SapphireEpisode *)episodeFrom:(int)ep to:(int)lastEp inSeason:(int)season forShow:(NSString *)show inContext:(NSManagedObjectContext *)moc;
++ (SapphireEpisode *)episodeTitle:(NSString *)title inSeason:(int)season forShow:(NSString *)show inContext:(NSManagedObjectContext *)moc;
 + (SapphireEpisode *)episodeWithDictionaries:(NSArray *)dictionaries inContext:(NSManagedObjectContext *)moc;
-+ (void)upgradeV1EpisodesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup;
++ (void)upgradeEpisodesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup;
 
 - (int)episodeNumberValue;
 - (int)lastEpisodeNumberValue;
@@ -47,5 +47,4 @@
  * The watched and favorite values for all dirs is cached for speed reasons.  If this value changes, the cache needs to be invalidated
  */
 - (void)clearPredicateCache;
-
 @end

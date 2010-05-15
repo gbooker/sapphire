@@ -9,14 +9,14 @@
 		</RegExp>
 	</NfoUrl>
 	<CreateSearchUrl dest="3">
-		<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/search.php?search=\1&lt;/url&gt;" dest="3">
+		<RegExp input="$$1" output="&lt;url&gt;http://services.tvrage.com/feeds/search.php?show=\1&lt;/url&gt;" dest="3">
 			<expression/>	
 		</RegExp>
 	</CreateSearchUrl>
 	<GetSearchResults dest="3">
 		<RegExp input="$$4" output="&lt;results&gt;\1&lt;/results&gt;" dest="3">	
-			<RegExp input="$$1" output="&lt;entity&gt;&lt;title&gt;\2&lt;/title&gt;&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;&lt;/entity&gt;" dest="4">
-				<expression repeat="yes">&lt;td class='b1'&gt;&lt;img[^&gt;]*&gt; &lt;a[^h]*href='http://www\.tvrage\.com/([^']*)' &gt;([^&lt;]*)&lt;/a&gt;</expression>	
+			<RegExp input="$$1" output="&lt;entity&gt;&lt;title&gt;\2&lt;/title&gt;&lt;url&gt;\3&lt;/url&gt;&lt;id&gt;\1&lt;/id&gt;&lt;/entity&gt;" dest="4">
+				<expression repeat="yes">&lt;showid&gt;([^&gt;]*)&lt;/showid&gt;.*?&lt;name&gt;([^&lt;]*)&lt;/name&gt;.*?&lt;link&gt;([^&lt;]*)&lt;/link&gt;</expression>	
 			</RegExp>
 			<expression noclean="1"/>
 		</RegExp>		
@@ -26,8 +26,14 @@
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
 				<expression>&lt;a name=&apos;summary&apos;&gt;.*?&lt;/a&gt;(.*?) Summary&lt;/h5&gt;</expression>
 			</RegExp>
+			<RegExp input="$$2" output="&lt;id&gt;\1&lt;/id&gt;" dest="5+">
+				<RegExp input="$$1" output="\1" dest="2">
+					<expression>/shows/([0-9]*)/</expression>
+				</RegExp>
+				<expression/>
+			</RegExp>
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">				
-				<expression> &lt;td&gt;&lt;table.*?\n&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;br&gt;.*?\n&lt;/script&gt;(?:&lt;div [^&gt;]*id=&apos;sft_1&apos;&gt;)?(.*?)(?:\n&lt;br&gt;\n&lt;a onclick=.*?|\n)&lt;br&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;</expression>
+				<expression>&lt;/table&gt;&lt;table.*?\n.*?\n&lt;/script&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;(?:&lt;div [^&gt;]*id=&apos;sft_1&apos;&gt;)?(.*?)(?:\n&lt;br&gt;\n&lt;a onclick=.*?|\n)&lt;br&gt;&amp;nbsp;?&lt;/td&gt;&lt;/tr&gt;</expression>
 			</RegExp>						
 			<RegExp input="$$1" output="&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;" dest="5+">
 				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes cast\)&lt;/td&gt;</expression>
@@ -53,19 +59,19 @@
 				</RegExp>		
 				<expression repeat="yes">\| ([^\|]*)</expression>
 			</RegExp>
-			<RegExp input="$$1" output="&lt;episodeguide&gt;&lt;url&gt;http://www.tvrage.com\1all&lt;/url&gt;&lt;/episodeguide&gt;" dest="5+">
-				<expression trim="1">href='([^']*)'&gt;Episode List&lt;/a&gt;&lt;br&gt;</expression>
+			<RegExp output="&lt;episodeguide&gt;&lt;url&gt;http://services.tvrage.com/feeds/episode_list.php?sid=$$2&lt;/url&gt;&lt;/episodeguide&gt;" dest="5+">
+				<expression />
 			</RegExp>																 
 			<expression noclean="1"/>
 		</RegExp>
 	</GetDetails>		
 	<GetEpisodeList dest="3">
 		<RegExp input="$$5" output="&lt;episodeguide&gt;\1&lt;/episodeguide&gt;" dest="3">
-			<RegExp input="$$1" output="&lt;episode&gt;&lt;url&gt;http://www.tvrage.com\1&lt;/url&gt;&lt;epnum&gt;\4&lt;/epnum&gt;&lt;season&gt;\3&lt;/season&gt;&lt;title&gt;\5&lt;/title&gt;&lt;absoluteEp&gt;\2&lt;/absoluteEp&gt;&lt;/episode&gt;" dest="5+">
-				<expression repeat="yes">class='b1'&gt;&lt;a href='([^']*)'&gt;([0-9]+)&lt;/a&gt;&lt;/td&gt;.*?class='b1'&gt;&lt;a href='[^']*'&gt;([0-9]+)+x([0-9]+)&lt;/i&gt;&lt;/a&gt;&lt;/td&gt;.*?&gt;([^&lt;]*)&lt;/a&gt; &lt;/td&gt;</expression>
+			<RegExp input="$$1" output="&lt;episode&gt;&lt;url&gt;\4&lt;/url&gt;&lt;title&gt;\6&lt;/title&gt;&lt;epnum&gt;\3&lt;/epnum&gt;&lt;season&gt;\$1&lt;/season&gt;&lt;absoluteEp&gt;\2&lt;/absoluteEp&gt;&lt;id&gt;\5&lt;/id&gt;&lt;/episode&gt;" dest="5+">
+				<expression repeat="yes">(?:&lt;Season no=&quot;([0-9]*)&quot;&gt;.*?)?&lt;epnum&gt;([^&lt;]*)&lt;/epnum&gt;.*?&lt;seasonnum&gt;([^&lt;]*)&lt;/seasonnum&gt;.*?&lt;link&gt;([^&lt;]*/([0-9]*))&lt;/link&gt;&lt;title&gt;([^&lt;]*)&lt;/title&gt;</expression>
 			</RegExp>	
-			<RegExp input="$$1" output="&lt;episode&gt;&lt;url&gt;http://www.tvrage.com\2&lt;/url&gt;&lt;season&gt;\1&lt;/season&gt;&lt;title&gt;\3&lt;/title&gt;&lt;/episode&gt;" dest="5+">
-				<expression repeat="yes">class=&#x27;b1&#x27;&gt;S([0-9]+) - #[0-9]+&lt;/td&gt;.*?class=&#x27;b1&#x27;&gt;&lt;a href=&#x27;([^&#x27;]*)&#x27;&gt;([^&lt;]*)&lt;/a&gt;</expression>
+			<RegExp input="$$1" output="&lt;episode&gt;&lt;url&gt;\2&lt;/url&gt;&lt;season&gt;\1&lt;/season&gt;&lt;title&gt;\4&lt;/title&gt;&lt;id&gt;\3&lt;/id&gt;&lt;/episode&gt;" dest="5+">
+				<expression repeat="yes">&lt;season&gt;([^&lt;]*)&lt;/season&gt;.*?&lt;link&gt;([^&lt;]*/([0-9]*))&lt;/link&gt;&lt;title&gt;([^&lt;]*)&lt;/title&gt;</expression>
 			</RegExp>
 			<expression noclean="1"/>			
 		</RegExp>				

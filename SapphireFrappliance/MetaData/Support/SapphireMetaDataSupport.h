@@ -91,13 +91,14 @@ NSString *searchCoverArtExtForPath(NSString *path);
 + (BOOL)wasLocked;
 
 /*!
- * @brief Import the old plist into the context
+ * @brief Import an old context into the context
  *
- * @param v1Context The context to use for old objects
+ * @param version The version of the context
+ * @param oldContext The context to use for old objects
  * @param context The context to use for new objects
  * @param display The display for UI feedback
  */
-+ (void)importV1Store:(NSManagedObjectContext *)v1Context intoContext:(NSManagedObjectContext *)context withDisplay:(SapphireMetaDataUpgrading *)display;
++ (void)importVersion:(int)version store:(NSManagedObjectContext *)oldContext intoContext:(NSManagedObjectContext *)context withDisplay:(SapphireMetaDataUpgrading *)display;
 
 /*!
  * @brief Import the old plist into the context

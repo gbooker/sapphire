@@ -19,7 +19,6 @@
  */
 
 #import "SapphireDisplayMenu.h"
-#import "SapphireMetaData.h"
 #import "SapphireDirectory.h"
 #import "SapphireSettings.h"
 #import "SapphireFileSorter.h"

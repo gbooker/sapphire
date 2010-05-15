@@ -42,14 +42,14 @@
 #import "SapphireXMLData.h"
 #import "SapphireMovieDirectory.h"
 
-//#define TESTING_UPGRADE
+#define TESTING_UPGRADE
 //#define LISTING_MOVIES
 //#define TESTING_XML_IMPORT
 //#define TESTING_FILE_SCANNING
 //#define TESTING_UPDATED_VALUES
 //#define TESTING_DIRECTORY_RESCAN
 //#define TESTING_AUTO_PRUNING
-#define TESTING_MOVIE_IMPORT
+//#define TESTING_MOVIE_IMPORT
 //#define TESTING_TV_SHOW_IMPORT
 //#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 //#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 	
-	NSString *storeFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV2"];
+	NSString *storeFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV3"];
 	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:storeFile];
 	if(!exists)
 		return 0;

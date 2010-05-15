@@ -7,6 +7,26 @@
 
 
 
+
+
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
+	return result;
+}
+
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
+}
+
+
+
+
+
+
 	
 - (void)addSubEpisodes:(NSSet*)value_ {
 	[self willChangeValueForKey:@"subEpisodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
@@ -39,23 +59,6 @@
 - (NSMutableSet*)subEpisodesSet {
 	return [self mutableSetValueForKey:@"subEpisodes"];
 }
-	
-
-	
-
-- (SapphireTVShow*)tvShow {
-	[self willAccessValueForKey:@"tvShow"];
-	SapphireTVShow *result = [self primitiveValueForKey:@"tvShow"];
-	[self didAccessValueForKey:@"tvShow"];
-	return result;
-}
-
-- (void)setTvShow:(SapphireTVShow*)value_ {
-	[self willChangeValueForKey:@"tvShow"];
-	[self setPrimitiveValue:value_ forKey:@"tvShow"];
-	[self didChangeValueForKey:@"tvShow"];
-}
-
 	
 
 	
@@ -93,6 +96,40 @@
 	
 
 	
+
+- (SapphireSeason*)season {
+	[self willAccessValueForKey:@"season"];
+	SapphireSeason *result = [self primitiveValueForKey:@"season"];
+	[self didAccessValueForKey:@"season"];
+	return result;
+}
+
+- (void)setSeason:(SapphireSeason*)value_ {
+	[self willChangeValueForKey:@"season"];
+	[self setPrimitiveValue:value_ forKey:@"season"];
+	[self didChangeValueForKey:@"season"];
+}
+
+	
+
+	
+
+- (SapphireTVShow*)tvShow {
+	[self willAccessValueForKey:@"tvShow"];
+	SapphireTVShow *result = [self primitiveValueForKey:@"tvShow"];
+	[self didAccessValueForKey:@"tvShow"];
+	return result;
+}
+
+- (void)setTvShow:(SapphireTVShow*)value_ {
+	[self willChangeValueForKey:@"tvShow"];
+	[self setPrimitiveValue:value_ forKey:@"tvShow"];
+	[self didChangeValueForKey:@"tvShow"];
+}
+
+	
+
+	
 - (void)addXml:(NSSet*)value_ {
 	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
 	[[self primitiveValueForKey:@"xml"] unionSet:value_];
@@ -124,23 +161,6 @@
 - (NSMutableSet*)xmlSet {
 	return [self mutableSetValueForKey:@"xml"];
 }
-	
-
-	
-
-- (SapphireSeason*)season {
-	[self willAccessValueForKey:@"season"];
-	SapphireSeason *result = [self primitiveValueForKey:@"season"];
-	[self didAccessValueForKey:@"season"];
-	return result;
-}
-
-- (void)setSeason:(SapphireSeason*)value_ {
-	[self willChangeValueForKey:@"season"];
-	[self setPrimitiveValue:value_ forKey:@"season"];
-	[self didChangeValueForKey:@"season"];
-}
-
 	
 
 @end

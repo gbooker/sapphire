@@ -2,26 +2,19 @@
 // Make changes to SapphireTVTranslation.h instead.
 
 #import <CoreData/CoreData.h>
-
+#import "SapphireTranslation.h"
 
 
 @class SapphireTVShow;
 
 
-@interface _SapphireTVTranslation : NSManagedObject {}
+@interface _SapphireTVTranslation : SapphireTranslation {}
 
 
-- (NSString*)name;
-- (void)setName:(NSString*)value_;
+- (NSString*)episodeListURL;
+- (void)setEpisodeListURL:(NSString*)value_;
 
-//- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSString*)showPath;
-- (void)setShowPath:(NSString*)value_;
-
-//- (BOOL)validateShowPath:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateEpisodeListURL:(id*)value_ error:(NSError**)error_;
 
 
 

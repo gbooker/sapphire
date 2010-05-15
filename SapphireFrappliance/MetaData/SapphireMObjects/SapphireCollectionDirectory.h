@@ -7,7 +7,7 @@
 }
 + (SapphireCollectionDirectory *)collectionAtPath:(NSString *)path mount:(BOOL)isMount skip:(BOOL)skip hidden:(BOOL)hidden manual:(BOOL)manual inContext:(NSManagedObjectContext *)moc;
 + (SapphireCollectionDirectory *)collectionAtPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
-+ (SapphireCollectionDirectory *)upgradeV1CollectionDirectory:(NSManagedObject *)oldCol toContext:(NSManagedObjectContext *)newMoc;
++ (SapphireCollectionDirectory *)upgradeCollectionDirectoryVersion:(int)version from:(NSManagedObject *)oldCol toContext:(NSManagedObjectContext *)newMoc;
 + (NSString *)resolveSymLinksInCollectionPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
 + (NSArray *)availableCollectionDirectoriesInContext:(NSManagedObjectContext *)moc includeHiddenOverSkipped:(BOOL)hidden;
 + (NSArray *)skippedCollectionDirectoriesInContext:(NSManagedObjectContext *)moc;

@@ -41,13 +41,15 @@
 	return [SapphireCollectionDirectory collectionAtPath:path mount:YES skip:NO hidden:NO manual:NO inContext:moc];
 }
 
-+ (SapphireCollectionDirectory *)upgradeV1CollectionDirectory:(NSManagedObject *)oldCol toContext:(NSManagedObjectContext *)newMoc
++ (SapphireCollectionDirectory *)upgradeCollectionDirectoryVersion:(int)version from:(NSManagedObject *)oldCol toContext:(NSManagedObjectContext *)newMoc
 {
 	SapphireCollectionDirectory *ret = [NSEntityDescription insertNewObjectForEntityForName:SapphireCollectionDirectoryName inManagedObjectContext:newMoc];
 	ret.hidden = [oldCol valueForKey:@"hidden"];
 	ret.isMount = [oldCol valueForKey:@"isMount"];
 	ret.manualCollection = [oldCol valueForKey:@"manualCollection"];
 	ret.skip = [oldCol valueForKey:@"skip"];
+	if(version >= 2)
+		ret.name = [oldCol valueForKey:@"name"];
 	
 	return ret;
 }

@@ -29,9 +29,10 @@ static NSArray *allowedSorts = nil;
 	return ret;
 }
 
-+ (NSDictionary *)upgradeV1DirectorsFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
++ (NSDictionary *)upgradeDirectorsVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
 {
 	NSMutableDictionary *lookup = [NSMutableDictionary dictionary];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *oldDirectors = doFetchRequest(SapphireDirectorName, oldMoc, nil);
 	NSEnumerator *directorEnum = [oldDirectors objectEnumerator];
 	NSManagedObject *oldDirector;
@@ -43,6 +44,7 @@ static NSArray *allowedSorts = nil;
 		newDirector.sortMethod = [oldDirector valueForKey:@"sortMethod"];
 		[lookup setObject:newDirector forKey:name];
 	}
+	[pool drain];
 	return lookup;
 }
 

@@ -23,7 +23,6 @@
 #include <sys/mount.h>
 
 #import "SapphireImportHelper.h"
-#import "SapphireMetaData.h"
 #import "SapphireAllImporter.h"
 #import "SapphireFileMetaData.h"
 #import "SapphireMetaDataSupport.h"

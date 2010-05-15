@@ -24,6 +24,7 @@
 
 extern NSString *tvShowTranslationNameKey;
 extern NSString *tvShowTranslationLinkKey;
+extern NSString *tvShowTranslationItemIDKey;
 
 /*!
  * @brief A subclass of SapphireCenteredMenuController to choose a show title

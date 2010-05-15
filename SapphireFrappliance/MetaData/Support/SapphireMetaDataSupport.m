@@ -443,37 +443,46 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	return [[SapphireMetaDataSupport sharedInstance] wasLocked];
 }
 
-+ (void)importV1Store:(NSManagedObjectContext *)v1Context intoContext:(NSManagedObjectContext *)context withDisplay:(SapphireMetaDataUpgrading *)display
++ (void)importVersion:(int)version store:(NSManagedObjectContext *)oldContext intoContext:(NSManagedObjectContext *)context withDisplay:(SapphireMetaDataUpgrading *)display;
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[display setCurrentFile:@"Upgrading Cast"];
-	NSDictionary *castLookup = [SapphireCast upgradeV1CastFromContext:v1Context toContext:context];
+	NSDictionary *castLookup = [SapphireCast upgradeCastVersion:version fromContext:oldContext toContext:context];
 	[display setCurrentFile:@"Upgrading Directors"];
-	NSDictionary *directorLookup = [SapphireDirector upgradeV1DirectorsFromContext:v1Context toContext:context];
+	NSDictionary *directorLookup = [SapphireDirector upgradeDirectorsVersion:version fromContext:oldContext toContext:context];
 	[display setCurrentFile:@"Upgrading Genres"];
-	NSDictionary *genreLookup = [SapphireGenre upgradeV1GenresFromContext:v1Context toContext:context];
+	NSDictionary *genreLookup = [SapphireGenre upgradeGenresVersion:version fromContext:oldContext toContext:context];
 	[display setCurrentFile:@"Upgrading Movies"];
-	NSDictionary *movieLookup = [SapphireMovie upgradeV1MoviesFromContext:v1Context toContext:context withCast:castLookup directors:directorLookup genres:genreLookup];
+	NSDictionary *movieLookup = [SapphireMovie upgradeMoviesVersion:version fromContext:oldContext toContext:context withCast:castLookup directors:directorLookup genres:genreLookup];
 	[display setCurrentFile:@"Upgrading Shows"];
-	[SapphireTVShow upgradeV1ShowsFromContext:v1Context toContext:context];
+	[SapphireTVShow upgradeShowsVersion:version fromContext:oldContext toContext:context];
 	[display setCurrentFile:@"Upgrading Directories"];
-	NSDictionary *dirLookup = [SapphireDirectoryMetaData upgradeV1DirectoriesFromContext:v1Context toContext:context];
+	NSDictionary *dirLookup = [SapphireDirectoryMetaData upgradeDirectoriesVersion:version fromContext:oldContext toContext:context];
 	[display setCurrentFile:@"Upgrading Files"];
-	NSDictionary *fileLookup = [SapphireFileMetaData upgradeV1FilesFromContext:v1Context toContext:context withMovies:movieLookup directories:dirLookup];
+	NSDictionary *fileLookup = [SapphireFileMetaData upgradeFilesVersion:version fromContext:oldContext toContext:context withMovies:movieLookup directories:dirLookup];
 	[display setCurrentFile:@"Upgrading SymLinks"];
-	[SapphireDirectorySymLink upgradeV1DirLinksFromContext:v1Context toContext:context directories:dirLookup];
-	[SapphireFileSymLink upgradeV1FileLinksFromContext:v1Context toContext:context directories:dirLookup file:fileLookup];
+	[SapphireDirectorySymLink upgradeDirLinksVersion:version fromContext:oldContext toContext:context directories:dirLookup];
+	[SapphireFileSymLink upgradeFileLinksVersion:version fromContext:oldContext toContext:context directories:dirLookup file:fileLookup];
 	[display setCurrentFile:@"Upgrading Joined Files"];
-	[SapphireJoinedFile upgradeV1JoinedFileFromContext:v1Context toContext:context file:fileLookup];
+	[SapphireJoinedFile upgradeJoinedFileVersion:version fromContext:oldContext toContext:context file:fileLookup];
 	[display setCurrentFile:@"Upgrading Episodes"];
-	[SapphireEpisode upgradeV1EpisodesFromContext:v1Context toContext:context file:fileLookup];
+	[SapphireEpisode upgradeEpisodesVersion:version fromContext:oldContext toContext:context file:fileLookup];
 	[display setCurrentFile:@"Upgrading XML"];
-	[SapphireXMLData upgradeV1XMLFromContext:v1Context toContext:context file:fileLookup];
+	[SapphireXMLData upgradeXMLVersion:version fromContext:oldContext toContext:context file:fileLookup];
+	[pool drain];
 }
 
 + (void)importPlist:(NSString *)configDir intoContext:(NSManagedObjectContext *)context withDisplay:(SapphireMetaDataUpgrading *)display
 {
 	NSString *currentImportPlist=[configDir stringByAppendingPathComponent:@"metaData.plist"];
-
+	
+	NSMutableDictionary *defer = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+								  [NSMutableDictionary dictionary], @"Join",
+								  [NSMutableDictionary dictionary], @"Cast",
+								  [NSMutableDictionary dictionary], @"Directors",
+								  [NSMutableDictionary dictionary], @"TV Shows",
+								  nil];
+	
 	if([[NSFileManager defaultManager] fileExistsAtPath:currentImportPlist])//import metadata & related info
 	{
 		NSLog(@"Upgrading %@", currentImportPlist);
@@ -482,6 +491,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 									  [NSMutableDictionary dictionary], @"Join",
 									  [NSMutableDictionary dictionary], @"Cast",
 									  [NSMutableDictionary dictionary], @"Directors",
+									  [NSMutableDictionary dictionary], @"TV Shows",
 									  nil];
 		int version = [[dict objectForKey:META_VERSION_KEY] intValue];
 		SapphireDirectoryMetaData *newDir = nil;
@@ -555,10 +565,16 @@ NSString *searchCoverArtExtForPath(NSString *path)
 		while((movie = [movieEnum nextObject]) != nil)
 		{
 			NSDictionary *movieDict = [translations objectForKey:movie];
-			SapphireMovieTranslation *trans = [SapphireMovieTranslation createMovieTranslationWithName:movie inContext:context];
-			trans.IMPLink = [movieDict objectForKey:MOVIE_TRAN_IMP_LINK_KEY];
 			NSString *IMDBLink = [movieDict objectForKey:MOVIE_TRAN_IMDB_LINK_KEY];
-			trans.IMDBLink = IMDBLink;
+			NSString *itemID = [IMDBLink lastPathComponent];
+			if([IMDBLink rangeOfString:@"://"].location == NSNotFound)
+				IMDBLink = [@"http://akas.imdb.com" stringByAppendingString:IMDBLink];
+			if([IMDBLink characterAtIndex:[IMDBLink length]-1] != '/')
+				IMDBLink = [IMDBLink stringByAppendingString:@"/"];
+			SapphireMovieTranslation *trans = [SapphireMovieTranslation createMovieTranslationWithName:movie inContext:context];
+			trans.url = IMDBLink;
+			trans.itemID = itemID;
+			trans.importerID = @"IMDb.com";
 			
 			int imdbNumber = [SapphireMovie imdbNumberFromString:IMDBLink];
 			if(imdbNumber != 0)
@@ -566,6 +582,8 @@ NSString *searchCoverArtExtForPath(NSString *path)
 				SapphireMovie *thisMovie = [SapphireMovie movieWithIMDB:imdbNumber inContext:context];
 				trans.movie = thisMovie;
 			}
+			trans.itemID = [IMDBLink lastPathComponent];
+			trans.importerID = @"IMDb.com";
 			
 			NSArray *posters = [movieDict objectForKey:MOVIE_TRAN_IMP_POSTERS_KEY];
 			NSSet *dupCheck = [NSSet setWithArray:posters];
@@ -589,6 +607,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	{
 		NSLog(@"Upgrading %@", currentImportPlist);
 		[display setCurrentFile:BRLocalizedString(@"Upgrading TV Translations", @"Upgrade progress indicator stating Sapphire is upgrading TV Translations")];
+		NSDictionary *tvShows = [defer objectForKey:@"TV Shows"];
 		NSDictionary *tvTranslations = [NSDictionary dictionaryWithContentsOfFile:currentImportPlist];
 		NSDictionary *translations = [tvTranslations objectForKey:@"Translations"];
 		NSEnumerator *tvEnum = [translations keyEnumerator];
@@ -596,8 +615,8 @@ NSString *searchCoverArtExtForPath(NSString *path)
 		while((tvShow = [tvEnum nextObject]) != nil)
 		{
 			NSString *showPath = [translations objectForKey:tvShow];
-			SapphireTVTranslation *trans = [SapphireTVTranslation createTVTranslationForName:tvShow withPath:showPath inContext:context];
-			SapphireTVShow *show = [SapphireTVShow showWithPath:showPath inContext:context];
+			SapphireTVTranslation *trans = [SapphireTVTranslation createTVTranslationForName:tvShow withURL:[@"http://www.tvrage.com" stringByAppendingString:showPath] itemID:nil importer:@"TV Rage" inContext:context];
+			SapphireTVShow *show = [tvShows objectForKey:showPath];
 			trans.tvShow = show;
 		}
 	}

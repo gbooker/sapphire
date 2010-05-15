@@ -22,24 +22,47 @@
 	return ret;
 }
 
-+ (SapphireMovieTranslation *)upgradeV1MovieTranslation:(NSManagedObject *)oldTran toMovie:(SapphireMovie *)movie
++ (SapphireMovieTranslation *)upgradeMovieTranslationVersion:(int)version from:(NSManagedObject *)oldTran toContext:(NSManagedObjectContext *)newMoc
 {
-	NSManagedObjectContext *newMoc = [movie managedObjectContext];
-	
 	SapphireMovieTranslation *ret = [NSEntityDescription insertNewObjectForEntityForName:SapphireMovieTranslationName inManagedObjectContext:newMoc];
-	ret.IMDBLink = [oldTran valueForKey:@"IMDBLink"];
-	ret.IMPLink = [oldTran valueForKey:@"IMPLink"];
+	NSString *newURL = [oldTran valueForKey:@"IMDBLink"];
+	if([newURL rangeOfString:@"://"].location == NSNotFound)
+		newURL = [@"http://akas.imdb.com" stringByAppendingString:newURL];
+	if([newURL characterAtIndex:[newURL length]-1] != '/')
+		newURL = [newURL stringByAppendingString:@"/"];
+	ret.url = newURL;
+	ret.itemID = [newURL lastPathComponent];
+	ret.importerID = @"IMDb.com";
 	ret.name = [oldTran valueForKey:@"name"];
 	ret.selectedPosterIndex = [oldTran valueForKey:@"selectedPosterIndex"];
-	ret.movie = movie;
 	
 	NSEnumerator *posterEnum = [[oldTran valueForKey:@"posters"] objectEnumerator];
 	NSManagedObject *oldPoster;
 	while((oldPoster = [posterEnum nextObject]) != nil)
 	{
-		[SapphireMoviePoster upgradeV1MoviePoster:oldPoster toTranslation:ret];
+		[SapphireMoviePoster upgradeMoviePosterVersion:version from:oldPoster toTranslation:ret];
 	}
 	return ret;
+}
+
++ (SapphireMovieTranslation *)upgradeMovieTranslationVersion:(int)version from:(NSManagedObject *)oldTran toMovie:(SapphireMovie *)movie
+{
+	NSManagedObjectContext *newMoc = [movie managedObjectContext];
+	
+	SapphireMovieTranslation *ret = [SapphireMovieTranslation upgradeMovieTranslationVersion:version from:oldTran toContext:newMoc];
+	ret.movie = movie;
+	return ret;
+}
+
++ (void)upgradeMovieLessMovieTranslationVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *oldTranslations = doFetchRequest(SapphireMovieTranslationName, oldMoc, [NSPredicate predicateWithFormat:@"movie == nil"]);
+	NSEnumerator *tranEnum = [oldTranslations objectEnumerator];
+	NSManagedObject *oldTran;
+	while((oldTran = [tranEnum nextObject]) != nil)
+		[SapphireMovieTranslation upgradeMovieTranslationVersion:version from:oldTran toContext:newMoc];
+	[pool drain];
 }
 
 - (SapphireMoviePoster *)selectedPoster

@@ -19,7 +19,7 @@
  */
 
 #import <SapphireCompatClasses/SapphireMediaMenuController.h>
-@class SapphireMetaData;
+@protocol SapphireMetaData;
 
 /*!
  * @brief A subclass of SapphireMediaMenuController for marking files
@@ -27,9 +27,9 @@
  * This class is designed to provide the user an interface for changing metadata about a file.  It presents the user with a menu to choose from.
  */
 @interface SapphireMarkMenu : SapphireMediaMenuController {
-	BOOL				isDir;				/*!< @brief YES if the current metadata is a directory*/
-	NSMutableArray		*marks;				/*!< @brief The mark menu items*/
-	SapphireMetaData	*metaData;			/*!< @brief The metadata currently being marked*/
+	BOOL					isDir;				/*!< @brief YES if the current metadata is a directory*/
+	NSMutableArray			*marks;				/*!< @brief The mark menu items*/
+	id <SapphireMetaData>	metaData;			/*!< @brief The metadata currently being marked*/
 }
 
 /*!
@@ -41,6 +41,6 @@
  * @param meta The metadata
  * @return A new mark menu
  */
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireMetaData *)meta;
+- (id) initWithScene: (BRRenderScene *) scene metaData: (id <SapphireMetaData>)meta;
 
 @end

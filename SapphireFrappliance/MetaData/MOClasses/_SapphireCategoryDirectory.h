@@ -19,4 +19,13 @@
 
 
 
+
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
+
+
 @end

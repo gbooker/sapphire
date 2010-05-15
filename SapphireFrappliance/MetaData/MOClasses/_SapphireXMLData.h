@@ -5,72 +5,14 @@
 
 
 
-@class SapphireEpisode;
-
 @class SapphireFileMetaData;
 
 @class SapphireMovie;
 
+@class SapphireEpisode;
+
 
 @interface _SapphireXMLData : NSManagedObject {}
-
-
-- (NSString*)contentDescription;
-- (void)setContentDescription:(NSString*)value_;
-
-//- (BOOL)validateContentDescription:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSNumber*)searchIMDBNumber;
-- (void)setSearchIMDBNumber:(NSNumber*)value_;
-
-- (int)searchIMDBNumberValue;
-- (void)setSearchIMDBNumberValue:(int)value_;
-
-//- (BOOL)validateSearchIMDBNumber:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSString*)summary;
-- (void)setSummary:(NSString*)value_;
-
-//- (BOOL)validateSummary:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSNumber*)absoluteEpisodeNumber;
-- (void)setAbsoluteEpisodeNumber:(NSNumber*)value_;
-
-- (short)absoluteEpisodeNumberValue;
-- (void)setAbsoluteEpisodeNumberValue:(short)value_;
-
-//- (BOOL)validateAbsoluteEpisodeNumber:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSData*)orderedDirectorsData;
-- (void)setOrderedDirectorsData:(NSData*)value_;
-
-//- (BOOL)validateOrderedDirectorsData:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSNumber*)oscarsWon;
-- (void)setOscarsWon:(NSNumber*)value_;
-
-- (short)oscarsWonValue;
-- (void)setOscarsWonValue:(short)value_;
-
-//- (BOOL)validateOscarsWon:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSData*)orderedCastData;
-- (void)setOrderedCastData:(NSData*)value_;
-
-//- (BOOL)validateOrderedCastData:(id*)value_ error:(NSError**)error_;
-
 
 
 - (NSNumber*)lastEpisodeNumber;
@@ -83,13 +25,19 @@
 
 
 
-- (NSNumber*)searchEpisode;
-- (void)setSearchEpisode:(NSNumber*)value_;
+- (NSData*)orderedDirectorsData;
+- (void)setOrderedDirectorsData:(NSData*)value_;
 
-- (short)searchEpisodeValue;
-- (void)setSearchEpisodeValue:(short)value_;
+//- (BOOL)validateOrderedDirectorsData:(id*)value_ error:(NSError**)error_;
 
-//- (BOOL)validateSearchEpisode:(id*)value_ error:(NSError**)error_;
+
+
+
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -97,25 +45,6 @@
 - (void)setOrderedGenresData:(NSData*)value_;
 
 //- (BOOL)validateOrderedGenresData:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-- (NSNumber*)imdbTop250Ranking;
-- (void)setImdbTop250Ranking:(NSNumber*)value_;
-
-- (short)imdbTop250RankingValue;
-- (void)setImdbTop250RankingValue:(short)value_;
-
-//- (BOOL)validateImdbTop250Ranking:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSDate*)modified;
-- (void)setModified:(NSDate*)value_;
-
-//- (BOOL)validateModified:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -129,38 +58,21 @@
 
 
 
-- (NSNumber*)searchSeasonNumber;
-- (void)setSearchSeasonNumber:(NSNumber*)value_;
-
-- (short)searchSeasonNumberValue;
-- (void)setSearchSeasonNumberValue:(short)value_;
-
-//- (BOOL)validateSearchSeasonNumber:(id*)value_ error:(NSError**)error_;
 
 
+- (NSString*)movieSortTitle;
+- (void)setMovieSortTitle:(NSString*)value_;
 
-- (NSString*)searchShowName;
-- (void)setSearchShowName:(NSString*)value_;
-
-//- (BOOL)validateSearchShowName:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateMovieSortTitle:(id*)value_ error:(NSError**)error_;
 
 
 
+- (NSDate*)modified;
+- (void)setModified:(NSDate*)value_;
+
+//- (BOOL)validateModified:(id*)value_ error:(NSError**)error_;
 
 
-
-
-- (NSString*)title;
-- (void)setTitle:(NSString*)value_;
-
-//- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
-
-
-
-- (NSDate*)releaseDate;
-- (void)setReleaseDate:(NSDate*)value_;
-
-//- (BOOL)validateReleaseDate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -171,6 +83,90 @@
 - (void)setEpisodeNumberValue:(short)value_;
 
 //- (BOOL)validateEpisodeNumber:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSNumber*)absoluteEpisodeNumber;
+- (void)setAbsoluteEpisodeNumber:(NSNumber*)value_;
+
+- (short)absoluteEpisodeNumberValue;
+- (void)setAbsoluteEpisodeNumberValue:(short)value_;
+
+//- (BOOL)validateAbsoluteEpisodeNumber:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSNumber*)imdbTop250Ranking;
+- (void)setImdbTop250Ranking:(NSNumber*)value_;
+
+- (short)imdbTop250RankingValue;
+- (void)setImdbTop250RankingValue:(short)value_;
+
+//- (BOOL)validateImdbTop250Ranking:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSString*)contentDescription;
+- (void)setContentDescription:(NSString*)value_;
+
+//- (BOOL)validateContentDescription:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSNumber*)searchEpisode;
+- (void)setSearchEpisode:(NSNumber*)value_;
+
+- (short)searchEpisodeValue;
+- (void)setSearchEpisodeValue:(short)value_;
+
+//- (BOOL)validateSearchEpisode:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSString*)MPAARating;
+- (void)setMPAARating:(NSString*)value_;
+
+//- (BOOL)validateMPAARating:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+- (NSData*)orderedCastData;
+- (void)setOrderedCastData:(NSData*)value_;
+
+//- (BOOL)validateOrderedCastData:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSString*)title;
+- (void)setTitle:(NSString*)value_;
+
+//- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSNumber*)oscarsWon;
+- (void)setOscarsWon:(NSNumber*)value_;
+
+- (short)oscarsWonValue;
+- (void)setOscarsWonValue:(short)value_;
+
+//- (BOOL)validateOscarsWon:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSString*)summary;
+- (void)setSummary:(NSString*)value_;
+
+//- (BOOL)validateSummary:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSDate*)releaseDate;
+- (void)setReleaseDate:(NSDate*)value_;
+
+//- (BOOL)validateReleaseDate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -194,17 +190,31 @@
 
 
 
-- (NSString*)MPAARating;
-- (void)setMPAARating:(NSString*)value_;
+- (NSNumber*)searchIMDBNumber;
+- (void)setSearchIMDBNumber:(NSNumber*)value_;
 
-//- (BOOL)validateMPAARating:(id*)value_ error:(NSError**)error_;
+- (int)searchIMDBNumberValue;
+- (void)setSearchIMDBNumberValue:(int)value_;
+
+//- (BOOL)validateSearchIMDBNumber:(id*)value_ error:(NSError**)error_;
 
 
 
+- (NSNumber*)searchSeasonNumber;
+- (void)setSearchSeasonNumber:(NSNumber*)value_;
 
-- (SapphireEpisode*)episode;
-- (void)setEpisode:(SapphireEpisode*)value_;
-//- (BOOL)validateEpisode:(id*)value_ error:(NSError**)error_;
+- (short)searchSeasonNumberValue;
+- (void)setSearchSeasonNumberValue:(short)value_;
+
+//- (BOOL)validateSearchSeasonNumber:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSString*)searchShowName;
+- (void)setSearchShowName:(NSString*)value_;
+
+//- (BOOL)validateSearchShowName:(id*)value_ error:(NSError**)error_;
+
 
 
 
@@ -217,6 +227,12 @@
 - (SapphireMovie*)movie;
 - (void)setMovie:(SapphireMovie*)value_;
 //- (BOOL)validateMovie:(id*)value_ error:(NSError**)error_;
+
+
+
+- (SapphireEpisode*)episode;
+- (void)setEpisode:(SapphireEpisode*)value_;
+//- (BOOL)validateEpisode:(id*)value_ error:(NSError**)error_;
 
 
 @end

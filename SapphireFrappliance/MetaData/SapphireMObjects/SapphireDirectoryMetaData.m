@@ -17,10 +17,8 @@
 
 + (SapphireDirectoryMetaData *)directoryWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc
 {
-	SapphireMetaData *meta = [SapphireMetaData metaDataWithPath:path inContext:moc];
-	if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
-		return (SapphireDirectoryMetaData *)meta;
-	return nil;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"path == %@", path];
+	return (SapphireDirectoryMetaData *)doSingleFetchRequest(SapphireDirectoryMetaDataName, moc, predicate);
 }
 
 + (SapphireDirectoryMetaData *)internalCreateDirectoryWithPath:(NSString *)path parent:(SapphireDirectoryMetaData *)parent inContext:(NSManagedObjectContext *)moc
@@ -53,9 +51,10 @@
 	return [SapphireDirectoryMetaData internalCreateDirectoryWithPath:path parent:parent inContext:moc];
 }
 
-+ (NSDictionary *)upgradeV1DirectoriesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
++ (NSDictionary *)upgradeDirectoriesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
 {
 	NSMutableDictionary *lookup = [NSMutableDictionary dictionary];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *dirs = doFetchRequest(SapphireDirectoryMetaDataName, oldMoc, nil);
 	NSEnumerator *dirEnum = [dirs objectEnumerator];
 	NSManagedObjectContext *oldDir;
@@ -64,9 +63,9 @@
 		SapphireDirectoryMetaData *newDir = [NSEntityDescription insertNewObjectForEntityForName:SapphireDirectoryMetaDataName inManagedObjectContext:newMoc];
 		NSString *path = [oldDir valueForKey:@"path"];
 		newDir.path = path;
-		NSManagedObject *oldCollection = [newDir valueForKey:@"collectionDirectory"];
+		NSManagedObject *oldCollection = [oldDir valueForKey:@"collectionDirectory"];
 		if(oldCollection != nil)
-			newDir.collectionDirectory = [SapphireCollectionDirectory upgradeV1CollectionDirectory:oldCollection toContext:newMoc];
+			newDir.collectionDirectory = [SapphireCollectionDirectory upgradeCollectionDirectoryVersion:version from:oldCollection toContext:newMoc];
 		[lookup setObject:newDir forKey:path];
 	}
 	dirEnum = [dirs objectEnumerator];
@@ -77,6 +76,7 @@
 		if(parentPath != nil)
 			((SapphireDirectoryMetaData *)[lookup objectForKey:path]).parent = [lookup objectForKey:parentPath];
 	}
+	[pool drain];
 	return lookup;
 }
 

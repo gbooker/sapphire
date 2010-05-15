@@ -81,6 +81,7 @@
 
 - (void)tellInformers
 {
+	loaded = YES;
 	@try {
 		NSEnumerator *invokeEnum = [informers objectEnumerator];
 		NSInvocation *invoke;
@@ -108,6 +109,19 @@
 {
 }
 
+- (void)loadLoop
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	for(int i=0; i<3; i++)
+	{
+		[self realLoadData];
+		if(![self failed])
+			break;
+	}
+	[self performSelectorOnMainThread:@selector(tellInformers) withObject:nil waitUntilDone:NO];
+	[pool drain];
+}
+
 - (BOOL)loaded
 {
 	return loaded;
@@ -125,7 +139,7 @@
 
 - (void)loadData
 {
-	[NSThread detachNewThreadSelector:@selector(realLoadData) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(loadLoop) toTarget:self withObject:nil];
 }
 
 - (void)addInformer:(NSInvocation *)invoke
@@ -172,12 +186,11 @@
 
 - (void)realLoadData
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSError *error = nil;
 	
 	if(url != nil)
 	{
-		NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
+		NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.0];
 		NSURLResponse *response = nil;
 		NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
 		if(error == nil)
@@ -213,11 +226,8 @@
 			}
 		}
 	}
-	loaded = YES;
 	if(![loadedString length])
 		NSLog(@"Load of %@ failed with error %@!!!", url, error);
-	[self performSelectorOnMainThread:@selector(tellInformers) withObject:nil waitUntilDone:NO];
-	[pool drain];
 }
 
 - (id)loadedObject
@@ -227,7 +237,7 @@
 
 - (BOOL)failed
 {
-	return [loadedString length] != 0;
+	return [loadedString length] == 0;
 }
 
 @end
@@ -247,14 +257,10 @@
 
 - (void)realLoadData
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSError *error = nil;
 	
 	if(url != nil)
 		loadedData = [[NSData alloc] initWithContentsOfURL:url options:NSUncachedRead error:&error];
-	loaded = YES;
-	[self performSelectorOnMainThread:@selector(tellInformers) withObject:nil waitUntilDone:NO];
-	[pool drain];
 }
 
 - (id)loadedObject
@@ -264,7 +270,7 @@
 
 - (BOOL)failed
 {
-	return [loadedData length] != 0;
+	return [loadedData length] == 0;
 }
 
 @end
@@ -453,6 +459,11 @@
 - (void)removeDelegate:(id <SapphireURLLoaderDelegate>)delegate
 {
 	[delegates removeObject:delegate];
+}
+
+- (int)loadingURLCount
+{
+	return workersCurrentlyWorking + [workerQueue count] + [priorityWorkerQueue count];
 }
 
 @end

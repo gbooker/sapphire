@@ -5,9 +5,9 @@
 #import "SapphireCategoryDirectory.h"
 
 
-@class SapphireEpisode;
-
 @class SapphireTVShow;
+
+@class SapphireEpisode;
 
 
 @interface _SapphireSeason : SapphireCategoryDirectory {}
@@ -31,17 +31,17 @@
 
 
 
+- (SapphireTVShow*)tvShow;
+- (void)setTvShow:(SapphireTVShow*)value_;
+//- (BOOL)validateTvShow:(id*)value_ error:(NSError**)error_;
+
+
+
 - (void)addEpisodes:(NSSet*)value_;
 - (void)removeEpisodes:(NSSet*)value_;
 - (void)addEpisodesObject:(SapphireEpisode*)value_;
 - (void)removeEpisodesObject:(SapphireEpisode*)value_;
 - (NSMutableSet*)episodesSet;
-
-
-
-- (SapphireTVShow*)tvShow;
-- (void)setTvShow:(SapphireTVShow*)value_;
-//- (BOOL)validateTvShow:(id*)value_ error:(NSError**)error_;
 
 
 @end

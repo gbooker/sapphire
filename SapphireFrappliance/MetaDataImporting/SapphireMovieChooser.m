@@ -24,6 +24,7 @@
 
 NSString *movieTranslationNameKey = @"name";
 NSString *movieTranslationLinkKey = @"IMDB Link";
+NSString *movieTranslationIDKey = @"ID";
 
 @interface SapphireMovieChooser ()
 - (void)doMyLayout;

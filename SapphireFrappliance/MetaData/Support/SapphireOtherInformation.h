@@ -1,8 +1,8 @@
 /*
- * SapphireMetaDataUpgrading.h
+ * SapphireOtherInformation.h
  * Sapphire
  *
- * Created by Graham Booker on Jun. 2 2008.
+ * Created by Graham Booker on Jul. 2, 2009.
  * Copyright 2008 Sapphire Development Team and/or www.nanopi.net
  * All rights reserved.
  *
@@ -18,26 +18,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <SapphireCompatClasses/SapphireCenteredMenuController.h>
-#import <SapphireCompatClasses/SapphireLayoutManager.h>
-#import "SapphireURLLoader.h"
-
-@interface SapphireMetaDataUpgrading : SapphireCenteredMenuController <SapphireLayoutDelegate, SapphireURLLoaderDelegate> {
-	BRWaitSpinnerControl	*spinner;			/*!< @brief The spinner*/
-	BRTextControl			*status;			/*!< @brief Status message*/
-	int						remainingURLs;		/*!< @brief URLS remaining to load*/
-}
-
 /*!
- * @brief Load has finished; pop
- */
-- (void)finished;
-
-/*!
- * @brief Sets the current file in the progress
+ * @brief Interface for other information
  *
- * @param file The current file
+ * Since all objects have other information data, the selectors for accessing it
+ * can be made into a category of NSManagedObject.  This is the simpliest method
+ * of inserting the selectors into all objects.
  */
-- (void)setCurrentFile:(NSString *)file;
+@interface NSManagedObject (otherInformation)
+
+- (NSDictionary *)otherInformation;
+- (void)setOtherInformation:(NSDictionary *)info;
+- (void)setOtherObject:(id)obj forKey:(id)key;
+- (void)removeOtherObjectForKey:(id)key;
+- (id)otherInformationForKey:(id)key;
 
 @end

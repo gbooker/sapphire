@@ -23,7 +23,6 @@
 #import	"SapphireSettings.h"
 #import "SapphireMediaPreview.h"
 #import "SapphireMedia.h"
-#import "SapphireMetaData.h"
 #import "SapphireWaitDisplay.h"
 #import "SapphireDirectoryMetaData.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>

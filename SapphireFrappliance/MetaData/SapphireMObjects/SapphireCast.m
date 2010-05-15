@@ -30,9 +30,10 @@ static NSArray *allowedSorts = nil;
 	return ret;
 }
 
-+ (NSDictionary *)upgradeV1CastFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
++ (NSDictionary *)upgradeCastVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc
 {
 	NSMutableDictionary *lookup = [NSMutableDictionary dictionary];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *oldCast = doFetchRequest(SapphireCastName, oldMoc, nil);
 	NSEnumerator *castEnum = [oldCast objectEnumerator];
 	NSManagedObject *oldCastMember;
@@ -45,6 +46,7 @@ static NSArray *allowedSorts = nil;
 		newCastMember.hasMajorRole = [oldCastMember valueForKey:@"hasMajorRole"];
 		[lookup setObject:newCastMember forKey:name];
 	}
+	[pool drain];
 	return lookup;
 }
 

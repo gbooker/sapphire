@@ -10,9 +10,9 @@
 
 @implementation SapphireEpisode
 
-+ (SapphireEpisode *)episodeFrom:(int)ep to:(int)lastEp inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc
++ (SapphireEpisode *)episodeFrom:(int)ep to:(int)lastEp inSeason:(int)season forShow:(NSString *)show inContext:(NSManagedObjectContext *)moc
 {
-	SapphireSeason *tvseason = [SapphireSeason season:season forShow:show withPath:showPath inContext:moc];
+	SapphireSeason *tvseason = [SapphireSeason season:season forShow:show inContext:moc];
 	NSEnumerator *epEnum = [tvseason.episodesSet objectEnumerator];
 	SapphireEpisode *tvep;
 	NSRange range = NSMakeRange(ep, lastEp);
@@ -29,9 +29,9 @@
 	return ret;
 }
 
-+ (SapphireEpisode *)episodeTitle:(NSString *)title inSeason:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc
++ (SapphireEpisode *)episodeTitle:(NSString *)title inSeason:(int)season forShow:(NSString *)show inContext:(NSManagedObjectContext *)moc
 {
-	SapphireSeason *tvseason = [SapphireSeason season:season forShow:show withPath:showPath inContext:moc];
+	SapphireSeason *tvseason = [SapphireSeason season:season forShow:show inContext:moc];
 	NSEnumerator *epEnum = [tvseason.episodesSet objectEnumerator];
 	SapphireEpisode *tvep;
 	while((tvep = [epEnum nextObject]) != nil)
@@ -47,13 +47,15 @@
 	return ret;
 }
 
-+ (void)upgradeV1EpisodesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
++ (void)upgradeEpisodesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *eps = doFetchRequest(SapphireEpisodeName, oldMoc, nil);
 	NSEnumerator *epEnum = [eps objectEnumerator];
 	NSManagedObject *oldEp;
 	while((oldEp = [epEnum nextObject]) != nil)
 	{
+		NSAutoreleasePool *innerPool = [[NSAutoreleasePool alloc] init];
 		NSArray *oldFilePaths = [oldEp valueForKeyPath:@"files.path"];
 		NSEnumerator *pathEnum = [oldFilePaths objectEnumerator];
 		NSString *path;
@@ -65,13 +67,15 @@
 				[newFiles addObject:newFile];
 		}
 		if([newFiles count] == 0)
+		{
+			[innerPool drain];
 			continue;
+		}
 		
 		NSNumber *seasonNum = [oldEp valueForKeyPath:@"season.seasonNumber"];
 		NSString *showName = [oldEp valueForKeyPath:@"tvShow.name"];
-		NSString *showPath = [oldEp valueForKeyPath:@"tvShow.showPath"];
 		
-		SapphireSeason *season = [SapphireSeason season:[seasonNum intValue] forShow:showName withPath:showPath inContext:newMoc];
+		SapphireSeason *season = [SapphireSeason season:[seasonNum intValue] forShow:showName inContext:newMoc];
 		if(season == nil)
 			continue;
 		
@@ -83,8 +87,10 @@
 		NSEnumerator *subEpEnum = [[oldEp valueForKey:@"subEpisodes"] objectEnumerator];
 		NSManagedObject *subEp;
 		while((subEp = [subEpEnum nextObject]) != nil)
-			[SapphireSubEpisode upgradeV1SubEpisode:subEp toContext:newMoc inEpisode:newEp];
+			[SapphireSubEpisode upgradeSubEpisodeVersion:version from:subEp toContext:newMoc inEpisode:newEp];
+		[innerPool drain];
 	}
+	[pool drain];
 }
 
 - (void) dealloc
@@ -137,15 +143,14 @@
 	if(lastEp == 0)
 		lastEp = ep;
 	
-	NSString *showPath = [firstEpDict objectForKey:META_SHOW_IDENTIFIER_KEY];
 	SapphireEpisode *ret;
 	if(ep == 0)
 	{
 		NSString *title = [firstEpDict objectForKey:META_TITLE_KEY];
-		ret = [SapphireEpisode episodeTitle:title inSeason:season forShow:show withPath:showPath inContext:moc];
+		ret = [SapphireEpisode episodeTitle:title inSeason:season forShow:show inContext:moc];
 	}
 	else
-		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show withPath:showPath inContext:moc];
+		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show inContext:moc];
 	[ret insertDictionary:firstEpDict];
 	if([dictionaries count] > 1)
 	{
@@ -294,6 +299,8 @@
 	return ret;
 }
 
+//XXX
+/*IS THIS EVER USED?
 - (NSNumber *)watched
 {
 	NSSet *files = self.filesSet;
@@ -316,7 +323,7 @@
 	if([remain count])
 		return [NSNumber numberWithBool:YES];
 	return [NSNumber numberWithBool:NO];
-}
+}*/
 
 /*Overrides*/
 - (void)addSubEpisodes:(NSSet*)value_

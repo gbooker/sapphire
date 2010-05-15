@@ -103,7 +103,10 @@ typedef enum {
 - (id) initWithScene: (BRRenderScene *) scene settingsPath:(NSString *)dictionaryPath context:(NSManagedObjectContext *)context;
 {
 	if(sharedInstance != nil)
-		return sharedInstance;
+	{
+		[self autorelease];
+		return [sharedInstance retain];
+	}
 	
 	self = [super initWithScene:scene];
 	

@@ -56,7 +56,7 @@
 	SapphireSiteTVShowScraper	*siteScraper;
 	SapphireTVTranslation		*translation;
 	NSString					*showName;
-	NSString					*showPath;
+	NSString					*episodeListURL;
 	SapphireTVShow				*show;
 	int							episode;
 	int							secondEp;
@@ -68,7 +68,7 @@
 - (id)initWithFile:(SapphireFileMetaData *)aFile atPath:(NSString *)aPath scraper:(SapphireSiteTVShowScraper *)siteScaper;
 - (void)setTranslation:(SapphireTVTranslation *)translation;
 - (void)setShowName:(NSString *)showName;
-- (void)setShowPath:(NSString *)showPath;
+- (void)setEpisodeListURL:(NSString *)episodeListURL;
 - (void)setShow:(SapphireTVShow *)show;
 - (void)setEpisodeTitle:(NSString *)episodeTitle;
 - (void)setEpisodeInfoArray:(NSMutableArray *)episodeInfoArray;
@@ -92,7 +92,7 @@
 	[siteScraper release];
 	[translation release];
 	[showName release];
-	[showPath release];
+	[episodeListURL release];
 	[show release];
 	[episodeTitle release];
 	[episodeInfoArray release];
@@ -103,9 +103,9 @@
 {
 	[translation autorelease];
 	translation = [aTranslation retain];
-	NSString *aShowPath = aTranslation.showPath;
-	if([aShowPath length])
-		[self setShowPath:aShowPath];
+	NSString *epListURL = translation.episodeListURL;
+	if([epListURL length])
+		[self setEpisodeListURL:epListURL];
 }
 
 - (void)setShowName:(NSString *)aShowName
@@ -114,10 +114,10 @@
 	showName = [aShowName retain];
 }
 
-- (void)setShowPath:(NSString *)aShowPath
+- (void)setEpisodeListURL:(NSString *)aEpisodeListURL
 {
-	[showPath autorelease];
-	showPath = [aShowPath retain];
+	[episodeListURL autorelease];
+	episodeListURL = [aEpisodeListURL retain];
 }
 
 - (void)setShow:(SapphireTVShow *)aShow
@@ -252,16 +252,13 @@
 	{
 		NSString *title = stringValueOfChild(entity, @"title");
 		NSString *url = stringValueOfChild(entity, @"url");
-		if([url length])
-		{
-			NSURL *trimmer = [NSURL URLWithString:url];
-			url = [trimmer path];
-		}
+		NSString *itemID = stringValueOfChild(entity, @"id");
 		if([title length] && [url length])
 			[shows addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-							   title, tvShowTranslationNameKey,
-							   url, tvShowTranslationLinkKey,
-							   nil]];
+							  title, tvShowTranslationNameKey,
+							  url, tvShowTranslationLinkKey,
+							  itemID, tvShowTranslationItemIDKey,
+							  nil]];
 	}
 	
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Found shows: %@", shows);
@@ -276,8 +273,9 @@
 	{
 		SapphireFileMetaData *metaData = state->file;
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
-		NSString *showPath = [[shows objectAtIndex:0] objectForKey:tvShowTranslationLinkKey];
-		SapphireTVTranslation *tran = [SapphireTVTranslation createTVTranslationForName:state->lookupName withPath:showPath inContext:moc];
+		NSString *showURL = [[shows objectAtIndex:0] objectForKey:tvShowTranslationLinkKey];
+		NSString *showID = [[shows objectAtIndex:0] objectForKey:tvShowTranslationItemIDKey];
+		SapphireTVTranslation *tran = [SapphireTVTranslation createTVTranslationForName:state->lookupName withURL:showURL itemID:showID importer:[[state->siteScraper scraper] name] inContext:moc];
 		[state setTranslation:tran];
 		[self getTVShowResultsForState:state];
 	}
@@ -303,6 +301,8 @@
 		fetchShowData = YES;
 	else if(![[show showDescription] length])
 		fetchShowData = YES;
+	else if(![state->episodeListURL length])
+		fetchShowData = YES;
 	
 	if(!fetchShowData)
 	{
@@ -314,8 +314,8 @@
 	{
 		SapphireSiteTVShowScraper *siteScraper = state->siteScraper;
 		[siteScraper setObject:state];
-		NSString *fullURL = [@"http://www.tvrage.com" stringByAppendingString:state->showPath];
-		[siteScraper getShowDetailsAtURL:fullURL forShowID:state->showPath];
+		NSString *fullURL = state->translation.url;
+		[siteScraper getShowDetailsAtURL:fullURL forShowID:state->translation.itemID];
 	}
 	else
 	{
@@ -357,7 +357,7 @@
 				[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 				return;
 			}
-			show = [SapphireTVShow show:title withPath:state->showPath inContext:moc];
+			show = [SapphireTVShow show:title inContext:moc];
 			tran.tvShow = show;
 		}
 		[state setShow:show];
@@ -370,6 +370,17 @@
 	if([plot length])
 		show.showDescription = plot;
 	
+	if(![state->episodeListURL length])
+	{
+		NSArray *episodeListURLs = arrayStringValueOfXPath(root, @"episodeguide/url");
+		if([episodeListURLs count])
+		{
+			NSString *episodeListURL = [episodeListURLs objectAtIndex:0];
+			[state setEpisodeListURL:episodeListURL];
+			[state->translation setEpisodeListURL:episodeListURL];
+		}
+	}
+	
 	[self getTVShowEpisodeListForState:state];
 }
 
@@ -377,7 +388,7 @@
 {
 	SapphireSiteTVShowScraper *siteScraper = state->siteScraper;
 	[siteScraper setObject:state];
-	NSString *fullURL = [NSString stringWithFormat:@"http://www.tvrage.com%@/episode_list/all", state->showPath];
+	NSString *fullURL = state->episodeListURL;
 	[siteScraper getEpisodeListAtURL:fullURL];
 }
 
@@ -478,7 +489,6 @@
 
 	if(epTitle != nil)
 		[epDict setObject:epTitle forKey:META_TITLE_KEY];
-	[epDict setObject:tvState->showPath forKey:META_SHOW_IDENTIFIER_KEY];
 	NSString *summary = stringValueOfChild(root, @"plot");
 	if(summary != nil)
 		[epDict setObject:summary forKey:META_DESCRIPTION_KEY];
@@ -560,7 +570,7 @@
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
 
-- (NSString *)showPathFromNfoFilePath:(NSString *)filepath
+- (NSString *)showURLFromNfoFilePath:(NSString *)filepath withID:(NSString * *)showID;
 {
 	NSString *nfoContent = [NSString stringWithContentsOfFile:filepath];
 
@@ -582,11 +592,8 @@
 	if(![urlStr length])
 		return nil;
 	
-	NSURL *url = [NSURL URLWithString:urlStr];
-	if(!url)
-		return nil;
-	
-	return [url path];
+	*showID = stringValueOfChild(root, @"id");
+	return urlStr;
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
@@ -708,18 +715,20 @@
 		if([scanner scanUpToString:@"." intoString:&epTitle])
 			[state setEpisodeTitle:epTitle];
 	}
-	if([tran showPath] == nil)
+	if([tran itemID] == nil)
 	{
 		BOOL nfoPathIsDir = NO;
 		NSString *nfoFilePath=[extLessPath stringByAppendingPathExtension:@"nfo"];
-		NSString *showPath = nil;
+		NSString *showURL = nil;
+		NSString *showID = nil;
 		if([[NSFileManager defaultManager] fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] && !nfoPathIsDir)
-			showPath = [self showPathFromNfoFilePath:nfoFilePath];
+			showURL = [self showURLFromNfoFilePath:nfoFilePath withID:&showID];
 		
-		if([showPath length])
+		if([showURL length])
 		{
-			[tran setShowPath:showPath];
-			[state setShowPath:showPath];
+			[tran setUrl:showURL];
+			if([showID length])
+				[tran setItemID:showID];
 		}
 		else
 		{
@@ -781,7 +790,7 @@
 	/*Check for a match done earlier*/
 	NSManagedObjectContext *moc = [state->file managedObjectContext];
 	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:state->lookupName inContext:moc];
-	if([tran showPath])
+	if([tran itemID])
 	{
 		[state setTranslation:tran];
 		[self getTVShowResultsForState:state];
@@ -811,7 +820,9 @@
 		/*They selected a show, save the translation and write it*/
 		NSDictionary *show = [[chooser shows] objectAtIndex:selection];
 		NSManagedObjectContext *moc = [currentData managedObjectContext];
-		SapphireTVTranslation *tran = [SapphireTVTranslation createTVTranslationForName:state->lookupName withPath:[show objectForKey:tvShowTranslationLinkKey] inContext:moc];
+		NSString *showURL = [show objectForKey:tvShowTranslationLinkKey];
+		NSString *showID = [show objectForKey:tvShowTranslationItemIDKey];
+		SapphireTVTranslation *tran = [SapphireTVTranslation createTVTranslationForName:state->lookupName withURL:showURL itemID:showID importer:[[state->siteScraper scraper] name] inContext:moc];
 		[state setTranslation:tran];
 		[self writeSettingsForContext:moc];
 		[self getTVShowResultsForState:state];

@@ -73,6 +73,7 @@
 - (SapphireMovieTranslation *)createTranslationInContext:(NSManagedObjectContext *)moc
 {
 	SapphireMovieTranslation *tran = [SapphireMovieTranslation createMovieTranslationWithName:lookupName inContext:moc];
+	tran.importerID = [[siteScraper scraper] name];
 	[self setTranslation:tran];
 	return tran;
 }
@@ -145,12 +146,8 @@
 			continue;
 		
 		NSString *title = stringValueOfChild(entity, @"title");
+		NSString *itemID = stringValueOfChild(entity, @"id");
 		NSString *url = stringValueOfChild(entity, @"url");
-		if([url length])
-		{
-			NSURL *trimmer = [NSURL URLWithString:url];
-			url = [trimmer path];
-		}
 		NSString *year = stringValueOfChild(entity, @"year");
 		if([year length])
 			title = [title stringByAppendingFormat:@" (%@)", year];
@@ -159,6 +156,7 @@
 			[movies addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 							   title, movieTranslationNameKey,
 							   url, movieTranslationLinkKey,
+							   itemID, movieTranslationIDKey,
 							   nil]];
 	}
 	
@@ -175,7 +173,7 @@
 		SapphireFileMetaData *metaData = state->file;
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
 		SapphireMovieTranslation *tran = [state createTranslationInContext:moc];
-		[tran setIMDBLink:[[movies objectAtIndex:0] objectForKey:movieTranslationLinkKey]];
+		tran.url = [[movies objectAtIndex:0] objectForKey:movieTranslationLinkKey];
 		[self getMovieResultsForState:state];
 	}
 	else
@@ -195,14 +193,10 @@
 - (void)getMovieResultsForState:(SapphireMovieImportStateData *)state
 {
 	SapphireMovieTranslation *tran = state->translation;
-	NSString *link = [tran IMDBLink];
+	NSString *link = tran.url;
 	SapphireSiteMovieScraper *siteScraper = state->siteScraper;
 	[siteScraper setObject:state];
-	NSString *site = [[[siteScraper scraper] settings] objectForKey:@"url"];
-	NSString *fullURL = [NSString stringWithFormat:@"http://%@%@", site, link];
-	if([fullURL characterAtIndex:[fullURL length]-1] != '/')
-		fullURL = [fullURL stringByAppendingString:@"/"];
-	[siteScraper getMovieDetailsAtURL:fullURL forMovieID:[link lastPathComponent]];
+	[siteScraper getMovieDetailsAtURL:link forMovieID:tran.itemID];
 }
 
 - (void)retrievedMovieDetails:(NSXMLDocument *)details forObject:(id)stateObj
@@ -299,19 +293,29 @@
 		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		return;
 	}
-	[state->translation setMovie:movie];
+	SapphireMovieTranslation *tran = state->translation;
+	[tran setMovie:movie];
 	[metaData setMovie:movie];
 	
-	NSArray *thumbs = [root elementsForName:@"thumb"];
-	NSXMLElement *fanart = [[root elementsForName:@"fanart"] lastObject];
-	if(fanart)
-		thumbs = [thumbs arrayByAddingObjectsFromArray:[fanart elementsForName:@"thumb"]];
-	
-	BOOL canDisplay = [delegate canDisplayChooser];
-	if(canDisplay && [thumbs count])
-		[self getMoviePostersForState:state thumbElements:thumbs];
+	SapphireMoviePoster *poster = [tran selectedPoster];
+	if(poster != nil)
+	{
+		[self saveMoviePosterAtURL:[poster link] forTranslation:tran];
+		[self completeWithState:state withStatus:ImportStateUpdated importComplete:YES];
+	}
 	else
-		[self completeWithState:state withStatus:ImportStateUpdated importComplete:canDisplay];
+	{
+		NSArray *thumbs = [root elementsForName:@"thumb"];
+		NSXMLElement *fanart = [[root elementsForName:@"fanart"] lastObject];
+		if(fanart)
+			thumbs = [thumbs arrayByAddingObjectsFromArray:[fanart elementsForName:@"thumb"]];
+		
+		BOOL canDisplay = [delegate canDisplayChooser];
+		if(canDisplay && [thumbs count])
+			[self getMoviePostersForState:state thumbElements:thumbs];
+		else
+			[self completeWithState:state withStatus:ImportStateUpdated importComplete:canDisplay];
+	}
 }
 
 - (void)getMoviePostersForState:(SapphireMovieImportStateData *)state thumbElements:(NSArray *)thumbElements;
@@ -353,11 +357,6 @@
 		while((poster = [posterEnum nextObject]) != nil)
 		{
 			NSString *link = [poster link];
-			if(![link hasPrefix:@"http://"])
-			{
-				link = [@"http://www.IMPAwards.com" stringByAppendingString:link];
-				[poster setLink:link];
-			}
 			[previews addObject:link];
 		}
 	}
@@ -393,7 +392,7 @@
 {
 	NSString *coverart = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:@"@MOVIES"];
 	[[NSFileManager defaultManager] constructPath:coverart];
-	int imdbNumber = [SapphireMovie imdbNumberFromString:[tran IMDBLink]];
+	int imdbNumber = [SapphireMovie imdbNumberFromString:tran.itemID];
 	coverart = [coverart stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.jpg", imdbNumber]];
 	[[SapphireApplianceController urlLoader] saveDataAtURL:url toFile:coverart];	
 }
@@ -410,7 +409,7 @@
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
 
-- (NSString *)moviePathFromNfoFilePath:(NSString *)filepath
+- (NSString *)movieURLFromNfoFilePath:(NSString *)filepath withID:(NSString * *)movieID
 {
 	NSString *nfoContent = [NSString stringWithContentsOfFile:filepath];
 	
@@ -429,14 +428,8 @@
 	
 	NSXMLElement *root = [doc rootElement];
 	NSString *urlStr = stringValueOfChild(root, @"url");
-	if(![urlStr length])
-		return nil;
-	
-	NSURL *url = [NSURL URLWithString:urlStr];
-	if(!url)
-		return nil;
-	
-	return [url path];
+	*movieID = stringValueOfChild(root, @"id");
+	return urlStr;
 }
 
 /*!
@@ -504,27 +497,33 @@
 	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie \"%@\"", state->lookupName);
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
+	if(tran == nil)
+		//Check for translation with full title
+		tran = [SapphireMovieTranslation movieTranslationWithName:[titleYearScanner string] inContext:moc];
 	[state setTranslation:tran];
 	int searchIMDBNumber = [metaData searchIMDBNumber];
 	if(searchIMDBNumber > 0)
 	{
 		if(!tran)
 			tran = [state createTranslationInContext:moc];
-		[tran setIMDBLink:[NSString stringWithFormat:@"/title/tt%08d", searchIMDBNumber]];
+		tran.url = [NSString stringWithFormat:@"http://%@/title/tt%d/", [[[siteScraper scraper] settings] objectForKey:@"url"], searchIMDBNumber];
 	}
-	if([tran IMDBLink] == nil)
+	if(tran.url == nil)
 	{
 		BOOL nfoPathIsDir = NO;
 		NSString *nfoFilePath=[extLessPath stringByAppendingPathExtension:@"nfo"];
-		NSString *moviePath = nil;
+		NSString *movieURL = nil;
+		NSString *movieID = nil;
 		if([[NSFileManager defaultManager] fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] && !nfoPathIsDir)
-			moviePath = [self moviePathFromNfoFilePath:nfoFilePath];
+			movieURL = [self movieURLFromNfoFilePath:nfoFilePath withID:&movieID];
 		
-		if([moviePath length])
+		if([movieURL length])
 		{
 			if(tran == nil)
 				tran = [state createTranslationInContext:moc];
-			[tran setIMDBLink:moviePath];
+			tran.url = movieURL;
+			if([movieID length])
+				[tran setItemID:movieID];
 		}
 		else
 		{
@@ -584,7 +583,7 @@
 		SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 		if(tran)
 			[state setTranslation:tran];
-		if([tran IMDBLink])
+		if(tran.url)
 		{
 			[self getMovieResultsForState:state];
 			return NO;
@@ -629,8 +628,8 @@
 			/*They selected a movie title, save the translation and write it*/
 			NSDictionary *movie = [[movieChooser movies] objectAtIndex:selection];
 			SapphireMovieTranslation *tran = [state createTranslationInContext:moc];
-			/* Add IMDB Key */
-			[tran setIMDBLink:[movie objectForKey:movieTranslationLinkKey]];
+			tran.url = [movie objectForKey:movieTranslationLinkKey];
+			tran.itemID = [movie objectForKey:movieTranslationIDKey];
 			/*We can resume now*/
 			[self getMovieResultsForState:state];
 		}

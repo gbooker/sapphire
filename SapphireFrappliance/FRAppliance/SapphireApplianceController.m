@@ -42,6 +42,8 @@
 #import "SapphireTVDirectory.h"
 #import "SapphireCustomVirtualDirectoryImporter.h"
 #import "SapphireURLLoader.h"
+#import "CoreDataSupportFunctions.h"
+#import "SapphireTVTranslation.h"
 
 #import "NSFileManager-Extensions.h"
 
@@ -100,7 +102,7 @@ void overrideApplicationSupportdir(NSString *override)
 	skipJoin = [[NSPredicate predicateWithFormat:@"joinedToFile == nil"] retain];
 	unwatched = [[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"watched == NO"], skipJoin, nil]] retain];
 	favorite = [[NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"favorite == YES"], skipJoin, nil]] retain];
-//	NSPredicate *topShows = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"top == YES"], skipJoin, nil]];
+	//	NSPredicate *topShows = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:[NSPredicate predicateWithFormat:@"top == YES"], skipJoin, nil]];
 	predicates = [[NSArray alloc] initWithObjects:unwatched, favorite/*, topShows*/, nil];
 	strictUnwatched = [[NSPredicate predicateWithFormat:@"watched == NO"] retain];
 	strictFavorite = [[NSPredicate predicateWithFormat:@"favorite == YES"] retain];
@@ -297,27 +299,37 @@ BRMusicNowPlayingController *musicController = nil;
 + (BOOL)upgradeNeeded
 {
 	NSFileManager *fm = [NSFileManager defaultManager];
-	NSString *storeFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV2"];
+	NSString *storeFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV3"];
 	BOOL exists = [fm fileExistsAtPath:storeFile];
-	BOOL oldExists = [fm fileExistsAtPath:[applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireData"]];
+	BOOL oldExists = [fm fileExistsAtPath:[applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV2"]];
+	oldExists |= [fm fileExistsAtPath:[applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireData"]];
 	oldExists |= [fm fileExistsAtPath:[applicationSupportDir() stringByAppendingPathComponent:@"metaData.plist"]];
 	oldExists |= [fm fileExistsAtPath:[applicationSupportDir() stringByAppendingPathComponent:@"movieData.plist"]];
 	oldExists |= [fm fileExistsAtPath:[applicationSupportDir() stringByAppendingPathComponent:@"tvdata.plist"]];
-	return !exists && oldExists;
+	BOOL needNewMeta = !exists && oldExists;
+	if(needNewMeta)
+		return YES;
+	else
+	{
+		NSManagedObjectContext *moc = [SapphireApplianceController newManagedObjectContextForFile:nil withOptions:nil];
+		BOOL ret = [SapphireTVTranslation needsFetchShowIDsInContext:moc];
+		[moc release];
+		return ret;
+	}
 }
 
 
 + (NSManagedObjectContext *)newManagedObjectContextForFile:(NSString *)storeFile withOptions:(NSDictionary *)storeOptions
 {
 	if(storeFile == nil)
-		storeFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV2"];
+		storeFile = [applicationSupportDir() stringByAppendingPathComponent:@"metaData.sapphireDataV3"];
 	NSFileManager *fm = [NSFileManager defaultManager];
 	[fm constructPath:[storeFile stringByDeletingLastPathComponent]];
 	NSURL *storeUrl = [NSURL fileURLWithPath:storeFile];
 	NSError *error = nil;
 	
 	NSString *mopath = [[NSBundle bundleForClass:[self class]] pathForResource:@"Sapphire" ofType:@"momd"];
-	mopath = [mopath stringByAppendingPathComponent:@"SapphireV2.mom"];
+	mopath = [mopath stringByAppendingPathComponent:@"SapphireV3.mom"];
 	NSURL *mourl = [NSURL fileURLWithPath:mopath];
 	NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mourl];
 	

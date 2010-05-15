@@ -1,1 +1,1 @@
-mogenerator -m Sapphire.xcdatamodeld/SapphireV2.xcdatamodel -M MOClasses -H SapphireMObjects
+mogenerator -m Sapphire.xcdatamodeld/SapphireV3.xcdatamodel -M MOClasses -H SapphireMObjects

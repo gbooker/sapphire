@@ -7,10 +7,8 @@
 
 + (SapphireFileSymLink *)fileLinkWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc
 {
-	SapphireSymLink *link = [SapphireSymLink linkWithPath:path inContext:moc];
-	if([link isKindOfClass:[SapphireFileSymLink class]])
-		return (SapphireFileSymLink *)link;
-	return nil;
+	NSPredicate *predicate = [NSPredicate predicateWithFormat:@"path == %@", path];
+	return (SapphireFileSymLink *)doSingleFetchRequest(SapphireFileSymLinkName, moc, predicate);
 }
 
 + (SapphireFileSymLink *)createFileLinkWithPath:(NSString *)path toPath:(NSString *)target inContext:(NSManagedObjectContext *)moc
@@ -30,8 +28,9 @@
 	return ret;
 }
 
-+ (void)upgradeV1FileLinksFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc directories:(NSDictionary *)dirLookup file:(NSDictionary *)fileLookup
++ (void)upgradeFileLinksVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc directories:(NSDictionary *)dirLookup file:(NSDictionary *)fileLookup
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *links = doFetchRequest(SapphireFileSymLinkName, oldMoc, nil);
 	NSEnumerator *linkEnum = [links objectEnumerator];
 	NSManagedObject *oldLink;
@@ -56,6 +55,7 @@
 		newLink.file = destination;
 		newLink.containingDirectory = containing;
 	}
+	[pool drain];
 }
 
 - (NSNumber *)watched

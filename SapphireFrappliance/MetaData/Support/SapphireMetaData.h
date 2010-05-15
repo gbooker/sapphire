@@ -1,13 +1,9 @@
-#import "_SapphireMetaData.h"
-
-#define SapphireMetaDataName		@"MetaData"
-
 /*!
  * @brief The base metadata protocol
  *
- * This protocol is designed for use with distributed objects.
+ * This protocol is the basic metadata object for previews
  */
-@protocol SapphireMetaDataProtocol <NSObject>
+@protocol SapphireMetaData <NSObject>
 /*!
  * @brief Returns the path of the current metadata
  *
@@ -16,12 +12,6 @@
  * @return The path
  */
 - (NSString *)path;
-
-@end
-
-@interface SapphireMetaData : _SapphireMetaData <SapphireMetaDataProtocol> {}
-+ (SapphireMetaData *)metaDataWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
-- (NSString *)name;
 
 /*!
  * @brief Get the metadata for display
@@ -32,5 +22,12 @@
  * @return The display metadata with the titles as keys
  */
 - (NSMutableDictionary *)getDisplayedMetaDataInOrder:(NSArray * *)order;
+
+/*!
+ * @brief Get the metadata's managed object context
+ *
+ * @return The managed object context
+ */
+- (NSManagedObjectContext *)managedObjectContext;
 
 @end

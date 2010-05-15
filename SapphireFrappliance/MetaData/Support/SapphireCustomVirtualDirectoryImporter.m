@@ -50,8 +50,6 @@
 //Global attributes
 // in minutes (db stores in seconds) (at least the value specified)
 #define DURATION_ELEM					@"duration" 
-// t, f, y, n, 1, 0
-#define WATCHED_ELEM					@"watched" 
 // MPEG-2, NTSC, 720x480 (16:9), or DivX 5 (Perian, 448 x352, Millions, etc. 
 #define VIDEO_DESCRIPTION_ELEM			@"videodescription" 
 // English, Spanish, or MPEG Layer3, Stereo, 44.100 kHz
@@ -188,7 +186,6 @@ typedef enum {
 										[SapphireCommandWrapper commandWithType:CommandTypeAllWrapper formatString:nil], ALL_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeAnyWrapper formatString:nil], ANY_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeNotWrapper formatString:nil], NOT_ELEM,
-										[SapphireCommandWrapper commandWithType:CommandTypeFormatBoolValue formatString:@"watched"], WATCHED_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatFloatValueTimes60 defaultValueCompare:ValueCompareTypeGreaterEqual formatString:@"duration"], DURATION_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"videoDescription"], VIDEO_DESCRIPTION_ELEM,
 										[SapphireCommandWrapper commandWithType:CommandTypeFormatElementString formatString:@"audioDescription"], AUDIO_DESCRIPTION_ELEM,

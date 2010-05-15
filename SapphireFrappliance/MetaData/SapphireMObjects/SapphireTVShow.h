@@ -3,9 +3,8 @@
 #define SapphireTVShowName	@"TVShow"
 
 @interface SapphireTVShow : _SapphireTVShow {}
-+ (SapphireTVShow *)show:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc;
-+ (SapphireTVShow *)showWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
-+ (void)upgradeV1ShowsFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc;
++ (SapphireTVShow *)show:(NSString *)show inContext:(NSManagedObjectContext *)moc;
++ (void)upgradeShowsVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc;
 + (NSArray *)sortMethods;
 
 - (NSComparisonResult)compare:(SapphireTVShow *)other;

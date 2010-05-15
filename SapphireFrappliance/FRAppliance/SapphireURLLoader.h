@@ -106,4 +106,11 @@
  */
 - (void)removeDelegate:(id <SapphireURLLoaderDelegate>)delegate;
 
+/*!
+ * @brief Get loading URLs count
+ *
+ * @return The current number of URLs loading
+ */
+- (int)loadingURLCount;
+
 @end

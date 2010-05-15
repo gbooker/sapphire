@@ -24,6 +24,7 @@
 
 extern NSString *movieTranslationNameKey;
 extern NSString *movieTranslationLinkKey;
+extern NSString *movieTranslationIDKey;
 
 /*!
  * @brief A subclass of SapphireCenteredMenuController to choose a movie title

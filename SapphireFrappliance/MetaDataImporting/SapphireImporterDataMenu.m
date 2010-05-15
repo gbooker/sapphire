@@ -323,8 +323,9 @@
 		[self setFileProgress:BRLocalizedString(@"Initializing...", @"The import is starting")];
 		[SapphireFrontRowCompat renderScene:[self scene]];
 		/*Initialize the import process*/
-		[[SapphireApplianceController urlLoader] addDelegate:self];
-		pendingURLCount = 0;
+		SapphireURLLoader *loader = [SapphireApplianceController urlLoader];
+		[loader addDelegate:self];
+		pendingURLCount = [loader loadingURLCount];
 		canceled = NO;
 		collectionIndex = 0;
 		[collectionDirectories release];

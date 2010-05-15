@@ -11,7 +11,7 @@ extern NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING;
 + (SapphireMovie *)movieWithTitle:(NSString *)title inContext:(NSManagedObjectContext *)moc;
 + (SapphireMovie *)createMovieWithTitle:(NSString *)title inContext:(NSManagedObjectContext *)moc;
 + (int)imdbNumberFromString:(NSString *)imdbStr;
-+ (NSDictionary *)upgradeV1MoviesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withCast:(NSDictionary *)cast directors:(NSDictionary *)directors genres:(NSDictionary *)genres;
++ (NSDictionary *)upgradeMoviesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withCast:(NSDictionary *)cast directors:(NSDictionary *)directors genres:(NSDictionary *)genres;
 
 - (NSArray *)orderedCast;
 - (void)setOrderedCast:(NSArray *)ordered;

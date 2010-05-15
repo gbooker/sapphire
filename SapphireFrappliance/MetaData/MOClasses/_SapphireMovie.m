@@ -7,53 +7,6 @@
 
 
 
-- (NSData*)overriddenGenresData {
-	[self willAccessValueForKey:@"overriddenGenresData"];
-	NSData *result = [self primitiveValueForKey:@"overriddenGenresData"];
-	[self didAccessValueForKey:@"overriddenGenresData"];
-	return result;
-}
-
-- (void)setOverriddenGenresData:(NSData*)value_ {
-	[self willChangeValueForKey:@"overriddenGenresData"];
-	[self setPrimitiveValue:value_ forKey:@"overriddenGenresData"];
-	[self didChangeValueForKey:@"overriddenGenresData"];
-}
-
-
-
-
-
-
-- (NSNumber*)rottonTomatoesRating {
-	[self willAccessValueForKey:@"rottonTomatoesRating"];
-	NSNumber *result = [self primitiveValueForKey:@"rottonTomatoesRating"];
-	[self didAccessValueForKey:@"rottonTomatoesRating"];
-	return result;
-}
-
-- (void)setRottonTomatoesRating:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"rottonTomatoesRating"];
-	[self setPrimitiveValue:value_ forKey:@"rottonTomatoesRating"];
-	[self didChangeValueForKey:@"rottonTomatoesRating"];
-}
-
-
-
-- (short)rottonTomatoesRatingValue {
-	NSNumber *result = [self rottonTomatoesRating];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setRottonTomatoesRatingValue:(short)value_ {
-	[self setRottonTomatoesRating:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-
 - (NSData*)orderedDirectorsData {
 	[self willAccessValueForKey:@"orderedDirectorsData"];
 	NSData *result = [self primitiveValueForKey:@"orderedDirectorsData"];
@@ -65,53 +18,6 @@
 	[self willChangeValueForKey:@"orderedDirectorsData"];
 	[self setPrimitiveValue:value_ forKey:@"orderedDirectorsData"];
 	[self didChangeValueForKey:@"orderedDirectorsData"];
-}
-
-
-
-
-
-
-- (NSNumber*)oscarsWon {
-	[self willAccessValueForKey:@"oscarsWon"];
-	NSNumber *result = [self primitiveValueForKey:@"oscarsWon"];
-	[self didAccessValueForKey:@"oscarsWon"];
-	return result;
-}
-
-- (void)setOscarsWon:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"oscarsWon"];
-	[self setPrimitiveValue:value_ forKey:@"oscarsWon"];
-	[self didChangeValueForKey:@"oscarsWon"];
-}
-
-
-
-- (short)oscarsWonValue {
-	NSNumber *result = [self oscarsWon];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setOscarsWonValue:(short)value_ {
-	[self setOscarsWon:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-
-- (NSData*)orderedCastData {
-	[self willAccessValueForKey:@"orderedCastData"];
-	NSData *result = [self primitiveValueForKey:@"orderedCastData"];
-	[self didAccessValueForKey:@"orderedCastData"];
-	return result;
-}
-
-- (void)setOrderedCastData:(NSData*)value_ {
-	[self willChangeValueForKey:@"orderedCastData"];
-	[self setPrimitiveValue:value_ forKey:@"orderedCastData"];
-	[self didChangeValueForKey:@"orderedCastData"];
 }
 
 
@@ -148,6 +54,44 @@
 
 
 
+- (NSString*)plot {
+	[self willAccessValueForKey:@"plot"];
+	NSString *result = [self primitiveValueForKey:@"plot"];
+	[self didAccessValueForKey:@"plot"];
+	return result;
+}
+
+- (void)setPlot:(NSString*)value_ {
+	[self willChangeValueForKey:@"plot"];
+	[self setPrimitiveValue:value_ forKey:@"plot"];
+	[self didChangeValueForKey:@"plot"];
+}
+
+
+
+
+
+
+
+
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
+	return result;
+}
+
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
+}
+
+
+
+
+
+
 - (NSData*)orderedGenresData {
 	[self willAccessValueForKey:@"orderedGenresData"];
 	NSData *result = [self primitiveValueForKey:@"orderedGenresData"];
@@ -160,6 +104,8 @@
 	[self setPrimitiveValue:value_ forKey:@"orderedGenresData"];
 	[self didChangeValueForKey:@"orderedGenresData"];
 }
+
+
 
 
 
@@ -180,6 +126,53 @@
 }
 
 
+
+
+
+
+
+
+- (NSNumber*)rottonTomatoesRating {
+	[self willAccessValueForKey:@"rottonTomatoesRating"];
+	NSNumber *result = [self primitiveValueForKey:@"rottonTomatoesRating"];
+	[self didAccessValueForKey:@"rottonTomatoesRating"];
+	return result;
+}
+
+- (void)setRottonTomatoesRating:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"rottonTomatoesRating"];
+	[self setPrimitiveValue:value_ forKey:@"rottonTomatoesRating"];
+	[self didChangeValueForKey:@"rottonTomatoesRating"];
+}
+
+
+
+- (short)rottonTomatoesRatingValue {
+	NSNumber *result = [self rottonTomatoesRating];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setRottonTomatoesRatingValue:(short)value_ {
+	[self setRottonTomatoesRating:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSData*)overriddenGenresData {
+	[self willAccessValueForKey:@"overriddenGenresData"];
+	NSData *result = [self primitiveValueForKey:@"overriddenGenresData"];
+	[self didAccessValueForKey:@"overriddenGenresData"];
+	return result;
+}
+
+- (void)setOverriddenGenresData:(NSData*)value_ {
+	[self willChangeValueForKey:@"overriddenGenresData"];
+	[self setPrimitiveValue:value_ forKey:@"overriddenGenresData"];
+	[self didChangeValueForKey:@"overriddenGenresData"];
+}
 
 
 
@@ -213,6 +206,40 @@
 
 
 
+
+
+- (NSString*)MPAARating {
+	[self willAccessValueForKey:@"MPAARating"];
+	NSString *result = [self primitiveValueForKey:@"MPAARating"];
+	[self didAccessValueForKey:@"MPAARating"];
+	return result;
+}
+
+- (void)setMPAARating:(NSString*)value_ {
+	[self willChangeValueForKey:@"MPAARating"];
+	[self setPrimitiveValue:value_ forKey:@"MPAARating"];
+	[self didChangeValueForKey:@"MPAARating"];
+}
+
+
+
+
+
+
+
+
+- (NSData*)orderedCastData {
+	[self willAccessValueForKey:@"orderedCastData"];
+	NSData *result = [self primitiveValueForKey:@"orderedCastData"];
+	[self didAccessValueForKey:@"orderedCastData"];
+	return result;
+}
+
+- (void)setOrderedCastData:(NSData*)value_ {
+	[self willChangeValueForKey:@"orderedCastData"];
+	[self setPrimitiveValue:value_ forKey:@"orderedCastData"];
+	[self didChangeValueForKey:@"orderedCastData"];
+}
 
 
 
@@ -255,6 +282,35 @@
 
 
 
+- (NSNumber*)oscarsWon {
+	[self willAccessValueForKey:@"oscarsWon"];
+	NSNumber *result = [self primitiveValueForKey:@"oscarsWon"];
+	[self didAccessValueForKey:@"oscarsWon"];
+	return result;
+}
+
+- (void)setOscarsWon:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"oscarsWon"];
+	[self setPrimitiveValue:value_ forKey:@"oscarsWon"];
+	[self didChangeValueForKey:@"oscarsWon"];
+}
+
+
+
+- (short)oscarsWonValue {
+	NSNumber *result = [self oscarsWon];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setOscarsWonValue:(short)value_ {
+	[self setOscarsWon:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
 - (NSData*)overriddenCastData {
 	[self willAccessValueForKey:@"overriddenCastData"];
 	NSData *result = [self primitiveValueForKey:@"overriddenCastData"];
@@ -266,35 +322,6 @@
 	[self willChangeValueForKey:@"overriddenCastData"];
 	[self setPrimitiveValue:value_ forKey:@"overriddenCastData"];
 	[self didChangeValueForKey:@"overriddenCastData"];
-}
-
-
-
-
-
-
-- (NSNumber*)imdbNumber {
-	[self willAccessValueForKey:@"imdbNumber"];
-	NSNumber *result = [self primitiveValueForKey:@"imdbNumber"];
-	[self didAccessValueForKey:@"imdbNumber"];
-	return result;
-}
-
-- (void)setImdbNumber:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"imdbNumber"];
-	[self setPrimitiveValue:value_ forKey:@"imdbNumber"];
-	[self didChangeValueForKey:@"imdbNumber"];
-}
-
-
-
-- (int)imdbNumberValue {
-	NSNumber *result = [self imdbNumber];
-	return result ? [result intValue] : 0;
-}
-
-- (void)setImdbNumberValue:(int)value_ {
-	[self setImdbNumber:[NSNumber numberWithInt:value_]];
 }
 
 
@@ -331,109 +358,34 @@
 
 
 
-- (NSString*)MPAARating {
-	[self willAccessValueForKey:@"MPAARating"];
-	NSString *result = [self primitiveValueForKey:@"MPAARating"];
-	[self didAccessValueForKey:@"MPAARating"];
+- (NSNumber*)imdbNumber {
+	[self willAccessValueForKey:@"imdbNumber"];
+	NSNumber *result = [self primitiveValueForKey:@"imdbNumber"];
+	[self didAccessValueForKey:@"imdbNumber"];
 	return result;
 }
 
-- (void)setMPAARating:(NSString*)value_ {
-	[self willChangeValueForKey:@"MPAARating"];
-	[self setPrimitiveValue:value_ forKey:@"MPAARating"];
-	[self didChangeValueForKey:@"MPAARating"];
+- (void)setImdbNumber:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"imdbNumber"];
+	[self setPrimitiveValue:value_ forKey:@"imdbNumber"];
+	[self didChangeValueForKey:@"imdbNumber"];
+}
+
+
+
+- (int)imdbNumberValue {
+	NSNumber *result = [self imdbNumber];
+	return result ? [result intValue] : 0;
+}
+
+- (void)setImdbNumberValue:(int)value_ {
+	[self setImdbNumber:[NSNumber numberWithInt:value_]];
 }
 
 
 
 
 
-
-- (NSString*)plot {
-	[self willAccessValueForKey:@"plot"];
-	NSString *result = [self primitiveValueForKey:@"plot"];
-	[self didAccessValueForKey:@"plot"];
-	return result;
-}
-
-- (void)setPlot:(NSString*)value_ {
-	[self willChangeValueForKey:@"plot"];
-	[self setPrimitiveValue:value_ forKey:@"plot"];
-	[self didChangeValueForKey:@"plot"];
-}
-
-
-
-
-
-
-	
-- (void)addGenres:(NSSet*)value_ {
-	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"genres"] unionSet:value_];
-	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
-}
-
--(void)removeGenres:(NSSet*)value_ {
-	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"genres"] minusSet:value_];
-	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
-}
-	
-- (void)addGenresObject:(SapphireGenre*)value_ {
-	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"genres"] addObject:value_];
-	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-	[changedObjects release];
-}
-
-- (void)removeGenresObject:(SapphireGenre*)value_ {
-	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"genres"] removeObject:value_];
-	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-	[changedObjects release];
-}
-
-- (NSMutableSet*)genresSet {
-	return [self mutableSetValueForKey:@"genres"];
-}
-	
-
-	
-- (void)addTranslations:(NSSet*)value_ {
-	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"translations"] unionSet:value_];
-	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
-}
-
--(void)removeTranslations:(NSSet*)value_ {
-	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"translations"] minusSet:value_];
-	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
-}
-	
-- (void)addTranslationsObject:(SapphireMovieTranslation*)value_ {
-	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"translations"] addObject:value_];
-	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-	[changedObjects release];
-}
-
-- (void)removeTranslationsObject:(SapphireMovieTranslation*)value_ {
-	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"translations"] removeObject:value_];
-	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-	[changedObjects release];
-}
-
-- (NSMutableSet*)translationsSet {
-	return [self mutableSetValueForKey:@"translations"];
-}
-	
 
 	
 - (void)addDirectors:(NSSet*)value_ {
@@ -470,36 +422,70 @@
 	
 
 	
-- (void)addXml:(NSSet*)value_ {
-	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"xml"] unionSet:value_];
-	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+- (void)addFiles:(NSSet*)value_ {
+	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"files"] unionSet:value_];
+	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
 }
 
--(void)removeXml:(NSSet*)value_ {
-	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"xml"] minusSet:value_];
-	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+-(void)removeFiles:(NSSet*)value_ {
+	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"files"] minusSet:value_];
+	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
 }
 	
-- (void)addXmlObject:(SapphireXMLData*)value_ {
+- (void)addFilesObject:(SapphireFileMetaData*)value_ {
 	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"xml"] addObject:value_];
-	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"files"] addObject:value_];
+	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
 	[changedObjects release];
 }
 
-- (void)removeXmlObject:(SapphireXMLData*)value_ {
+- (void)removeFilesObject:(SapphireFileMetaData*)value_ {
 	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"xml"] removeObject:value_];
-	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"files"] removeObject:value_];
+	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
 	[changedObjects release];
 }
 
-- (NSMutableSet*)xmlSet {
-	return [self mutableSetValueForKey:@"xml"];
+- (NSMutableSet*)filesSet {
+	return [self mutableSetValueForKey:@"files"];
+}
+	
+
+	
+- (void)addGenres:(NSSet*)value_ {
+	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"genres"] unionSet:value_];
+	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+}
+
+-(void)removeGenres:(NSSet*)value_ {
+	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"genres"] minusSet:value_];
+	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+}
+	
+- (void)addGenresObject:(SapphireGenre*)value_ {
+	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
+	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"genres"] addObject:value_];
+	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[changedObjects release];
+}
+
+- (void)removeGenresObject:(SapphireGenre*)value_ {
+	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
+	[self willChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"genres"] removeObject:value_];
+	[self didChangeValueForKey:@"genres" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[changedObjects release];
+}
+
+- (NSMutableSet*)genresSet {
+	return [self mutableSetValueForKey:@"genres"];
 }
 	
 
@@ -538,36 +524,70 @@
 	
 
 	
-- (void)addFiles:(NSSet*)value_ {
-	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"files"] unionSet:value_];
-	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+- (void)addTranslations:(NSSet*)value_ {
+	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"translations"] unionSet:value_];
+	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
 }
 
--(void)removeFiles:(NSSet*)value_ {
-	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
-	[[self primitiveValueForKey:@"files"] minusSet:value_];
-	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+-(void)removeTranslations:(NSSet*)value_ {
+	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"translations"] minusSet:value_];
+	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
 }
 	
-- (void)addFilesObject:(SapphireFileMetaData*)value_ {
+- (void)addTranslationsObject:(SapphireMovieTranslation*)value_ {
 	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"files"] addObject:value_];
-	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"translations"] addObject:value_];
+	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
 	[changedObjects release];
 }
 
-- (void)removeFilesObject:(SapphireFileMetaData*)value_ {
+- (void)removeTranslationsObject:(SapphireMovieTranslation*)value_ {
 	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
-	[self willChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-	[[self primitiveValueForKey:@"files"] removeObject:value_];
-	[self didChangeValueForKey:@"files" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[self willChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"translations"] removeObject:value_];
+	[self didChangeValueForKey:@"translations" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
 	[changedObjects release];
 }
 
-- (NSMutableSet*)filesSet {
-	return [self mutableSetValueForKey:@"files"];
+- (NSMutableSet*)translationsSet {
+	return [self mutableSetValueForKey:@"translations"];
+}
+	
+
+	
+- (void)addXml:(NSSet*)value_ {
+	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"xml"] unionSet:value_];
+	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
+}
+
+-(void)removeXml:(NSSet*)value_ {
+	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+	[[self primitiveValueForKey:@"xml"] minusSet:value_];
+	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value_];
+}
+	
+- (void)addXmlObject:(SapphireXMLData*)value_ {
+	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
+	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"xml"] addObject:value_];
+	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
+	[changedObjects release];
+}
+
+- (void)removeXmlObject:(SapphireXMLData*)value_ {
+	NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value_ count:1];
+	[self willChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[[self primitiveValueForKey:@"xml"] removeObject:value_];
+	[self didChangeValueForKey:@"xml" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
+	[changedObjects release];
+}
+
+- (NSMutableSet*)xmlSet {
+	return [self mutableSetValueForKey:@"xml"];
 }
 	
 

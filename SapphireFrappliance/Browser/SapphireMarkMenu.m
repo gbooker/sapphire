@@ -58,8 +58,10 @@ NSString *MARK_DESCRIPTION			= @"Description";
 NSString *MARK_COMMAND				= @"Command";
 
 typedef enum {
-	COMMAND_TOGGLE_WATCHED,
-	COMMAND_TOGGLE_FAVORITE,
+	COMMAND_MARK_WATCHED,
+	COMMAND_MARK_UNWATCHED,
+	COMMAND_MARK_FAVORITE,
+	COMMAND_MARK_NOT_FAVORITE,
 	COMMAND_MARK_TO_REFETCH_TV,
 	COMMAND_MARK_TO_REFETCH_MOVIE,
 	COMMAND_MARK_TO_DELETE_METADATA,
@@ -76,10 +78,6 @@ typedef enum {
 	COMMAND_JOIN,
 	COMMAND_SHOW_ONLY_SUMMARY,
 	//Directory Only Commands
-	COMMAND_MARK_WATCHED,
-	COMMAND_MARK_UNWATCHED,
-	COMMAND_MARK_FAVORITE,
-	COMMAND_MARK_NOT_FAVORITE,
 	COMMAND_TOGGLE_SKIP,
 	COMMAND_TOGGLE_COLLECTION,
 	COMMAND_PASTE_PATH,
@@ -93,7 +91,7 @@ static NSString *movingPath = nil;
 	joinList = [[NSMutableArray alloc] init];
 }
 
-- (id) initWithScene: (BRRenderScene *) scene metaData: (SapphireMetaData *)meta
+- (id) initWithScene: (BRRenderScene *) scene metaData: (id <SapphireMetaData>)meta
 {
 	self = [super initWithScene:scene];
 	if(!self)
@@ -244,29 +242,35 @@ static NSString *movingPath = nil;
 		SapphireFileMetaData *fileMeta = (SapphireFileMetaData *)metaData;
 		NSString *watched = nil;
 		NSString *watchedDesc = nil;
+		MarkCommand watchedCommand = 0;
 		NSString *favorite = nil;
 		NSString *favoriteDesc = nil;
+		MarkCommand favoriteCommand = 0;
 		
 		if([fileMeta watchedValue])
 		{
-			watched		= BRLocalizedString(@"Mark as Unwatched", @"Mark file as unwatched");
-			watchedDesc = BRLocalizedString(@"Sapphire will save this file as unwatched.", @"Mark directory watched description");
+			watched			= BRLocalizedString(@"Mark as Unwatched", @"Mark file as unwatched");
+			watchedDesc		= BRLocalizedString(@"Sapphire will save this file as unwatched.", @"Mark directory watched description");
+			watchedCommand	= COMMAND_MARK_UNWATCHED;
 		}
 		else
 		{
-			watched		= BRLocalizedString(@"Mark as Watched", @"Mark file as watched");
-			watchedDesc = BRLocalizedString(@"Sapphire will save this file as watched.", @"Mark directory watched description");
+			watched			= BRLocalizedString(@"Mark as Watched", @"Mark file as watched");
+			watchedDesc		= BRLocalizedString(@"Sapphire will save this file as watched.", @"Mark directory watched description");
+			watchedCommand	= COMMAND_MARK_WATCHED;
 		}
 
 		if([fileMeta favoriteValue])
 		{
-			favorite	 = BRLocalizedString(@"        Not Favorite", @"Mark file as a favorite");
-			favoriteDesc = BRLocalizedString(@"Sapphire will remove this file from favorites.", @"Mark directory as not favorite");
+			favorite		= BRLocalizedString(@"        Not Favorite", @"Mark file as a favorite");
+			favoriteDesc	= BRLocalizedString(@"Sapphire will remove this file from favorites.", @"Mark directory as not favorite");
+			favoriteCommand	= COMMAND_MARK_NOT_FAVORITE;
 		}
 		else
 		{
-			favorite	 = BRLocalizedString(@"        Favorite", @"Mark file as not a favorite");
-			favoriteDesc = BRLocalizedString(@"Sapphire will add this file as a favorite.", @"Mark directory as favorite description");
+			favorite		= BRLocalizedString(@"        Favorite", @"Mark file as not a favorite");
+			favoriteDesc	= BRLocalizedString(@"Sapphire will add this file as a favorite.", @"Mark directory as favorite description");
+			favoriteCommand = COMMAND_MARK_FAVORITE;
 
 		}
 		marks = [[NSMutableArray alloc] initWithObjects:
@@ -278,12 +282,12 @@ static NSString *movingPath = nil;
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				watched, MARK_NAME,
 				watchedDesc, MARK_DESCRIPTION,
-				[NSNumber numberWithInt:COMMAND_TOGGLE_WATCHED], MARK_COMMAND,
+				[NSNumber numberWithInt:watchedCommand], MARK_COMMAND,
 				nil],
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				favorite, MARK_NAME,
 				favoriteDesc, MARK_DESCRIPTION,
-				[NSNumber numberWithInt:COMMAND_TOGGLE_FAVORITE], MARK_COMMAND,
+				[NSNumber numberWithInt:favoriteCommand], MARK_COMMAND,
 				nil],
 			nil];
 		
@@ -704,12 +708,19 @@ static NSString *movingPath = nil;
 		SapphireFileMetaData *fileMeta = (SapphireFileMetaData *)metaData;
 		switch(command)
 		{
-			case COMMAND_TOGGLE_WATCHED:
-				[fileMeta setWatchedValue:![fileMeta watchedValue]];
+			case COMMAND_MARK_WATCHED:
+				[fileMeta setWatchedValue:YES];
 				[fileMeta setResumeTime:0];
 				break;
-			case COMMAND_TOGGLE_FAVORITE:
-				[fileMeta setFavoriteValue:![fileMeta favoriteValue]];
+			case COMMAND_MARK_UNWATCHED:
+				[fileMeta setWatchedValue:NO];
+				[fileMeta setResumeTime:0];
+				break;
+			case COMMAND_MARK_FAVORITE:
+				[fileMeta setFavoriteValue:YES];
+				break;
+			case COMMAND_MARK_NOT_FAVORITE:
+				[fileMeta setFavoriteValue:NO];
 				break;
 			case COMMAND_MARK_TO_REFETCH_TV:
 				[fileMeta setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
@@ -797,20 +808,22 @@ static NSString *movingPath = nil;
 - (BRControl *)pasteInDir:(SapphireDirectoryMetaData *)dirMeta
 {
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
-	SapphireMetaData *meta = [SapphireMetaData metaDataWithPath:movingPath inContext:moc];
 	NSString *errorString = nil;
-	if([meta isKindOfClass:[SapphireDirectoryMetaData class]])
+	BOOL movingDir;
+	if(![[NSFileManager defaultManager] fileExistsAtPath:movingPath isDirectory:&movingDir])
 	{
-		SapphireDirectoryMetaData *dir = (SapphireDirectoryMetaData *)meta;
+		errorString = [NSString stringWithFormat:BRLocalizedString(@"%@ Seems to be missing", @"Could not find file; parameter is moving file"), [movingPath lastPathComponent]];
+	}
+	else if(movingDir)
+	{
+		SapphireDirectoryMetaData *dir = [SapphireDirectoryMetaData directoryWithPath:movingPath inContext:moc];
 		errorString = [dir moveToDir:dirMeta];
 	}
-	else if([meta isKindOfClass:[SapphireFileMetaData class]])
+	else
 	{
-		SapphireFileMetaData *file = (SapphireFileMetaData *)meta;
+		SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:movingPath inContext:moc];
 		errorString = [file moveToDir:dirMeta];
 	}
-	else
-		errorString = [NSString stringWithFormat:BRLocalizedString(@"%@ Seems to be missing", @"Could not find file; parameter is moving file"), [movingPath lastPathComponent]];
 	if(errorString != nil)
 	{
 		SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Moving Error", @"Short error indicating an error while moving a file") longError:errorString];
@@ -825,7 +838,7 @@ static NSString *movingPath = nil;
 	return nil;
 }
 
-- (BRControl *)deletePath:(SapphireMetaData *)meta
+- (BRControl *)deletePath:(id <SapphireMetaData>)meta
 {
 	@try {
 		NSManagedObjectContext *moc = [meta managedObjectContext];

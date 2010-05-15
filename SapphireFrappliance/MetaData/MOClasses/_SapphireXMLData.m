@@ -7,165 +7,6 @@
 
 
 
-- (NSString*)contentDescription {
-	[self willAccessValueForKey:@"contentDescription"];
-	NSString *result = [self primitiveValueForKey:@"contentDescription"];
-	[self didAccessValueForKey:@"contentDescription"];
-	return result;
-}
-
-- (void)setContentDescription:(NSString*)value_ {
-	[self willChangeValueForKey:@"contentDescription"];
-	[self setPrimitiveValue:value_ forKey:@"contentDescription"];
-	[self didChangeValueForKey:@"contentDescription"];
-}
-
-
-
-
-
-
-- (NSNumber*)searchIMDBNumber {
-	[self willAccessValueForKey:@"searchIMDBNumber"];
-	NSNumber *result = [self primitiveValueForKey:@"searchIMDBNumber"];
-	[self didAccessValueForKey:@"searchIMDBNumber"];
-	return result;
-}
-
-- (void)setSearchIMDBNumber:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"searchIMDBNumber"];
-	[self setPrimitiveValue:value_ forKey:@"searchIMDBNumber"];
-	[self didChangeValueForKey:@"searchIMDBNumber"];
-}
-
-
-
-- (int)searchIMDBNumberValue {
-	NSNumber *result = [self searchIMDBNumber];
-	return result ? [result intValue] : 0;
-}
-
-- (void)setSearchIMDBNumberValue:(int)value_ {
-	[self setSearchIMDBNumber:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
-
-- (NSString*)summary {
-	[self willAccessValueForKey:@"summary"];
-	NSString *result = [self primitiveValueForKey:@"summary"];
-	[self didAccessValueForKey:@"summary"];
-	return result;
-}
-
-- (void)setSummary:(NSString*)value_ {
-	[self willChangeValueForKey:@"summary"];
-	[self setPrimitiveValue:value_ forKey:@"summary"];
-	[self didChangeValueForKey:@"summary"];
-}
-
-
-
-
-
-
-- (NSNumber*)absoluteEpisodeNumber {
-	[self willAccessValueForKey:@"absoluteEpisodeNumber"];
-	NSNumber *result = [self primitiveValueForKey:@"absoluteEpisodeNumber"];
-	[self didAccessValueForKey:@"absoluteEpisodeNumber"];
-	return result;
-}
-
-- (void)setAbsoluteEpisodeNumber:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"absoluteEpisodeNumber"];
-	[self setPrimitiveValue:value_ forKey:@"absoluteEpisodeNumber"];
-	[self didChangeValueForKey:@"absoluteEpisodeNumber"];
-}
-
-
-
-- (short)absoluteEpisodeNumberValue {
-	NSNumber *result = [self absoluteEpisodeNumber];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setAbsoluteEpisodeNumberValue:(short)value_ {
-	[self setAbsoluteEpisodeNumber:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-
-- (NSData*)orderedDirectorsData {
-	[self willAccessValueForKey:@"orderedDirectorsData"];
-	NSData *result = [self primitiveValueForKey:@"orderedDirectorsData"];
-	[self didAccessValueForKey:@"orderedDirectorsData"];
-	return result;
-}
-
-- (void)setOrderedDirectorsData:(NSData*)value_ {
-	[self willChangeValueForKey:@"orderedDirectorsData"];
-	[self setPrimitiveValue:value_ forKey:@"orderedDirectorsData"];
-	[self didChangeValueForKey:@"orderedDirectorsData"];
-}
-
-
-
-
-
-
-- (NSNumber*)oscarsWon {
-	[self willAccessValueForKey:@"oscarsWon"];
-	NSNumber *result = [self primitiveValueForKey:@"oscarsWon"];
-	[self didAccessValueForKey:@"oscarsWon"];
-	return result;
-}
-
-- (void)setOscarsWon:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"oscarsWon"];
-	[self setPrimitiveValue:value_ forKey:@"oscarsWon"];
-	[self didChangeValueForKey:@"oscarsWon"];
-}
-
-
-
-- (short)oscarsWonValue {
-	NSNumber *result = [self oscarsWon];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setOscarsWonValue:(short)value_ {
-	[self setOscarsWon:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-
-- (NSData*)orderedCastData {
-	[self willAccessValueForKey:@"orderedCastData"];
-	NSData *result = [self primitiveValueForKey:@"orderedCastData"];
-	[self didAccessValueForKey:@"orderedCastData"];
-	return result;
-}
-
-- (void)setOrderedCastData:(NSData*)value_ {
-	[self willChangeValueForKey:@"orderedCastData"];
-	[self setPrimitiveValue:value_ forKey:@"orderedCastData"];
-	[self didChangeValueForKey:@"orderedCastData"];
-}
-
-
-
-
-
-
 - (NSNumber*)lastEpisodeNumber {
 	[self willAccessValueForKey:@"lastEpisodeNumber"];
 	NSNumber *result = [self primitiveValueForKey:@"lastEpisodeNumber"];
@@ -195,28 +36,37 @@
 
 
 
-- (NSNumber*)searchEpisode {
-	[self willAccessValueForKey:@"searchEpisode"];
-	NSNumber *result = [self primitiveValueForKey:@"searchEpisode"];
-	[self didAccessValueForKey:@"searchEpisode"];
+- (NSData*)orderedDirectorsData {
+	[self willAccessValueForKey:@"orderedDirectorsData"];
+	NSData *result = [self primitiveValueForKey:@"orderedDirectorsData"];
+	[self didAccessValueForKey:@"orderedDirectorsData"];
 	return result;
 }
 
-- (void)setSearchEpisode:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"searchEpisode"];
-	[self setPrimitiveValue:value_ forKey:@"searchEpisode"];
-	[self didChangeValueForKey:@"searchEpisode"];
+- (void)setOrderedDirectorsData:(NSData*)value_ {
+	[self willChangeValueForKey:@"orderedDirectorsData"];
+	[self setPrimitiveValue:value_ forKey:@"orderedDirectorsData"];
+	[self didChangeValueForKey:@"orderedDirectorsData"];
 }
 
 
 
-- (short)searchEpisodeValue {
-	NSNumber *result = [self searchEpisode];
-	return result ? [result shortValue] : 0;
+
+
+
+
+
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
+	return result;
 }
 
-- (void)setSearchEpisodeValue:(short)value_ {
-	[self setSearchEpisode:[NSNumber numberWithShort:value_]];
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
 }
 
 
@@ -235,55 +85,6 @@
 	[self willChangeValueForKey:@"orderedGenresData"];
 	[self setPrimitiveValue:value_ forKey:@"orderedGenresData"];
 	[self didChangeValueForKey:@"orderedGenresData"];
-}
-
-
-
-
-
-
-
-
-- (NSNumber*)imdbTop250Ranking {
-	[self willAccessValueForKey:@"imdbTop250Ranking"];
-	NSNumber *result = [self primitiveValueForKey:@"imdbTop250Ranking"];
-	[self didAccessValueForKey:@"imdbTop250Ranking"];
-	return result;
-}
-
-- (void)setImdbTop250Ranking:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"imdbTop250Ranking"];
-	[self setPrimitiveValue:value_ forKey:@"imdbTop250Ranking"];
-	[self didChangeValueForKey:@"imdbTop250Ranking"];
-}
-
-
-
-- (short)imdbTop250RankingValue {
-	NSNumber *result = [self imdbTop250Ranking];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setImdbTop250RankingValue:(short)value_ {
-	[self setImdbTop250Ranking:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-
-- (NSDate*)modified {
-	[self willAccessValueForKey:@"modified"];
-	NSDate *result = [self primitiveValueForKey:@"modified"];
-	[self didAccessValueForKey:@"modified"];
-	return result;
-}
-
-- (void)setModified:(NSDate*)value_ {
-	[self willChangeValueForKey:@"modified"];
-	[self setPrimitiveValue:value_ forKey:@"modified"];
-	[self didChangeValueForKey:@"modified"];
 }
 
 
@@ -320,28 +121,19 @@
 
 
 
-- (NSNumber*)searchSeasonNumber {
-	[self willAccessValueForKey:@"searchSeasonNumber"];
-	NSNumber *result = [self primitiveValueForKey:@"searchSeasonNumber"];
-	[self didAccessValueForKey:@"searchSeasonNumber"];
+
+
+- (NSString*)movieSortTitle {
+	[self willAccessValueForKey:@"movieSortTitle"];
+	NSString *result = [self primitiveValueForKey:@"movieSortTitle"];
+	[self didAccessValueForKey:@"movieSortTitle"];
 	return result;
 }
 
-- (void)setSearchSeasonNumber:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"searchSeasonNumber"];
-	[self setPrimitiveValue:value_ forKey:@"searchSeasonNumber"];
-	[self didChangeValueForKey:@"searchSeasonNumber"];
-}
-
-
-
-- (short)searchSeasonNumberValue {
-	NSNumber *result = [self searchSeasonNumber];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setSearchSeasonNumberValue:(short)value_ {
-	[self setSearchSeasonNumber:[NSNumber numberWithShort:value_]];
+- (void)setMovieSortTitle:(NSString*)value_ {
+	[self willChangeValueForKey:@"movieSortTitle"];
+	[self setPrimitiveValue:value_ forKey:@"movieSortTitle"];
+	[self didChangeValueForKey:@"movieSortTitle"];
 }
 
 
@@ -349,58 +141,20 @@
 
 
 
-- (NSString*)searchShowName {
-	[self willAccessValueForKey:@"searchShowName"];
-	NSString *result = [self primitiveValueForKey:@"searchShowName"];
-	[self didAccessValueForKey:@"searchShowName"];
+- (NSDate*)modified {
+	[self willAccessValueForKey:@"modified"];
+	NSDate *result = [self primitiveValueForKey:@"modified"];
+	[self didAccessValueForKey:@"modified"];
 	return result;
 }
 
-- (void)setSearchShowName:(NSString*)value_ {
-	[self willChangeValueForKey:@"searchShowName"];
-	[self setPrimitiveValue:value_ forKey:@"searchShowName"];
-	[self didChangeValueForKey:@"searchShowName"];
+- (void)setModified:(NSDate*)value_ {
+	[self willChangeValueForKey:@"modified"];
+	[self setPrimitiveValue:value_ forKey:@"modified"];
+	[self didChangeValueForKey:@"modified"];
 }
 
 
-
-
-
-
-
-
-
-
-- (NSString*)title {
-	[self willAccessValueForKey:@"title"];
-	NSString *result = [self primitiveValueForKey:@"title"];
-	[self didAccessValueForKey:@"title"];
-	return result;
-}
-
-- (void)setTitle:(NSString*)value_ {
-	[self willChangeValueForKey:@"title"];
-	[self setPrimitiveValue:value_ forKey:@"title"];
-	[self didChangeValueForKey:@"title"];
-}
-
-
-
-
-
-
-- (NSDate*)releaseDate {
-	[self willAccessValueForKey:@"releaseDate"];
-	NSDate *result = [self primitiveValueForKey:@"releaseDate"];
-	[self didAccessValueForKey:@"releaseDate"];
-	return result;
-}
-
-- (void)setReleaseDate:(NSDate*)value_ {
-	[self willChangeValueForKey:@"releaseDate"];
-	[self setPrimitiveValue:value_ forKey:@"releaseDate"];
-	[self didChangeValueForKey:@"releaseDate"];
-}
 
 
 
@@ -429,6 +183,232 @@
 
 - (void)setEpisodeNumberValue:(short)value_ {
 	[self setEpisodeNumber:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSNumber*)absoluteEpisodeNumber {
+	[self willAccessValueForKey:@"absoluteEpisodeNumber"];
+	NSNumber *result = [self primitiveValueForKey:@"absoluteEpisodeNumber"];
+	[self didAccessValueForKey:@"absoluteEpisodeNumber"];
+	return result;
+}
+
+- (void)setAbsoluteEpisodeNumber:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"absoluteEpisodeNumber"];
+	[self setPrimitiveValue:value_ forKey:@"absoluteEpisodeNumber"];
+	[self didChangeValueForKey:@"absoluteEpisodeNumber"];
+}
+
+
+
+- (short)absoluteEpisodeNumberValue {
+	NSNumber *result = [self absoluteEpisodeNumber];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setAbsoluteEpisodeNumberValue:(short)value_ {
+	[self setAbsoluteEpisodeNumber:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSNumber*)imdbTop250Ranking {
+	[self willAccessValueForKey:@"imdbTop250Ranking"];
+	NSNumber *result = [self primitiveValueForKey:@"imdbTop250Ranking"];
+	[self didAccessValueForKey:@"imdbTop250Ranking"];
+	return result;
+}
+
+- (void)setImdbTop250Ranking:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"imdbTop250Ranking"];
+	[self setPrimitiveValue:value_ forKey:@"imdbTop250Ranking"];
+	[self didChangeValueForKey:@"imdbTop250Ranking"];
+}
+
+
+
+- (short)imdbTop250RankingValue {
+	NSNumber *result = [self imdbTop250Ranking];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setImdbTop250RankingValue:(short)value_ {
+	[self setImdbTop250Ranking:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSString*)contentDescription {
+	[self willAccessValueForKey:@"contentDescription"];
+	NSString *result = [self primitiveValueForKey:@"contentDescription"];
+	[self didAccessValueForKey:@"contentDescription"];
+	return result;
+}
+
+- (void)setContentDescription:(NSString*)value_ {
+	[self willChangeValueForKey:@"contentDescription"];
+	[self setPrimitiveValue:value_ forKey:@"contentDescription"];
+	[self didChangeValueForKey:@"contentDescription"];
+}
+
+
+
+
+
+
+- (NSNumber*)searchEpisode {
+	[self willAccessValueForKey:@"searchEpisode"];
+	NSNumber *result = [self primitiveValueForKey:@"searchEpisode"];
+	[self didAccessValueForKey:@"searchEpisode"];
+	return result;
+}
+
+- (void)setSearchEpisode:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"searchEpisode"];
+	[self setPrimitiveValue:value_ forKey:@"searchEpisode"];
+	[self didChangeValueForKey:@"searchEpisode"];
+}
+
+
+
+- (short)searchEpisodeValue {
+	NSNumber *result = [self searchEpisode];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setSearchEpisodeValue:(short)value_ {
+	[self setSearchEpisode:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSString*)MPAARating {
+	[self willAccessValueForKey:@"MPAARating"];
+	NSString *result = [self primitiveValueForKey:@"MPAARating"];
+	[self didAccessValueForKey:@"MPAARating"];
+	return result;
+}
+
+- (void)setMPAARating:(NSString*)value_ {
+	[self willChangeValueForKey:@"MPAARating"];
+	[self setPrimitiveValue:value_ forKey:@"MPAARating"];
+	[self didChangeValueForKey:@"MPAARating"];
+}
+
+
+
+
+
+
+
+
+- (NSData*)orderedCastData {
+	[self willAccessValueForKey:@"orderedCastData"];
+	NSData *result = [self primitiveValueForKey:@"orderedCastData"];
+	[self didAccessValueForKey:@"orderedCastData"];
+	return result;
+}
+
+- (void)setOrderedCastData:(NSData*)value_ {
+	[self willChangeValueForKey:@"orderedCastData"];
+	[self setPrimitiveValue:value_ forKey:@"orderedCastData"];
+	[self didChangeValueForKey:@"orderedCastData"];
+}
+
+
+
+
+
+
+- (NSString*)title {
+	[self willAccessValueForKey:@"title"];
+	NSString *result = [self primitiveValueForKey:@"title"];
+	[self didAccessValueForKey:@"title"];
+	return result;
+}
+
+- (void)setTitle:(NSString*)value_ {
+	[self willChangeValueForKey:@"title"];
+	[self setPrimitiveValue:value_ forKey:@"title"];
+	[self didChangeValueForKey:@"title"];
+}
+
+
+
+
+
+
+- (NSNumber*)oscarsWon {
+	[self willAccessValueForKey:@"oscarsWon"];
+	NSNumber *result = [self primitiveValueForKey:@"oscarsWon"];
+	[self didAccessValueForKey:@"oscarsWon"];
+	return result;
+}
+
+- (void)setOscarsWon:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"oscarsWon"];
+	[self setPrimitiveValue:value_ forKey:@"oscarsWon"];
+	[self didChangeValueForKey:@"oscarsWon"];
+}
+
+
+
+- (short)oscarsWonValue {
+	NSNumber *result = [self oscarsWon];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setOscarsWonValue:(short)value_ {
+	[self setOscarsWon:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSString*)summary {
+	[self willAccessValueForKey:@"summary"];
+	NSString *result = [self primitiveValueForKey:@"summary"];
+	[self didAccessValueForKey:@"summary"];
+	return result;
+}
+
+- (void)setSummary:(NSString*)value_ {
+	[self willChangeValueForKey:@"summary"];
+	[self setPrimitiveValue:value_ forKey:@"summary"];
+	[self didChangeValueForKey:@"summary"];
+}
+
+
+
+
+
+
+- (NSDate*)releaseDate {
+	[self willAccessValueForKey:@"releaseDate"];
+	NSDate *result = [self primitiveValueForKey:@"releaseDate"];
+	[self didAccessValueForKey:@"releaseDate"];
+	return result;
+}
+
+- (void)setReleaseDate:(NSDate*)value_ {
+	[self willChangeValueForKey:@"releaseDate"];
+	[self setPrimitiveValue:value_ forKey:@"releaseDate"];
+	[self didChangeValueForKey:@"releaseDate"];
 }
 
 
@@ -494,17 +474,28 @@
 
 
 
-- (NSString*)MPAARating {
-	[self willAccessValueForKey:@"MPAARating"];
-	NSString *result = [self primitiveValueForKey:@"MPAARating"];
-	[self didAccessValueForKey:@"MPAARating"];
+- (NSNumber*)searchIMDBNumber {
+	[self willAccessValueForKey:@"searchIMDBNumber"];
+	NSNumber *result = [self primitiveValueForKey:@"searchIMDBNumber"];
+	[self didAccessValueForKey:@"searchIMDBNumber"];
 	return result;
 }
 
-- (void)setMPAARating:(NSString*)value_ {
-	[self willChangeValueForKey:@"MPAARating"];
-	[self setPrimitiveValue:value_ forKey:@"MPAARating"];
-	[self didChangeValueForKey:@"MPAARating"];
+- (void)setSearchIMDBNumber:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"searchIMDBNumber"];
+	[self setPrimitiveValue:value_ forKey:@"searchIMDBNumber"];
+	[self didChangeValueForKey:@"searchIMDBNumber"];
+}
+
+
+
+- (int)searchIMDBNumberValue {
+	NSNumber *result = [self searchIMDBNumber];
+	return result ? [result intValue] : 0;
+}
+
+- (void)setSearchIMDBNumberValue:(int)value_ {
+	[self setSearchIMDBNumber:[NSNumber numberWithInt:value_]];
 }
 
 
@@ -512,22 +503,52 @@
 
 
 
-	
-
-- (SapphireEpisode*)episode {
-	[self willAccessValueForKey:@"episode"];
-	SapphireEpisode *result = [self primitiveValueForKey:@"episode"];
-	[self didAccessValueForKey:@"episode"];
+- (NSNumber*)searchSeasonNumber {
+	[self willAccessValueForKey:@"searchSeasonNumber"];
+	NSNumber *result = [self primitiveValueForKey:@"searchSeasonNumber"];
+	[self didAccessValueForKey:@"searchSeasonNumber"];
 	return result;
 }
 
-- (void)setEpisode:(SapphireEpisode*)value_ {
-	[self willChangeValueForKey:@"episode"];
-	[self setPrimitiveValue:value_ forKey:@"episode"];
-	[self didChangeValueForKey:@"episode"];
+- (void)setSearchSeasonNumber:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"searchSeasonNumber"];
+	[self setPrimitiveValue:value_ forKey:@"searchSeasonNumber"];
+	[self didChangeValueForKey:@"searchSeasonNumber"];
 }
 
-	
+
+
+- (short)searchSeasonNumberValue {
+	NSNumber *result = [self searchSeasonNumber];
+	return result ? [result shortValue] : 0;
+}
+
+- (void)setSearchSeasonNumberValue:(short)value_ {
+	[self setSearchSeasonNumber:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+
+- (NSString*)searchShowName {
+	[self willAccessValueForKey:@"searchShowName"];
+	NSString *result = [self primitiveValueForKey:@"searchShowName"];
+	[self didAccessValueForKey:@"searchShowName"];
+	return result;
+}
+
+- (void)setSearchShowName:(NSString*)value_ {
+	[self willChangeValueForKey:@"searchShowName"];
+	[self setPrimitiveValue:value_ forKey:@"searchShowName"];
+	[self didChangeValueForKey:@"searchShowName"];
+}
+
+
+
+
+
 
 	
 
@@ -559,6 +580,23 @@
 	[self willChangeValueForKey:@"movie"];
 	[self setPrimitiveValue:value_ forKey:@"movie"];
 	[self didChangeValueForKey:@"movie"];
+}
+
+	
+
+	
+
+- (SapphireEpisode*)episode {
+	[self willAccessValueForKey:@"episode"];
+	SapphireEpisode *result = [self primitiveValueForKey:@"episode"];
+	[self didAccessValueForKey:@"episode"];
+	return result;
+}
+
+- (void)setEpisode:(SapphireEpisode*)value_ {
+	[self willChangeValueForKey:@"episode"];
+	[self setPrimitiveValue:value_ forKey:@"episode"];
+	[self didChangeValueForKey:@"episode"];
 }
 
 	

@@ -7,6 +7,44 @@
 
 
 
+- (NSString*)path {
+	[self willAccessValueForKey:@"path"];
+	NSString *result = [self primitiveValueForKey:@"path"];
+	[self didAccessValueForKey:@"path"];
+	return result;
+}
+
+- (void)setPath:(NSString*)value_ {
+	[self willChangeValueForKey:@"path"];
+	[self setPrimitiveValue:value_ forKey:@"path"];
+	[self didChangeValueForKey:@"path"];
+}
+
+
+
+
+
+
+
+
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
+	return result;
+}
+
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
+}
+
+
+
+
+
+
 	
 
 - (SapphireFileMetaData*)file {

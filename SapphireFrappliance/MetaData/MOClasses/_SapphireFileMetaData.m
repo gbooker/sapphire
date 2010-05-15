@@ -7,28 +7,57 @@
 
 
 
-- (NSNumber*)favorite {
-	[self willAccessValueForKey:@"favorite"];
-	NSNumber *result = [self primitiveValueForKey:@"favorite"];
-	[self didAccessValueForKey:@"favorite"];
+- (NSNumber*)hasVideo {
+	[self willAccessValueForKey:@"hasVideo"];
+	NSNumber *result = [self primitiveValueForKey:@"hasVideo"];
+	[self didAccessValueForKey:@"hasVideo"];
 	return result;
 }
 
-- (void)setFavorite:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"favorite"];
-	[self setPrimitiveValue:value_ forKey:@"favorite"];
-	[self didChangeValueForKey:@"favorite"];
+- (void)setHasVideo:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"hasVideo"];
+	[self setPrimitiveValue:value_ forKey:@"hasVideo"];
+	[self didChangeValueForKey:@"hasVideo"];
 }
 
 
 
-- (BOOL)favoriteValue {
-	NSNumber *result = [self favorite];
+- (BOOL)hasVideoValue {
+	NSNumber *result = [self hasVideo];
 	return result ? [result boolValue] : 0;
 }
 
-- (void)setFavoriteValue:(BOOL)value_ {
-	[self setFavorite:[NSNumber numberWithBool:value_]];
+- (void)setHasVideoValue:(BOOL)value_ {
+	[self setHasVideo:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+
+- (NSNumber*)audioFormatID {
+	[self willAccessValueForKey:@"audioFormatID"];
+	NSNumber *result = [self primitiveValueForKey:@"audioFormatID"];
+	[self didAccessValueForKey:@"audioFormatID"];
+	return result;
+}
+
+- (void)setAudioFormatID:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"audioFormatID"];
+	[self setPrimitiveValue:value_ forKey:@"audioFormatID"];
+	[self didChangeValueForKey:@"audioFormatID"];
+}
+
+
+
+- (int)audioFormatIDValue {
+	NSNumber *result = [self audioFormatID];
+	return result ? [result intValue] : 0;
+}
+
+- (void)setAudioFormatIDValue:(int)value_ {
+	[self setAudioFormatID:[NSNumber numberWithInt:value_]];
 }
 
 
@@ -65,17 +94,17 @@
 
 
 
-- (NSString*)audioDescription {
-	[self willAccessValueForKey:@"audioDescription"];
-	NSString *result = [self primitiveValueForKey:@"audioDescription"];
-	[self didAccessValueForKey:@"audioDescription"];
+- (NSString*)subtitlesDescription {
+	[self willAccessValueForKey:@"subtitlesDescription"];
+	NSString *result = [self primitiveValueForKey:@"subtitlesDescription"];
+	[self didAccessValueForKey:@"subtitlesDescription"];
 	return result;
 }
 
-- (void)setAudioDescription:(NSString*)value_ {
-	[self willChangeValueForKey:@"audioDescription"];
-	[self setPrimitiveValue:value_ forKey:@"audioDescription"];
-	[self didChangeValueForKey:@"audioDescription"];
+- (void)setSubtitlesDescription:(NSString*)value_ {
+	[self willChangeValueForKey:@"subtitlesDescription"];
+	[self setPrimitiveValue:value_ forKey:@"subtitlesDescription"];
+	[self didChangeValueForKey:@"subtitlesDescription"];
 }
 
 
@@ -83,28 +112,28 @@
 
 
 
-- (NSNumber*)duration {
-	[self willAccessValueForKey:@"duration"];
-	NSNumber *result = [self primitiveValueForKey:@"duration"];
-	[self didAccessValueForKey:@"duration"];
+- (NSNumber*)resumeTime {
+	[self willAccessValueForKey:@"resumeTime"];
+	NSNumber *result = [self primitiveValueForKey:@"resumeTime"];
+	[self didAccessValueForKey:@"resumeTime"];
 	return result;
 }
 
-- (void)setDuration:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"duration"];
-	[self setPrimitiveValue:value_ forKey:@"duration"];
-	[self didChangeValueForKey:@"duration"];
+- (void)setResumeTime:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"resumeTime"];
+	[self setPrimitiveValue:value_ forKey:@"resumeTime"];
+	[self didChangeValueForKey:@"resumeTime"];
 }
 
 
 
-- (float)durationValue {
-	NSNumber *result = [self duration];
-	return result ? [result floatValue] : 0;
+- (int)resumeTimeValue {
+	NSNumber *result = [self resumeTime];
+	return result ? [result intValue] : 0;
 }
 
-- (void)setDurationValue:(float)value_ {
-	[self setDuration:[NSNumber numberWithFloat:value_]];
+- (void)setResumeTimeValue:(int)value_ {
+	[self setResumeTime:[NSNumber numberWithInt:value_]];
 }
 
 
@@ -112,28 +141,28 @@
 
 
 
-- (NSNumber*)hasVideo {
-	[self willAccessValueForKey:@"hasVideo"];
-	NSNumber *result = [self primitiveValueForKey:@"hasVideo"];
-	[self didAccessValueForKey:@"hasVideo"];
+- (NSNumber*)fileClass {
+	[self willAccessValueForKey:@"fileClass"];
+	NSNumber *result = [self primitiveValueForKey:@"fileClass"];
+	[self didAccessValueForKey:@"fileClass"];
 	return result;
 }
 
-- (void)setHasVideo:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"hasVideo"];
-	[self setPrimitiveValue:value_ forKey:@"hasVideo"];
-	[self didChangeValueForKey:@"hasVideo"];
+- (void)setFileClass:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"fileClass"];
+	[self setPrimitiveValue:value_ forKey:@"fileClass"];
+	[self didChangeValueForKey:@"fileClass"];
 }
 
 
 
-- (BOOL)hasVideoValue {
-	NSNumber *result = [self hasVideo];
-	return result ? [result boolValue] : 0;
+- (short)fileClassValue {
+	NSNumber *result = [self fileClass];
+	return result ? [result shortValue] : 0;
 }
 
-- (void)setHasVideoValue:(BOOL)value_ {
-	[self setHasVideo:[NSNumber numberWithBool:value_]];
+- (void)setFileClassValue:(short)value_ {
+	[self setFileClass:[NSNumber numberWithShort:value_]];
 }
 
 
@@ -141,17 +170,17 @@
 
 
 
-- (NSString*)videoDescription {
-	[self willAccessValueForKey:@"videoDescription"];
-	NSString *result = [self primitiveValueForKey:@"videoDescription"];
-	[self didAccessValueForKey:@"videoDescription"];
+- (NSString*)path {
+	[self willAccessValueForKey:@"path"];
+	NSString *result = [self primitiveValueForKey:@"path"];
+	[self didAccessValueForKey:@"path"];
 	return result;
 }
 
-- (void)setVideoDescription:(NSString*)value_ {
-	[self willChangeValueForKey:@"videoDescription"];
-	[self setPrimitiveValue:value_ forKey:@"videoDescription"];
-	[self didChangeValueForKey:@"videoDescription"];
+- (void)setPath:(NSString*)value_ {
+	[self willChangeValueForKey:@"path"];
+	[self setPrimitiveValue:value_ forKey:@"path"];
+	[self didChangeValueForKey:@"path"];
 }
 
 
@@ -188,28 +217,88 @@
 
 
 
-- (NSNumber*)resumeTime {
-	[self willAccessValueForKey:@"resumeTime"];
-	NSNumber *result = [self primitiveValueForKey:@"resumeTime"];
-	[self didAccessValueForKey:@"resumeTime"];
+- (NSNumber*)favorite {
+	[self willAccessValueForKey:@"favorite"];
+	NSNumber *result = [self primitiveValueForKey:@"favorite"];
+	[self didAccessValueForKey:@"favorite"];
 	return result;
 }
 
-- (void)setResumeTime:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"resumeTime"];
-	[self setPrimitiveValue:value_ forKey:@"resumeTime"];
-	[self didChangeValueForKey:@"resumeTime"];
+- (void)setFavorite:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"favorite"];
+	[self setPrimitiveValue:value_ forKey:@"favorite"];
+	[self didChangeValueForKey:@"favorite"];
 }
 
 
 
-- (int)resumeTimeValue {
-	NSNumber *result = [self resumeTime];
-	return result ? [result intValue] : 0;
+- (BOOL)favoriteValue {
+	NSNumber *result = [self favorite];
+	return result ? [result boolValue] : 0;
 }
 
-- (void)setResumeTimeValue:(int)value_ {
-	[self setResumeTime:[NSNumber numberWithInt:value_]];
+- (void)setFavoriteValue:(BOOL)value_ {
+	[self setFavorite:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+
+- (NSNumber*)watched {
+	[self willAccessValueForKey:@"watched"];
+	NSNumber *result = [self primitiveValueForKey:@"watched"];
+	[self didAccessValueForKey:@"watched"];
+	return result;
+}
+
+- (void)setWatched:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"watched"];
+	[self setPrimitiveValue:value_ forKey:@"watched"];
+	[self didChangeValueForKey:@"watched"];
+}
+
+
+
+- (BOOL)watchedValue {
+	NSNumber *result = [self watched];
+	return result ? [result boolValue] : 0;
+}
+
+- (void)setWatchedValue:(BOOL)value_ {
+	[self setWatched:[NSNumber numberWithBool:value_]];
+}
+
+
+
+
+
+
+
+
+- (NSNumber*)duration {
+	[self willAccessValueForKey:@"duration"];
+	NSNumber *result = [self primitiveValueForKey:@"duration"];
+	[self didAccessValueForKey:@"duration"];
+	return result;
+}
+
+- (void)setDuration:(NSNumber*)value_ {
+	[self willChangeValueForKey:@"duration"];
+	[self setPrimitiveValue:value_ forKey:@"duration"];
+	[self didChangeValueForKey:@"duration"];
+}
+
+
+
+- (float)durationValue {
+	NSNumber *result = [self duration];
+	return result ? [result floatValue] : 0;
+}
+
+- (void)setDurationValue:(float)value_ {
+	[self setDuration:[NSNumber numberWithFloat:value_]];
 }
 
 
@@ -275,28 +364,35 @@
 
 
 
-- (NSNumber*)watched {
-	[self willAccessValueForKey:@"watched"];
-	NSNumber *result = [self primitiveValueForKey:@"watched"];
-	[self didAccessValueForKey:@"watched"];
+- (NSString*)videoDescription {
+	[self willAccessValueForKey:@"videoDescription"];
+	NSString *result = [self primitiveValueForKey:@"videoDescription"];
+	[self didAccessValueForKey:@"videoDescription"];
 	return result;
 }
 
-- (void)setWatched:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"watched"];
-	[self setPrimitiveValue:value_ forKey:@"watched"];
-	[self didChangeValueForKey:@"watched"];
+- (void)setVideoDescription:(NSString*)value_ {
+	[self willChangeValueForKey:@"videoDescription"];
+	[self setPrimitiveValue:value_ forKey:@"videoDescription"];
+	[self didChangeValueForKey:@"videoDescription"];
 }
 
 
 
-- (BOOL)watchedValue {
-	NSNumber *result = [self watched];
-	return result ? [result boolValue] : 0;
+
+
+
+- (NSDate*)added {
+	[self willAccessValueForKey:@"added"];
+	NSDate *result = [self primitiveValueForKey:@"added"];
+	[self didAccessValueForKey:@"added"];
+	return result;
 }
 
-- (void)setWatchedValue:(BOOL)value_ {
-	[self setWatched:[NSNumber numberWithBool:value_]];
+- (void)setAdded:(NSDate*)value_ {
+	[self willChangeValueForKey:@"added"];
+	[self setPrimitiveValue:value_ forKey:@"added"];
+	[self didChangeValueForKey:@"added"];
 }
 
 
@@ -322,28 +418,17 @@
 
 
 
-- (NSNumber*)audioFormatID {
-	[self willAccessValueForKey:@"audioFormatID"];
-	NSNumber *result = [self primitiveValueForKey:@"audioFormatID"];
-	[self didAccessValueForKey:@"audioFormatID"];
+- (NSData*)otherPropertiesData {
+	[self willAccessValueForKey:@"otherPropertiesData"];
+	NSData *result = [self primitiveValueForKey:@"otherPropertiesData"];
+	[self didAccessValueForKey:@"otherPropertiesData"];
 	return result;
 }
 
-- (void)setAudioFormatID:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"audioFormatID"];
-	[self setPrimitiveValue:value_ forKey:@"audioFormatID"];
-	[self didChangeValueForKey:@"audioFormatID"];
-}
-
-
-
-- (int)audioFormatIDValue {
-	NSNumber *result = [self audioFormatID];
-	return result ? [result intValue] : 0;
-}
-
-- (void)setAudioFormatIDValue:(int)value_ {
-	[self setAudioFormatID:[NSNumber numberWithInt:value_]];
+- (void)setOtherPropertiesData:(NSData*)value_ {
+	[self willChangeValueForKey:@"otherPropertiesData"];
+	[self setPrimitiveValue:value_ forKey:@"otherPropertiesData"];
+	[self didChangeValueForKey:@"otherPropertiesData"];
 }
 
 
@@ -351,137 +436,23 @@
 
 
 
-- (NSNumber*)fileClass {
-	[self willAccessValueForKey:@"fileClass"];
-	NSNumber *result = [self primitiveValueForKey:@"fileClass"];
-	[self didAccessValueForKey:@"fileClass"];
+- (NSString*)audioDescription {
+	[self willAccessValueForKey:@"audioDescription"];
+	NSString *result = [self primitiveValueForKey:@"audioDescription"];
+	[self didAccessValueForKey:@"audioDescription"];
 	return result;
 }
 
-- (void)setFileClass:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"fileClass"];
-	[self setPrimitiveValue:value_ forKey:@"fileClass"];
-	[self didChangeValueForKey:@"fileClass"];
-}
-
-
-
-- (short)fileClassValue {
-	NSNumber *result = [self fileClass];
-	return result ? [result shortValue] : 0;
-}
-
-- (void)setFileClassValue:(short)value_ {
-	[self setFileClass:[NSNumber numberWithShort:value_]];
+- (void)setAudioDescription:(NSString*)value_ {
+	[self willChangeValueForKey:@"audioDescription"];
+	[self setPrimitiveValue:value_ forKey:@"audioDescription"];
+	[self didChangeValueForKey:@"audioDescription"];
 }
 
 
 
 
 
-
-- (NSString*)subtitlesDescription {
-	[self willAccessValueForKey:@"subtitlesDescription"];
-	NSString *result = [self primitiveValueForKey:@"subtitlesDescription"];
-	[self didAccessValueForKey:@"subtitlesDescription"];
-	return result;
-}
-
-- (void)setSubtitlesDescription:(NSString*)value_ {
-	[self willChangeValueForKey:@"subtitlesDescription"];
-	[self setPrimitiveValue:value_ forKey:@"subtitlesDescription"];
-	[self didChangeValueForKey:@"subtitlesDescription"];
-}
-
-
-
-
-
-
-	
-
-- (SapphireDirectoryMetaData*)parent {
-	[self willAccessValueForKey:@"parent"];
-	SapphireDirectoryMetaData *result = [self primitiveValueForKey:@"parent"];
-	[self didAccessValueForKey:@"parent"];
-	return result;
-}
-
-- (void)setParent:(SapphireDirectoryMetaData*)value_ {
-	[self willChangeValueForKey:@"parent"];
-	[self setPrimitiveValue:value_ forKey:@"parent"];
-	[self didChangeValueForKey:@"parent"];
-}
-
-	
-
-	
-
-- (SapphireMovie*)movie {
-	[self willAccessValueForKey:@"movie"];
-	SapphireMovie *result = [self primitiveValueForKey:@"movie"];
-	[self didAccessValueForKey:@"movie"];
-	return result;
-}
-
-- (void)setMovie:(SapphireMovie*)value_ {
-	[self willChangeValueForKey:@"movie"];
-	[self setPrimitiveValue:value_ forKey:@"movie"];
-	[self didChangeValueForKey:@"movie"];
-}
-
-	
-
-	
-
-- (SapphireXMLData*)xmlData {
-	[self willAccessValueForKey:@"xmlData"];
-	SapphireXMLData *result = [self primitiveValueForKey:@"xmlData"];
-	[self didAccessValueForKey:@"xmlData"];
-	return result;
-}
-
-- (void)setXmlData:(SapphireXMLData*)value_ {
-	[self willChangeValueForKey:@"xmlData"];
-	[self setPrimitiveValue:value_ forKey:@"xmlData"];
-	[self didChangeValueForKey:@"xmlData"];
-}
-
-	
-
-	
-
-- (SapphireJoinedFile*)joinedFile {
-	[self willAccessValueForKey:@"joinedFile"];
-	SapphireJoinedFile *result = [self primitiveValueForKey:@"joinedFile"];
-	[self didAccessValueForKey:@"joinedFile"];
-	return result;
-}
-
-- (void)setJoinedFile:(SapphireJoinedFile*)value_ {
-	[self willChangeValueForKey:@"joinedFile"];
-	[self setPrimitiveValue:value_ forKey:@"joinedFile"];
-	[self didChangeValueForKey:@"joinedFile"];
-}
-
-	
-
-	
-
-- (SapphireJoinedFile*)joinedToFile {
-	[self willAccessValueForKey:@"joinedToFile"];
-	SapphireJoinedFile *result = [self primitiveValueForKey:@"joinedToFile"];
-	[self didAccessValueForKey:@"joinedToFile"];
-	return result;
-}
-
-- (void)setJoinedToFile:(SapphireJoinedFile*)value_ {
-	[self willChangeValueForKey:@"joinedToFile"];
-	[self setPrimitiveValue:value_ forKey:@"joinedToFile"];
-	[self didChangeValueForKey:@"joinedToFile"];
-}
-
-	
 
 	
 - (void)addLinkedParents:(NSSet*)value_ {
@@ -519,6 +490,74 @@
 
 	
 
+- (SapphireJoinedFile*)joinedToFile {
+	[self willAccessValueForKey:@"joinedToFile"];
+	SapphireJoinedFile *result = [self primitiveValueForKey:@"joinedToFile"];
+	[self didAccessValueForKey:@"joinedToFile"];
+	return result;
+}
+
+- (void)setJoinedToFile:(SapphireJoinedFile*)value_ {
+	[self willChangeValueForKey:@"joinedToFile"];
+	[self setPrimitiveValue:value_ forKey:@"joinedToFile"];
+	[self didChangeValueForKey:@"joinedToFile"];
+}
+
+	
+
+	
+
+- (SapphireJoinedFile*)joinedFile {
+	[self willAccessValueForKey:@"joinedFile"];
+	SapphireJoinedFile *result = [self primitiveValueForKey:@"joinedFile"];
+	[self didAccessValueForKey:@"joinedFile"];
+	return result;
+}
+
+- (void)setJoinedFile:(SapphireJoinedFile*)value_ {
+	[self willChangeValueForKey:@"joinedFile"];
+	[self setPrimitiveValue:value_ forKey:@"joinedFile"];
+	[self didChangeValueForKey:@"joinedFile"];
+}
+
+	
+
+	
+
+- (SapphireXMLData*)xmlData {
+	[self willAccessValueForKey:@"xmlData"];
+	SapphireXMLData *result = [self primitiveValueForKey:@"xmlData"];
+	[self didAccessValueForKey:@"xmlData"];
+	return result;
+}
+
+- (void)setXmlData:(SapphireXMLData*)value_ {
+	[self willChangeValueForKey:@"xmlData"];
+	[self setPrimitiveValue:value_ forKey:@"xmlData"];
+	[self didChangeValueForKey:@"xmlData"];
+}
+
+	
+
+	
+
+- (SapphireDirectoryMetaData*)parent {
+	[self willAccessValueForKey:@"parent"];
+	SapphireDirectoryMetaData *result = [self primitiveValueForKey:@"parent"];
+	[self didAccessValueForKey:@"parent"];
+	return result;
+}
+
+- (void)setParent:(SapphireDirectoryMetaData*)value_ {
+	[self willChangeValueForKey:@"parent"];
+	[self setPrimitiveValue:value_ forKey:@"parent"];
+	[self didChangeValueForKey:@"parent"];
+}
+
+	
+
+	
+
 - (SapphireEpisode*)tvEpisode {
 	[self willAccessValueForKey:@"tvEpisode"];
 	SapphireEpisode *result = [self primitiveValueForKey:@"tvEpisode"];
@@ -530,6 +569,23 @@
 	[self willChangeValueForKey:@"tvEpisode"];
 	[self setPrimitiveValue:value_ forKey:@"tvEpisode"];
 	[self didChangeValueForKey:@"tvEpisode"];
+}
+
+	
+
+	
+
+- (SapphireMovie*)movie {
+	[self willAccessValueForKey:@"movie"];
+	SapphireMovie *result = [self primitiveValueForKey:@"movie"];
+	[self didAccessValueForKey:@"movie"];
+	return result;
+}
+
+- (void)setMovie:(SapphireMovie*)value_ {
+	[self willChangeValueForKey:@"movie"];
+	[self setPrimitiveValue:value_ forKey:@"movie"];
+	[self didChangeValueForKey:@"movie"];
 }
 
 	

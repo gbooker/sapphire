@@ -55,6 +55,23 @@
 
 
 	
+
+- (SapphireTVShow*)tvShow {
+	[self willAccessValueForKey:@"tvShow"];
+	SapphireTVShow *result = [self primitiveValueForKey:@"tvShow"];
+	[self didAccessValueForKey:@"tvShow"];
+	return result;
+}
+
+- (void)setTvShow:(SapphireTVShow*)value_ {
+	[self willChangeValueForKey:@"tvShow"];
+	[self setPrimitiveValue:value_ forKey:@"tvShow"];
+	[self didChangeValueForKey:@"tvShow"];
+}
+
+	
+
+	
 - (void)addEpisodes:(NSSet*)value_ {
 	[self willChangeValueForKey:@"episodes" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value_];
 	[[self primitiveValueForKey:@"episodes"] unionSet:value_];
@@ -86,23 +103,6 @@
 - (NSMutableSet*)episodesSet {
 	return [self mutableSetValueForKey:@"episodes"];
 }
-	
-
-	
-
-- (SapphireTVShow*)tvShow {
-	[self willAccessValueForKey:@"tvShow"];
-	SapphireTVShow *result = [self primitiveValueForKey:@"tvShow"];
-	[self didAccessValueForKey:@"tvShow"];
-	return result;
-}
-
-- (void)setTvShow:(SapphireTVShow*)value_ {
-	[self willChangeValueForKey:@"tvShow"];
-	[self setPrimitiveValue:value_ forKey:@"tvShow"];
-	[self didChangeValueForKey:@"tvShow"];
-}
-
 	
 
 @end

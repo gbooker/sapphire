@@ -7,53 +7,6 @@
 
 
 
-- (NSString*)showDescription {
-	[self willAccessValueForKey:@"showDescription"];
-	NSString *result = [self primitiveValueForKey:@"showDescription"];
-	[self didAccessValueForKey:@"showDescription"];
-	return result;
-}
-
-- (void)setShowDescription:(NSString*)value_ {
-	[self willChangeValueForKey:@"showDescription"];
-	[self setPrimitiveValue:value_ forKey:@"showDescription"];
-	[self didChangeValueForKey:@"showDescription"];
-}
-
-
-
-
-
-
-- (NSNumber*)showID {
-	[self willAccessValueForKey:@"showID"];
-	NSNumber *result = [self primitiveValueForKey:@"showID"];
-	[self didAccessValueForKey:@"showID"];
-	return result;
-}
-
-- (void)setShowID:(NSNumber*)value_ {
-	[self willChangeValueForKey:@"showID"];
-	[self setPrimitiveValue:value_ forKey:@"showID"];
-	[self didChangeValueForKey:@"showID"];
-}
-
-
-
-- (int)showIDValue {
-	NSNumber *result = [self showID];
-	return result ? [result intValue] : 0;
-}
-
-- (void)setShowIDValue:(int)value_ {
-	[self setShowID:[NSNumber numberWithInt:value_]];
-}
-
-
-
-
-
-
 - (NSString*)name {
 	[self willAccessValueForKey:@"name"];
 	NSString *result = [self primitiveValueForKey:@"name"];
@@ -72,17 +25,17 @@
 
 
 
-- (NSString*)showPath {
-	[self willAccessValueForKey:@"showPath"];
-	NSString *result = [self primitiveValueForKey:@"showPath"];
-	[self didAccessValueForKey:@"showPath"];
+- (NSString*)showDescription {
+	[self willAccessValueForKey:@"showDescription"];
+	NSString *result = [self primitiveValueForKey:@"showDescription"];
+	[self didAccessValueForKey:@"showDescription"];
 	return result;
 }
 
-- (void)setShowPath:(NSString*)value_ {
-	[self willChangeValueForKey:@"showPath"];
-	[self setPrimitiveValue:value_ forKey:@"showPath"];
-	[self didChangeValueForKey:@"showPath"];
+- (void)setShowDescription:(NSString*)value_ {
+	[self willChangeValueForKey:@"showDescription"];
+	[self setPrimitiveValue:value_ forKey:@"showDescription"];
+	[self didChangeValueForKey:@"showDescription"];
 }
 
 

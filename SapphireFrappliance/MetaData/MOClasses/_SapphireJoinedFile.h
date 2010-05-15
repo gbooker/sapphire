@@ -14,6 +14,15 @@
 
 
 
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
+
+
+
 - (SapphireFileMetaData*)file;
 - (void)setFile:(SapphireFileMetaData*)value_;
 //- (BOOL)validateFile:(id*)value_ error:(NSError**)error_;

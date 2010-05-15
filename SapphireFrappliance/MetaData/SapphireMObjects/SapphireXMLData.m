@@ -21,6 +21,7 @@
 
 + (void)upgradeV1XMLFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *xmls = doFetchRequest(SapphireXMLDataName, oldMoc, nil);
 	NSEnumerator *xmlEnum = [xmls objectEnumerator];
 	NSManagedObject *oldXML;
@@ -56,7 +57,7 @@
 		{
 			newXML.orderedCastData = [movieXML valueForKey:@"orderedCastData"];
 			newXML.orderedDirectorsData = [movieXML valueForKey:@"orderedDirectorsData"];
-			newXML.orderedGenresData = [movieXML valueForKey:@"orderedGenresData"];			
+			newXML.orderedGenresData = [movieXML valueForKey:@"orderedGenresData"];
 		}
 		file.xmlData = newXML;
 		
@@ -65,6 +66,58 @@
 		if(newXML.movie == nil)
 			[newXML constructMovie];
 	}
+	[pool drain];
+}
+
++ (void)upgradeV2XMLFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSArray *xmls = doFetchRequest(SapphireXMLDataName, oldMoc, nil);
+	NSEnumerator *xmlEnum = [xmls objectEnumerator];
+	NSManagedObject *oldXML;
+	while((oldXML = [xmlEnum nextObject]) != nil)
+	{
+		NSString *path = [oldXML valueForKeyPath:@"file.path"];
+		SapphireFileMetaData *file = nil;
+		if(path != nil)
+			file = [fileLookup objectForKey:path];
+		if(file == nil)
+			continue;
+		
+		SapphireXMLData *newXML = [NSEntityDescription insertNewObjectForEntityForName:SapphireXMLDataName inManagedObjectContext:newMoc];
+		newXML.absoluteEpisodeNumber = [oldXML valueForKey:@"absoluteEpisodeNumber"];
+		newXML.contentDescription = [oldXML valueForKey:@"contentDescription"];
+		newXML.episodeNumber = [oldXML valueForKey:@"episodeNumber"];
+		newXML.fileClass = [oldXML valueForKey:@"fileClass"];
+		newXML.imdbRating = [oldXML valueForKey:@"imdbRating"];
+		newXML.imdbTop250Ranking = [oldXML valueForKey:@"imdbTop250Ranking"];
+		newXML.lastEpisodeNumber = [oldXML valueForKey:@"lastEpisodeNumber"];
+		newXML.modified = [oldXML valueForKey:@"modified"];
+		newXML.MPAARating = [oldXML valueForKey:@"MPAARating"];
+		newXML.orderedCastData = [oldXML valueForKey:@"orderedCastData"];
+		newXML.orderedDirectorsData = [oldXML valueForKey:@"orderedDirectorsData"];
+		newXML.orderedGenresData = [oldXML valueForKey:@"orderedGenresData"];
+		newXML.oscarsWon = [oldXML valueForKey:@"oscarsWon"];
+		newXML.releaseDate = [oldXML valueForKey:@"releaseDate"];
+		newXML.searchEpisode = [oldXML valueForKey:@"searchEpisode"];
+		newXML.searchIMDBNumber = [oldXML valueForKey:@"searchIMDBNumber"];
+		newXML.searchLastEpisodeNumber = [oldXML valueForKey:@"searchLastEpisodeNumber"];
+		newXML.searchSeasonNumber = [oldXML valueForKey:@"searchSeasonNumber"];
+		newXML.searchShowName = [oldXML valueForKey:@"searchShowName"];			
+		newXML.summary = [oldXML valueForKey:@"summary"];
+		newXML.title = [oldXML valueForKey:@"title"];
+		
+		file.xmlData = newXML;
+	}
+	[pool drain];
+}
+
++ (void)upgradeXMLVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
+{
+	if(version == 1)
+		[SapphireXMLData upgradeV1XMLFromContext:oldMoc toContext:newMoc file:fileLookup];
+	else
+		[SapphireXMLData upgradeV2XMLFromContext:oldMoc toContext:newMoc file:fileLookup];
 }
 
 - (void)insertDictionary:(NSDictionary *)dict
@@ -181,10 +234,9 @@
 	if(value != nil)
 		self.fileClass = value;
 
-//AAA
-//	value = [dict objectForKey:META_MOVIE_SORT_TITLE_KEY];
-//	if(value != nil)
-//		self.movieSortTitle = value;
+	value = [dict objectForKey:META_MOVIE_SORT_TITLE_KEY];
+	if(value != nil)
+		self.movieSortTitle = value;
 	
 	if(self.episode == nil)
 		[self constructEpisode];
@@ -342,11 +394,11 @@
 	SapphireEpisode *ret;
 	if(ep != 0)
 	{
-		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show withPath:nil inContext:[self managedObjectContext]];
+		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show inContext:[self managedObjectContext]];
 	}
 	else if(title != nil)
 	{
-		ret = [SapphireEpisode episodeTitle:title inSeason:season forShow:show withPath:nil inContext:[self managedObjectContext]];
+		ret = [SapphireEpisode episodeTitle:title inSeason:season forShow:show inContext:[self managedObjectContext]];
 	}
 	else
 		return;

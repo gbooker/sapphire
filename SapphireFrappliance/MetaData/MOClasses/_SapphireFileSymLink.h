@@ -2,7 +2,7 @@
 // Make changes to SapphireFileSymLink.h instead.
 
 #import <CoreData/CoreData.h>
-#import "SapphireSymLink.h"
+
 
 
 @class SapphireFileMetaData;
@@ -10,7 +10,23 @@
 @class SapphireDirectoryMetaData;
 
 
-@interface _SapphireFileSymLink : SapphireSymLink {}
+@interface _SapphireFileSymLink : NSManagedObject {}
+
+
+- (NSString*)path;
+- (void)setPath:(NSString*)value_;
+
+//- (BOOL)validatePath:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
 
 
 

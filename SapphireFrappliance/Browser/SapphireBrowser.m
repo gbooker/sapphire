@@ -264,139 +264,144 @@ static BOOL is10Version = NO;
 
 - (id<BRMenuItemLayer>) itemForRow: (long) row
 {
-	NSString * displayName=nil ;
-	/*Check for no items*/
-	int nameCount = [_names count];
-	FileClass fileCls=0;
-	if( nameCount == 0)
-	{
-		BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
-		[SapphireFrontRowCompat setTitle:BRLocalizedString(@"< EMPTY >", @"Empty directory") forMenu:result];
-		return result;
-	}
-	if( row >= nameCount ) return ( nil ) ;
-	
-	/*Check our cache*/
-	NSString *lookupName = [_names objectAtIndex:row];
-	id cached = [items objectForKey:lookupName];
-	if(cached != nil)
-		return cached;
-	// Pad filename to correcrtly display gem icons
-	BRAdornedMenuItemLayer * result = nil;
-	BOOL watched = NO;
-	BOOL favorite = NO;
-	BOOL utility = NO;
-	BOOL partiallyWatched = NO;
-	BRRenderScene *scene = [self scene];
-	SapphireTheme *theme = [SapphireTheme sharedTheme];
-	/*Is this a dir*/
-	if(row < dirCount)
-	{
-		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:YES];
-		id <SapphireDirectory> meta = [metaData metaDataForDirectory:lookupName];
-		watched = ![meta containsFileMatchingPredicate:[SapphireApplianceController unwatchedPredicate]];
-		favorite = [meta containsFileMatchingPredicate:[SapphireApplianceController favoritePredicate]];
-	}
-	/*Check for a file next*/
-	else if(row < dirCount + fileCount)
-	{
-		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
-		SapphireFileMetaData *meta = [metaData metaDataForFile:lookupName];
-		if(meta != nil)
+	@try{
+		NSString * displayName=nil ;
+		/*Check for no items*/
+		int nameCount = [_names count];
+		FileClass fileCls=0;
+		if( nameCount == 0)
 		{
-			fileCls=[meta fileClassValue];
-			BOOL rightTextSet = NO;
-			if(fileCls==FILE_CLASS_TV_SHOW)
+			BRAdornedMenuItemLayer *result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
+			[SapphireFrontRowCompat setTitle:BRLocalizedString(@"< EMPTY >", @"Empty directory") forMenu:result];
+			return result;
+		}
+		if( row >= nameCount ) return ( nil ) ;
+		
+		/*Check our cache*/
+		NSString *lookupName = [_names objectAtIndex:row];
+		id cached = [items objectForKey:lookupName];
+		if(cached != nil)
+			return cached;
+		// Pad filename to correcrtly display gem icons
+		BRAdornedMenuItemLayer * result = nil;
+		BOOL watched = NO;
+		BOOL favorite = NO;
+		BOOL utility = NO;
+		BOOL partiallyWatched = NO;
+		BRRenderScene *scene = [self scene];
+		SapphireTheme *theme = [SapphireTheme sharedTheme];
+		/*Is this a dir*/
+		if(row < dirCount)
+		{
+			result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:YES];
+			id <SapphireDirectory> meta = [metaData metaDataForDirectory:lookupName];
+			watched = ![meta containsFileMatchingPredicate:[SapphireApplianceController unwatchedPredicate]];
+			favorite = [meta containsFileMatchingPredicate:[SapphireApplianceController favoritePredicate]];
+		}
+		/*Check for a file next*/
+		else if(row < dirCount + fileCount)
+		{
+			result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
+			SapphireFileMetaData *meta = [metaData metaDataForFile:lookupName];
+			if(meta != nil)
 			{
-				SapphireEpisode *ep = [meta tvEpisode];
-				/*Display episode number if available*/
-				int eps= [ep episodeNumberValue];
-				int ep2= [ep lastEpisodeNumberValue];
-				displayName=[ep episodeTitle] ;
-				if(eps>0)
+				fileCls=[meta fileClassValue];
+				BOOL rightTextSet = NO;
+				if(fileCls==FILE_CLASS_TV_SHOW)
 				{
-					NSArray *comp = [[metaData path] pathComponents];
-					NSString *prefix = @"";
-					if([comp count] == 2 && [[comp objectAtIndex:0] isEqual:@"@TV"])
-						/*Eps listed outside of seasons*/
-						prefix = [NSString stringWithFormat:@"%02dx", [[ep season] seasonNumberValue]];
-					if(ep2>0 && ep2 != eps)
-						[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %@%02d-%02d", prefix, eps, ep2] forMenu:result];
+					SapphireEpisode *ep = [meta tvEpisode];
+					/*Display episode number if available*/
+					int eps= [ep episodeNumberValue];
+					int ep2= [ep lastEpisodeNumberValue];
+					displayName=[ep episodeTitle] ;
+					if(eps>0)
+					{
+						NSArray *comp = [[metaData path] pathComponents];
+						NSString *prefix = @"";
+						if([comp count] == 2 && [[comp objectAtIndex:0] isEqual:@"@TV"])
+							/*Eps listed outside of seasons*/
+							prefix = [NSString stringWithFormat:@"%02dx", [[ep season] seasonNumberValue]];
+						if(ep2>0 && ep2 != eps)
+							[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %@%02d-%02d", prefix, eps, ep2] forMenu:result];
+						else
+							[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %@%02d", prefix, eps] forMenu:result];
+						rightTextSet = YES;
+					}
+				}
+				if(fileCls==FILE_CLASS_MOVIE)
+				{
+					SapphireMovie *movie = [meta movie];
+					displayName=[movie title];
+					/* Find out if we are displaying a virtual directoy we need to filter for */
+					NSString *dirPath=[metaData path];
+					/*Add icons & stats (RIGHT)*/
+					int top250 = [movie imdbTop250RankingValue];
+					if([dirPath hasPrefix:VIRTUAL_DIR_TOP250_PATH] && top250 > 0)
+					{
+						NSString *movieStatsTop250 = [NSString stringWithFormat:@"#%d ", top250];
+						/* This list is already filtered so all displayed movies will have a top250 stat */
+						[SapphireFrontRowCompat setRightJustifiedText:movieStatsTop250 forMenu:result];
+						[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
+					}
+					else if([movie oscarsWonValue] > 0)
+					{
+						NSString *movieStatsOscar = [NSString stringWithFormat:@"%dx", [movie oscarsWonValue]];
+						[SapphireFrontRowCompat setRightJustifiedText:movieStatsOscar forMenu:result];
+						[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
+					}
+					else if(top250 > 0)
+					{
+						NSString *movieStatsTop250 = [NSString stringWithFormat:@"#%d ", top250];
+						[SapphireFrontRowCompat setRightJustifiedText:movieStatsTop250 forMenu:result];
+						[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
+					}
 					else
-						[SapphireFrontRowCompat setRightJustifiedText:[NSString stringWithFormat:@" %@%02d", prefix, eps] forMenu:result];
+					{
+						[SapphireFrontRowCompat setRightJustifiedText:[meta durationString] forMenu:result];
+					}
 					rightTextSet = YES;
 				}
-			}
-			if(fileCls==FILE_CLASS_MOVIE)
-			{
-				SapphireMovie *movie = [meta movie];
-				displayName=[movie title];
-				/* Find out if we are displaying a virtual directoy we need to filter for */
-				NSString *dirPath=[metaData path];
-				/*Add icons & stats (RIGHT)*/
-				int top250 = [movie imdbTop250RankingValue];
-				if([dirPath hasPrefix:VIRTUAL_DIR_TOP250_PATH] && top250 > 0)
-				{
-					NSString *movieStatsTop250 = [NSString stringWithFormat:@"#%d ", top250];
-					/* This list is already filtered so all displayed movies will have a top250 stat */
-					[SapphireFrontRowCompat setRightJustifiedText:movieStatsTop250 forMenu:result];
-					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
-				}
-				else if([movie oscarsWonValue] > 0)
-				{
-					NSString *movieStatsOscar = [NSString stringWithFormat:@"%dx", [movie oscarsWonValue]];
-					[SapphireFrontRowCompat setRightJustifiedText:movieStatsOscar forMenu:result];
-					[SapphireFrontRowCompat setRightIcon:[theme gem:OSCAR_GEM_KEY] forMenu:result];
-				}
-				else if(top250 > 0)
-				{
-					NSString *movieStatsTop250 = [NSString stringWithFormat:@"#%d ", top250];
-					[SapphireFrontRowCompat setRightJustifiedText:movieStatsTop250 forMenu:result];
-					[SapphireFrontRowCompat setRightIcon:[theme gem:IMDB_GEM_KEY] forMenu:result];
-				}
-				else
-				{
-					[SapphireFrontRowCompat setRightJustifiedText:[meta durationString] forMenu:result];
-				}
-				rightTextSet = YES;
-			}
-			watched = [meta watchedValue];
-			favorite = [meta favoriteValue];
-			partiallyWatched = [meta resumeTimeValue] != 0;
-			NSString *sizeString = [meta sizeString];
-			if(!rightTextSet && [sizeString length] > 1)
-				/*Fallback to size*/
-				[SapphireFrontRowCompat setRightJustifiedText:sizeString forMenu:result];
+				watched = [meta watchedValue];
+				favorite = [meta favoriteValue];
+				partiallyWatched = [meta resumeTimeValue] != 0;
+				NSString *sizeString = [meta sizeString];
+				if(!rightTextSet && [sizeString length] > 1)
+					/*Fallback to size*/
+					[SapphireFrontRowCompat setRightJustifiedText:sizeString forMenu:result];
 
+			}
 		}
+		/*Utility*/
+		else
+		{
+			result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
+			utility = YES;
+		}
+		NSString *gemString = nil;
+		/*Add icons (LEFT)*/
+		if(utility) gemString = FAST_GEM_KEY;
+		else if(partiallyWatched) gemString = RED_BLUE_GEM_KEY;
+		else if(!watched) gemString = BLUE_GEM_KEY;
+		else if(favorite) gemString = YELLOW_GEM_KEY;
+		else if(fileCls==FILE_CLASS_AUDIO) gemString = GREEN_GEM_KEY;
+		else gemString = RED_GEM_KEY;;
+		[SapphireFrontRowCompat setLeftIcon:[theme gem:gemString] forMenu:result];
+		
+		// add text
+		NSString *name;
+		if(displayName)
+			name = displayName;
+		else
+			name = lookupName;
+		name=[@"  " stringByAppendingString: name] ;
+		[SapphireFrontRowCompat setTitle:name forMenu:result];
+		[items setObject:result forKey:lookupName];
+					
+		return ( result ) ;
+	} @catch (NSException *e) {
+		[SapphireApplianceController logException:e];
 	}
-	/*Utility*/
-	else
-	{
-		result = [SapphireFrontRowCompat textMenuItemForScene:scene folder:NO];
-		utility = YES;
-	}
-	NSString *gemString = nil;
-	/*Add icons (LEFT)*/
-	if(utility) gemString = FAST_GEM_KEY;
-	else if(partiallyWatched) gemString = RED_BLUE_GEM_KEY;
-	else if(!watched) gemString = BLUE_GEM_KEY;
-	else if(favorite) gemString = YELLOW_GEM_KEY;
-	else if(fileCls==FILE_CLASS_AUDIO) gemString = GREEN_GEM_KEY;
-	else gemString = RED_GEM_KEY;;
-	[SapphireFrontRowCompat setLeftIcon:[theme gem:gemString] forMenu:result];
-	
-	// add text
-	NSString *name;
-	if(displayName)
-		name = displayName;
-	else
-		name = lookupName;
-	name=[@"  " stringByAppendingString: name] ;
-	[SapphireFrontRowCompat setTitle:name forMenu:result];
-	[items setObject:result forKey:lookupName];
-				
-	return ( result ) ;
+	return nil;
 }
 
 - (NSString *) titleForRow: (long) row
@@ -458,7 +463,6 @@ static BOOL is10Version = NO;
 		int ep = [episode episodeNumberValue];
 		int season = [[episode season] seasonNumberValue];
 		SapphireTVShow *show = [episode tvShow];
-		NSString *showID = [show showPath];
 		NSString *showName= [show name];
 		
 		if(season != 0)
@@ -467,8 +471,6 @@ static BOOL is10Version = NO;
 			[reqComp addObject:[NSString stringWithFormat:@"ep=%d", ep]];
 		if(showName != 0)
 			[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
-		if(showID != 0)
-			[reqComp addObject:[NSString stringWithFormat:@"showid=%@", showID]];
 	}
 	else if([currentPlayFile fileClassValue] == FILE_CLASS_MOVIE)
 	{

@@ -14,7 +14,7 @@
 		} \
 	}
 @interface SapphireXMLData : _SapphireXMLData {}
-+ (void)upgradeV1XMLFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup;
++ (void)upgradeXMLVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup;
 - (void)insertDictionary:(NSDictionary *)dict;
 - (NSArray *)orderedCast;
 - (void)setOrderedCast:(NSArray *)ordered;

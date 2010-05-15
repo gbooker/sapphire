@@ -17,8 +17,9 @@
 	return ret;
 }
 
-+ (void)upgradeV1JoinedFileFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
++ (void)upgradeJoinedFileVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc file:(NSDictionary *)fileLookup
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *joins = doFetchRequest(SapphireJoinedFileName, oldMoc, nil);
 	NSEnumerator *joinEnum = [joins objectEnumerator];
 	NSManagedObject *oldJoin;
@@ -48,6 +49,7 @@
 		newJoin.file = destination;
 		[newJoin.joinedFilesSet setSet:joined];
 	}
+	[pool drain];
 }
 
 @end

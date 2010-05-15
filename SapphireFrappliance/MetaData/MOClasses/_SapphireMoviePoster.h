@@ -11,6 +11,15 @@
 @interface _SapphireMoviePoster : NSManagedObject {}
 
 
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 - (NSString*)link;
 - (void)setLink:(NSString*)value_;
 

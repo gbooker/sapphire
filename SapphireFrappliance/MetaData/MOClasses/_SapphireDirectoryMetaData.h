@@ -2,8 +2,12 @@
 // Make changes to SapphireDirectoryMetaData.h instead.
 
 #import <CoreData/CoreData.h>
-#import "SapphireMetaData.h"
 
+
+
+@class SapphireDirectorySymLink;
+
+@class SapphireCollectionDirectory;
 
 @class SapphireDirectoryMetaData;
 
@@ -11,22 +15,50 @@
 
 @class SapphireFileMetaData;
 
-@class SapphireFileSymLink;
-
 @class SapphireDirectoryMetaData;
 
-@class SapphireDirectorySymLink;
-
-@class SapphireCollectionDirectory;
+@class SapphireFileSymLink;
 
 
-@interface _SapphireDirectoryMetaData : SapphireMetaData {}
+@interface _SapphireDirectoryMetaData : NSManagedObject {}
 
 
 
-- (SapphireDirectoryMetaData*)parent;
-- (void)setParent:(SapphireDirectoryMetaData*)value_;
-//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
+
+- (NSString*)path;
+- (void)setPath:(NSString*)value_;
+
+//- (BOOL)validatePath:(id*)value_ error:(NSError**)error_;
+
+
+
+- (NSData*)otherPropertiesData;
+- (void)setOtherPropertiesData:(NSData*)value_;
+
+//- (BOOL)validateOtherPropertiesData:(id*)value_ error:(NSError**)error_;
+
+
+
+
+- (void)addLinkedParents:(NSSet*)value_;
+- (void)removeLinkedParents:(NSSet*)value_;
+- (void)addLinkedParentsObject:(SapphireDirectorySymLink*)value_;
+- (void)removeLinkedParentsObject:(SapphireDirectorySymLink*)value_;
+- (NSMutableSet*)linkedParentsSet;
+
+
+
+- (SapphireCollectionDirectory*)collectionDirectory;
+- (void)setCollectionDirectory:(SapphireCollectionDirectory*)value_;
+//- (BOOL)validateCollectionDirectory:(id*)value_ error:(NSError**)error_;
+
+
+
+- (void)addMetaDirs:(NSSet*)value_;
+- (void)removeMetaDirs:(NSSet*)value_;
+- (void)addMetaDirsObject:(SapphireDirectoryMetaData*)value_;
+- (void)removeMetaDirsObject:(SapphireDirectoryMetaData*)value_;
+- (NSMutableSet*)metaDirsSet;
 
 
 
@@ -46,33 +78,17 @@
 
 
 
+- (SapphireDirectoryMetaData*)parent;
+- (void)setParent:(SapphireDirectoryMetaData*)value_;
+//- (BOOL)validateParent:(id*)value_ error:(NSError**)error_;
+
+
+
 - (void)addLinkedFiles:(NSSet*)value_;
 - (void)removeLinkedFiles:(NSSet*)value_;
 - (void)addLinkedFilesObject:(SapphireFileSymLink*)value_;
 - (void)removeLinkedFilesObject:(SapphireFileSymLink*)value_;
 - (NSMutableSet*)linkedFilesSet;
-
-
-
-- (void)addMetaDirs:(NSSet*)value_;
-- (void)removeMetaDirs:(NSSet*)value_;
-- (void)addMetaDirsObject:(SapphireDirectoryMetaData*)value_;
-- (void)removeMetaDirsObject:(SapphireDirectoryMetaData*)value_;
-- (NSMutableSet*)metaDirsSet;
-
-
-
-- (void)addLinkedParents:(NSSet*)value_;
-- (void)removeLinkedParents:(NSSet*)value_;
-- (void)addLinkedParentsObject:(SapphireDirectorySymLink*)value_;
-- (void)removeLinkedParentsObject:(SapphireDirectorySymLink*)value_;
-- (NSMutableSet*)linkedParentsSet;
-
-
-
-- (SapphireCollectionDirectory*)collectionDirectory;
-- (void)setCollectionDirectory:(SapphireCollectionDirectory*)value_;
-//- (BOOL)validateCollectionDirectory:(id*)value_ error:(NSError**)error_;
 
 
 @end

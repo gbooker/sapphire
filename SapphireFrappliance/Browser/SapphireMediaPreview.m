@@ -135,7 +135,7 @@ static NSSet *coverArtExtentions = nil;
 	[asset release];
 }
 
-- (void)setMetaData:(id <SapphireMetaDataProtocol>)newMeta inMetaData:(id <SapphireDirectory>)dir
+- (void)setMetaData:(id <SapphireMetaData>)newMeta inMetaData:(id <SapphireDirectory>)dir
 {
 	[meta release];
 	NSString *path = [newMeta path];

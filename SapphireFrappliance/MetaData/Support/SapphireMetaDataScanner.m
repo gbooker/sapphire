@@ -19,7 +19,6 @@
  */
 
 #import "SapphireMetaDataScanner.h"
-#import "SapphireMetaData.h"
 #import "SapphireApplianceController.h"
 #import "SapphireDirectoryMetaData.h"
 

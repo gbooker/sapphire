@@ -1,4 +1,5 @@
 #import "_SapphireFileMetaData.h"
+#import "SapphireMetaData.h"
 
 #define SapphireFileMetaDataName	@"FileMetaData"
 
@@ -39,7 +40,6 @@ extern NSString *META_EPISODE_NUMBER_KEY;
 extern NSString *META_SHOW_NAME_KEY;
 extern NSString *META_SHOW_AIR_DATE;
 extern NSString *META_ABSOLUTE_EP_NUMBER_KEY;
-extern NSString *META_SHOW_IDENTIFIER_KEY;
 extern NSString *META_EPISODE_2_NUMBER_KEY;
 extern NSString *META_ABSOLUTE_EP_2_NUMBER_KEY;
 extern NSString *META_SEARCH_SEASON_NUMBER_KEY;
@@ -88,11 +88,11 @@ typedef enum {
 
 @class SapphireMetaDataUpgrading;
 
-@interface SapphireFileMetaData : _SapphireFileMetaData {}
+@interface SapphireFileMetaData : _SapphireFileMetaData <SapphireMetaData> {}
 + (SapphireFileMetaData *)fileWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
 + (SapphireFileMetaData *)createFileWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
 + (SapphireFileMetaData *)createFileWithPath:(NSString *)path parent:(SapphireDirectoryMetaData *)parent inContext:(NSManagedObjectContext *)moc;
-+ (NSDictionary *)upgradeV1FilesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withMovies:(NSDictionary *)movieLookup directories:(NSDictionary *)dirLookup;
++ (NSDictionary *)upgradeFilesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withMovies:(NSDictionary *)movieLookup directories:(NSDictionary *)dirLookup;
 
 - (void)insertDictionary:(NSDictionary *)dict withDefer:(NSMutableDictionary *)defer;
 - (NSComparisonResult) episodeCompare:(SapphireFileMetaData *)other;

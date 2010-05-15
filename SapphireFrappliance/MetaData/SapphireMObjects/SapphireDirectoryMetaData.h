@@ -19,7 +19,7 @@
 + (SapphireDirectoryMetaData *)directoryWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
 + (SapphireDirectoryMetaData *)createDirectoryWithPath:(NSString *)path inContext:(NSManagedObjectContext *)moc;
 + (SapphireDirectoryMetaData *)createDirectoryWithPath:(NSString *)path parent:(SapphireDirectoryMetaData *)parent inContext:(NSManagedObjectContext *)moc;
-+ (NSDictionary *)upgradeV1DirectoriesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc;
++ (NSDictionary *)upgradeDirectoriesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc;
 - (void)insertDictionary:(NSDictionary *)dict withDefer:(NSMutableDictionary *)defer andDisplay:(SapphireMetaDataUpgrading *)display;
 - (void)rescanDirWithExistingDirs:(NSMutableArray *)existingDirs files:(NSMutableArray *)existingFiles symDirs:(NSMutableArray *)existingSymDirs symFiles:(NSMutableArray *)existingSymFiles;
 

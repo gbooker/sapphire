@@ -12,9 +12,9 @@ static NSArray *allowedSorts = nil;
 	allowedSorts = [[NSArray alloc] initWithObjects:[SapphireTVEpisodeSorter sharedInstance], [SapphireDateSorter sharedInstance], nil];
 }
 
-+ (SapphireSeason *)season:(int)season forShow:(NSString *)show withPath:(NSString *)showPath inContext:(NSManagedObjectContext *)moc
++ (SapphireSeason *)season:(int)season forShow:(NSString *)show inContext:(NSManagedObjectContext *)moc
 {
-	SapphireTVShow *tvshow = [SapphireTVShow show:show withPath:showPath inContext:moc];
+	SapphireTVShow *tvshow = [SapphireTVShow show:show inContext:moc];
 	NSPredicate *seasonPred = [NSPredicate predicateWithFormat:@"seasonNumber = %d", season];
 	NSArray *results = [[tvshow.seasonsSet allObjects] filteredArrayUsingPredicate:seasonPred];
 	if([results count])
@@ -26,7 +26,7 @@ static NSArray *allowedSorts = nil;
 	return ret;
 }
 
-+ (SapphireSeason *)upgradeV1Season:(NSManagedObject *)oldSeason toShow:(SapphireTVShow *)show
++ (SapphireSeason *)upgradeSeasonVersion:(int)version from:(NSManagedObject *)oldSeason toShow:(SapphireTVShow *)show
 {
 	NSManagedObjectContext *newMoc = [show managedObjectContext];
 	

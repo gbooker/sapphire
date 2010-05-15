@@ -23,10 +23,9 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 #define ORDERED_GENRES_DATA			@"orderedGenresData"
 #define OVERRIDDEN_GENRES_DATA		@"overriddenGenresData"
 
-//AAA
-//@interface SapphireMovie (private)
-//- (NSString *)movieSortTitle;
-//@end
+@interface SapphireMovie ()
+- (NSString *)movieSortTitle;
+@end
 
 @implementation SapphireMovie
 
@@ -167,16 +166,21 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 	return imdbNumber;
 }
 
-+ (NSDictionary *)upgradeV1MoviesFromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withCast:(NSDictionary *)cast directors:(NSDictionary *)directors genres:(NSDictionary *)genres
++ (NSDictionary *)upgradeMoviesVersion:(int)version fromContext:(NSManagedObjectContext *)oldMoc toContext:(NSManagedObjectContext *)newMoc withCast:(NSDictionary *)cast directors:(NSDictionary *)directors genres:(NSDictionary *)genres
 {
 	NSMutableDictionary *lookup = [NSMutableDictionary dictionary];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSArray *oldMovies = doFetchRequest(SapphireMovieName, oldMoc, nil);
 	NSEnumerator *movieEnum = [oldMovies objectEnumerator];
 	NSManagedObject *oldMovie;
 	while((oldMovie = [movieEnum nextObject]) != nil)
 	{
-		SapphireMovie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:SapphireMovieName inManagedObjectContext:newMoc];
+		NSString *title = [oldMovie valueForKey:@"title"];
 		NSNumber *imdbNumber = [oldMovie valueForKey:@"imdbNumber"];
+		if(imdbNumber == nil && title == nil)
+			//Reject b/c this movie info isn't useful
+			continue;
+		SapphireMovie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:SapphireMovieName inManagedObjectContext:newMoc];
 		newMovie.imdbNumber = imdbNumber;
 		newMovie.imdbRating = [oldMovie valueForKey:@"imdbRating"];
 		newMovie.imdbTop250Ranking = [oldMovie valueForKey:@"imdbTop250Ranking"];
@@ -184,7 +188,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		newMovie.oscarsWon = [oldMovie valueForKey:@"oscarsWon"];
 		newMovie.plot = [oldMovie valueForKey:@"plot"];
 		newMovie.releaseDate = [oldMovie valueForKey:@"releaseDate"];
-		newMovie.title = [oldMovie valueForKey:@"title"];
+		newMovie.title = title;
 		
 		NSData *propData = [oldMovie valueForKey:@"orderedCastData"];
 		NSArray *castNames = [NSKeyedUnarchiver unarchiveObjectWithData:propData];
@@ -221,10 +225,15 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		NSManagedObject *translation;
 		while((translation = [translationEnum nextObject]) != nil)
 		{
-			[SapphireMovieTranslation upgradeV1MovieTranslation:translation toMovie:newMovie];
+			[SapphireMovieTranslation upgradeMovieTranslationVersion:version from:translation toMovie:newMovie];
 		}
-		[lookup setObject:newMovie forKey:imdbNumber];
+		if(imdbNumber != nil)
+			[lookup setObject:newMovie forKey:imdbNumber];
+		else if(title != nil)
+			[lookup setObject:newMovie forKey:title];
 	}
+	[SapphireMovieTranslation upgradeMovieLessMovieTranslationVersion:version fromContext:oldMoc toContext:newMoc];
+	[pool drain];
 	return lookup;
 }
 
@@ -235,9 +244,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 
 - (NSComparisonResult)titleCompare:(SapphireMovie *)other
 {
-	//AAA
-//	return [[self movieSortTitle] nameCompare:[other movieSortTitle]];
-	return [self.title nameCompare:other.title];
+	return [[self movieSortTitle] nameCompare:[other movieSortTitle]];
 }
 
 - (NSComparisonResult)imdbTop250RankingCompare:(SapphireMovie *)other
@@ -508,12 +515,11 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 	return super.title;
 }
 
-//AAA
-//- (NSString *)movieSortTitle
-//{
-//	overrideWithXMLForKey(NSString, movieSortTitle);
-//	return self.title;
-//}
+- (NSString *)movieSortTitle
+{
+	overrideWithXMLForKey(NSString, movieSortTitle);
+	return self.title;
+}
 
 - (NSString *)plot
 {
@@ -580,6 +586,8 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		[dict setObject:value forKey:META_MOVIE_GENRES_KEY];
 }
 
+//XXX
+/*IS THIS EVER USED?
 - (NSNumber *)watched
 {
 	NSSet *files = self.filesSet;
@@ -602,7 +610,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 	if([remain count])
 		return [NSNumber numberWithBool:YES];
 	return [NSNumber numberWithBool:NO];
-}
+}*/
 
 - (void)clearPredicateCache
 {
