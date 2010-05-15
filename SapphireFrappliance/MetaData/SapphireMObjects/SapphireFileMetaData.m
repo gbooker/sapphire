@@ -126,6 +126,7 @@ static NSSet *secondaryFiles;
 	SapphireFileMetaData *ret = [NSEntityDescription insertNewObjectForEntityForName:SapphireFileMetaDataName inManagedObjectContext:moc];
 	ret.parent = parent;
 	ret.path = path;
+	ret.added = [NSDate date];
 	
 	return ret;
 }
