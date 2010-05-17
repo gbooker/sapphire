@@ -24,14 +24,6 @@
 @class SapphireImporterDataMenu, SapphireAllImporter, SapphireFileMetaData;
 
 /*!
- * @brief The type of import requested
- */
-typedef enum {
-	IMPORT_TYPE_FILE_DATA,		/*!< @brief Just import file data, not everything */
-	IMPORT_TYPE_ALL_DATA,		/*!< @brief Import everything */
-}ImportType;
-
-/*!
  * @brief The protocol for a file import data
  *
  * This object is a protocol of data to import.  It has the metadata as well as what kind of import to od.  Finally, it has an object to inform when the import is complete.
@@ -52,13 +44,6 @@ typedef enum {
  * @return The informer
  */
 - (id <SapphireImporterBackgroundProtocol>)informer;
-
-/*!
- * @brief Get the import type
- *
- * @return The import Type
- */
-- (ImportType)importType;
 @end
 
 /*!
@@ -167,12 +152,10 @@ typedef enum {
 /*!
  * @brief The importer client object
  */
-@interface SapphireImportHelperClient : SapphireImportHelper <SapphireImportClient, SapphireImporterDelegate> {
+@interface SapphireImportHelperClient : SapphireImportHelper <SapphireImportClient> {
 	id <SapphireImportServer>	server;			/*!< @brief The server*/
-	SapphireAllImporter			*allImporter;	/*!< @brief An allimporter object for importing all data*/
 	NSManagedObjectContext		*moc;			/*!< @brief The object context*/
 	BOOL						keepRunning;	/*!< @brief Keep running (for terminating run loop)*/
-	BOOL						importComplete;	/*!< @brief The background importer completed*/
 }
 
 /*!
@@ -199,13 +182,15 @@ typedef enum {
 /*!
  * @brief The importer server object
  */
-@interface SapphireImportHelperServer : SapphireImportHelper <SapphireImportServer> {
+@interface SapphireImportHelperServer : SapphireImportHelper <SapphireImportServer, SapphireImporterDelegate> {
 	NSConnection						*serverConnection;	/*!< @brief The server's listener connection*/
 	id <SapphireImportClient>			client;				/*!< @brief The client*/
 	NSManagedObjectContext				*moc;				/*!< @brief The object context*/
 	NSMutableArray						*queue;				/*!< @brief The processing queue*/
 	BOOL								queueSuspended;		/*!< @brief YES if the child exists, but nothing is in the queue, NO otherwise*/
 	id <SapphireImportFileProtocol>		currentImporting;	/*!< @brief The file the child is currently processing*/
+	SapphireAllImporter					*allImporter;		/*!< @brief An allimporter object for importing all data*/
+	NSMutableDictionary					*informers;			/*!< @brief The informer of completion of import keyed by path*/
 }
 
 /*!

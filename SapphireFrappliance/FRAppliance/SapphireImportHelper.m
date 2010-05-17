@@ -33,9 +33,8 @@
 @interface SapphireImportFile : NSObject <SapphireImportFileProtocol>{
 	NSString								*path;
 	id <SapphireImporterBackgroundProtocol>	informer;
-	ImportType								type;
 }
-- (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer type:(ImportType)aType;
+- (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer;
 @end
 
 @interface SapphireImportHelperServer ()
@@ -88,8 +87,6 @@ static SapphireImportHelper *shared = nil;
 		return nil;
 	
 	moc = [context retain];
-	allImporter = [[SapphireAllImporter alloc] init];
-	[allImporter setDelegate:self];
 	keepRunning = YES;
 	
 	return self;
@@ -97,28 +94,8 @@ static SapphireImportHelper *shared = nil;
 - (void) dealloc
 {
 	[server release];
-	[allImporter release];
 	[moc release];
 	[super dealloc];
-}
-
-- (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state
-{
-	importComplete = YES;
-}
-
-- (BOOL)canDisplayChooser
-{
-	return NO;
-}
-
-- (id)chooserScene
-{
-	return nil;
-}
-
-- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
-{
 }
 
 - (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
@@ -167,27 +144,11 @@ static SapphireImportHelper *shared = nil;
 		{
 			[moc reset];
 			NSAutoreleasePool *singleImportPool = [[NSAutoreleasePool alloc] init];
-			ImportType type = [file importType];
 			BOOL ret;
 			NSString *path = [file path];
 			SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:path inContext:moc];
 			[moc refreshObject:file mergeChanges:YES];
-			if(type == IMPORT_TYPE_FILE_DATA)
-				ret = updateMetaData(file);
-			else
-			{
-				ImportState state = [allImporter importMetaData:file path:[file path]];
-				if(state == ImportStateBackground || state == ImportStateMultipleSuspend)
-				{
-					importComplete = NO;
-					NSRunLoop *currentRL = [NSRunLoop currentRunLoop];
-					while(!importComplete && [currentRL runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]])
-						;
-					ret = YES;
-				}
-				else
-					ret = (state == ImportStateUpdated);
-			}
+			ret = updateMetaData(file);
 			NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
 			[server importCompleteWithChanges:changes updated:ret];
 			[singleImportPool release];
@@ -216,7 +177,10 @@ static SapphireImportHelper *shared = nil;
 	
 	queue = [[NSMutableArray alloc] init];
 	queueSuspended = NO;
-	
+	allImporter = [[SapphireAllImporter alloc] init];
+	[allImporter setDelegate:self];
+	informers = [[NSMutableDictionary alloc] init];
+
 	serverConnection = [NSConnection defaultConnection];
 	[serverConnection setRootObject:self];
 	if([serverConnection registerName:CONNECTION_NAME] == NO)
@@ -237,6 +201,8 @@ static SapphireImportHelper *shared = nil;
 	[moc release];
 	[queue release];
 	[currentImporting release];
+	[allImporter release];
+	[informers release];
 	[super dealloc];
 }
 
@@ -341,7 +307,7 @@ static SapphireImportHelper *shared = nil;
 
 - (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
-	SapphireImportFile *item = [[SapphireImportFile alloc] initWithPath:[file path] informer:inform  type:IMPORT_TYPE_FILE_DATA];
+	SapphireImportFile *item = [[SapphireImportFile alloc] initWithPath:[file path] informer:inform];
 	[queue addObject:item];
 	[item release];
 	[self itemAdded];
@@ -350,10 +316,8 @@ static SapphireImportHelper *shared = nil;
 
 - (void)importAllData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
-	SapphireImportFile *item = [[SapphireImportFile alloc] initWithPath:[file path] informer:inform type:IMPORT_TYPE_ALL_DATA];
-	[queue addObject:item];
-	[item release];
-	[self itemAdded];
+	[informers setObject:inform forKey:[file path]];
+	[allImporter importMetaData:file path:[file path]];
 }
 
 - (void)removeObjectsWithInform:(id <SapphireImporterBackgroundProtocol>)inform
@@ -420,10 +384,34 @@ static SapphireImportHelper *shared = nil;
 	currentImporting = nil;
 }
 
+- (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state
+{
+	id <SapphireImporterBackgroundProtocol> informer = [informers objectForKey:path];
+	if(informer == nil)
+		return;
+	
+	[informer informComplete:state == ImportStateUpdated onPath:path];
+	[informers removeObjectForKey:path];
+}
+
+- (BOOL)canDisplayChooser
+{
+	return NO;
+}
+
+- (id)chooserScene
+{
+	return nil;
+}
+
+- (void)displayChooser:(BRLayerController <SapphireChooser> *)chooser forImporter:(id <SapphireImporter>)importer withContext:(id)context
+{
+}
+
 @end
 
 @implementation SapphireImportFile
-- (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer type:(ImportType)aType;
+- (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer
 {
 	self = [super init];
 	if(!self)
@@ -431,7 +419,6 @@ static SapphireImportHelper *shared = nil;
 	
 	path = [aPath retain];
 	informer = [aInformer retain];
-	type = aType;
 	
 	return self;
 }
@@ -449,11 +436,6 @@ static SapphireImportHelper *shared = nil;
 - (id <SapphireImporterBackgroundProtocol>)informer
 {
 	return informer;
-}
-
-- (ImportType)importType
-{
-	return type;
 }
 
 @end
