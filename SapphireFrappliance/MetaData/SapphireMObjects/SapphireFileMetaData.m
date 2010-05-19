@@ -24,7 +24,6 @@
 
 //ATV Extra Info
 NSString *META_SHOW_BROADCASTER_KEY =		@"Broadcast Company";
-NSString *META_SHOW_PUBLISHED_DATE_KEY =	@"Published Date";
 NSString *META_SHOW_AQUIRED_DATE =			@"Date Aquired";
 NSString *META_SHOW_RATING_KEY =			@"Rating";
 NSString *META_SHOW_FAVORITE_RATING_KEY =	@"User Rating";

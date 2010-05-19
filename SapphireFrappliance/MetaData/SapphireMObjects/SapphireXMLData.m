@@ -183,6 +183,10 @@
 	if(strVal != nil)
 		self.searchShowName = strVal;
 	
+	NSDate *releaseDate = [dict objectForKey:META_SHOW_AIR_DATE];
+	if(releaseDate != nil)
+		self.releaseDate = releaseDate;
+	
 	
 	NSArray *arrVal = [dict objectForKey:META_MOVIE_CAST_KEY];
 	NSEnumerator *arrEnum = [arrVal objectEnumerator];
@@ -379,29 +383,52 @@
 
 - (void)constructEpisode
 {
-	int season = self.searchSeasonNumberValue;
+	NSNumber *season = self.searchSeasonNumber;
 	NSString *show = self.searchShowName;
 	
-	if(season == 0 || show == nil)
+	if([season intValue] == 0 || show == nil)
 		return;
 	
-	int ep = self.searchEpisodeValue;
-	int lastEp = self.lastEpisodeNumberValue;
-	if(lastEp == 0)
-		lastEp = ep;
+	NSMutableDictionary *firstEp = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+									show, META_SHOW_NAME_KEY,
+									season, META_SEASON_NUMBER_KEY,
+									nil];
+	
+	NSMutableDictionary *lastEp = nil;
+	
+	NSNumber *ep = self.episodeNumber;
+	if(ep != nil)
+		[firstEp setObject:ep forKey:META_EPISODE_NUMBER_KEY];
+	NSNumber *lastEpNumber = self.lastEpisodeNumber;
+	if([lastEpNumber intValue] != 0)
+	{
+		lastEp = [firstEp mutableCopy];
+		[lastEp setObject:lastEpNumber forKey:META_EPISODE_NUMBER_KEY];
+	}
 	NSString *title = self.title;
+	if(title != nil)
+		[firstEp setObject:title forKey:META_TITLE_KEY];
+	
+	NSString *desc = self.contentDescription;
+	if(desc != nil)
+		[firstEp setObject:desc forKey:META_DESCRIPTION_KEY];
+	
+	NSNumber *absEpisode = self.absoluteEpisodeNumber;
+	if(absEpisode != nil)
+		[firstEp setObject:absEpisode forKey:META_ABSOLUTE_EP_NUMBER_KEY];
+	
+	NSDate *airDate = self.releaseDate;
+	if(airDate != nil)
+		[firstEp setObject:airDate forKey:META_SHOW_AIR_DATE];
 	
 	SapphireEpisode *ret;
-	if(ep != 0)
-	{
-		ret = [SapphireEpisode episodeFrom:ep to:lastEp inSeason:season forShow:show inContext:[self managedObjectContext]];
-	}
-	else if(title != nil)
-	{
-		ret = [SapphireEpisode episodeTitle:title inSeason:season forShow:show inContext:[self managedObjectContext]];
-	}
+	if(ep != 0 || title != nil)
+		ret = [SapphireEpisode episodeWithDictionaries:[NSArray arrayWithObjects:firstEp, lastEp, nil] inContext:[self managedObjectContext]];
 	else
 		return;
+	
+	[firstEp release];
+	[lastEp release];
 	
 	self.episode = ret;
 	self.file.tvEpisode = ret;
