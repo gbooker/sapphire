@@ -112,7 +112,8 @@
 - (void)loadLoop
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	for(int i=0; i<3; i++)
+	int i;
+	for(i=0; i<3; i++)
 	{
 		[self realLoadData];
 		if(![self failed])
