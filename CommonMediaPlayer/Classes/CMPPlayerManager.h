@@ -97,7 +97,7 @@ static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *pass
 	AuthorizationEnvironment environ = {2, authItems};
 	AuthorizationItem rightSet[] = {{kAuthorizationRightExecute, 0, NULL, 0}};
 	AuthorizationRights rights = {1, rightSet};
-	AuthorizationRef auth;
+	AuthorizationRef auth = NULL;
 	OSStatus result = AuthorizationCreate(&rights, &environ, kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights, &auth);
 	if(result == errAuthorizationSuccess)
 	{
@@ -159,7 +159,8 @@ static inline BOOL installPassthroughComponent(NSFileManager *fm, NSString *pass
 		success = NO;
 		FrameworkLoadPrint(@"Failed to install Passthrough component");
 	}
-	AuthorizationFree(auth, kAuthorizationFlagDefaults);
+	if(auth)
+		AuthorizationFree(auth, kAuthorizationFlagDefaults);
 	return success;
 }
 
@@ -197,7 +198,7 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 				AuthorizationEnvironment environ = {2, authItems};
 				AuthorizationItem rightSet[] = {{kAuthorizationRightExecute, 0, NULL, 0}};
 				AuthorizationRights rights = {1, rightSet};
-				AuthorizationRef auth;
+				AuthorizationRef auth = NULL;
 				OSStatus result = AuthorizationCreate(&rights, &environ, kAuthorizationFlagPreAuthorize | kAuthorizationFlagExtendRights, &auth);
 				if(result == errAuthorizationSuccess)
 				{
@@ -212,7 +213,8 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 					success = NO;
 					FrameworkLoadPrint(@"Failed to correct permissions on Frameworks directory");
 				}
-				AuthorizationFree(auth, kAuthorizationFlagDefaults);
+				if(auth)
+					AuthorizationFree(auth, kAuthorizationFlagDefaults);
 				int status;
 				wait(&status);
 			}
