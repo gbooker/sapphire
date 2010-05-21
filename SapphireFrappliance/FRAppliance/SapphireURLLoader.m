@@ -223,6 +223,9 @@
 						break;
 				}
 				loadedString = [[NSString alloc] initWithData:mutData encoding:responseEncoding];
+				if(loadedString == nil)
+					//Fallback in last ditch effort because we have to still handle more moronic things that TVRage does.
+					loadedString = [[NSString alloc] initWithData:mutData encoding:NSISOLatin1StringEncoding];
 				[mutData release];
 			}
 		}
