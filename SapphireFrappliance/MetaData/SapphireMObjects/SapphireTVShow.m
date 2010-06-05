@@ -7,6 +7,7 @@
 #import "NSString-Extensions.h"
 #import "SapphireFileSorter.h"
 #import "SapphireTVTranslation.h"
+#import "SapphireFileMetaData.h"
 
 @implementation SapphireTVShow
 
@@ -144,6 +145,40 @@ static inline NSArray *getEpsFromFiles(NSManagedObjectContext *moc, NSArray *fil
 	[super removeEpisodesObject:removedEpisode];
 	if([self.episodesSet count] == 0)
 		[SapphireMetaDataSupport setObjectForPendingDelete:self];
+}
+
+- (NSString *)calculateAutoSortPath
+{
+	NSArray *files = doFetchRequest(SapphireFileMetaDataName, [self managedObjectContext], [self metaFileFetchPredicate]);
+	if([files count] == 0)
+		return nil;
+	
+	NSString *sortPath = [[(SapphireFileMetaData *)[files objectAtIndex:0] path] stringByDeletingLastPathComponent];
+	BOOL cropTwoDirs = NO;
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	SapphireFileMetaData *file;
+	while((file = [fileEnum nextObject]) != nil)
+	{
+		NSString *dirPath = [[file path] stringByDeletingLastPathComponent];
+		if(cropTwoDirs)
+			dirPath = [dirPath stringByDeletingLastPathComponent];
+		
+		if([dirPath isEqualToString:sortPath])
+			continue;
+		
+		if(!cropTwoDirs)
+		{
+			sortPath = [sortPath stringByDeletingLastPathComponent];
+			dirPath = [dirPath stringByDeletingLastPathComponent];
+			cropTwoDirs = YES;
+			if([dirPath isEqualToString:sortPath])
+				continue;
+		}
+		
+		return nil;
+	}
+	
+	return sortPath;
 }
 
 @end

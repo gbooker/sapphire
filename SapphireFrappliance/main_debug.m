@@ -42,7 +42,7 @@
 #import "SapphireXMLData.h"
 #import "SapphireMovieDirectory.h"
 
-#define TESTING_UPGRADE
+//#define TESTING_UPGRADE
 //#define LISTING_MOVIES
 //#define TESTING_XML_IMPORT
 //#define TESTING_FILE_SCANNING
@@ -54,6 +54,7 @@
 //#define TESTING_MULTIPLE_AND_SINGLE_TV_SHOW_IMPORT
 //#define TESTING_MOVIE_VIRTUAL_DIRS_IN_XML
 //#define TESTING_TV_IMPORT_THROUGH_XML
+#define TESTING_AUTO_SORT_PATH
 
 void overrideApplicationSupportdir(NSString *override);
 
@@ -194,7 +195,7 @@ int main(int argc, char *argv[])
 		[bundle load];		
 	}
 	
-//	overrideApplicationSupportdir([NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Frontrow"]);
+	overrideApplicationSupportdir([NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Frontrow"]);
 #ifdef TESTING_UPGRADE
 	{
 		SapphireMetaDataUpgrading *upgrade = [[SapphireMetaDataUpgrading alloc] init];
@@ -345,6 +346,18 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/life on mars.avi" inContext:moc];
 		[importManager importer:allImporter importMetaData:file path:[file path]];
+	}
+#endif
+#ifdef TESTING_AUTO_SORT_PATH
+	{
+		NSArray *shows = doFetchRequest(SapphireTVShowName, moc, nil);
+		NSEnumerator *showEnum = [shows objectEnumerator];
+		SapphireTVShow *show;
+		while((show = [showEnum nextObject]) != nil)
+		{
+			NSString *autoPath = [show calculateAutoSortPath];
+			NSLog(@"Sort path for %@ is %@", [show name], autoPath);
+		}
 	}
 #endif
 	
