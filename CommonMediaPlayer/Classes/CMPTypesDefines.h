@@ -27,6 +27,7 @@ typedef enum{
 	CMPPlayerManagerFileTypeDVDImage = 2,
 	CMPPlayerManagerFileTypeAudio = 3,
 	CMPPlayerManagerFileTypeDVDImport = 4,
+	CMPPlayerManagerFileTypeMPlayer = 5,
 	CMPPlayerManagerFileTypeOther = 0xFFFF,
 } CMPPlayerManagerFileType;
 

@@ -28,6 +28,8 @@
 #import "CMPISODVDPlayer.h"
 #import "CMPDVDImporter.h"
 #import "CMPInstaller.h"
+#import "CMPMPPlayer.h"
+#import "CMPMPPlayerController.h"
 
 @implementation CMPPlayerManager
 
@@ -81,7 +83,9 @@
 	
 	[self registerPlayer:[CMPDVDImporter class] forType:CMPPlayerManagerFileTypeDVDImport withExtensions:[NSArray arrayWithObject:@""]];
 	
-	
+	[self registerPlayer:[CMPMPPlayer class] forType:CMPPlayerManagerFileTypeMPlayer withExtensions:[NSArray arrayWithObjects:@"m4v", @"3gp", @"m3u", @"pls", @"divx", @"xvid", @"avi", @"mov", @"wmv", @"asx", @"asf", @"ogm", @"mpg", @"mpeg", @"mkv", @"avc", @"flv", @"dv", @"fli", @"m2v", @"ts", @"vob", @"iso", @"img", @"rm", @"rmvb", nil]];
+
+	[knownControllers addObject:[CMPMPPlayerController class]];
 	return self;
 }
 

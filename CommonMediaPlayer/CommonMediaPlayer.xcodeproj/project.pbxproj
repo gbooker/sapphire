@@ -17,6 +17,10 @@
 		8768EBDD112A563800318F1A /* CMPDVDImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8768EBDB112A563800318F1A /* CMPDVDImporter.m */; };
 		8768EC49112A5E4200318F1A /* AGProcess.h in Headers */ = {isa = PBXBuildFile; fileRef = 8768EC47112A5E4200318F1A /* AGProcess.h */; };
 		8768EC4A112A5E4200318F1A /* AGProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = 8768EC48112A5E4200318F1A /* AGProcess.m */; };
+		87C75D8411BB51AE00D53B37 /* CMPMPPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 87C75D8011BB51AE00D53B37 /* CMPMPPlayer.h */; };
+		87C75D8511BB51AE00D53B37 /* CMPMPPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 87C75D8111BB51AE00D53B37 /* CMPMPPlayer.m */; };
+		87C75D8611BB51AE00D53B37 /* CMPMPPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = 87C75D8211BB51AE00D53B37 /* CMPMPPlayerController.h */; };
+		87C75D8711BB51AE00D53B37 /* CMPMPPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 87C75D8311BB51AE00D53B37 /* CMPMPPlayerController.m */; };
 		87E0033E11263CBF004FC2C7 /* CMPDVDImageAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */; };
 		87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */; };
 		87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */; };
@@ -84,6 +88,10 @@
 		8768EBDB112A563800318F1A /* CMPDVDImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImporter.m; sourceTree = "<group>"; };
 		8768EC47112A5E4200318F1A /* AGProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGProcess.h; sourceTree = "<group>"; };
 		8768EC48112A5E4200318F1A /* AGProcess.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGProcess.m; sourceTree = "<group>"; };
+		87C75D8011BB51AE00D53B37 /* CMPMPPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPMPPlayer.h; sourceTree = "<group>"; };
+		87C75D8111BB51AE00D53B37 /* CMPMPPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPMPPlayer.m; sourceTree = "<group>"; };
+		87C75D8211BB51AE00D53B37 /* CMPMPPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPMPPlayerController.h; sourceTree = "<group>"; };
+		87C75D8311BB51AE00D53B37 /* CMPMPPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPMPPlayerController.m; sourceTree = "<group>"; };
 		87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDImageAction.h; sourceTree = "<group>"; };
 		87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImageAction.m; sourceTree = "<group>"; };
 		87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPISODVDPlayer.h; sourceTree = "<group>"; };
@@ -166,7 +174,6 @@
 				F50027201123573A001B52FE /* Debug */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
-				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = CommonMediaPlayer;
@@ -184,6 +191,7 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				87E006C01127A05F004FC2C7 /* bin */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
@@ -249,6 +257,17 @@
 			name = "Update Classes";
 			sourceTree = "<group>";
 		};
+		87C75D7F11BB51AE00D53B37 /* MPlayer classes */ = {
+			isa = PBXGroup;
+			children = (
+				87C75D8011BB51AE00D53B37 /* CMPMPPlayer.h */,
+				87C75D8111BB51AE00D53B37 /* CMPMPPlayer.m */,
+				87C75D8211BB51AE00D53B37 /* CMPMPPlayerController.h */,
+				87C75D8311BB51AE00D53B37 /* CMPMPPlayerController.m */,
+			);
+			path = "MPlayer classes";
+			sourceTree = "<group>";
+		};
 		F50027201123573A001B52FE /* Debug */ = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +289,7 @@
 		F50CCCF01118ECAD00213966 /* Media Players */ = {
 			isa = PBXGroup;
 			children = (
+				87C75D7F11BB51AE00D53B37 /* MPlayer classes */,
 				F531CAE0111E2EDF005DF910 /* Leopard DVD Framework */,
 				F50CCCF41118ED0000213966 /* DVD Framework */,
 			);
@@ -351,6 +371,8 @@
 				870D75E81137AB8B007BD611 /* CMPDownloadController.h in Headers */,
 				870D75EA1137AB8B007BD611 /* CMPInstaller.h in Headers */,
 				870D75EC1137AB8B007BD611 /* CMPProgressBarControl.h in Headers */,
+				87C75D8411BB51AE00D53B37 /* CMPMPPlayer.h in Headers */,
+				87C75D8611BB51AE00D53B37 /* CMPMPPlayerController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -464,6 +486,8 @@
 				870D75E91137AB8B007BD611 /* CMPDownloadController.m in Sources */,
 				870D75EB1137AB8B007BD611 /* CMPInstaller.m in Sources */,
 				870D75ED1137AB8B007BD611 /* CMPProgressBarControl.m in Sources */,
+				87C75D8511BB51AE00D53B37 /* CMPMPPlayer.m in Sources */,
+				87C75D8711BB51AE00D53B37 /* CMPMPPlayerController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
