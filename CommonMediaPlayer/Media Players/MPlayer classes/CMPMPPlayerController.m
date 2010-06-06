@@ -68,6 +68,7 @@ static NSTimer *timer = nil;
 
 	[player release];
 	[delegate release];
+	[screenRelease release];
 	[super dealloc];
 }
 
