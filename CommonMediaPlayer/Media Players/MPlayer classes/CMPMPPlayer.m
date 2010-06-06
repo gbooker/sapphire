@@ -339,11 +339,15 @@
 	
 	//set outputs
 	
-	[mpTask setStandardOutput: [[NSPipe alloc] init]];
+	NSPipe *output = [[NSPipe alloc] init];
+	[mpTask setStandardOutput:output];
+	[output release];
 	[mpTask setStandardError: [mpTask standardOutput]];
 	
 	//set inputs
-	[mpTask setStandardInput:[[NSPipe alloc] init]];
+	NSPipe *input = [[NSPipe alloc] init];
+	[mpTask setStandardInput:input];
+	[input release];
 	
 	
 	
