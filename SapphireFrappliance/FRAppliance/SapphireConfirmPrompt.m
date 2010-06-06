@@ -23,14 +23,14 @@
 
 @implementation SapphireConfirmPrompt
 
-- (id)initWithScene:(BRRenderScene *)scene title:(NSString *)title subtitle:(NSString *)sub invokation:(NSInvocation *)invokation;
+- (id)initWithScene:(BRRenderScene *)scene title:(NSString *)title subtitle:(NSString *)sub invocation:(NSInvocation *)invocation;
 {
 	self = [super initWithScene:scene];
 	if(self == nil)
 		return self;
 	
 	[self setListTitle:title];
-	invoke = [invokation retain];
+	invoke = [invocation retain];
 	[invoke retainArguments];
 	subText = [sub retain];
 	

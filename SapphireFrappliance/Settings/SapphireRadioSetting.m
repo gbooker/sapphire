@@ -39,28 +39,28 @@
 - (void) dealloc
 {
 	[choices release];
-	[gettingInvokation release];
-	[settingInvokation release];
+	[gettingInvocation release];
+	[settingInvocation release];
 	[super dealloc];
 }
 
 - (void)setSettingSelector:(SEL)setter
 {
-	[settingInvokation release];
-	settingInvokation = [[NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:setter]] retain];
-	[settingInvokation setTarget:target];
-	[settingInvokation setSelector:setter];
+	[settingInvocation release];
+	settingInvocation = [[NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:setter]] retain];
+	[settingInvocation setTarget:target];
+	[settingInvocation setSelector:setter];
 }
 
 - (void)setGettingSelector:(SEL)getter
 {
-	[gettingInvokation release];
-	gettingInvokation = [[NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:getter]] retain];
-	[gettingInvokation setTarget:target];
-	[gettingInvokation setSelector:getter];
+	[gettingInvocation release];
+	gettingInvocation = [[NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:getter]] retain];
+	[gettingInvocation setTarget:target];
+	[gettingInvocation setSelector:getter];
 	
-	[gettingInvokation invoke];
-	[gettingInvokation getReturnValue:&selected];
+	[gettingInvocation invoke];
+	[gettingInvocation getReturnValue:&selected];
 	[[self list] reload];
 }
 
@@ -122,8 +122,8 @@
 - (void) itemSelected: (long) row
 {
     // This is called when the user changed a setting
-	[settingInvokation setArgument:&row atIndex:2];
-	[settingInvokation invoke];
+	[settingInvocation setArgument:&row atIndex:2];
+	[settingInvocation invoke];
 	
 	/*Redraw*/
 	[[self list] reload];

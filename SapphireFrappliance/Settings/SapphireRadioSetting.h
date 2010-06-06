@@ -28,8 +28,8 @@
 
 @interface SapphireRadioSetting : SapphireMediaMenuController {
 	NSArray				*choices;				/*!< @brief The choicess the user has to select from*/
-	NSInvocation		*settingInvokation;		/*!< @brief The invokation to set the choice*/
-	NSInvocation		*gettingInvokation;		/*!< @brief The invokation to get the choice*/
+	NSInvocation		*settingInvocation;		/*!< @brief The invocation to set the choice*/
+	NSInvocation		*gettingInvocation;		/*!< @brief The invocation to get the choice*/
 	NSObject			*target;				/*!< @brief The target to set and get the choice*/
 	int					selected;				/*!< @brief The current selected choice*/
 	NSArray				*choiceDesc;			/*!< @brief A description of choices*/

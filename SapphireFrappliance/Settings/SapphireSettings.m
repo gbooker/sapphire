@@ -472,7 +472,7 @@ typedef enum {
 	else
 		question = [NSString stringWithFormat:BRLocalizedString(@"Do you want to delete the show path for %@?", @"Prompt for deleting a show's path, argument is show name"), [show name]];
 	
-	SapphireConfirmPrompt *prompt = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Show Path", @"Show Path") subtitle:question invokation:invoke];
+	SapphireConfirmPrompt *prompt = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Show Path", @"Show Path") subtitle:question invocation:invoke];
 	return [prompt autorelease];
 }
 

@@ -435,7 +435,7 @@ static NSString *movingPath = nil;
 	
 	SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene: [self scene]
 																	 title: BRLocalizedString(@"Getting artwork selection", @"Getting artwork selection")
-																invokation: invoke];
+																invocation: invoke];
 	
 	[invoke setArgument: &fileMeta atIndex: 2];
 	return [wait autorelease];
@@ -455,7 +455,7 @@ static NSString *movingPath = nil;
 	[invoke setTarget:self];
 	[invoke retainArguments];
 	[invoke setArgument:&fileMeta atIndex:2];
-	[controller setRefreshInvokation:invoke];
+	[controller setRefreshInvocation:invoke];
 	
 	return [controller autorelease];
 }
@@ -672,7 +672,7 @@ static NSString *movingPath = nil;
 				}
 				break;
 			case COMMAND_RENAME_TO_PRETTY:
-				doSubtreeInvokation(dirMeta, @selector(renameToPrettyName), nil);
+				doSubtreeInvocation(dirMeta, @selector(renameToPrettyName), nil);
 				break;
 			case COMMAND_CUT_PATH:
 				[movingPath release];
@@ -685,7 +685,7 @@ static NSString *movingPath = nil;
 				[invoke setTarget:self];
 				[invoke setArgument:&dirMeta atIndex:2];
 				
-				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:[NSString stringWithFormat:BRLocalizedString(@"Moving %@", @"parameter is file/dir that is being moved"), [movingPath lastPathComponent]] invokation:invoke];
+				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:[NSString stringWithFormat:BRLocalizedString(@"Moving %@", @"parameter is file/dir that is being moved"), [movingPath lastPathComponent]] invocation:invoke];
 				
 				replaceController = [wait autorelease];
 			}
@@ -698,7 +698,7 @@ static NSString *movingPath = nil;
 				[invoke setArgument:&dirMeta atIndex:3];
 				[invoke retainArguments];
 				
-				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"Delete Directory Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invokation:invoke];
+				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"Delete Directory Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invocation:invoke];
 				
 				replaceController = [confirm autorelease];
 			}
@@ -749,7 +749,7 @@ static NSString *movingPath = nil;
 				[invoke setSelector:@selector(doJoin:)];
 				[invoke setTarget:self];
 				
-				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:BRLocalizedString(@"Joining Files", @"Title for wait display while joining files") invokation:invoke];
+				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:BRLocalizedString(@"Joining Files", @"Title for wait display while joining files") invocation:invoke];
 				[invoke setArgument:&wait atIndex:2];
 				
 				replaceController = [wait autorelease];
@@ -789,7 +789,7 @@ static NSString *movingPath = nil;
 				[invoke setArgument:&fileMeta atIndex:3];
 				[invoke retainArguments];
 				
-				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete File?", @"Delete File Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[fileMeta path] lastPathComponent]] invokation:invoke];
+				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete File?", @"Delete File Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[fileMeta path] lastPathComponent]] invocation:invoke];
 				
 				replaceController = [confirm autorelease];
 			}

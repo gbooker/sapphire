@@ -46,11 +46,11 @@
 }
 
 /*!
- * @brief Sets the invokation to refresh
+ * @brief Sets the invocation to refresh
  *
- * @param[in] invoke The invokation to refresh
+ * @param[in] invoke The invocation to refresh
  */
-- (void)setRefreshInvokation: (NSInvocation *)invoke;
+- (void)setRefreshInvocation: (NSInvocation *)invoke;
 
 /*!
  * @brief check ATV version & poster chooser opt out

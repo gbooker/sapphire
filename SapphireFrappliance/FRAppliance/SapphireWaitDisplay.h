@@ -24,7 +24,7 @@
 @interface SapphireWaitDisplay : SapphireCenteredMenuController <SapphireLayoutDelegate> {
 	BRWaitSpinnerControl	*spinner;			/*!< @brief The spinner*/
 	BRTextControl			*status;			/*!< @brief Status message*/
-	NSInvocation			*invoke;			/*!< @brief The invokation to make*/
+	NSInvocation			*invoke;			/*!< @brief The invocation to make*/
 	BOOL					runInThread;		/*!< @brief run in a thread*/
 	BOOL					noPopWhenComplete;	/*!< @brief don't pop the controller on completion*/
 	BOOL					completed;			/*!< @brief Has the process completed*/
@@ -35,9 +35,9 @@
  *
  * @param scene The scene
  * @param title The title for the display
- * @param invokation The invokation to make to start the process
+ * @param invocation The invocation to make to start the process
  */
-- (id)initWithScene:(BRRenderScene *)scene title:(NSString *)title invokation:(NSInvocation *)invokation;
+- (id)initWithScene:(BRRenderScene *)scene title:(NSString *)title invocation:(NSInvocation *)invocation;
 
 /*!
  * @brief Sets the current status in the progress

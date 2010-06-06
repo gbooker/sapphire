@@ -187,7 +187,7 @@ extern NSString *VIRTUAL_DIR_OSCAR_PATH;
 /*!
  * @brief Invoke a command on all files contained within this directory within filter
  *
- * @param fileInv The invokation to invoke
+ * @param fileInv The invocation to invoke
  */
 - (void)invokeOnAllFiles:(NSInvocation *)fileInv;
 

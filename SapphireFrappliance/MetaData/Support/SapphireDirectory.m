@@ -30,7 +30,7 @@ NSString *VIRTUAL_DIR_GENRE_PATH =			@"@MOVIES/By Genre";
 NSString *VIRTUAL_DIR_TOP250_PATH =			@"@MOVIES/IMDB Top 250";
 NSString *VIRTUAL_DIR_OSCAR_PATH =			@"@MOVIES/Academy Award Winning";
 
-void doSubtreeInvokation(id <SapphireDirectory> dir, SEL select, id object)
+void doSubtreeInvocation(id <SapphireDirectory> dir, SEL select, id object)
 {
 	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[[SapphireFileMetaData class] instanceMethodSignatureForSelector:select]];
 	[inv setSelector:select];
@@ -43,29 +43,29 @@ void doSubtreeInvokation(id <SapphireDirectory> dir, SEL select, id object)
 void setSubtreeToWatched(id <SapphireDirectory> dir, BOOL watched)
 {
 	SEL select = @selector(setWatched:);
-	doSubtreeInvokation(dir, select, [NSNumber numberWithBool:watched]);
+	doSubtreeInvocation(dir, select, [NSNumber numberWithBool:watched]);
 }
 
 void setSubtreeToFavorite(id <SapphireDirectory> dir, BOOL favorite)
 {
 	SEL select = @selector(setFavorite:);
-	doSubtreeInvokation(dir, select, [NSNumber numberWithBool:favorite]);
+	doSubtreeInvocation(dir, select, [NSNumber numberWithBool:favorite]);
 }
 
 void setSubtreeToReimportFromMask(id <SapphireDirectory> dir, int mask)
 {
 	SEL select = @selector(setToReimportFromMask:);
-	doSubtreeInvokation(dir, select, [NSNumber numberWithInt:mask]);
+	doSubtreeInvocation(dir, select, [NSNumber numberWithInt:mask]);
 }
 
 void setSubtreeToClearMetaData(id <SapphireDirectory> dir)
 {
 	SEL select = @selector(clearMetaData);
-	doSubtreeInvokation(dir, select, nil);
+	doSubtreeInvocation(dir, select, nil);
 }
 
 void setSubtreeToResetImportDecisions(id <SapphireDirectory> dir)
 {
 	SEL select = @selector(setToResetImportDecisions);
-	doSubtreeInvokation(dir, select, nil);
+	doSubtreeInvocation(dir, select, nil);
 }

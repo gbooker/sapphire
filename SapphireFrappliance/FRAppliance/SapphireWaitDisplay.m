@@ -25,14 +25,14 @@
 
 @implementation SapphireWaitDisplay
 
-- (id) initWithScene:(BRRenderScene *)scene title:(NSString *)title invokation:(NSInvocation *)invokation
+- (id) initWithScene:(BRRenderScene *)scene title:(NSString *)title invocation:(NSInvocation *)invocation
 {
 	self = [super initWithScene:scene];
 	if(self == nil)
 		return self;
 	
 	[self setListTitle:title];
-	invoke = [invokation retain];
+	invoke = [invocation retain];
 	[invoke retainArguments];
 	
 	status = [SapphireFrontRowCompat newTextControlWithScene:scene];

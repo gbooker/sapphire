@@ -123,7 +123,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 	[fileInfoText setFrame:frame];
 }
 
-- (void)setRefreshInvokation:(NSInvocation *)invoke;
+- (void)setRefreshInvocation:(NSInvocation *)invoke;
 {
 	[refreshInvoke release];
 	refreshInvoke = [invoke retain];
@@ -525,7 +525,7 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 		
 		SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene: [self scene]
 																		 title: BRLocalizedString(@"Getting artwork selection", @"Getting artwork selection")
-																	invokation: invoke];
+																	invocation: invoke];
 		[[self stack] swapController:[wait autorelease]];
 	}
 	else

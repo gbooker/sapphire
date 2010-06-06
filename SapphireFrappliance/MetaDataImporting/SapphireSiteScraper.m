@@ -46,7 +46,7 @@
 	myCopy->delegate = [delegate retain];
 	myCopy->referenceObject = [referenceObject retain];
 	myCopy->loader = [loader retain];
-	myCopy->finishedInvokation = [finishedInvokation retain];
+	myCopy->finishedInvocation = [finishedInvocation retain];
 	myCopy->pendingUrlElements = [pendingUrlElements retain];
 	
 	return myCopy;
@@ -58,7 +58,7 @@
 	[referenceObject release];
 	[loader release];
 	[pendingUrlElements release];
-	[finishedInvokation release];
+	[finishedInvocation release];
 	[super dealloc];
 }
 
@@ -112,9 +112,9 @@
 	
 	if([urlsToFetch count] == 0)
 	{
-		[finishedInvokation invoke];
-		[finishedInvokation release];
-		finishedInvokation = nil;
+		[finishedInvocation invoke];
+		[finishedInvocation release];
+		finishedInvocation = nil;
 	}
 	else
 	{
@@ -138,13 +138,13 @@
 	if([xmlResults length])
 		document = [[NSXMLDocument alloc] initWithXMLString:xmlResults options:0 error:&error];
 	
-	[finishedInvokation release];
-	finishedInvokation = [[NSInvocation invocationWithMethodSignature:[delegate methodSignatureForSelector:selector]] retain];
-	[finishedInvokation retainArguments];
-	[finishedInvokation setTarget:delegate];
-	[finishedInvokation setSelector:selector];
-	[finishedInvokation setArgument:&document atIndex:2];
-	[finishedInvokation setArgument:&referenceObject atIndex:3];
+	[finishedInvocation release];
+	finishedInvocation = [[NSInvocation invocationWithMethodSignature:[delegate methodSignatureForSelector:selector]] retain];
+	[finishedInvocation retainArguments];
+	[finishedInvocation setTarget:delegate];
+	[finishedInvocation setSelector:selector];
+	[finishedInvocation setArgument:&document atIndex:2];
+	[finishedInvocation setArgument:&referenceObject atIndex:3];
 	
 	[self scanForURLs:document];
 	

@@ -40,7 +40,7 @@
 	id <SapphireSiteScraperDelegate>	delegate;
 	id									referenceObject;
 	SapphireURLLoader					*loader;
-	NSInvocation						*finishedInvokation;
+	NSInvocation						*finishedInvocation;
 	NSMutableSet						*pendingUrlElements;
 }
 

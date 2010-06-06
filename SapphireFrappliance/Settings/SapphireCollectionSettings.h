@@ -26,13 +26,13 @@
 /*!
  * @brief The Settings specific to collections
  *
- * This is a bit abstract in its opperation.  It is a SapphireMediaMenuController subclass that displays a list of collections, with or without a checkbox next to them, and a title.  Finally, it has an invokation for settings a value and getting a value.
+ * This is a bit abstract in its opperation.  It is a SapphireMediaMenuController subclass that displays a list of collections, with or without a checkbox next to them, and a title.  Finally, it has an invocation for settings a value and getting a value.
  */
 @interface SapphireCollectionSettings : SapphireMediaMenuController {
 	NSArray							*collections;		/*!< @brief The collections, in order*/
 	NSManagedObjectContext			*moc;				/*!< @brief The context*/
-	NSInvocation					*setInv;			/*!< @brief The set value invokation*/
-	NSInvocation					*getInv;			/*!< @brief The get value invokation*/
+	NSInvocation					*setInv;			/*!< @brief The set value invocation*/
+	NSInvocation					*getInv;			/*!< @brief The get value invocation*/
 }
 
 /*!

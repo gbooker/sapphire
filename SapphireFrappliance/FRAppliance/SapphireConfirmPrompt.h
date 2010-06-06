@@ -28,7 +28,7 @@ typedef enum {
 } SapphireConfirmPromptResult;
 
 @interface SapphireConfirmPrompt : SapphireCenteredMenuController <SapphireLayoutDelegate>{
-	NSInvocation			*invoke;			/*!< @brief The invokation to make*/
+	NSInvocation			*invoke;			/*!< @brief The invocation to make*/
 	BRTextControl			*subtitle;			/*!< @brief The sub-title message*/
 	NSString				*subText;			/*!< @brief The text of the sub-title message*/
 }
@@ -39,8 +39,8 @@ typedef enum {
  * @param scene The scene
  * @param title The title for the display
  * @param sub The secondary title
- * @param invokation The invokation to make to start the process
+ * @param invocation The invocation to make to start the process
  */
-- (id)initWithScene:(BRRenderScene *)scene title:(NSString *)title subtitle:(NSString *)sub invokation:(NSInvocation *)invokation;
+- (id)initWithScene:(BRRenderScene *)scene title:(NSString *)title subtitle:(NSString *)sub invocation:(NSInvocation *)invocation;
 
 @end
