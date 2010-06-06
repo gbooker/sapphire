@@ -33,8 +33,9 @@
 @interface SapphireImportFile : NSObject <SapphireImportFileProtocol>{
 	NSString								*path;
 	id <SapphireImporterBackgroundProtocol>	informer;
+	FileContainerType						type;
 }
-- (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer;
+- (id)initWithPath:(NSString *)aPath type:(FileContainerType)aType informer:(id <SapphireImporterBackgroundProtocol>)aInformer;
 @end
 
 @interface SapphireImportHelperServer ()
@@ -80,13 +81,12 @@ static SapphireImportHelper *shared = nil;
 
 @implementation SapphireImportHelperClient
 
-- (id)initWithContext:(NSManagedObjectContext *)context
+- (id)init
 {
 	self = [super init];
 	if(!self)
 		return nil;
 	
-	moc = [context retain];
 	keepRunning = YES;
 	
 	return self;
@@ -94,14 +94,7 @@ static SapphireImportHelper *shared = nil;
 - (void) dealloc
 {
 	[server release];
-	[moc release];
 	[super dealloc];
-}
-
-- (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
-{
-	updateMetaData(file);
-	return YES;
 }
 
 - (void)startChild
@@ -113,7 +106,7 @@ static SapphireImportHelper *shared = nil;
 		[serverobj setProtocolForProxy:@protocol(SapphireImportServer)];
 		shared = self;
 		[serverobj setClient:(SapphireImportHelperClient *)shared];
-		server = serverobj;	
+		server = serverobj;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];		
 	}
 	@catch (NSException * e) {
@@ -142,15 +135,11 @@ static SapphireImportHelper *shared = nil;
 		id <SapphireImportFileProtocol> file;
 		while((file = [server nextFile]) != nil)
 		{
-			[moc reset];
 			NSAutoreleasePool *singleImportPool = [[NSAutoreleasePool alloc] init];
 			BOOL ret;
 			NSString *path = [file path];
-			SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:path inContext:moc];
-			[moc refreshObject:file mergeChanges:YES];
-			ret = updateMetaData(file);
-			NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
-			[server importCompleteWithChanges:changes updated:ret];
+			NSDictionary *fileMeta = fileMetaData(path, [file fileContainerType]);
+			[server fileImportCompleteWithMeta:fileMeta path:path];
 			[singleImportPool release];
 		}
 	}
@@ -307,7 +296,7 @@ static SapphireImportHelper *shared = nil;
 
 - (BOOL)importFileData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
-	SapphireImportFile *item = [[SapphireImportFile alloc] initWithPath:[file path] informer:inform];
+	SapphireImportFile *item = [[SapphireImportFile alloc] initWithPath:[file path] type:[file fileContainerTypeValue] informer:inform];
 	[queue addObject:item];
 	[item release];
 	[self itemAdded];
@@ -384,6 +373,18 @@ static SapphireImportHelper *shared = nil;
 	currentImporting = nil;
 }
 
+- (void)fileImportCompleteWithMeta:(bycopy NSDictionary *)fileMeta path:(NSString *)path
+{
+	SapphireFileMetaData *file = [SapphireFileMetaData fileWithPath:path inContext:moc];
+	[file addFileData:fileMeta];
+	if(![[currentImporting path] isEqualToString:path])
+		return;
+	
+	[[currentImporting informer] informComplete:YES onPath:path];
+	[currentImporting release];
+	currentImporting = nil;
+}
+
 - (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)state
 {
 	id <SapphireImporterBackgroundProtocol> informer = [informers objectForKey:path];
@@ -411,13 +412,14 @@ static SapphireImportHelper *shared = nil;
 @end
 
 @implementation SapphireImportFile
-- (id)initWithPath:(NSString *)aPath informer:(id <SapphireImporterBackgroundProtocol>)aInformer
+- (id)initWithPath:(NSString *)aPath type:(FileContainerType)aType informer:(id <SapphireImporterBackgroundProtocol>)aInformer
 {
 	self = [super init];
 	if(!self)
 		return nil;
 	
 	path = [aPath retain];
+	type = aType;
 	informer = [aInformer retain];
 	
 	return self;
@@ -436,6 +438,10 @@ static SapphireImportHelper *shared = nil;
 - (id <SapphireImporterBackgroundProtocol>)informer
 {
 	return informer;
+}
+- (FileContainerType)fileContainerType
+{
+	return type;
 }
 
 @end

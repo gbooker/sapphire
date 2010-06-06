@@ -44,6 +44,11 @@
  * @return The informer
  */
 - (id <SapphireImporterBackgroundProtocol>)informer;
+
+/*!
+ * @brief The file container type
+ */
+- (enum FileContainerType)fileContainerType;
 @end
 
 /*!
@@ -92,6 +97,14 @@
  * @param update YES if data was imported, NO otherwise
  */
 - (void)importCompleteWithChanges:(bycopy NSDictionary *)changes updated:(BOOL)updated;
+
+/*!
+ * @brief The client has finished importing file metadata
+ *
+ * @param fileMeta The dictionary of file metadata
+ * @param path The path which was imported
+ */
+- (void)fileImportCompleteWithMeta:(bycopy NSDictionary *)fileMeta path:(NSString *)path;
 @end
 
 /*!
@@ -154,7 +167,6 @@
  */
 @interface SapphireImportHelperClient : SapphireImportHelper <SapphireImportClient> {
 	id <SapphireImportServer>	server;			/*!< @brief The server*/
-	NSManagedObjectContext		*moc;			/*!< @brief The object context*/
 	BOOL						keepRunning;	/*!< @brief Keep running (for terminating run loop)*/
 }
 
@@ -164,7 +176,7 @@
  * @param context The managed object context
  * @return The new importer client
  */
-- (id)initWithContext:(NSManagedObjectContext *)context;
+- (id)init;
 
 /*!
  * @brief Start the child's processing

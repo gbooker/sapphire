@@ -54,21 +54,10 @@ int main(int argc, char *argv[])
 	NSBundle *bundle = [NSBundle bundleWithPath:path];
 	[bundle load];
 	
-	NSDictionary *storeOptions = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSReadOnlyPersistentStoreOption, nil];
-	NSManagedObjectContext *moc = [NSClassFromString(@"SapphireApplianceController") newManagedObjectContextForFile:nil withOptions:nil];
-	[storeOptions release];
-	if(moc == nil)
-	{
-		[innerPool drain];
-		[pool drain];
-		return 0;
-	}
-	
 	[NSClassFromString(@"SapphireLogging") setLogLevel:SAPPHIRE_LOG_LEVEL_ERROR forType:SAPPHIRE_LOG_ALL];
 	[NSClassFromString(@"SapphireLogging") setLogLevel:SAPPHIRE_LOG_LEVEL_DEBUG forType:SAPPHIRE_LOG_METADATA_STORE];
 	
-	SapphireImportHelperClient *help = [[NSClassFromString(@"SapphireImportHelperClient") alloc] initWithContext:moc];
-	[moc release];
+	SapphireImportHelperClient *help = [[NSClassFromString(@"SapphireImportHelperClient") alloc] init];
 	[help startChild];
 	
 	[innerPool drain];

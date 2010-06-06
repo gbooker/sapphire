@@ -80,7 +80,7 @@ typedef enum {
 	FILE_CLASS_OTHER = 5,
 } FileClass;
 
-typedef enum {
+typedef enum FileContainerType {
 	FILE_CONTAINER_TYPE_QT_MOVIE = 0,
 	FILE_CONTAINER_TYPE_VIDEO_TS = 1,
 } FileContainerType;
@@ -123,6 +123,17 @@ typedef enum {
  * @return YES if any files were updated, NO otherwise
  */
 - (BOOL)updateMetaData;
+
+/*!
+ * @brief Get the file metadata
+ *
+ * @param path The path to import
+ * @param type The container type of the file
+ *
+ * @return The file metadata info
+ */
+NSDictionary *fileMetaData(NSString *path, FileContainerType type);
+
 
 /*!
  * @brief Adds File data read from the file
