@@ -22,4 +22,4 @@
 //Note, only defines should ever be in this file!
 
 #define CMPVersion 9  //Full Version Number
-#define CMPAPIVersion 2 //API version 2
+#define CMPAPIVersion 1 //API version 1
