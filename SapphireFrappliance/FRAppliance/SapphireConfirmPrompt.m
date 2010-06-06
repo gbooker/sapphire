@@ -80,6 +80,14 @@
 	[super wasPushed];
 }
 
+- (void)wasPopped
+{
+	SapphireConfirmPromptResult result = SapphireConfirmPromptResultAbort;
+	[invoke setArgument:&result atIndex:2];
+	[invoke invoke];
+	[super wasPopped];
+}
+
 - (long) itemCount
 {
 	return 2;
@@ -124,16 +132,18 @@
 
 - (void)itemSelected:(long)row
 {
+	SapphireConfirmPromptResult result = SapphireConfirmPromptResultCancel;
 	if(row == 1)
-	{
-		[invoke invoke];
-		BRControl *ret = nil;
-		[invoke getReturnValue:&ret];
-		if(ret != nil)
-			[[self stack] swapController:ret];
-		else
-			[[self stack] popController];
-	}
+		result = SapphireConfirmPromptResultOK;
+	
+	[invoke setArgument:&result atIndex:2];
+	[invoke invoke];
+	BRControl *ret = nil;
+	[invoke getReturnValue:&ret];
+	[invoke autorelease];
+	invoke = nil;
+	if(ret != nil)
+		[[self stack] swapController:ret];
 	else
 		[[self stack] popController];
 }

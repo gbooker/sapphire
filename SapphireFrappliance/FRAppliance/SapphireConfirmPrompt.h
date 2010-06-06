@@ -21,6 +21,12 @@
 #import <SapphireCompatClasses/SapphireCenteredMenuController.h>
 #import <SapphireCompatClasses/SapphireLayoutManager.h>
 
+typedef enum {
+	SapphireConfirmPromptResultAbort,
+	SapphireConfirmPromptResultCancel,
+	SapphireConfirmPromptResultOK,
+} SapphireConfirmPromptResult;
+
 @interface SapphireConfirmPrompt : SapphireCenteredMenuController <SapphireLayoutDelegate>{
 	NSInvocation			*invoke;			/*!< @brief The invokation to make*/
 	BRTextControl			*subtitle;			/*!< @brief The sub-title message*/

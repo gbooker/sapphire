@@ -692,10 +692,10 @@ static NSString *movingPath = nil;
 				break;
 			case COMMAND_DELETE_PATH:
 			{
-				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(deletePath:)]];
-				[invoke setSelector:@selector(deletePath:)];
+				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(deleteReturnedResult:atPath:)]];
+				[invoke setSelector:@selector(deleteReturnedResult:atPath:)];
 				[invoke setTarget:self];
-				[invoke setArgument:&dirMeta atIndex:2];
+				[invoke setArgument:&dirMeta atIndex:3];
 				
 				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"Delete Directory Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invokation:invoke];
 				
@@ -782,10 +782,10 @@ static NSString *movingPath = nil;
 				break;				
 			case COMMAND_DELETE_PATH:
 			{
-				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(deletePath:)]];
-				[invoke setSelector:@selector(deletePath:)];
+				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(deleteReturnedResult:atPath:)]];
+				[invoke setSelector:@selector(deleteReturnedResult:atPath:)];
 				[invoke setTarget:self];
-				[invoke setArgument:&fileMeta atIndex:2];
+				[invoke setArgument:&fileMeta atIndex:3];
 				
 				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete File?", @"Delete File Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[fileMeta path] lastPathComponent]] invokation:invoke];
 				
@@ -838,8 +838,11 @@ static NSString *movingPath = nil;
 	return nil;
 }
 
-- (BRControl *)deletePath:(id <SapphireMetaData>)meta
+- (BRControl *)deleteReturnedResult:(SapphireConfirmPromptResult)result atPath:(id <SapphireMetaData>)meta
 {
+	if(result != SapphireConfirmPromptResultOK)
+		return nil;
+	
 	@try {
 		NSManagedObjectContext *moc = [meta managedObjectContext];
 		BOOL success = [[NSFileManager defaultManager] removeFileAtPath:[meta path] handler:nil];
