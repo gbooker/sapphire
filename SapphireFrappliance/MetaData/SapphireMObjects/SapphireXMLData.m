@@ -421,14 +421,14 @@
 	if(airDate != nil)
 		[firstEp setObject:airDate forKey:META_SHOW_AIR_DATE];
 	
+	[firstEp autorelease];
+	[lastEp autorelease];
+
 	SapphireEpisode *ret;
 	if(ep != 0 || title != nil)
 		ret = [SapphireEpisode episodeWithDictionaries:[NSArray arrayWithObjects:firstEp, lastEp, nil] inContext:[self managedObjectContext]];
 	else
 		return;
-	
-	[firstEp release];
-	[lastEp release];
 	
 	self.episode = ret;
 	self.file.tvEpisode = ret;

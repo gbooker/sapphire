@@ -439,7 +439,7 @@ typedef enum {
 {
 	int i, count = [shows count];
 	SapphireTVShow *show;
-	NSString *calcAutoPath;
+	NSString *calcAutoPath = nil;
 	NSString *autoPath;
 	for(i=0; i<count; i++)
 	{
