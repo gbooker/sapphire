@@ -35,8 +35,8 @@
 		F500276311235964001B52FE /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D6A5FE840307C02AAC07 /* AppKit.framework */; };
 		F500276411235967001B52FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		F5002A3011247ACC001B52FE /* BackRowUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F5002A2F11247ACC001B52FE /* BackRowUtils.h */; };
-		F50CCAC7111786E000213966 /* CMPPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAC6111786E000213966 /* CMPPlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F50CCAC91117871400213966 /* CMPPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAC81117871400213966 /* CMPPlayerController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F50CCAC7111786E000213966 /* CMPPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAC6111786E000213966 /* CMPPlayer.h */; settings = {ATTRIBUTES = (); }; };
+		F50CCAC91117871400213966 /* CMPPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCAC81117871400213966 /* CMPPlayerController.h */; settings = {ATTRIBUTES = (); }; };
 		F50CCACB1117875B00213966 /* CMPTypesDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCACA1117875B00213966 /* CMPTypesDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F50CCACF111787A200213966 /* CMPPlayerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCACD111787A200213966 /* CMPPlayerManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F50CCAD0111787A200213966 /* CMPPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCACE111787A200213966 /* CMPPlayerManager.m */; };
