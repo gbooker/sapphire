@@ -8,4 +8,5 @@
 
 - (NSComparisonResult)compare:(SapphireSeason *)other;
 - (NSString *)seasonName;
+- (NSString *)autoSortPath;
 @end

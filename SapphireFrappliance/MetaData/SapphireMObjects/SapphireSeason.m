@@ -61,6 +61,15 @@ static NSArray *allowedSorts = nil;
 	return [NSString stringWithFormat:@"Season %d", self.seasonNumberValue];
 }
 
+- (NSString *)autoSortPath
+{
+	NSString *showPath = [self.tvShow autoSortPath];
+	if(showPath == nil)
+		return nil;
+	
+	return [showPath stringByAppendingPathComponent:[self seasonName]];
+}
+
 - (NSPredicate *)metaFileFetchPredicate
 {
 	return [NSPredicate predicateWithFormat:@"tvEpisode.season == %@", self];

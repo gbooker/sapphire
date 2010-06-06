@@ -33,6 +33,11 @@
 #import "SapphireCollectionDirectory.h"
 #import "SapphireDirectoryMetaData.h"
 #import "SapphireMetaDataSupport.h"
+#import "SapphireTVShow.h"
+#import "SapphireConfirmPrompt.h"
+#import "CoreDataSupportFunctions.h"
+#import "SapphireErrorDisplayController.h"
+
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "NSString-Extensions.h"
 #import "NSFileManager-Extensions.h"
@@ -67,6 +72,7 @@ typedef enum {
 	COMMAND_IMPORT_FILE_DATA,
 	COMMAND_IMPORT_TV_DATA,
 	COMMAND_IMPORT_MOVIE_DATA,
+	COMMAND_IMPORT_TV_AUTOSORT_CALCULATE,
 	COMMAND_IMPORT_HIDE_POSTER_CHOOSER,
 	COMMAND_IMPORT_USE_DIR_NAME,
 	COMMAND_IMPORT_HIDE_ALL_CHOOSERS,
@@ -133,6 +139,12 @@ typedef enum {
 			BRLocalizedString(@"Tells Sapphire that for every Movie, gather more information from the internet.", @"Fetch Movie Data description"), SETTING_DESCRIPTION,
 			[theme gem:IMDB_GEM_KEY], SETTING_GEM,
 			[NSNumber numberWithInt:COMMAND_IMPORT_MOVIE_DATA], SETTING_COMMAND,
+			nil],
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Calculate TV Directories", @"Calculate TV Dirs menu item"), SETTING_NAME,
+			BRLocalizedString(@"Tells Sapphire to calculate directories where each TV show is stored.", @"Calculate TV Dirs description"), SETTING_DESCRIPTION,
+			[theme gem:TVR_GEM_KEY], SETTING_GEM,
+			[NSNumber numberWithInt:COMMAND_IMPORT_TV_AUTOSORT_CALCULATE], SETTING_COMMAND,
 			nil],
 /*		[NSDictionary dictionaryWithObjectsAndKeys:
 			BRLocalizedString(@"  Choose Movie Posters", @"Start Poster Chooser menu item"), SETTING_NAME,
@@ -423,6 +435,61 @@ typedef enum {
 	return [displayOnlyPlot compare:[NSDate date]] == NSOrderedDescending;
 }
 
+- (SapphireConfirmPrompt *)nextAutoSortPathConfirm:(NSArray *)shows
+{
+	int i, count = [shows count];
+	SapphireTVShow *show;
+	NSString *calcAutoPath;
+	NSString *autoPath;
+	for(i=0; i<count; i++)
+	{
+		show = [shows objectAtIndex:i];
+		calcAutoPath = [show calculateAutoSortPath];
+		autoPath = [show autoSortPath];
+		if(autoPath == nil && calcAutoPath == nil)
+			continue;
+		if(autoPath == nil || calcAutoPath == nil)
+			//Only one of them is nil
+			break;
+		if(![autoPath isEqualToString:calcAutoPath])
+			break;
+	}
+	
+	if(i == count)
+		return nil;
+	
+	NSArray *newArray = [shows subarrayWithRange:NSMakeRange(i+1, count-i-1)];
+	NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(promptResult:forShow:remaining:)]];
+	[invoke setTarget:self];
+	[invoke setSelector:@selector(promptResult:forShow:remaining:)];
+	[invoke setArgument:&show atIndex:3];
+	[invoke setArgument:&newArray atIndex:4];
+	[invoke retainArguments];
+	
+	NSString *question;
+	if(calcAutoPath != nil)
+		question = [NSString stringWithFormat:BRLocalizedString(@"Do you want to set the show path for %@ to %@?", @"Prompt for setting a show's path, arguments are show name and path"), [show name], calcAutoPath];
+	else
+		question = [NSString stringWithFormat:BRLocalizedString(@"Do you want to delete the show path for %@?", @"Prompt for deleting a show's path, argument is show name"), [show name]];
+	
+	SapphireConfirmPrompt *prompt = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Show Path", @"Show Path") subtitle:question invokation:invoke];
+	return [prompt autorelease];
+}
+
+- (BRLayerController *)promptResult:(SapphireConfirmPromptResult)result forShow:(SapphireTVShow *)show remaining:(NSArray *)remain
+{
+	if(result == SapphireConfirmPromptResultAbort)
+		return nil;
+	
+	if(result == SapphireConfirmPromptResultOK)
+	{
+		[show setAutoSortPath:[show calculateAutoSortPath]];
+		[SapphireMetaDataSupport save:moc];
+	}
+	
+	return [self nextAutoSortPathConfirm:remain];
+}
+
 - (void)wasExhumed
 {
     // handle being revealed when the user presses Menu
@@ -545,6 +612,20 @@ typedef enum {
 			[[self stack] pushController:menu];
 			[menu release];
 			[importer release];
+			break;
+		}
+		case COMMAND_IMPORT_TV_AUTOSORT_CALCULATE:
+		{
+			NSArray *shows = doFetchRequest(SapphireTVShowName, moc, nil);
+			SapphireConfirmPrompt *confirm = [self nextAutoSortPathConfirm:shows];
+			if(confirm != nil)
+				[[self stack] pushController:confirm];
+			else
+			{
+				SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"No Changes", @"No Changes") longError:BRLocalizedString(@"Sapphire didn't detect any changes to show paths", @"Display info for no show path changes detected")];
+				[[self stack] pushController:error];
+				[error release];
+			}
 			break;
 		}
 /*		case COMMAND_IMPORT_MOVIE_POSTERS:

@@ -8,6 +8,9 @@
 #import "SapphireFileSorter.h"
 #import "SapphireTVTranslation.h"
 #import "SapphireFileMetaData.h"
+#import "SapphireOtherInformation.h"
+
+NSString *autoSortPathKey = @"autoSortPath";
 
 @implementation SapphireTVShow
 
@@ -178,7 +181,24 @@ static inline NSArray *getEpsFromFiles(NSManagedObjectContext *moc, NSArray *fil
 		return nil;
 	}
 	
+	if(!cropTwoDirs)
+	{
+		NSString *lastPathComponent = [sortPath lastPathComponent];
+		if([[lastPathComponent lowercaseString] hasPrefix:@"season"])
+			sortPath = [sortPath stringByDeletingLastPathComponent];
+	}
+	
 	return sortPath;
+}
+
+- (NSString *)autoSortPath
+{
+	return [self otherInformationForKey:autoSortPathKey];
+}
+
+- (void)setAutoSortPath:(NSString *)path
+{
+	[self setOtherObject:path forKey:autoSortPathKey];
 }
 
 @end

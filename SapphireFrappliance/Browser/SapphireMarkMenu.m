@@ -696,6 +696,7 @@ static NSString *movingPath = nil;
 				[invoke setSelector:@selector(deleteReturnedResult:atPath:)];
 				[invoke setTarget:self];
 				[invoke setArgument:&dirMeta atIndex:3];
+				[invoke retainArguments];
 				
 				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"Delete Directory Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invokation:invoke];
 				
@@ -786,6 +787,7 @@ static NSString *movingPath = nil;
 				[invoke setSelector:@selector(deleteReturnedResult:atPath:)];
 				[invoke setTarget:self];
 				[invoke setArgument:&fileMeta atIndex:3];
+				[invoke retainArguments];
 				
 				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete File?", @"Delete File Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[fileMeta path] lastPathComponent]] invokation:invoke];
 				

@@ -53,6 +53,8 @@
 - (void)setOtherObject:(id)obj forKey:(id)key
 {
 	NSMutableDictionary *mutOther = [[self otherInformation] mutableCopy];
+	if(mutOther == nil)
+		mutOther = [[NSMutableDictionary alloc] init];
 	[mutOther setObject:obj forKey:key];
 	NSDictionary *dict = [mutOther copy];
 	[self setOtherInformation:dict];

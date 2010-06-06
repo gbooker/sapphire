@@ -9,4 +9,6 @@
 
 - (NSComparisonResult)compare:(SapphireTVShow *)other;
 - (NSString *)calculateAutoSortPath;
+- (NSString *)autoSortPath;
+- (void)setAutoSortPath:(NSString *)path;
 @end
