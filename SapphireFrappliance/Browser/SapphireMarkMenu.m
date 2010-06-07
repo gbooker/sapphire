@@ -72,6 +72,7 @@ typedef enum {
 	COMMAND_DELETE_PATH,
 	COMMAND_CHANGE_ARTWORK,
 	//File Only Commands
+	COMMAND_MOVE_TO_AUTO_SORT,
 	COMMAND_MARK_TO_JOIN,
 	COMMAND_MARK_AND_JOIN,
 	COMMAND_CLEAR_JOIN_MARK,
@@ -291,6 +292,17 @@ static NSString *movingPath = nil;
 				nil],
 			nil];
 		
+		NSString *autoSortPath = [fileMeta autoSortPath];
+		if(autoSortPath != nil && [[[fileMeta path] stringByDeletingLastPathComponent] caseInsensitiveCompare:autoSortPath] != NSOrderedSame)
+		{
+			[marks insertObject:
+			    [NSDictionary dictionaryWithObjectsAndKeys:
+				    BRLocalizedString(@"Move to Auto Sort Path", @"Moving a file to auto sort path menu title"), MARK_NAME,
+					[NSString stringWithFormat:BRLocalizedString(@"Move to \"%@\"", @"Moving a file to auto sort path description; parameter is new path"), autoSortPath], MARK_DESCRIPTION,
+					[NSNumber numberWithInt:COMMAND_MOVE_TO_AUTO_SORT], MARK_COMMAND,
+					nil]
+				atIndex:1];
+		}
 		NSString *prettyName = [fileMeta prettyName];
 		if(prettyName != nil && [[fileMeta fileName] caseInsensitiveCompare:prettyName] != NSOrderedSame)
 		{
@@ -777,6 +789,18 @@ static NSString *movingPath = nil;
 					replaceController = [[[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"Short message indicating error condition") longError:error] autorelease];
 			}
 				break;
+			case COMMAND_MOVE_TO_AUTO_SORT:
+			{
+				NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(pasteInDir:)]];
+				[invoke setSelector:@selector(moveToAutoSortName:)];
+				[invoke setTarget:self];
+				[invoke setArgument:&fileMeta atIndex:2];
+				
+				SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:[NSString stringWithFormat:BRLocalizedString(@"Moving %@", @"parameter is file/dir that is being moved"), [[fileMeta path] lastPathComponent]] invocation:invoke];
+				
+				replaceController = [wait autorelease];
+			}
+				break;
 			case COMMAND_CUT_PATH:
 				[movingPath release];
 				movingPath = [[fileMeta path] retain];
@@ -805,6 +829,14 @@ static NSString *movingPath = nil;
 		[[self stack] swapController:replaceController];
 	else
 		[[self stack] popController];
+}
+
+- (BRControl *)moveToAutoSortName:(SapphireFileMetaData *)fileMeta
+{
+	NSString *error = [fileMeta moveToAutoSortName];
+	if(error != nil)
+		return [[[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Error", @"Short message indicating error condition") longError:error] autorelease];
+	return nil;
 }
 
 - (BRControl *)pasteInDir:(SapphireDirectoryMetaData *)dirMeta

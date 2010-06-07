@@ -17,6 +17,7 @@
 
 #import "NSArray-Extensions.h"
 #import "NSString-Extensions.h"
+#import "NSFileManager-Extensions.h"
 
 #import <QTKit/QTKit.h>
 
@@ -934,6 +935,38 @@ static NSString *movingToPath = @"To";
 	NSLog(@"Going to rename %@ to %@", [self path], mutStr);
 	
 	return [self rename:[mutStr autorelease]];
+}
+
+- (NSString *)autoSortPath
+{
+	SapphireEpisode *episode = self.tvEpisode;
+	return [episode.season autoSortPath];
+}
+
+- (NSString *)moveToAutoSortName
+{
+	NSString *error = nil;
+	if(![[self fileName] isEqualToString:[self prettyName]])
+		error = [self renameToPrettyName];
+	
+	if(error != nil)
+		return error;
+	
+	NSString *autoSortSeasonPath = [self autoSortPath];
+	if(autoSortSeasonPath == nil)
+		return nil;
+	
+	NSString *autoSortShowPath = [autoSortSeasonPath stringByDeletingLastPathComponent];
+	
+	NSFileManager *fm = [NSFileManager defaultManager];
+	if(![fm isDirectory:autoSortShowPath])
+		return [NSString stringWithFormat:BRLocalizedString(@"Auto sort path %@ is not a directory", @"Error indicating auto sort path isn't a directory"), autoSortShowPath];
+	
+	if(![fm constructPath:autoSortSeasonPath])
+		return [NSString stringWithFormat:BRLocalizedString(@"Cannot create directory at path %@", @"Error indicating auto sort path can't be created"), autoSortSeasonPath];
+	
+	SapphireDirectoryMetaData *dirMeta = [SapphireDirectoryMetaData createDirectoryWithPath:autoSortSeasonPath inContext:[self managedObjectContext]];
+	return [self moveToDir:dirMeta];
 }
 
 - (NSString *)fileName

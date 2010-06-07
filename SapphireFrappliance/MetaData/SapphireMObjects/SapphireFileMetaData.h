@@ -200,6 +200,20 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type);
 - (NSString *)renameToPrettyName;
 
 /*!
+ * @brief Get the file's auto-sort path
+ *
+ * @return The file's auto sort path, nil if none exists
+ */
+- (NSString *)autoSortPath;
+
+/*!
+ * @brief Move to auto-sort path
+ *
+ * @return Move error, if one occurs
+ */
+- (NSString *)moveToAutoSortName;
+
+/*!
  * @brief Return the filename, minus the path extension
  */
 - (NSString *)fileName;
