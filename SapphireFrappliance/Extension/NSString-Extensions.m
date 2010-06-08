@@ -39,6 +39,14 @@
 	[mut replaceAllOccurancesOf:search withString:replacement];
 	return [NSString stringWithString:mut];
 }
+
+- (NSString *)searchCleanedString
+{
+	NSString *ret = [self stringByReplacingAllOccurancesOf:@"_" withString:@" "];
+	ret = [ret stringByReplacingAllOccurancesOf:@"." withString:@" "];
+	ret = [ret stringByReplacingAllOccurancesOf:@"-" withString:@" "];
+	return ret;
+}
 @end
 
 @implementation NSString (Additions)

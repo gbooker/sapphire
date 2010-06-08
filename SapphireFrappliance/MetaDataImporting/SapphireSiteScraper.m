@@ -21,6 +21,7 @@
 #import "SapphireSiteScraper.h"
 #import "SapphireURLLoader.h"
 #import "SapphireScraper.h"
+#import "NSString-Extensions.h"
 
 @implementation SapphireSiteScraper
 
@@ -202,6 +203,7 @@
 
 - (void)searchForMovieName:(NSString *)name year:(NSString *)year
 {
+	name = [name searchCleanedString];
 	NSString *searchURLXmlString = [scraper searchURLForMovieName:name year:year];
 	
 	NSError *error = nil;
@@ -292,6 +294,7 @@
 
 - (void)searchForShowNamed:(NSString *)name;
 {
+	name = [name searchCleanedString];
 	NSString *searchURLXmlString = [scraper searchURLForShowName:name];
 	
 	NSError *error = nil;

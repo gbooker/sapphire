@@ -48,6 +48,13 @@
  * @return The new string after all replacements
  */
 - (NSString *)stringByReplacingAllOccurancesOf:(NSString *)search withString:(NSString *)replacement;
+
+/*!
+ * @brief Replace all -_. with spaces
+ *
+ * @return The cleaned string
+ */
+- (NSString *)searchCleanedString;
 @end
 
 @interface NSString (Additions)
