@@ -20,6 +20,7 @@
 
 #import "SapphireScraper.h"
 #include "pcre.h"
+#import "SapphireApplianceController.h"
 
 @interface SapphireScraper ()
 - (void)parseSettings;
@@ -41,12 +42,8 @@ static NSDictionary *scraperPaths = nil;
 		scrapers = [[NSMutableDictionary alloc] init];
 }
 
-+ (NSArray *)allScrapperNames
+void checkScrappersInPath(NSArray *paths, NSMutableDictionary *scraperPathsDict, NSMutableDictionary *scraperDates)
 {
-	NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
-	NSArray *paths = [selfBundle pathsForResourcesOfType:@"xml" inDirectory:@"scrapers"];
-	
-	NSMutableDictionary *scraperPathsDict = [[NSMutableDictionary alloc] init];
 	NSEnumerator *pathEnum = [paths objectEnumerator];
 	NSString *path;
 	while((path = [pathEnum nextObject]) != nil)
@@ -60,10 +57,42 @@ static NSDictionary *scraperPaths = nil;
 		
 		NSString *name = [[root attributeForName:@"name"] stringValue];
 		NSString *type = [[root attributeForName:@"content"] stringValue];
+		NSString *dateStr = [[root attributeForName:@"date"] stringValue];
+		NSDate *date = [NSDate dateWithNaturalLanguageString:dateStr];
 		
-		[scraperPathsDict setObject:[type stringByAppendingFormat:@"-%@", path] forKey:name];
+		NSDate *existingDate = [scraperDates objectForKey:name];
+		if(existingDate == nil || [existingDate compare:date] == NSOrderedAscending)
+		{
+			[scraperPathsDict setObject:[type stringByAppendingFormat:@"-%@", path] forKey:name];
+			[scraperDates setObject:date forKey:name];
+		}
+		
 		[doc release];
 	}
+}
+
++ (NSArray *)allScrapperNames
+{
+	NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
+	NSMutableDictionary *scraperPathsDict = [[NSMutableDictionary alloc] init];
+	NSMutableDictionary *scraperDates = [[NSMutableDictionary alloc] init];
+	
+	NSArray *paths = [selfBundle pathsForResourcesOfType:@"xml" inDirectory:@"scrapers"];
+	checkScrappersInPath(paths, scraperPathsDict, scraperDates);
+	
+	paths = [NSArray array];
+	NSString *scraperDir = [applicationSupportDir() stringByAppendingPathComponent:@"scrapers"];
+	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:scraperDir];
+	NSEnumerator *fileEnum = [files objectEnumerator];
+	NSString *filename;
+	while((filename = [fileEnum nextObject]) != nil)
+	{
+		if([[filename pathExtension] isEqualToString:@"xml"])
+			paths = [paths arrayByAddingObject:[scraperDir stringByAppendingPathComponent:filename]];
+	}
+	checkScrappersInPath(paths, scraperPathsDict, scraperDates);
+	
+	[scraperDates release];
 	[scraperPaths release];
 	scraperPaths = [scraperPathsDict copy];
 	[scraperPathsDict release];
