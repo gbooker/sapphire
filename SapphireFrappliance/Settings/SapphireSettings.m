@@ -37,6 +37,7 @@
 #import "SapphireConfirmPrompt.h"
 #import "CoreDataSupportFunctions.h"
 #import "SapphireErrorDisplayController.h"
+#import "SapphireWaitDisplay.h"
 
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 #import "NSString-Extensions.h"
@@ -73,6 +74,7 @@ typedef enum {
 	COMMAND_IMPORT_TV_DATA,
 	COMMAND_IMPORT_MOVIE_DATA,
 	COMMAND_IMPORT_TV_AUTOSORT_CALCULATE,
+	COMMAND_IMPORT_UPDATE_SCRAPERS,
 	COMMAND_IMPORT_HIDE_POSTER_CHOOSER,
 	COMMAND_IMPORT_USE_DIR_NAME,
 	COMMAND_IMPORT_HIDE_ALL_CHOOSERS,
@@ -145,6 +147,12 @@ typedef enum {
 			BRLocalizedString(@"Tells Sapphire to calculate directories where each TV show is stored.", @"Calculate TV Dirs description"), SETTING_DESCRIPTION,
 			[theme gem:TVR_GEM_KEY], SETTING_GEM,
 			[NSNumber numberWithInt:COMMAND_IMPORT_TV_AUTOSORT_CALCULATE], SETTING_COMMAND,
+			nil],
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Update Scrapers", @"Update Scrapers menu item"), SETTING_NAME,
+			BRLocalizedString(@"Tells Sapphire to download latest scrapers from the website.", @"Update Scrapers description"), SETTING_DESCRIPTION,
+			[theme gem:CONE_GEM_KEY], SETTING_GEM,
+			[NSNumber numberWithInt:COMMAND_IMPORT_UPDATE_SCRAPERS], SETTING_COMMAND,
 			nil],
 /*		[NSDictionary dictionaryWithObjectsAndKeys:
 			BRLocalizedString(@"  Choose Movie Posters", @"Start Poster Chooser menu item"), SETTING_NAME,
@@ -490,6 +498,16 @@ typedef enum {
 	return [self nextAutoSortPathConfirm:remain];
 }
 
+- (BRLayerController *)waitForDownloads
+{
+	SapphireURLLoader *loader = [SapphireApplianceController urlLoader];
+	while([loader loadingURLCount] != 0)
+		usleep(100000);
+	
+	SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Restart Needed", @"Restart Needed") longError:BRLocalizedString(@"You must exist Frontrow for new scrapers to take effect", @"You must exist Frontrow for new scrapers to take effect")];
+	return [error autorelease];
+}
+
 - (void)wasExhumed
 {
     // handle being revealed when the user presses Menu
@@ -626,6 +644,25 @@ typedef enum {
 				[[self stack] pushController:error];
 				[error release];
 			}
+			break;
+		}
+		case COMMAND_IMPORT_UPDATE_SCRAPERS:
+		{
+			SapphireURLLoader *loader = [SapphireApplianceController urlLoader];
+			NSFileManager *fm = [NSFileManager defaultManager];
+			[fm constructPath:[applicationSupportDir() stringByAppendingPathComponent:@"scrapers/common"]];
+			NSArray *loads = [NSArray arrayWithObjects:@"tvrage.xml", @"imdb.xml", @"/common/dtrailer.xml", @"common/imdb.xml", @"common/impa.xml", @"common/movieposterdb.xml", @"common/tmdb.xml", nil];
+			NSString *dest = [applicationSupportDir() stringByAppendingPathComponent:@"scrapers"];
+			NSEnumerator *loadEnum = [loads objectEnumerator];
+			NSString *load;
+			while((load = [loadEnum nextObject]) != nil)
+				[loader saveDataAtURL:[@"http://appletv.nanopi.net/svn/trunk/SapphireFrappliance/MetaDataImporting/Scrapers/" stringByAppendingString:load] toFile:[dest stringByAppendingPathComponent:load]];
+			NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(waitForDownloads)]];
+			[invoke setTarget:self];
+			[invoke setSelector:@selector(waitForDownloads)];
+			SapphireWaitDisplay *wait = [[SapphireWaitDisplay alloc] initWithScene:[self scene] title:BRLocalizedString(@"Downloading", @"Downloading") invocation:invoke];
+			[[self stack] pushController:wait];
+			[wait release];
 			break;
 		}
 /*		case COMMAND_IMPORT_MOVIE_POSTERS:
