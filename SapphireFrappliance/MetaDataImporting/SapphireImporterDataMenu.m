@@ -569,19 +569,19 @@
 
 - (void)urlLoaderFinisedResource:(SapphireURLLoader *)loader
 {
-	pendingURLCount--;
+	pendingURLCount = [loader loadingURLCount];
 	[self updateDisplay];
 }
 
 - (void)urlLoaderCancelledResource:(SapphireURLLoader *)loader
 {
-	pendingURLCount--;
+	pendingURLCount = [loader loadingURLCount];
 	[self updateDisplay];
 }
 
 - (void)urlLoaderAddedResource:(SapphireURLLoader *)loader
 {
-	pendingURLCount++;
+	pendingURLCount = [loader loadingURLCount];
 	[self updateDisplay];
 }
 
