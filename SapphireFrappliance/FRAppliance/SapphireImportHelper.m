@@ -136,7 +136,6 @@ static SapphireImportHelper *shared = nil;
 		while((file = [server nextFile]) != nil)
 		{
 			NSAutoreleasePool *singleImportPool = [[NSAutoreleasePool alloc] init];
-			BOOL ret;
 			NSString *path = [file path];
 			NSDictionary *fileMeta = fileMetaData(path, [file fileContainerType]);
 			[server fileImportCompleteWithMeta:fileMeta path:path];
