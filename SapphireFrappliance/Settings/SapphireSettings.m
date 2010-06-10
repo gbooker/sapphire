@@ -296,7 +296,7 @@ typedef enum {
 	/*display*/
 	BRListControl *list = [self list];
 	[list setDatasource:self];
-	[SapphireFrontRowCompat addDividerAtIndex:6 toList:list];
+	[SapphireFrontRowCompat addDividerAtIndex:8 toList:list];
 	/*Save our instance*/
 	sharedInstance = [self retain];
 
