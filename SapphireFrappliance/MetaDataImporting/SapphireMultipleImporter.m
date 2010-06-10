@@ -180,6 +180,7 @@
 		return;
 	}
 	
+	[state retain];
 	if(state->currentImportIndex == index)
 	{
 		state->currentImportIndex++;
@@ -192,6 +193,7 @@
 		[delegate backgroundImporter:self completedImportOnPath:path withState:status];
 		[pendingImports removeObjectForKey:path];
 	}
+	[state release];
 }
 
 - (BOOL)canDisplayChooser
