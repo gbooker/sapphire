@@ -111,6 +111,7 @@
 	}
 	[colSet removeObject:@"/mnt"];
 	[colSet removeObject:@"/CIFS"];
+	[colSet removeObject:@"/Volumes/BOOTCAMP"];
 	[colSet removeObject:NSHomeDirectory()];
 	NSString *homeMoviesPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Movies"];
 	if([[NSFileManager defaultManager] fileExistsAtPath:homeMoviesPath])
