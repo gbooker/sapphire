@@ -393,7 +393,9 @@ static NSSet *secondaryFiles;
 		//XML file is gone, but we still reference it
 		return YES;
 
-	int modTime = [[xmlProps objectForKey:NSFileModificationDate] timeIntervalSince1970];
+	int modTime = 0;
+	if(xmlProps)
+		modTime = [[xmlProps objectForKey:NSFileModificationDate] timeIntervalSince1970];
 	if(modTime != [self importedTimeFromSource:IMPORT_TYPE_XML_MASK])
 		//XML modification time does not match our last import
 		return YES;

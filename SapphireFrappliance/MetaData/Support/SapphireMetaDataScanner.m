@@ -110,8 +110,8 @@ static void subLoop(SapphireMetaDataScanner *scan, NSArray *compArray, NSArray *
 	int newDepth = currentDepth + 1;
 	for(i=0; i<=endIndex; i++)
 	{
-		NSArray *components;
-		NSString *subDirName;
+		NSArray *components = nil;
+		NSString *subDirName = nil;
 		if(i == endIndex)
 		{
 			if(i == 0)

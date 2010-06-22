@@ -253,9 +253,10 @@ static BOOL usingATypeOfTakeThree = NO;
 	{
 		CGImageRef coverArt = nil;
 		CGImageSourceRef source = CGImageSourceCreateWithData((CFDataRef)imageData, nil);
-		if(source != NULL)
+		if(source != NULL) {
 			coverArt = CGImageSourceCreateImageAtIndex(source, 1, nil);
-		CFRelease(source);
+			CFRelease(source);
+		}
 		return [(id)coverArt autorelease];
 	}
 }

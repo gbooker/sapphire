@@ -66,7 +66,7 @@
 	NSRect frame = [SapphireFrontRowCompat frameOfController:self];
 	NSRect newFrame;
 	newFrame.size.width = newFrame.size.height = frame.size.height / 6.0f;
-	newFrame.origin.y += (frame.size.height - newFrame.size.height) / 2.0f;
+	newFrame.origin.y = (frame.size.height - newFrame.size.height) / 2.0f;
 	newFrame.origin.x = (frame.size.width - newFrame.size.width) / 2.0f;
 	[spinner setFrame:newFrame] ;
 }
