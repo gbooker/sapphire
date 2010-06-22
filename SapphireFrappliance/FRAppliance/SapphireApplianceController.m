@@ -732,6 +732,8 @@ BRMusicNowPlayingController *musicController = nil;
 				[display release];
 				return YES;
 			}
+			default:
+				break;
 		}
 		
 	}

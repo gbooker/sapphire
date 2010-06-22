@@ -20,6 +20,7 @@
 
 
 #import <BackRow/BackRow.h>
+#include <unistd.h>
 #import "SapphireApplianceController.h"
 #import "SapphireSettings.h"
 #import "SapphireTheme.h"

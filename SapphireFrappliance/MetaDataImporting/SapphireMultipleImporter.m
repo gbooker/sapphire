@@ -106,6 +106,9 @@
 				state->updated = YES;
 			case ImportStateNotUpdated:
 				state->completedMask |= 1 << importIndex;
+				break;
+			case ImportStateUserSkipped:
+				break;
 		}
 	}
 	

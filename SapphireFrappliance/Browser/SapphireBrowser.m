@@ -742,6 +742,8 @@ static BOOL is10Version = NO;
 			[controller release];				
 			return YES;
 		}
+		default:
+			break;
 	}
 	return [super brEventAction:event];
 }

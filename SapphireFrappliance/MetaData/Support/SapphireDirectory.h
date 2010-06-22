@@ -296,6 +296,14 @@ extern NSString *VIRTUAL_DIR_OSCAR_PATH;
 
 @end
 
+/*!
+ * @brief Executes a selector on an entire subtree.
+ *
+ * @param dir The subtree
+ * @param select The selector to execute
+ * @param object The object as the first parameter to the selector
+ */
+void doSubtreeInvocation(id <SapphireDirectory> dir, SEL select, id object);
 
 /*!
  * @brief Set subtree to watched or unwatched with restriction as to predicate.  Does not follow symlinks

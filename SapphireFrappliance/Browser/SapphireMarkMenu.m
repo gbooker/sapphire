@@ -713,7 +713,10 @@ static NSString *movingPath = nil;
 				SapphireConfirmPrompt *confirm = [[SapphireConfirmPrompt alloc] initWithScene:[self scene] title:BRLocalizedString(@"Delete Directory?", @"Delete Directory Prompt Title") subtitle:[NSString stringWithFormat:BRLocalizedString(@"Are you sure you wish to delete %@?", @"parameter is file/dir that is being deleted"), [[dirMeta path] lastPathComponent]] invocation:invoke];
 				
 				replaceController = [confirm autorelease];
+				break;
 			}
+			default:
+				break;
 		}
 	}
 	else
@@ -821,6 +824,8 @@ static NSString *movingPath = nil;
 			case COMMAND_CHANGE_ARTWORK:
 				replaceController = [self loadArtwork:fileMeta];
 				break;
+			default:
+				break;
 		}
 	}
 	/*Save and exit*/
@@ -872,7 +877,7 @@ static NSString *movingPath = nil;
 	return nil;
 }
 
-- (BRControl *)deleteReturnedResult:(SapphireConfirmPromptResult)result atPath:(id <SapphireMetaData>)meta
+- (BRControl *)deleteReturnedResult:(SapphireConfirmPromptResult)result atPath:(NSManagedObject <SapphireMetaData> *)meta
 {
 	if(result != SapphireConfirmPromptResultOK)
 		return nil;

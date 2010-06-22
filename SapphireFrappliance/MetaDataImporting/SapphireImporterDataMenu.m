@@ -421,6 +421,9 @@
 				[self itemImportBackgrounded];
 				ret = NO;
 				break;
+			case ImportStateNotUpdated:
+			case ImportStateUserSkipped:
+				break;
 		}
 		if(ret)
 			[SapphireMetaDataSupport save:moc];
@@ -696,6 +699,8 @@ static SapphireImportChooserQueueItem *findNextChooser(NSMutableArray *choosers)
 			break;
 		case kBREventRemoteActionMenu:
 			[self cancel];
+			break;
+		default:
 			break;
 	}
 	return [super brEventAction:event];

@@ -365,6 +365,8 @@ typedef enum {
 			return @">";
 		case ValueCompareTypeGreaterEqual:
 			return @">=";
+		case ValueCompareTypeNone:
+			return @"";
 	}
 	return nil;
 }
@@ -386,6 +388,8 @@ typedef enum {
 			break;
 		case CommandTypeFormatNSDateValue:
 			return [NSString stringWithFormat:@"%@ %@ %%@", [command formatString], compareStr];
+		default:
+			break;
 	}
 	return nil;
 }
