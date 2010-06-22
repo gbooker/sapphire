@@ -35,7 +35,7 @@
 
 + (CMPPlayerManager *)sharedPlayerManager
 {
-	CMPPlayerManager *shared = nil;
+	static CMPPlayerManager *shared = nil;
 	if(shared == nil)
 		shared = [[CMPPlayerManager alloc] init];
 	
@@ -173,7 +173,6 @@
 		if(canPlay)
 		{
 			//NSLog(@"Using Player");
-			[player retain];
 			break;
 		}
 		
@@ -205,6 +204,7 @@
 	
 	//XXX Prefs
 	id <CMPPlayerController> controller = [[(Class)[goodControllers anyObject] alloc] initWithScene:scene player:player];
+	[goodControllers release];
 	return [controller autorelease];
 }
 

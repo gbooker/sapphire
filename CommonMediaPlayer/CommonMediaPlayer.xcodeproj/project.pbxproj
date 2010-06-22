@@ -51,6 +51,8 @@
 		F50CCE2A1118FD9000213966 /* CMPDVDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCE281118FD9000213966 /* CMPDVDPlayer.m */; };
 		F50CCE911119DECA00213966 /* CMPDVDPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F50CCE8F1119DECA00213966 /* CMPDVDPlayerController.h */; settings = {ATTRIBUTES = (); }; };
 		F50CCE921119DECA00213966 /* CMPDVDPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F50CCE901119DECA00213966 /* CMPDVDPlayerController.m */; };
+		F512FF4811D170D40062B86E /* CMPOverlayAction.h in Headers */ = {isa = PBXBuildFile; fileRef = F512FF4611D170D40062B86E /* CMPOverlayAction.h */; };
+		F512FF4911D170D40062B86E /* CMPOverlayAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F512FF4711D170D40062B86E /* CMPOverlayAction.m */; };
 		F531CAE3111E2EF9005DF910 /* CMPLeopardDVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = F531CAE1111E2EF9005DF910 /* CMPLeopardDVDPlayer.h */; };
 		F531CAE4111E2EF9005DF910 /* CMPLeopardDVDPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = F531CAE2111E2EF9005DF910 /* CMPLeopardDVDPlayer.m */; };
 		F531CAFD111E305B005DF910 /* CMPLeopardDVDPlayerController.h in Headers */ = {isa = PBXBuildFile; fileRef = F531CAFB111E305B005DF910 /* CMPLeopardDVDPlayerController.h */; };
@@ -122,6 +124,8 @@
 		F50CCE281118FD9000213966 /* CMPDVDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDPlayer.m; sourceTree = "<group>"; };
 		F50CCE8F1119DECA00213966 /* CMPDVDPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDPlayerController.h; sourceTree = "<group>"; };
 		F50CCE901119DECA00213966 /* CMPDVDPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDPlayerController.m; sourceTree = "<group>"; };
+		F512FF4611D170D40062B86E /* CMPOverlayAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPOverlayAction.h; sourceTree = "<group>"; };
+		F512FF4711D170D40062B86E /* CMPOverlayAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPOverlayAction.m; sourceTree = "<group>"; };
 		F531CAE1111E2EF9005DF910 /* CMPLeopardDVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPLeopardDVDPlayer.h; sourceTree = "<group>"; };
 		F531CAE2111E2EF9005DF910 /* CMPLeopardDVDPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPLeopardDVDPlayer.m; sourceTree = "<group>"; };
 		F531CAFB111E305B005DF910 /* CMPLeopardDVDPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPLeopardDVDPlayerController.h; sourceTree = "<group>"; };
@@ -324,6 +328,8 @@
 				F50CCCF71118ED7D00213966 /* CMPScreenReleaseAction.m */,
 				F5001CBD1120939D001B52FE /* CMPOverlayModeAction.h */,
 				F5001CBE1120939D001B52FE /* CMPOverlayModeAction.m */,
+				F512FF4611D170D40062B86E /* CMPOverlayAction.h */,
+				F512FF4711D170D40062B86E /* CMPOverlayAction.m */,
 			);
 			path = "General Actions";
 			sourceTree = "<group>";
@@ -373,6 +379,7 @@
 				870D75EC1137AB8B007BD611 /* CMPProgressBarControl.h in Headers */,
 				87C75D8411BB51AE00D53B37 /* CMPMPPlayer.h in Headers */,
 				87C75D8611BB51AE00D53B37 /* CMPMPPlayerController.h in Headers */,
+				F512FF4811D170D40062B86E /* CMPOverlayAction.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +495,7 @@
 				870D75ED1137AB8B007BD611 /* CMPProgressBarControl.m in Sources */,
 				87C75D8511BB51AE00D53B37 /* CMPMPPlayer.m in Sources */,
 				87C75D8711BB51AE00D53B37 /* CMPMPPlayerController.m in Sources */,
+				F512FF4911D170D40062B86E /* CMPOverlayAction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

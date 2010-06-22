@@ -21,7 +21,7 @@
 
 #import "CMPPlayerController.h"
 
-@class CMPDVDPlayer, CMPDVDWindowCreationAction, CMPDVDTextView, CMPDVDPlayerPlayHead, CMPDVDBlurredMenu;
+@class CMPDVDPlayer, CMPDVDWindowCreationAction, CMPTextView, CMPPlayerPlayHead, CMPBlurredMenu, CMPOverlayAction;
 
 typedef enum {
 	CMPDVDPlayerControllerOverlayModeNone,
@@ -36,18 +36,19 @@ typedef enum {
 	CMPDVDPlayer						*player;
 	id <CMPPlayerControllerDelegate>	delegate;
 	CMPDVDWindowCreationAction			*windowCreation;
+	CMPOverlayAction					*overlay;
 #ifdef PLAY_WITH_OVERLAY
 	BOOL								blacked;
 #endif
 	CMPDVDPlayerControllerOverlayMode	overlayMode;
 	NSTimer								*overlayDismiss;
-	CMPDVDTextView						*statusOverlay;
-	CMPDVDTextView						*subtitlesOverlay;
-	CMPDVDTextView						*audioOverlay;
-	CMPDVDTextView						*chapterOverlay;
-	CMPDVDTextView						*zoomOverlay;
-	CMPDVDPlayerPlayHead				*playheadOverlay;
-	CMPDVDBlurredMenu					*blurredMenu;
+	CMPTextView							*statusOverlay;
+	CMPTextView							*subtitlesOverlay;
+	CMPTextView							*audioOverlay;
+	CMPTextView							*chapterOverlay;
+	CMPTextView							*zoomOverlay;
+	CMPPlayerPlayHead					*playheadOverlay;
+	CMPBlurredMenu						*blurredMenu;
 }
 
 - (void)playbackStopped;

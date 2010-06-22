@@ -50,7 +50,7 @@ typedef enum {
 	CMPDVDZoomLevelCount,
 } CMPDVDZoomLevel;
 
-@class CMPDVDPlayerController, CMPDVDFrameworkLoadAction;
+@class CMPDVDPlayerController, CMPDVDFrameworkLoadAction, CMPPlayerPlayHead;
 
 @interface CMPDVDPlayer : NSObject <CMPPlayer>{
 	BRBaseMediaAsset			*asset;
@@ -64,6 +64,7 @@ typedef enum {
 	NSTimer						*stopTimer;
 	CMPDVDZoomLevel				zoomLevel;
 	BOOL						useStopTimer;
+	CMPPlayerPlayHead			*playhead;
 }
 
 - (BOOL)useStopTimer;
@@ -103,6 +104,7 @@ typedef enum {
 - (void)nextSubStream;
 - (void)setZoomLevel:(CMPDVDZoomLevel)level;
 - (CMPDVDZoomLevel)zoomLevel;
+- (void)setPlayhead:(CMPPlayerPlayHead *)playhead;
 + (BOOL)isVolume:(NSString *)theVolume;
 + (BOOL)isImage:(NSString *)theVolume;
 @end

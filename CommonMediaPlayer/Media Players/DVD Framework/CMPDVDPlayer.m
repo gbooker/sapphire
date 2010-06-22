@@ -23,6 +23,7 @@
 #import "CMPDVDPlayer.h"
 #import "CMPDVDFrameworkLoadAction.h"
 #import "CMPDVDPlayerController.h"
+#import "CMPOverlayAction.h"
 #import <AudioUnit/AudioUnit.h>
 
 enum{
@@ -76,6 +77,7 @@ static UInt32						eventCallbackID = 0;
 	[asset release];
 	[frameworkLoad release];
 	[stopTimer invalidate];
+	[playhead release];
 	[super dealloc];
 }
 
@@ -706,6 +708,13 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 	return zoomLevel;
 }
 
+- (void)setPlayhead:(CMPPlayerPlayHead *)aPlayhead
+{
+	[playhead release];
+	playhead = [aPlayhead retain];
+	[playhead updateDisplayWithElapsed:currentElapsedTime duration:titleDuration];
+}
+
 static BOOL pauseOnPlay = NO;
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {
@@ -758,7 +767,8 @@ static BOOL pauseOnPlay = NO;
 	DVDStop();
 	DVDCloseMediaFile();
 	DVDCloseMediaVolume();
-	DVDSetVideoDisplay(kCGNullDirectDisplay);
+	//Seems to crash SL
+	//DVDSetVideoDisplay(kCGNullDirectDisplay);
 	DVDDispose();
 }
 
@@ -909,6 +919,11 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 		titleDuration = -1;
 }
 
+- (void)updatePlayhead
+{
+	[playhead updateDisplayWithElapsed:currentElapsedTime duration:titleDuration];
+}
+
 - (void)titleTimeChanged
 {
 	if ([self useStopTimer])
@@ -921,6 +936,8 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 	DVDGetTime(kDVDTimeCodeElapsedSeconds, &time, &frames);
 	if(time != 0)
 		currentElapsedTime = time;
+	if(playhead != nil)
+		[self performSelectorOnMainThread:@selector(updatePlayhead) withObject:nil waitUntilDone:NO];
 }
 
 - (NSSize)size
@@ -1093,6 +1110,7 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 			//[[self stack] pushController:aController];
 			return NO;
 	}
+	DVDSetTimeEventRate(100);
 	return result == noErr;
 }
 

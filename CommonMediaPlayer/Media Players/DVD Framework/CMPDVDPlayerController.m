@@ -22,6 +22,7 @@
 #import "CMPDVDPlayerController.h"
 #import "CMPDVDPlayer.h"
 #import "CMPDVDWindowCreationAction.h"
+#import "CMPOverlayAction.h"
 #import "CMPATVVersion.h"
 #import "CoreGraphicsServices.h"
 
@@ -139,6 +140,7 @@ static NSTimer *timer = nil;
 	[player release];
 	[delegate release];
 	[windowCreation release];
+	[overlay release];
 	[overlayDismiss invalidate];
 	[statusOverlay release];
 	[subtitlesOverlay release];
@@ -194,17 +196,18 @@ static NSTimer *timer = nil;
 {
 //	[self setOpacity:0.0f];
 	[windowCreation openWithError:nil];
+	overlay = [[windowCreation overlayAction] retain];
 	BOOL resume = NO;
-	CMPDVDOverlayWindow *shield = [windowCreation addBlackShieldWindow];
+	CMPOverlayWindow *shield = [overlay addBlackShieldWindow];
 	[shield display];
 	[player initiatePlaybackWithResume:&resume];
 	if(resume)
 	{
 		[self showResumeOverlayWithDismiss:NO];
-		[windowCreation performSelector:@selector(closeOverlay:) withObject:shield afterDelay:0.5];
+		[overlay performSelector:@selector(closeOverlay:) withObject:shield afterDelay:0.5];
 	}
 	else
-		[windowCreation closeOverlay:shield withFade:[NSNumber numberWithFloat:0]];
+		[overlay closeOverlay:shield withFade:[NSNumber numberWithFloat:0]];
 }
 
 - (void)playbackStopped
@@ -342,10 +345,10 @@ static NSTimer *timer = nil;
 	[windowCreation closeWithError:nil];
 }
 
-static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDVDOverlayWindow * *overlay, NSNumber *fadeTime)
+static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow * *overlay, NSNumber *fadeTime)
 {
-	CMPDVDOverlayWindow *actualOverlay = *overlay;
-	[windowCreation closeOverlay:actualOverlay withFade:fadeTime];
+	CMPOverlayWindow *actualOverlay = *overlay;
+	[overlayAction closeOverlay:actualOverlay withFade:fadeTime];
 	[actualOverlay release];
 	*overlay = nil;
 }
@@ -381,17 +384,19 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	}
 	
 	if(closeStatus)
-		closeAndNilOverlay(windowCreation, &statusOverlay, fadeTime);
+		closeAndNilOverlay(overlay, &statusOverlay, fadeTime);
 	if(closeSubtitles)
-		closeAndNilOverlay(windowCreation, &subtitlesOverlay, fadeTime);
+		closeAndNilOverlay(overlay, &subtitlesOverlay, fadeTime);
 	if(closeAudio)
-		closeAndNilOverlay(windowCreation, &audioOverlay, fadeTime);
+		closeAndNilOverlay(overlay, &audioOverlay, fadeTime);
 	if(closeChapter)
-		closeAndNilOverlay(windowCreation, &chapterOverlay, fadeTime);
+		closeAndNilOverlay(overlay, &chapterOverlay, fadeTime);
 	if(closeZoom)
-		closeAndNilOverlay(windowCreation, &zoomOverlay, fadeTime);
-	if(closePlayhead)
-		closeAndNilOverlay(windowCreation, &playheadOverlay, fadeTime);
+		closeAndNilOverlay(overlay, &zoomOverlay, fadeTime);
+	if(closePlayhead) {
+		[player setPlayhead:nil];
+		closeAndNilOverlay(overlay, &playheadOverlay, fadeTime);		
+	}
 }
 
 - (void)fadeOverlays
@@ -411,9 +416,9 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 {
 	if(playheadOverlay)
 		return;
-	playheadOverlay = [[windowCreation addPlayheadOverlay] retain];
-	[playheadOverlay setPlayer:player];
+	playheadOverlay = [[overlay addPlayheadOverlay] retain];
 	[playheadOverlay displayWithFadeTime:0.1];
+	[player setPlayhead:playheadOverlay];
 }
 
 - (void)showSubAndAudioMode
@@ -422,11 +427,11 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	[self overlayModeChangedWithFade:0];
 	
 	if(!subtitlesOverlay)
-		subtitlesOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
+		subtitlesOverlay = [[overlay addTextOverlayInPosition:CMPOverlayUpperLeft] retain];
 	[subtitlesOverlay setText:[player currentSubFormat]];
 	[subtitlesOverlay displayWithFadeTime:0.25];
 	if(!audioOverlay)
-		audioOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperRight] retain];
+		audioOverlay = [[overlay addTextOverlayInPosition:CMPOverlayUpperRight] retain];
 	[audioOverlay setText:[player currentAudioFormat]];
 	[audioOverlay displayWithFadeTime:0.25];
 	
@@ -444,7 +449,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	[self overlayModeChangedWithFade:0];
 	
 	if(!chapterOverlay)
-		chapterOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
+		chapterOverlay = [[overlay addTextOverlayInPosition:CMPOverlayUpperLeft] retain];
 	[chapterOverlay setText:[self chapterString]];
 	[chapterOverlay displayWithFadeTime:0.25];
 	[self showPlayheadOverlay];
@@ -469,7 +474,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	[self overlayModeChangedWithFade:0];
 	
 	if(!zoomOverlay)
-		zoomOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperRight] retain];
+		zoomOverlay = [[overlay addTextOverlayInPosition:CMPOverlayUpperRight] retain];
 	[zoomOverlay setText:[self zoomModeString]];
 	[zoomOverlay displayWithFadeTime:0.25];
 	
@@ -503,7 +508,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	[self overlayModeChangedWithFade:0];
 	
 	if(!statusOverlay)
-		statusOverlay = [[windowCreation addTextOverlayInPosition:CMPDVDOverlayUpperLeft] retain];
+		statusOverlay = [[overlay addTextOverlayInPosition:CMPOverlayUpperLeft] retain];
 	[statusOverlay setText:[self stringForPlayerState]];
 	[statusOverlay displayWithFadeTime:0.25];
 	[self showPlayheadOverlay];
@@ -517,7 +522,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 	[self overlayModeChangedWithFade:fadeTime];
 	
 	//Catch any others
-	[windowCreation closeAllOverlaysWithFadeTime:fadeTime];
+	[overlay closeAllOverlaysWithFadeTime:fadeTime];
 	
 	[overlayDismiss invalidate];
 	overlayDismiss = nil;
@@ -527,7 +532,7 @@ static void closeAndNilOverlay(CMPDVDWindowCreationAction *windowCreation, CMPDV
 {
 	if(dismiss)
 		[self dismissOverlaysWithFadeTime:0];
-	blurredMenu = [[windowCreation addBlurredMenuOverlayWithItems:[NSArray arrayWithObjects:@"Resume Playback", @"Start From Beginning", @"Main Menu", nil]] retain];
+	blurredMenu = [[overlay addBlurredMenuOverlayWithItems:[NSArray arrayWithObjects:@"Resume Playback", @"Start From Beginning", @"Main Menu", nil]] retain];
 	[blurredMenu displayWithFadeTime:0.5];
 }
 

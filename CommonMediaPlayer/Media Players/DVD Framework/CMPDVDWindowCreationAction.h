@@ -21,78 +21,14 @@
 
 #import "CMPActionController.h"
 
-@class CMPScreenReleaseAction, CMPDVDPlayer, CMPDVDPlayerPlayHeadView, CMPDVDSelectionView;
-
-typedef enum {
-	CMPDVDOverlayUpperLeft,
-	CMPDVDOverlayUpperRight,
-	CMPDVDOverlayLowerLeft,
-	CMPDVDOverlayLowerRight,
-} CMPDVDOverlayPosition;
-
-@interface CMPDVDOverlayWindow : NSWindow
-{
-	NSRect					screenRect;
-	int						overWindowID;
-	float					initialOpacity, finalOpacity, fadeTime;
-	NSTimer					*opacityChangeTimer;
-	NSDate					*opacityChangeStartTime;
-}
-
-- (void)display;
-- (void)displayWithFadeTime:(float)fadeTime;
-
-@end
-
-@interface CMPDVDTextView : CMPDVDOverlayWindow
-{
-	CMPDVDOverlayPosition	position;
-	NSTextField				*textField;
-}
-
-- (void)setText:(NSString *)text;
-
-@end
-
-@interface CMPDVDPlayerPlayHead : CMPDVDOverlayWindow {
-	NSTextField							*elapsedField;
-	NSTextField							*durationField;
-	CMPDVDPlayer						*player;
-	CMPDVDPlayerPlayHeadView			*playView;
-	NSTimer								*updateTimer;
-}
-- (void)setPlayer:(CMPDVDPlayer *)player;
-
-@end
-
-@interface CMPDVDBlurredMenu : CMPDVDOverlayWindow
-{
-	NSArray					*menuItems;
-	CMPDVDSelectionView		*selectionView;
-	NSImageView				*imageView;
-	int						selectedItem;
-	int						itemHeight;
-}
-- (BOOL)previousItem;
-- (BOOL)nextItem;
-- (int)selectedItem;
-@end
-
+@class CMPScreenReleaseAction, CMPDVDPlayer, CMPOverlayAction;
 
 @interface CMPDVDWindowCreationAction : NSObject <CMPActionController>{
 	CMPScreenReleaseAction	*screenRelease;
+	CMPOverlayAction		*overlayAction;
 	NSWindow				*dvdWindow;
-	NSMutableArray			*overlays;
 }
 
 - (void)setWindowAlpha:(float)alpha;
-- (CMPDVDOverlayWindow *)addBlackShieldWindow;
-- (CMPDVDTextView *)addTextOverlayInPosition:(CMPDVDOverlayPosition)position;
-- (CMPDVDPlayerPlayHead *)addPlayheadOverlay;
-- (CMPDVDBlurredMenu *)addBlurredMenuOverlayWithItems:(NSArray *)items;
-- (void)closeOverlay:(CMPDVDOverlayWindow *)overlay;
-- (void)closeOverlay:(CMPDVDOverlayWindow *)overlay withFade:(NSNumber *)fadeTimeNumber;
-- (void)closeAllOverlays;
-- (void)closeAllOverlaysWithFadeTime:(float)fadeTime;
-
+- (CMPOverlayAction *)overlayAction;
 @end
