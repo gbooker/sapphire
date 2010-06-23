@@ -187,6 +187,14 @@
 	if(releaseDate != nil)
 		self.releaseDate = releaseDate;
 	
+	NSNumber *userRating = [dict objectForKey:META_SHOW_FAVORITE_RATING_KEY];
+	if(userRating != nil)
+		self.imdbRating = userRating;
+	
+	NSString *rating = [dict objectForKey:META_SHOW_RATING_KEY];
+	if(rating != nil)
+		self.MPAARating = rating;
+	
 	
 	NSArray *arrVal = [dict objectForKey:META_MOVIE_CAST_KEY];
 	NSEnumerator *arrEnum = [arrVal objectEnumerator];

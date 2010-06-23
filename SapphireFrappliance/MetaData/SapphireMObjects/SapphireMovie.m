@@ -301,7 +301,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 				if(cast != nil)
 					[mutRet addObject:cast];
 				else
-					SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not locate cast member %@ of movie %@", castName, self.title);
+					[mutRet addObject:[SapphireCast createCast:castName inContext:[self managedObjectContext]]];
 			}
 			[castByName release];
 			ret = [NSArray arrayWithArray:mutRet];
@@ -360,7 +360,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 				if(genre != nil)
 					[mutRet addObject:genre];
 				else
-					SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not locate genre %@ of movie %@", genreName, self.title);
+					[mutRet addObject:[SapphireGenre createGenre:genreName inContext:[self managedObjectContext]]];
 			}
 			[genreByName release];
 			ret = [NSArray arrayWithArray:mutRet];			
@@ -526,6 +526,18 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 	overrideWithXMLForKey(NSString, summary);
 	overrideWithXMLForKey(NSString, contentDescription);
 	return super.plot;
+}
+
+- (NSString *)MPAARating
+{
+	overrideWithXMLForKey(NSString, MPAARating);
+	return super.MPAARating;
+}
+
+- (NSNumber *)imdbRating
+{
+	overrideWithXMLForKey(NSNumber, imdbRating);
+	return super.imdbRating;
 }
 
 - (BOOL)castMemberHasMajorRoleStatus:(SapphireCast *)cast

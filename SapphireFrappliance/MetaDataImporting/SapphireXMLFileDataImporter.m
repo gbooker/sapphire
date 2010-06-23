@@ -86,10 +86,10 @@ static NSDictionary *xmlMultiAttributes = nil;
 						   META_MOVIE_SORT_TITLE_KEY,		MOVIE_SORT_TITLE_XML_QUERY,
 						   nil] ;
 	xmlMultiAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-						  @"Genres",				GENRES_XML_QUERY,
-						  @"Cast",				CAST_XML_QUERY,
-						  @"Producers" ,			PRODUCERS_XML_QUERY,
-						  @"Directors",			DIRECTORS_XML_QUERY,nil];
+						  META_MOVIE_GENRES_KEY,			GENRES_XML_QUERY,
+						  META_MOVIE_CAST_KEY,				CAST_XML_QUERY,
+						  @"Producers",						PRODUCERS_XML_QUERY,
+						  META_MOVIE_DIRECTOR_KEY,			DIRECTORS_XML_QUERY,nil];
 }
 
 - (ImportState)importMetaData:(SapphireFileMetaData *)metaData path:(NSString *)path
