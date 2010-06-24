@@ -76,10 +76,12 @@ typedef enum {
 - (int)selectedItem;
 @end
 
-extern NSString *CMPOverlayActionWindowKey;
+extern NSString *CMPOverlayActionWindowNumberKey;
+extern NSString *CMPOverlayActionWindowRectKey;
 
 @interface CMPOverlayAction : NSObject <CMPActionController>{
-	NSWindow				*window;
+	NSRect					windowRect;
+	int						windowNumber;
 	NSMutableArray			*overlays;
 }
 

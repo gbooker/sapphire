@@ -21,7 +21,6 @@
 
 #import "CMPOverlayAction.h"
 #import "CoreGraphicsServices.h"
-#import "CMPOverlayModeAction.h"
 #import "CMPATVVersion.h"
 
 #define ANIMATE_TIME_INTERVAL 0.02
@@ -567,7 +566,8 @@ static void Interpolate (void* info, float const* inData, float* outData)
 
 @end
 
-NSString *CMPOverlayActionWindowKey = @"window";
+NSString *CMPOverlayActionNumberKey = @"windowNumber";
+NSString *CMPOverlayActionRectKey = @"windowNumber";
 
 @interface BRDisplayManager (compat)
 + (BRDisplayManager *)sharedInstance;
@@ -577,15 +577,31 @@ NSString *CMPOverlayActionWindowKey = @"window";
 
 - (id)initWithController:(id <CMPPlayerController>)controller andSettings:(NSDictionary *)settings
 {
-	NSWindow *win = [settings objectForKey:CMPOverlayActionWindowKey];
-	if(win == nil)
+	NSNumber *windowNum = [settings objectForKey:CMPOverlayActionWindowNumberKey];
+	if(windowNum == nil)
 		return [self autorelease];
 	
 	self = [super init];
 	if(!self)
 		return self;
 	
-	window = [win retain];
+	windowNumber = [windowNum intValue];
+	NSValue *windowRectValue = [settings objectForKey:CMPOverlayActionWindowRectKey];
+	if(windowRectValue != nil)
+		windowRect = [windowRectValue rectValue];
+	else {
+		CGDirectDisplayID display = [(BRDisplayManager *)[BRDisplayManager sharedInstance] display];
+		CGRect frame = CGDisplayBounds(display);
+		frame.size.width = CGDisplayPixelsWide(display);
+		frame.size.height = CGDisplayPixelsHigh(display);
+		
+		if(frame.size.width < 0.0f)
+			frame.size.width = ABS(frame.size.width);
+		if(frame.size.height < 0.0f)
+			frame.size.height = ABS(frame.size.height);
+		
+		windowRect = NSMakeRect(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);		
+	}
 	overlays = [[NSMutableArray alloc] init];
 	
 	return self;
@@ -593,7 +609,6 @@ NSString *CMPOverlayActionWindowKey = @"window";
 
 - (void) dealloc
 {
-	[window release];
 	[overlays release];
 	[super dealloc];
 }
@@ -605,7 +620,7 @@ NSString *CMPOverlayActionWindowKey = @"window";
 
 - (CMPOverlayWindow *)addBlackShieldWindow
 {
-	CMPOverlayWindow *ret = [[CMPOverlayWindow alloc] initWithContentRect:[window frame] overWindow:[window windowNumber]];
+	CMPOverlayWindow *ret = [[CMPOverlayWindow alloc] initWithContentRect:windowRect overWindow:windowNumber];
 	
 	[overlays addObject:ret];
 	[ret release];
@@ -615,7 +630,7 @@ NSString *CMPOverlayActionWindowKey = @"window";
 
 - (CMPTextView *)addTextOverlayInPosition:(CMPOverlayPosition)position
 {
-	CMPTextView *ret = [[CMPTextView alloc] initWithContentRect:[window frame] position:position overWindow:[window windowNumber]];
+	CMPTextView *ret = [[CMPTextView alloc] initWithContentRect:windowRect position:position overWindow:windowNumber];
 	
 	[overlays addObject:ret];
 	[ret release];
@@ -625,7 +640,7 @@ NSString *CMPOverlayActionWindowKey = @"window";
 
 - (CMPPlayerPlayHead *)addPlayheadOverlay
 {
-	CMPPlayerPlayHead *ret = [[CMPPlayerPlayHead alloc] initWithContentRect:[window frame] overWindow:[window windowNumber]];
+	CMPPlayerPlayHead *ret = [[CMPPlayerPlayHead alloc] initWithContentRect:windowRect overWindow:windowNumber];
 	
 	[overlays addObject:ret];
 	[ret release];
@@ -635,7 +650,7 @@ NSString *CMPOverlayActionWindowKey = @"window";
 
 - (CMPBlurredMenu *)addBlurredMenuOverlayWithItems:(NSArray *)items
 {
-	CMPBlurredMenu *ret = [[CMPBlurredMenu alloc] initWithItems:items contentRect:[window frame] overWindow:[window windowNumber]];
+	CMPBlurredMenu *ret = [[CMPBlurredMenu alloc] initWithItems:items contentRect:windowRect overWindow:windowNumber];
 	
 	[overlays addObject:ret];
 	[ret release];
@@ -672,7 +687,6 @@ NSString *CMPOverlayActionWindowKey = @"window";
 - (BOOL)closeWithError:(NSError **)error
 {
 	[self closeAllOverlays];
-	[window close];
 	return YES;
 }
 @end

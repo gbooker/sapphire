@@ -24,7 +24,6 @@
 #import "CMPDVDWindowCreationAction.h"
 #import "CMPScreenReleaseAction.h"
 #import "CoreGraphicsServices.h"
-#import "CMPOverlayModeAction.h"
 #import "CMPATVVersion.h"
 #import "CMPDVDPlayer.h"
 #import "CMPOverlayAction.h"
@@ -41,7 +40,6 @@
 	if(!self)
 		return self;
 	
-//	screenRelease = [[CMPOverlayModeAction alloc] initWithController:controller andSettings:settings];
 	screenRelease = [[CMPScreenReleaseAction alloc] initWithController:controller andSettings:settings];
 	
 	return self;
@@ -122,7 +120,7 @@ static int CreateEmptyWindow(CGRect myFrame)
     CGContextFlush(ctx);
     CGContextRelease(ctx);
 	
-	overlayAction = [[CMPOverlayAction alloc] initWithController:nil andSettings:[NSDictionary dictionaryWithObjectsAndKeys:dvdWindow, CMPOverlayActionWindowKey, nil]];
+	overlayAction = [[CMPOverlayAction alloc] initWithController:nil andSettings:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:[dvdWindow windowNumber]], CMPOverlayActionWindowNumberKey, [NSValue valueWithRect:[dvdWindow frame]], CMPOverlayActionWindowRectKey, nil]];
 	[overlayAction openWithError:nil];
 		
 	OSStatus setWindowErr = DVDSetVideoWindowID(dvdWindowID);
