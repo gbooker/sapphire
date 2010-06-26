@@ -60,3 +60,13 @@
 }
 
 @end
+
+@interface SapphireDurationSorter : SapphireFileSorter {
+}
+
+@end
+
+@interface SapphireFileSizeSorter : SapphireFileSorter {
+}
+
+@end

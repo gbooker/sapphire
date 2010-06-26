@@ -33,6 +33,13 @@
 - (NSComparisonResult)episodeAirDateCompare:(SapphireFileMetaData *)other;
 @end
 
+SapphireFileMetaData *getFileFromFileOrLink(id file)
+{
+	if([file isKindOfClass:[SapphireFileMetaData class]])
+		return (SapphireFileMetaData *)file;
+	else
+		return ((SapphireFileSymLink *)file).file;	
+}
 
 @implementation SapphireFileSorter
 
@@ -217,6 +224,86 @@
 
 @end
 
+@implementation SapphireDurationSorter
+
++ (SapphireFileSorter *)sharedInstance
+{
+	static SapphireDurationSorter *shared = nil;
+	if(shared == nil)
+		shared = [[SapphireDurationSorter alloc] init];
+	return shared;
+}
+
+- (NSString *)displayName
+{
+	return BRLocalizedString(@"By Duration", @"[Sort] By Duration");
+}
+
+- (NSString *)displayDescription
+{
+	return BRLocalizedString(@"Sort by Duration.", @"Sort by Duration description");
+}
+
+- (int)sortNumber
+{
+	return 5;
+}
+
+NSComparisonResult fileAndLinkDurationCompare(id file1, id file2, void *context)
+{
+	SapphireFileMetaData *first = getFileFromFileOrLink(file1);
+	SapphireFileMetaData *second = getFileFromFileOrLink(file2);
+	
+	return [first.duration compare:second.duration];
+}
+
+- (void)sortFiles:(NSMutableArray *)files
+{
+	[files sortUsingFunction:fileAndLinkDurationCompare context:nil];
+}
+
+@end
+
+@implementation SapphireFileSizeSorter
+
++ (SapphireFileSorter *)sharedInstance
+{
+	static SapphireFileSizeSorter *shared = nil;
+	if(shared == nil)
+		shared = [[SapphireFileSizeSorter alloc] init];
+	return shared;
+}
+
+- (NSString *)displayName
+{
+	return BRLocalizedString(@"By File Size", @"[Sort] By File Size");
+}
+
+- (NSString *)displayDescription
+{
+	return BRLocalizedString(@"Sort by File Size.", @"Sort by File Size description");
+}
+
+- (int)sortNumber
+{
+	return 6;
+}
+
+NSComparisonResult fileAndLinkSizeCompare(id file1, id file2, void *context)
+{
+	SapphireFileMetaData *first = getFileFromFileOrLink(file1);
+	SapphireFileMetaData *second = getFileFromFileOrLink(file2);
+	
+	return [first.size compare:second.size];
+}
+
+- (void)sortFiles:(NSMutableArray *)files
+{
+	[files sortUsingFunction:fileAndLinkSizeCompare context:nil];
+}
+
+@end
+
 @implementation SapphireDateSorter
 
 + (SapphireFileSorter *)sharedInstance
@@ -239,23 +326,14 @@
 
 - (int)sortNumber
 {
-	return 5;
+	return 7;
 }
 
 NSComparisonResult fileAndLinkDateCompare(id file1, id file2, void *context)
 {
 	/*Resolve link and try to sort by episodes*/
-	SapphireFileMetaData *first;
-	if([file1 isKindOfClass:[SapphireFileMetaData class]])
-		first = (SapphireFileMetaData *)file1;
-	else
-		first = ((SapphireFileSymLink *)file1).file;
-	
-	SapphireFileMetaData *second;
-	if([file2 isKindOfClass:[SapphireFileMetaData class]])
-		second = (SapphireFileMetaData *)file2;
-	else
-		second = ((SapphireFileSymLink *)file2).file;
+	SapphireFileMetaData *first = getFileFromFileOrLink(file1);
+	SapphireFileMetaData *second = getFileFromFileOrLink(file2);
 	
 	NSComparisonResult result = [first episodeAirDateCompare:second];
 	if(result != NSOrderedSame)
@@ -298,7 +376,7 @@ NSComparisonResult fileAndLinkDateCompare(id file1, id file2, void *context)
 
 - (int)sortNumber
 {
-	return 6;
+	return 8;
 }
 
 - (void)sortFiles:(NSMutableArray *)files

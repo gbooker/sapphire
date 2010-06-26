@@ -9,7 +9,7 @@ static NSArray *allowedSorts = nil;
 
 + (void)load
 {
-	allowedSorts = [[NSArray alloc] initWithObjects:[SapphireTVEpisodeSorter sharedInstance], [SapphireDateSorter sharedInstance], nil];
+	allowedSorts = [[NSArray alloc] initWithObjects:[SapphireTVEpisodeSorter sharedInstance], [SapphireDurationSorter sharedInstance], [SapphireFileSizeSorter sharedInstance], [SapphireDateSorter sharedInstance], nil];
 }
 
 + (SapphireSeason *)season:(int)season forShow:(NSString *)show inContext:(NSManagedObjectContext *)moc

@@ -122,6 +122,8 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	SapphireFileSorter *titleSort = [SapphireMovieTitleSorter sharedInstance];
 	SapphireFileSorter *imdbRankSort = [SapphireMovieIMDBTop250RankSorter sharedInstance];
 	SapphireFileSorter *awardSort = [SapphireMovieAcademyAwardSorter sharedInstance];
+	SapphireFileSorter *durationSort = [SapphireDurationSorter sharedInstance];
+	SapphireFileSorter *sizeSort = [SapphireFileSizeSorter sharedInstance];
 	SapphireFileSorter *dateSort = [SapphireDateSorter sharedInstance];
 	SapphireFileSorter *imdbRatingSort = [SapphireMovieIMDBRatingSorter sharedInstance];
 	
@@ -131,7 +133,7 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	/*Finish the static directory setup*/
 	[all setPath:VIRTUAL_DIR_ALL_PATH];
 	[all setCoverArtPath:moviePath];
-	[all setFileSorters:[NSArray arrayWithObjects:titleSort, dateSort, imdbRatingSort, nil]];
+	[all setFileSorters:[NSArray arrayWithObjects:titleSort, durationSort, sizeSort, dateSort, imdbRatingSort, nil]];
 	[genre setPath:VIRTUAL_DIR_GENRE_PATH];
 	[genre setCoverArtPath:moviePath];
 	[genre setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.genres != nil"]];
@@ -143,10 +145,10 @@ NSArray *genreEntityFetch(NSManagedObjectContext *moc, NSPredicate *filterPredic
 	[cast setMetaFileFetchPredicate:[NSPredicate predicateWithFormat:@"movie != nil AND ANY movie.#cast != nil"]];
 	[top250 setPath:VIRTUAL_DIR_TOP250_PATH];
 	[top250 setCoverArtPath:moviePath];
-	[top250 setFileSorters:[NSArray arrayWithObjects:imdbRankSort, titleSort, dateSort, imdbRatingSort, nil]];
+	[top250 setFileSorters:[NSArray arrayWithObjects:imdbRankSort, titleSort, durationSort, sizeSort, dateSort, imdbRatingSort, nil]];
 	[oscar setPath:VIRTUAL_DIR_OSCAR_PATH];
 	[oscar setCoverArtPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"AMPAS_Oscar_H" ofType:@"png"]];
-	[oscar setFileSorters:[NSArray arrayWithObjects:awardSort, titleSort, dateSort, imdbRatingSort, nil]];
+	[oscar setFileSorters:[NSArray arrayWithObjects:awardSort, titleSort, durationSort, sizeSort, dateSort, imdbRatingSort, nil]];
 	[subDirs makeObjectsPerformSelector:@selector(setNotificationName:) withObject:MOVIE_DID_CHANGE_PREDICATE_MATCHING];
 	Basic_Directory_Function_Inits
 
