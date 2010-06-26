@@ -469,6 +469,8 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type)
 		NSError *error = nil;
 		QTMovie *movie = [QTMovie movieWithFile:path error:&error];
 		QTTime duration = [movie duration];
+		if(movie == nil)
+			duration.timeValue = 0;
 		[fileMeta setObject:[NSNumber numberWithFloat:(float)duration.timeValue/(float)duration.timeScale] forKey:META_FILE_DURATION_KEY];
 		NSArray *audioTracks = [movie tracksOfMediaType:@"soun"];
 		NSNumber *audioSampleRate = nil;
