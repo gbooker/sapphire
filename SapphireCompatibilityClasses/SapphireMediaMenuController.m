@@ -252,6 +252,8 @@
 				return YES;
 			}
 			break;
+		default:
+			break;
     }
 	return [super brEventAction:event];
 }
