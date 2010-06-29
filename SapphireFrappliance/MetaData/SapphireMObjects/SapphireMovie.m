@@ -197,7 +197,10 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		NSMutableArray *objArray = [NSMutableArray array];
 		while((name = [castEnum nextObject]) != nil)
 		{
-			[objArray addObject:[cast objectForKey:name]];
+			SapphireCast *castMember = [cast objectForKey:name];
+			if(castMember == nil)
+				castMember = [SapphireCast createCast:name inContext:newMoc];
+			[objArray addObject:castMember];
 		}
 		newMovie.orderedCast = objArray;
 		
@@ -207,7 +210,10 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		objArray = [NSMutableArray array];
 		while((name = [directorEnum nextObject]) != nil)
 		{
-			[objArray addObject:[directors objectForKey:name]];
+			SapphireDirector *director = [directors objectForKey:name];
+			if(director == nil)
+				director = [SapphireDirector createDirector:name inContext:newMoc];
+			[objArray addObject:director];
 		}
 		newMovie.orderedDirectors = objArray;
 		
@@ -217,7 +223,10 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 		objArray = [NSMutableArray array];
 		while((name = [genreEnum nextObject]) != nil)
 		{
-			[objArray addObject:[genres objectForKey:name]];
+			SapphireGenre *genre = [genres objectForKey:name];
+			if(genre == nil)
+				genre = [SapphireGenre createGenre:name inContext:newMoc];
+			[objArray addObject:genre];
 		}
 		newMovie.orderedGenres = objArray;
 		
