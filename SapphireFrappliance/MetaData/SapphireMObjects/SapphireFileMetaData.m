@@ -14,6 +14,7 @@
 #import "SapphireSeason.h"
 #import "SapphireTVTranslation.h"
 #import "SapphireMovieTranslation.h"
+#import "SapphireJoinedFile.h"
 
 #import "NSArray-Extensions.h"
 #import "NSString-Extensions.h"
@@ -591,10 +592,8 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type)
 	return NO;
 }
 
-- (NSString *)sizeString
+NSString *sizeStringForSize(float size)
 {
-	/*Get size*/
-	float size = [self sizeValue];
 	if(size == 0)
 		return @"-";
 	
@@ -622,6 +621,26 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type)
 		letter = 'K';
 	}
 	return [NSString stringWithFormat:@"%.1f%cB", size, letter];	
+}
+
+- (NSString *)sizeString
+{
+	/*Get size*/
+	float size = [self sizeValue];
+	NSString *sizeStr = sizeStringForSize(size);
+	SapphireJoinedFile *joined = self.joinedFile;
+	if(joined != nil)
+	{
+		NSEnumerator *joinedEnum = [joined.joinedFilesSet objectEnumerator];
+		SapphireFileMetaData *file;
+		while((file = [joinedEnum nextObject]) != nil)
+		{
+			size += file.sizeValue;
+		}
+		if(size != 0)
+			sizeStr = [sizeStr stringByAppendingFormat:@"/%@", sizeStringForSize(size)];
+	}
+	return sizeStr;
 }
 
 - (void)setToReimportFromMask:(NSNumber *)mask
