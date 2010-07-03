@@ -567,7 +567,7 @@ static void Interpolate (void* info, float const* inData, float* outData)
 @end
 
 NSString *CMPOverlayActionWindowNumberKey = @"windowNumber";
-NSString *CMPOverlayActionWindowRectKey = @"windowNumber";
+NSString *CMPOverlayActionWindowRectKey = @"windowRect";
 
 @interface BRDisplayManager (compat)
 + (BRDisplayManager *)sharedInstance;
