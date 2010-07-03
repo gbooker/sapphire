@@ -1,6 +1,6 @@
 PATH="$PATH:/opt/local/bin:/usr/local/bin:/usr/local/subversion/bin:/sw/bin"
 INSTALLER="installSapphire.sh"
-VERSION="1.0b8.0.3"
+VERSION="1.0b8.0.4"
 cd "$BUILT_PRODUCTS_DIR"
 mkdir -p "dist"
 cd "dist"
