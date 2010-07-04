@@ -64,10 +64,10 @@ SapphireFileMetaData *getFileFromFileOrLink(id file)
 				break;
 		}
 	}
-	BOOL ret = NO;
+	BOOL ret = YES;
 	if(sorterObj == nil)
 	{
-		ret = YES;
+		ret = NO;
 		sorterObj = [allowed objectAtIndex:0];
 	}
 	[sorterObj sortFiles:files];

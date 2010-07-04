@@ -26,6 +26,7 @@
 #import "SapphireFileMetaData.h"
 #import "SapphireMediaPreview.h"
 #import "SapphireTheme.h"
+#import "SapphireMetaDataSupport.h"
 #import <SapphireCompatClasses/SapphireFrontRowCompat.h>
 
 typedef enum {
@@ -202,6 +203,7 @@ typedef enum {
 			break;
 		default:
 			[(id <SapphireSortableDirectory>)dir setSortMethodValue:command - COMMAND_SORT_NUM_BASE];
+			[SapphireMetaDataSupport save:[dir managedObjectContext]];
 			[dir reloadDirectoryContents];
 			break;
 	}
