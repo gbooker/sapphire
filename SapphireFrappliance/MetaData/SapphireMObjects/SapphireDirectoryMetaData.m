@@ -72,8 +72,8 @@
 	while((oldDir = [dirEnum nextObject]) != nil)
 	{
 		NSString *path = [oldDir valueForKey:@"path"];
-		NSString *parentPath = [oldDir valueForKeyPath:@"parent.path"];
-		if(parentPath != nil)
+		NSString *parentPath = [path stringByDeletingLastPathComponent];
+		if(parentPath != nil && ![parentPath isEqualToString:@"/"])
 			((SapphireDirectoryMetaData *)[lookup objectForKey:path]).parent = [lookup objectForKey:parentPath];
 	}
 	[pool drain];

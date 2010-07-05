@@ -165,7 +165,7 @@ static NSSet *secondaryFiles;
 		SapphireFileMetaData *newFile = [NSEntityDescription insertNewObjectForEntityForName:SapphireFileMetaDataName inManagedObjectContext:newMoc];
 		NSString *path = [oldFile valueForKey:@"path"];
 		newFile.path = path;
-		newFile.parent = [dirLookup objectForKey:[oldFile valueForKeyPath:@"parent.path"]];
+		newFile.parent = [dirLookup objectForKey:[path stringByDeletingLastPathComponent]];
 		newFile.audioDescription = [oldFile valueForKey:@"audioDescription"];
 		newFile.audioFormatID = [oldFile valueForKey:@"audioFormatID"];
 		newFile.duration = [oldFile valueForKey:@"duration"];
