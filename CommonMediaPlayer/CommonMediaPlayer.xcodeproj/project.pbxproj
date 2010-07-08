@@ -23,6 +23,8 @@
 		87C75D8711BB51AE00D53B37 /* CMPMPPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 87C75D8311BB51AE00D53B37 /* CMPMPPlayerController.m */; };
 		87DCE3D611E588680064B98E /* CMPSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 87DCE3D411E588680064B98E /* CMPSettings.h */; };
 		87DCE3D711E588680064B98E /* CMPSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 87DCE3D511E588680064B98E /* CMPSettings.m */; };
+		87DCE3ED11E589240064B98E /* NSFileManager-Extensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 87DCE3EB11E589240064B98E /* NSFileManager-Extensions.h */; };
+		87DCE3EE11E589240064B98E /* NSFileManager-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 87DCE3EC11E589240064B98E /* NSFileManager-Extensions.m */; };
 		87E0033E11263CBF004FC2C7 /* CMPDVDImageAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */; };
 		87E0033F11263CBF004FC2C7 /* CMPDVDImageAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */; };
 		87E0038B1126628B004FC2C7 /* CMPISODVDPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */; };
@@ -98,6 +100,8 @@
 		87C75D8311BB51AE00D53B37 /* CMPMPPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPMPPlayerController.m; sourceTree = "<group>"; };
 		87DCE3D411E588680064B98E /* CMPSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPSettings.h; sourceTree = "<group>"; };
 		87DCE3D511E588680064B98E /* CMPSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPSettings.m; sourceTree = "<group>"; };
+		87DCE3EB11E589240064B98E /* NSFileManager-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager-Extensions.h"; sourceTree = "<group>"; };
+		87DCE3EC11E589240064B98E /* NSFileManager-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager-Extensions.m"; sourceTree = "<group>"; };
 		87E0033C11263CBF004FC2C7 /* CMPDVDImageAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPDVDImageAction.h; sourceTree = "<group>"; };
 		87E0033D11263CBF004FC2C7 /* CMPDVDImageAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPDVDImageAction.m; sourceTree = "<group>"; };
 		87E003891126628B004FC2C7 /* CMPISODVDPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPISODVDPlayer.h; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 		0867D691FE84028FC02AAC07 /* CommonMediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				87DCE3EA11E589240064B98E /* Extensions */,
 				870D747E11379272007BD611 /* Update Classes */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				F50CCCF01118ECAD00213966 /* Media Players */,
@@ -276,6 +281,15 @@
 				87C75D8311BB51AE00D53B37 /* CMPMPPlayerController.m */,
 			);
 			path = "MPlayer classes";
+			sourceTree = "<group>";
+		};
+		87DCE3EA11E589240064B98E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				87DCE3EB11E589240064B98E /* NSFileManager-Extensions.h */,
+				87DCE3EC11E589240064B98E /* NSFileManager-Extensions.m */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		F50027201123573A001B52FE /* Debug */ = {
@@ -387,6 +401,7 @@
 				87C75D8611BB51AE00D53B37 /* CMPMPPlayerController.h in Headers */,
 				F512FF4811D170D40062B86E /* CMPOverlayAction.h in Headers */,
 				87DCE3D611E588680064B98E /* CMPSettings.h in Headers */,
+				87DCE3ED11E589240064B98E /* NSFileManager-Extensions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,6 +519,7 @@
 				87C75D8711BB51AE00D53B37 /* CMPMPPlayerController.m in Sources */,
 				F512FF4911D170D40062B86E /* CMPOverlayAction.m in Sources */,
 				87DCE3D711E588680064B98E /* CMPSettings.m in Sources */,
+				87DCE3EE11E589240064B98E /* NSFileManager-Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
