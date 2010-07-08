@@ -6,4 +6,5 @@
 	#import <Foundation/Foundation.h>
 	#import <BackRow/BackRow.h>
 	#import "BackRowUtils.h"
+	#import "CMPSettings.h"
 #endif

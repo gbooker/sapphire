@@ -66,6 +66,35 @@ typedef enum {
 	kBREventRemoteActionHoldDown,
 } BREventRemoteAction;
 
+
+typedef enum {
+	
+	/* 
+	 when you program a custom remote there are "playback" buttons that can be programmed, this is to account for those
+	 12 = skip forward
+	 13 = skip back
+	 14 = Pause
+	 15 = Play
+	 16 = stop
+	 17 = ff
+	 18 = rw
+	 19 = previous chapter
+	 20 = next chapter
+	 
+	 */
+	
+	kBREventPlaybackActionSkipAhead = 12,
+	kBREventPlaybackActionSkipBack,
+	kBREventPlaybackActionPause,
+	kBREventPlaybackActionPlay,
+	kBREventPlaybackActionStop,
+	kBREventPlaybackActionFastForward,
+	kBREventPlaybackActionRewind,
+	kBREventPlaybackActionNextChapter,
+	kBREventPlaybackActionPreviousChapter,
+	
+} BREventPlaybackAction;
+
 @interface CMPATVVersion : NSObject {
 }
 

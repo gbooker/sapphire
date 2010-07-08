@@ -686,6 +686,90 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 			else
 				[player pause];
 			break;
+		
+		//playback buttons that i finally discovered after programming a different remote for my appletv.
+			
+		case kBREventPlaybackActionSkipAhead:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+				[player nextFrame];
+			break;
+			
+		case kBREventPlaybackActionSkipBack:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+				[player previousFrame];
+			break;	
+			
+		case kBREventPlaybackActionPause:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+			else if(playingInSomeForm)
+				[player pause];
+			break;
+			
+		case kBREventPlaybackActionPlay:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+			
+				[player play];
+			break;
+			
+		case kBREventPlaybackActionStop:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+			[player goToMenu];
+				//[player stopPlayback]; //wont do anything for now, is crashy
+			break;	
+			
+		
+		case kBREventPlaybackActionFastForward:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+			else if(playingInSomeForm)
+				[player incrementScanRate];
+			break;
+			
+		
+		case kBREventPlaybackActionRewind:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+			else if(playingInSomeForm)
+				[player decrementScanRate];
+			break;
+			
+		case kBREventPlaybackActionNextChapter:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+				[player nextChapter];
+			break;
+			
+		case kBREventPlaybackActionPreviousChapter:
+			if(blurredMenu)
+				return NO;
+			else if(inMenu)
+				return NO;
+				[player previousChapter];
+			break;
+			
+			
+			
 		default:
 			NSLog(@"unknown %d", action);
 			return [super brEventAction:event];

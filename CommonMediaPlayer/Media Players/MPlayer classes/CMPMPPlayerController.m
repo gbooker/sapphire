@@ -227,7 +227,49 @@ static NSTimer *timer = nil;
 			[player play];
 			break;
 			
+		
+		case kBREventPlaybackActionSkipAhead:
+			
+			if ([player isPlaylist])
+				[player nextPlaylistItem];
+			else
+				[player seekSixtyForward];
+			break;
+			
+		case kBREventPlaybackActionSkipBack:
+			if ([player isPlaylist])
+				[player nextPlaylistItem];
+			else
+				[player seekSixtyBack];
+			break;
+			
+		case kBREventPlaybackActionFastForward:
+			
+			[player seekSixHundredForward];
+			break;
+		
+		case kBREventPlaybackActionRewind:
+			
+			[player seekSixHundredBackwards];
+			break;
+			
+		case kBREventPlaybackActionPlay:
+			
+			[player play];
+			break;
+			
+		case kBREventPlaybackActionStop:
+			
+			[player stopPlayback];
+			break;
+			
+		case kBREventPlaybackActionPause:
+			
+			[player pause];
+			break;
+			
 		default:
+			
 			NSLog(@"unknown %d", action);
 			return [super brEventAction:event];
 	}

@@ -167,6 +167,7 @@
 		else
 			return NO;
 	}
+	return NO;
 }
 
 
@@ -246,6 +247,48 @@
 {
 	[self sendCommand:MPSeekTenBackwards];
 }
+
+- (void)seekSixtyForward
+{
+	[self sendCommand:MPSeekSixtyForward];
+}
+
+- (void)seekSixtyBack
+{
+	[self sendCommand:MPSeekTenBackwards];
+}
+
+- (void)seekSixHundredForward
+{
+	[self sendCommand:MPSeek600Forwards];
+}
+
+- (void)seekSixHundredBackwards
+{
+	[self sendCommand:MPSeek600Backwards];
+}
+
+- (void)nextPlaylistItem
+{
+	[self sendCommand:MPNextPlaylistItem];
+}
+
+- (void)previousePlaylistItem
+{
+	[self sendCommand:MPPreviousPlaylistItem];
+}
+
+- (int)currentKeymap {
+    return currentKeymap;
+}
+
+- (void)setCurrentKeymap:(int)value {
+    if (currentKeymap != value) {
+        currentKeymap = value;
+    }
+}
+
+
 
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {

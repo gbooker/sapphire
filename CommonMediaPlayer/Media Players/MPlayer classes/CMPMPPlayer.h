@@ -35,7 +35,12 @@
 	BOOL						repeatFile;
 	BOOL						isPlaylist;
 	BOOL						usePassthrough;
+	
+	int							currentKeymap;
 }
+
+- (int)currentKeymap;
+- (void)setCurrentKeymap:(int)value;
 
 - (BOOL)usePassthrough;
 - (void)setUsePassthrough:(BOOL)value;
@@ -61,6 +66,12 @@
 - (void)volumeDown;
 - (void)seekTenForward;
 - (void)seekTenBack;
+- (void)seekSixtyForward;
+- (void)seekSixtyBack;
+- (void)seekSixHundredForward;
+- (void)seekSixHundredBackwards;
+- (void)nextPlaylistItem;
+- (void)previousePlaylistItem;
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 - (void)stopPlayback;
 - (void)setResumeTime:(UInt32)resumeTime;
