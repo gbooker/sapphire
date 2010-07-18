@@ -694,7 +694,11 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 				return NO;
 			else if(inMenu)
 				return NO;
+			else
+			{
 				[player nextFrame];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			}
 			break;
 			
 		case kBREventPlaybackActionSkipBack:
@@ -702,7 +706,11 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 				return NO;
 			else if(inMenu)
 				return NO;
+			else
+			{
 				[player previousFrame];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			}
 			break;	
 			
 		case kBREventPlaybackActionPause:
@@ -711,7 +719,10 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 			else if(inMenu)
 				return NO;
 			else if(playingInSomeForm)
+			{
 				[player pause];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			}
 			break;
 			
 		case kBREventPlaybackActionPlay:
@@ -719,8 +730,11 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 				return NO;
 			else if(inMenu)
 				return NO;
-			
+			else
+			{
 				[player play];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			}
 			break;
 			
 		case kBREventPlaybackActionStop:
@@ -728,8 +742,12 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 				return NO;
 			else if(inMenu)
 				return NO;
-			[player goToMenu];
+			else
+			{
+				[player goToMenu];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
 				//[player stopPlayback]; //wont do anything for now, is crashy
+			}
 			break;	
 			
 		
@@ -739,7 +757,10 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 			else if(inMenu)
 				return NO;
 			else if(playingInSomeForm)
+			{
 				[player incrementScanRate];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			}
 			break;
 			
 		
@@ -749,7 +770,10 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 			else if(inMenu)
 				return NO;
 			else if(playingInSomeForm)
+			{
 				[player decrementScanRate];
+				overlayMode = CMPDVDPlayerControllerOverlayModeStatus;
+			}
 			break;
 			
 		case kBREventPlaybackActionNextChapter:
@@ -757,7 +781,11 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 				return NO;
 			else if(inMenu)
 				return NO;
+			else
+			{
 				[player nextChapter];
+				[self showChapterMode];
+			}
 			break;
 			
 		case kBREventPlaybackActionPreviousChapter:
@@ -765,7 +793,11 @@ static void closeAndNilOverlay(CMPOverlayAction *overlayAction, CMPOverlayWindow
 				return NO;
 			else if(inMenu)
 				return NO;
+			else
+			{
 				[player previousChapter];
+				[self showChapterMode];
+			}
 			break;
 			
 			
