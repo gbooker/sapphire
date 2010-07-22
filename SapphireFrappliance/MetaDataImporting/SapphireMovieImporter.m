@@ -174,6 +174,7 @@
 		NSManagedObjectContext *moc = [metaData managedObjectContext];
 		SapphireMovieTranslation *tran = [state createTranslationInContext:moc];
 		tran.url = [[movies objectAtIndex:0] objectForKey:movieTranslationLinkKey];
+		tran.itemID = [[movies objectAtIndex:0] objectForKey:movieTranslationIDKey];
 		[self getMovieResultsForState:state];
 	}
 	else
