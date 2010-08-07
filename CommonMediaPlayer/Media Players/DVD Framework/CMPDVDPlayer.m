@@ -25,6 +25,7 @@
 #import "CMPDVDPlayerController.h"
 #import "CMPOverlayAction.h"
 #import <AudioUnit/AudioUnit.h>
+#import <unistd.h>
 
 enum{
 	kDVDAudioModeUninitialized 		= 0,
@@ -715,29 +716,85 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 	[playhead updateDisplayWithElapsed:currentElapsedTime duration:titleDuration];
 }
 
-static BOOL pauseOnPlay = NO;
+- (void)setAudioMode
+{
+	if(ignoreStopUntilPlay)
+		//Avoid excessive calls to this function resulting from what we do here
+		return;
+	BOOL useSPDIF = NO;
+	//See if we should go SPDIF (unknown formats default to SPDIF)
+	DVDAudioFormat format = kDVDAudioUnknownFormat;
+	UInt32 bitsPerSample, samplesPerSecond, channels;
+	DVDGetAudioStreamFormat(&format, &bitsPerSample, &samplesPerSecond, &channels);
+	switch (format) {
+		case kDVDAudioAC3Format:
+		case kDVDAudioUnknownFormat:
+		case kDVDAudioDTSFormat:
+			useSPDIF = YES;
+			break;
+		default:
+			break;
+	}
+	OSStatus SPDIFresult = noErr;
+	if(useSPDIF)
+	{
+		//See if we can go SPDIF
+		DVDAudioMode audioMode = 0;
+		SPDIFresult = DVDGetAudioOutputModeCapabilities(&audioMode);
+		//NSLog(@"SPDIF get is %d with mode %d", SPDIFresult, audioMode);
+		if(!(audioMode & kDVDAudioModeSPDIF))
+			useSPDIF = NO;
+	}
+	//See what mode we are in
+	DVDAudioMode currentMode = kDVDAudioModeUninitialized;
+	DVDGetAudioOutputMode(&currentMode);
+	BOOL change = (currentMode == kDVDAudioModeSPDIF) ^ useSPDIF;
+	Boolean playing = NO;
+	DVDIsPlaying(&playing);
+	if(change)
+	{
+		//Something needs to change.  The changes cannot be made while playback is in progress, so stop, change, then play.
+		Boolean paused = NO;
+		DVDIsPaused(&paused);
+		if(playing)
+		{
+			ignoreStopUntilPlay = YES;  //We don't want to trigger leaving playback.
+			DVDStop();
+			sleep(1);  //Allow playback to stop before we fiddle with it.
+		}
+		if(useSPDIF)
+		{
+			//Engage the SPDIF interface
+			SPDIFresult = DVDSetAudioOutputMode(kDVDAudioModeSPDIF);
+			//NSLog(@"Set to SPDIF with result %d", SPDIFresult);
+			SPDIFresult = DVDSetSPDIFDataOutDevice(0);
+			//NSLog(@"Set SPDIF device with result %d", SPDIFresult);
+		}
+		else
+			//Disengage the SPDIF interface
+			SPDIFresult = DVDSetAudioOutputMode(kDVDAudioModeProLogic);
+		if(playing)
+		{
+			//If we were playing, resume.
+			sleep(1);  //Allow changes above to take effect.
+			DVDPlay();
+			if(paused)
+				//Pause doesn't work here unless we actually play first.
+				DVDPause();
+		}
+	}
+}
+
 - (void)initiatePlaybackWithResume:(BOOL *)resume;
 {
-	DVDAudioMode audioMode = 0;
-	//See if we can go SPDIF
-	OSStatus SPDIFresult = DVDGetAudioOutputModeCapabilities(&audioMode);
-	//NSLog(@"SPDIF get is %d with mode %d", SPDIFresult, audioMode);
-	if(audioMode & kDVDAudioModeSPDIF)
-	{
-		//Engage the SPDIF interface
-		SPDIFresult = DVDSetAudioOutputMode(kDVDAudioModeSPDIF);
-		//NSLog(@"Set to SPDIF with result %d", SPDIFresult);
-		SPDIFresult = DVDSetSPDIFDataOutDevice(0);
-		//NSLog(@"Set SPDIF device with result %d", SPDIFresult);
-	}	
-	
+	ignoreStopUntilPlay = NO;
+	[self setAudioMode];
 	DVDGetNumTitles(&titleCount);
 	BOOL doingResume = titleCount == 1 && resumeTime != 0;
 	OSStatus playError = DVDPlay();
 	DVDMute(true);
 	if(doingResume)
 	{
-		pauseOnPlay = YES;
 		DVDSetTime(kDVDTimeCodeElapsedSeconds, resumeTime, 0);
 		DVDPause();
 	}
@@ -837,8 +894,10 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 //			//Allowed User opperations has changed (is it up to us to enforce this?)
 //		case kDVDEventAngle:
 //			//Angle has changed
-//		case kDVDEventAudioStream:
-//			//Audio stream has changed
+		case kDVDEventAudioStream:
+			//Audio stream has changed
+			[player performSelectorOnMainThread:@selector(setAudioMode) withObject:nil waitUntilDone:NO];
+			break;
 //		case kDVDEventSubpictureStream:
 //			//Subtitle has changed
 //		case kDVDEventBitrate:
@@ -917,6 +976,7 @@ static void MyDVDEventHandler(DVDEventCode inEventCode, UInt32 inEventData1, UIn
 		currentElapsedTime = 0;
 	else
 		titleDuration = -1;
+	[self performSelectorOnMainThread:@selector(setAudioMode) withObject:nil waitUntilDone:NO];
 }
 
 - (void)updatePlayhead
