@@ -420,7 +420,9 @@ NSComparisonResult dirAndLinkPathCompare(id dir1, id dir2, void *context)
 	while((object = [objectEnum nextObject]) != nil)
 	{
 		[existingDirs removeObject:object];
-		[moc deleteObject:object];
+		SapphireDirectoryMetaData *dir = (SapphireDirectoryMetaData *)object;
+		if(dir.collectionDirectory == nil)
+			[moc deleteObject:object];
 		modified = YES;
 	}
 	[dirs release];
@@ -464,7 +466,8 @@ NSComparisonResult dirAndLinkPathCompare(id dir1, id dir2, void *context)
 	NSMutableArray *linkedFiles = [[self.linkedFilesSet allObjects] mutableCopy];
 	NSMutableArray *linkedDirs = [[self.linkedDirsSet allObjects] mutableCopy];
 	
-	[self rescanDirWithExistingDirs:fetchedDirs files:fetchedFiles symDirs:linkedDirs symFiles:linkedFiles];
+	if([[NSFileManager defaultManager] isDirectory:self.path])
+		[self rescanDirWithExistingDirs:fetchedDirs files:fetchedFiles symDirs:linkedDirs symFiles:linkedFiles];
 	
 	NSMutableArray *allFiles = [fetchedFiles mutableCopy];
 	[allFiles addObjectsFromArray:linkedFiles];
