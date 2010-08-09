@@ -781,6 +781,7 @@ DVDScanRate decrementedNewRate(DVDScanRate currentRate)
 			if(paused)
 				//Pause doesn't work here unless we actually play first.
 				DVDPause();
+			ignoreStopUntilPlay = NO;
 		}
 	}
 }
