@@ -107,9 +107,10 @@ static SapphireImportHelper *shared = nil;
 		shared = self;
 		[serverobj setClient:(SapphireImportHelperClient *)shared];
 		server = serverobj;
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];
 	}
 	@catch (NSException * e) {
+		[SapphireApplianceController logException:e];
 		keepRunning = NO;
 	}
 }
@@ -304,8 +305,18 @@ static SapphireImportHelper *shared = nil;
 
 - (void)importAllData:(SapphireFileMetaData *)file inform:(id <SapphireImporterBackgroundProtocol>)inform;
 {
-	[informers setObject:inform forKey:[file path]];
-	[allImporter importMetaData:file path:[file path]];
+	NSString *path = [file path];
+	[informers setObject:inform forKey:path];
+	ImportState result = [allImporter importMetaData:file path:[file path]];
+	switch (result) {
+		case ImportStateNotUpdated:
+		case ImportStateUpdated:
+			[inform informComplete:result == ImportStateUpdated onPath:path];
+			[informers removeObjectForKey:path];
+			break;
+		default:
+			break;
+	}
 }
 
 - (void)removeObjectsWithInform:(id <SapphireImporterBackgroundProtocol>)inform
