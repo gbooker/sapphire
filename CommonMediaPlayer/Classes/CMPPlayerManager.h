@@ -71,6 +71,23 @@ static inline BOOL needCopy(NSString *frameworkPath)
 	return NO;
 }
 
+static inline BOOL needCopyWithAlways(NSString *frameworkPath, NSString *myFrameworkPath)
+{
+	NSFileManager *fm = [NSFileManager defaultManager];
+	BOOL isDir = NO;
+	FrameworkLoadPrint(@"Checking if dir exists");
+	if(![fm fileExistsAtPath:frameworkPath isDirectory:&isDir] || !isDir)
+		return YES;
+	
+	NSBundle *bundle = [NSBundle bundleWithPath:frameworkPath];
+	NSString *execPath = [bundle executablePath];
+	NSBundle *myBundle = [NSBundle bundleWithPath:myFrameworkPath];
+	NSString *myExecPath = [myBundle executablePath];
+	if(![fm contentsEqualAtPath:execPath andPath:myExecPath])
+		return YES;
+	return NO;
+}
+
 static BOOL createDirectoryTree(NSFileManager *fm, NSString *directory)
 {
 	BOOL isDir;
@@ -168,8 +185,9 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 {
 	NSString *frameworkPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Frameworks/CommonMediaPlayer.framework"];
 	FrameworkLoadPrint(@"Path is at %@", frameworkPath);
+	NSString *frameworkInFrap = [frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"];
 #ifdef FrameworkAlwaysCopy
-	BOOL neededCopy = YES;
+	BOOL neededCopy = needCopyWithAlways(frameworkPath, frameworkInFrap);
 #else
 	BOOL neededCopy = needCopy(frameworkPath);
 #endif
@@ -177,7 +195,6 @@ static inline BOOL loadCMPFramework(NSString *frapPath)
 	if(neededCopy)
 	{
 		NSFileManager *fm = [NSFileManager defaultManager];
-		NSString *frameworkInFrap = [frapPath stringByAppendingPathComponent:@"Contents/Frameworks/CommonMediaPlayer.framework"];
 		FrameworkLoadPrint(@"Going to copy %@", frameworkInFrap);
 		BOOL success = [fm removeFileAtPath:frameworkPath handler:nil];
 		FrameworkLoadPrint(@"Delete success is %d", success);
