@@ -273,7 +273,12 @@ static void subSymFileCallback(SapphireMetaDataScanner *scan, NSString *lastName
 	/*Include the files in this dir*/
 	if(results != nil)
 	{
-		[results addObjectsFromArray:files];
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"path.pathExtension == %@", @"mov"];
+		NSArray *movFiles = [files filteredArrayUsingPredicate:predicate];
+		predicate = [NSPredicate predicateWithFormat:@"path.pathExtension != %@", @"mov"];
+		NSArray *nonMovFiles = [files filteredArrayUsingPredicate:predicate];
+		[results replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:movFiles];
+		[results addObjectsFromArray:nonMovFiles];
 		[results addObjectsFromArray:symFiles];
 	}
 	/*Send results*/
