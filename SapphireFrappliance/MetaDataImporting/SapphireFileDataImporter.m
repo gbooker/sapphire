@@ -20,7 +20,10 @@
 
 #import "SapphireFileDataImporter.h"
 #import "SapphireFileMetaData.h"
-#include "SapphireImportHelper.h"
+#import "SapphireImportHelper.h"
+#import "SapphireJoinedFile.h"
+
+#import <QTKit/QTKit.h>
 
 @implementation SapphireFileDataImporter
 
@@ -34,6 +37,59 @@
 	/*Import file if necessary*/
 	if([metaData needsUpdating])
 	{
+		if([[path pathExtension] isEqualToString:@"mov"])
+		{
+			//Find all references to see if this is a joined movie.
+			NSError *error = nil;
+			QTMovie *movie = [QTMovie movieWithFile:path error:&error];
+			NSMutableSet *filePaths = [NSMutableSet set];
+			NSArray *tracks = [movie tracks];
+			int trackCount = [tracks count];
+			int i;
+			for(i=0; i<trackCount; i++)
+			{
+				QTTrack *track = [tracks objectAtIndex:i];
+				QTMedia *media = [track media];
+				if(media != nil)
+				{
+					Media qtMedia = [media quickTimeMedia];
+					short count;
+					GetMediaDataRefCount(qtMedia, &count);
+					for(int i=0; i<count; i++)
+					{
+						Handle dataRef;
+						OSType dataRefType;
+						long dataRefAttrs;
+						if(GetMediaDataRef(qtMedia, i, &dataRef, &dataRefType, &dataRefAttrs) == noErr && dataRefType == AliasDataHandlerSubType)
+						{
+							CFStringRef outPath;
+							if(QTGetDataReferenceFullPathCFString(dataRef, dataRefType, (QTPathStyle)kQTNativeDefaultPathStyle, &outPath) == noErr)
+							{
+								[filePaths addObject:(NSString *)outPath];
+								CFRelease(outPath);
+							}
+							DisposeHandle(dataRef);
+						}
+					}
+				}
+			}
+			[filePaths removeObject:path];
+			SapphireJoinedFile *joined = [metaData joinedFile];
+			if([filePaths count])
+			{
+				NSManagedObjectContext *moc = [metaData managedObjectContext];
+				//This is a joined file
+				if(joined == nil)
+					joined = [SapphireJoinedFile joinedFileForPath:path inContext:moc];
+				NSEnumerator *pathEnum = [filePaths objectEnumerator];
+				NSString *otherPath;
+				while((otherPath = [pathEnum nextObject]) != nil)
+					[joined addJoinedFilesObject:[SapphireFileMetaData createFileWithPath:otherPath inContext:moc]];
+			}
+			else if(joined != nil)
+				//This is not a joined file, so mark as such
+				[metaData setJoinedFile:nil];
+		}
 		if([[SapphireImportHelper sharedHelperForContext:[metaData managedObjectContext]] importFileData:metaData inform:self])
 			return ImportStateUpdated;
 		else
