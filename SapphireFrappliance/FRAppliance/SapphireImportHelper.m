@@ -173,7 +173,7 @@ static SapphireImportHelper *shared = nil;
 	serverConnection = [NSConnection defaultConnection];
 	[serverConnection setRootObject:self];
 	if([serverConnection registerName:CONNECTION_NAME] == NO)
-		SapphireLog(SAPPHIRE_LOG_GENERAL, SAPPHIRE_LOG_LEVEL_ERROR, @"Register failed");
+		SapphireLog(SapphireLogTypeGeneral, SapphireLogLevelError, @"Register failed");
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:nil];
 	moc = [context retain];
@@ -267,11 +267,11 @@ static SapphireImportHelper *shared = nil;
 			[NSTask launchedTaskWithLaunchPath:path arguments:[NSArray array]];
 		}
 		@catch (NSException * e) {
-			SapphireLog(SAPPHIRE_LOG_GENERAL, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not launch helper because of exception %@ launching %@.  Make this file executable", e, path);
+			SapphireLog(SapphireLogTypeGeneral, SapphireLogLevelError, @"Could not launch helper because of exception %@ launching %@.  Make this file executable", e, path);
 		}		
 	}
 	else
-		SapphireLog(SAPPHIRE_LOG_GENERAL, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not correct helper permissions on %@.  Make this file executable!", path);
+		SapphireLog(SapphireLogTypeGeneral, SapphireLogLevelError, @"Could not correct helper permissions on %@.  Make this file executable!", path);
 }
 
 - (void)connectionDidDie:(NSNotification *)note

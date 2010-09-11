@@ -30,7 +30,7 @@
 	NSData *documentData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:error];
 	if(error != nil && *error != nil)
 	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to load URL %@ with error: %@", url, *error);
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelError, @"Failed to load URL %@ with error: %@", url, *error);
 		return nil;
 	}
 	

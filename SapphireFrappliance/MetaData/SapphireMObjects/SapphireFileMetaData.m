@@ -683,7 +683,7 @@ NSString *sizeStringForSize(float size)
 		{
 			if([lowerFileName hasPrefix:tran.name])
 			{
-				SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Deleting TV import translation for %@", tran.name);
+				SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Deleting TV import translation for %@", tran.name);
 				[moc deleteObject:tran];
 			}
 		}
@@ -696,7 +696,7 @@ NSString *sizeStringForSize(float size)
 	SapphireMovieTranslation *movieTran = [SapphireMovieTranslation movieTranslationWithName:lookupName inContext:moc];
 	if(movieTran != nil)
 	{
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Deleting Movie import translation for %@", movieTran.name);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Deleting Movie import translation for %@", movieTran.name);
 		[moc deleteObject:movieTran];
 	}
 	NSScanner *titleYearScanner = [NSScanner scannerWithString:lookupName];
@@ -715,7 +715,7 @@ NSString *sizeStringForSize(float size)
 		movieTran = [SapphireMovieTranslation movieTranslationWithName:normalTitle inContext:moc];
 		if(movieTran != nil)
 		{
-			SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Deleting Movie import translation for %@", movieTran.name);
+			SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Deleting Movie import translation for %@", movieTran.name);
 			[moc deleteObject:movieTran];
 		}
 	}	

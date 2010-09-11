@@ -29,12 +29,12 @@
 
 @end
 
-SapphireLogLevel SapphireLoggingLevels[SAPPHIRE_LOG_ALL] = {
-	SAPPHIRE_LOG_LEVEL_ERROR,
-	SAPPHIRE_LOG_LEVEL_ERROR,
-	SAPPHIRE_LOG_LEVEL_ERROR,
-	SAPPHIRE_LOG_LEVEL_ERROR,
-	SAPPHIRE_LOG_LEVEL_ERROR,
+SapphireLogLevel SapphireLoggingLevels[SapphireLogTypeAll] = {
+	SapphireLogLevelError,
+	SapphireLogLevelError,
+	SapphireLogLevelError,
+	SapphireLogLevelError,
+	SapphireLogLevelError,
 };
 
 void SapphireLog(SapphireLogType type, SapphireLogLevel level, NSString *format, ...)
@@ -50,10 +50,10 @@ void SapphireLog(SapphireLogType type, SapphireLogLevel level, NSString *format,
 
 void SapphireSetLogLevel(SapphireLogType type, SapphireLogLevel level)
 {
-	if(type == SAPPHIRE_LOG_ALL)
+	if(type == SapphireLogTypeAll)
 	{
 		int i;
-		for(i=0; i<SAPPHIRE_LOG_ALL; i++)
+		for(i=0; i<SapphireLogTypeAll; i++)
 			SapphireLoggingLevels[i] = level;
 	}
 	else

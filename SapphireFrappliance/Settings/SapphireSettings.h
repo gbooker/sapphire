@@ -177,4 +177,29 @@
  * @brief Gets hiding of all info besides plot for next preview controller
  */
 - (BOOL)displayOnlyPlot;
+
+/*!
+ * @brief Gets the log level for general logging
+ */
+- (SapphireLogLevel)generalLogLevel;
+
+/*!
+ * @brief Gets the log level for import logging
+ */
+- (SapphireLogLevel)importLogLevel;
+
+/*!
+ * @brief Gets the log level for file logging
+ */
+- (SapphireLogLevel)fileLogLevel;
+
+/*!
+ * @brief Gets the log level for playback logging
+ */
+- (SapphireLogLevel)playbackLogLevel;
+
+/*!
+ * @brief Gets the log level for metadata logging
+ */
+- (SapphireLogLevel)metadataLogLevel;
 @end

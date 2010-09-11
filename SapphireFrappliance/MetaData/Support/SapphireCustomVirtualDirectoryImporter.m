@@ -257,7 +257,7 @@ typedef enum {
 	if (matchPred != nil)
 	{
 		matchPred = [NSCompoundPredicate andPredicateWithSubpredicates:[NSArray arrayWithObjects:basePredicate, matchPred, nil]];
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_INFO, @"Creating virtual directory with filter: %@", matchPred);
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelInfo, @"Creating virtual directory with filter: %@", matchPred);
 		[virtualDir setPredicate:matchPred];
 	}
 	else
@@ -271,7 +271,7 @@ typedef enum {
 - (void)readVirtualDirectories;
 {
 	/*Check for XML file*/
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Looking for file: %@", path);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Looking for file: %@", path);
 	NSFileManager *fm = [NSFileManager defaultManager];
 	BOOL xmlPathIsDir = NO;
 	if(![fm fileExistsAtPath:path isDirectory:&xmlPathIsDir] || xmlPathIsDir)

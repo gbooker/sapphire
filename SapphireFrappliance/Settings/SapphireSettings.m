@@ -48,54 +48,60 @@ static SapphireSettings *sharedInstance = nil;
 
 @implementation SapphireSettings
 
-NSString *HIDE_FAVORITE_KEY			= @"HideFavorites";
-NSString *HIDE_TOP_SHOWS_KEY		= @"HideTopShows";
-NSString *HIDE_UNWATCHED_KEY		= @"HideUnwatched";
-NSString *HIDE_SPOILERS_KEY			= @"HideSpoilers";
-NSString *HIDE_AUDIO_KEY			= @"HideAudio";
-NSString *HIDE_VIDEO_KEY			= @"HideVideo";
-NSString *HIDE_POSTER_CHOOSER_KEY	= @"PosterChooserOptOut";
-NSString *HIDE_UI_QUIT_KEY			= @"HideUIQuit";
-NSString *ENABLE_FAST_SWITCHING_KEY = @"EnableFastSwitching";
-NSString *USE_AC3_PASSTHROUGH		= @"EnableAC3Passthrough";
-NSString *ENABLE_DIR_LOOKUP			= @"EnableDirLookup";
-NSString *ENABLE_AUTO_SELECTION		= @"EnableAutoSelection";
-NSString *DISABLE_ANON_KEY			= @"DisableAnonymousReporting";
-NSString *LAST_PREDICATE			= @"LastPredicate";
+NSString *SettingHideFavorite		= @"HideFavorites";
+NSString *SettingHideTopShows		= @"HideTopShows";
+NSString *SettingHideUnwatched		= @"HideUnwatched";
+NSString *SettingHideSpoilers		= @"HideSpoilers";
+NSString *SettingHideAudio			= @"HideAudio";
+NSString *SettingHideVideo			= @"HideVideo";
+NSString *SettingHidePosterChooser	= @"PosterChooserOptOut";
+NSString *SettingHideUIQuit			= @"HideUIQuit";
+NSString *SettingEnableFastSwitch	= @"EnableFastSwitching";
+NSString *SettingAC3Passthrough		= @"EnableAC3Passthrough";
+NSString *SettingDirLookup			= @"EnableDirLookup";
+NSString *SettingEnableAutoSelect	= @"EnableAutoSelection";
+NSString *SettingDisableAnonReport	= @"DisableAnonymousReporting";
+NSString *SettingLastPredicate		= @"LastPredicate";
 
-NSString *SETTING_NAME					= @"Name";
-NSString *SETTING_DESCRIPTION			= @"Description";
-NSString *SETTING_KEY					= @"Key";
-NSString *SETTING_GEM					= @"Gem";
-NSString *SETTING_COMMAND				= @"Command";
+NSString *SettingLogGeneralLevel	= @"GeneralLogLevel";
+NSString *SettingLogImportLevel		= @"ImportLogLevel";
+NSString *SettingLogFileLevel		= @"FileLogLevel";
+NSString *SettingLogPlaybackLevel	= @"PlaybackLogLevel";
+NSString *SettingLogMetadataLevel	= @"MetadataLogLevel";
+
+NSString *SettingListName			= @"Name";
+NSString *SettingListDescription	= @"Description";
+NSString *SettingListKey			= @"Key";
+NSString *SettingListGem			= @"Gem";
+NSString *SettingListCommand		= @"Command";
 
 typedef enum {
-	COMMAND_NONE,
-	COMMAND_IMPORT_FILE_DATA,
-	COMMAND_IMPORT_TV_DATA,
-	COMMAND_IMPORT_MOVIE_DATA,
-	COMMAND_IMPORT_TV_AUTOSORT_CALCULATE,
-	COMMAND_IMPORT_UPDATE_SCRAPERS,
-	COMMAND_IMPORT_HIDE_POSTER_CHOOSER,
-	COMMAND_IMPORT_USE_DIR_NAME,
-	COMMAND_IMPORT_HIDE_ALL_CHOOSERS,
+	SettingsCommandNone,
+	SettingsCommandImportFileData,
+	SettingsCommandImportTVData,
+	SettingsCommandImportMovieData,
+	SettingsCommandImportTVAutosortCalculate,
+	SettingsCommandImportUpdateScrapers,
+	SettingsCommandImportHidePosterChooser,
+	SettingsCommandImportUseDirName,
+	SettingsCommandImportHideAllChoosers,
 	
-	COMMAND_COLLECTIONS_HIDE,
-	COMMAND_COLLECTIONS_DONT_IMPORT,
-	COMMAND_COLLECTIONS_DELETE,
+	SettingsCommandCollectionsHide,
+	SettingsCommandCollectionsDontImport,
+	SettingsCommandCollectionsDelete,
 	
-	COMMAND_FILTERS_SKIP_FAVORITE,
-	COMMAND_FILTERS_SKIP_UNWATCHED,
+	SettingsCommandFiltersSkipFavorite,
+	SettingsCommandFiltersSkipUnwatched,
 	
-	COMMAND_METADATA_HIDE_SPOILERS,
-	COMMAND_METADATA_HIDE_AUDIO,
-	COMMAND_METADATA_HIDE_VIDEO,
+	SettingsCommandMetadataHideSpoilers,
+	SettingsCommandMetadataHideAudio,
+	SettingsCommandMetadataHideVideo,
 	
-	COMMAND_AUDIO_ENABLE_AC3,
+	SettingsCommandAudioEnableAC3,
 	
-	COMMAND_GENERAL_HIDE_UI_QUIT,
-	COMMAND_GENERAL_FAST_DIRECTORY_SWITCHING,
-	COMMAND_GENERAL_DONT_ANON_REPORT,
+	SettingsCommandGeneralHideUIQuit,
+	SettingsCommandGeneralFastDirectorySwitching,
+	SettingsCommandGeneralDontAnonReport,
 } SettingsCommand;
 
 + (SapphireSettings *)sharedSettings
@@ -119,156 +125,156 @@ typedef enum {
 	
 	self = [super initWithScene:scene];
 	
-	lastCommand = COMMAND_NONE;
+	lastCommand = SettingsCommandNone;
 	/*Setup display*/
 	moc = [context retain];
 	
 	SapphireTheme *theme = [SapphireTheme sharedTheme];
 	settings = [[NSArray alloc] initWithObjects:
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Populate File Data", @"Populate File Data menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to examine all files, and remember the file size, length and other information that can be gathered from the file itself.", @"Populate File Data description"), SETTING_DESCRIPTION,
-			[theme gem:IMPORT_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_FILE_DATA], SETTING_COMMAND,
+			BRLocalizedString(@"  Populate File Data", @"Populate File Data menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to examine all files, and remember the file size, length and other information that can be gathered from the file itself.", @"Populate File Data description"), SettingListDescription,
+			[theme gem:IMPORT_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportFileData], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Fetch TV Show Data", @"Fetch TV Show Data menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that for every TV episode, gather more information about this episode from the internet.", @"Fetch TV Show Data description"), SETTING_DESCRIPTION,
-			[theme gem:TVR_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_TV_DATA], SETTING_COMMAND,
+			BRLocalizedString(@"  Fetch TV Show Data", @"Fetch TV Show Data menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that for every TV episode, gather more information about this episode from the internet.", @"Fetch TV Show Data description"), SettingListDescription,
+			[theme gem:TVR_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportTVData], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Fetch Movie Data", @"Fetch Movie Data menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that for every Movie, gather more information from the internet.", @"Fetch Movie Data description"), SETTING_DESCRIPTION,
-			[theme gem:IMDB_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_MOVIE_DATA], SETTING_COMMAND,
+			BRLocalizedString(@"  Fetch Movie Data", @"Fetch Movie Data menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that for every Movie, gather more information from the internet.", @"Fetch Movie Data description"), SettingListDescription,
+			[theme gem:IMDB_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportMovieData], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Calculate TV Directories", @"Calculate TV Dirs menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to calculate directories where each TV show is stored.", @"Calculate TV Dirs description"), SETTING_DESCRIPTION,
-			[theme gem:TVR_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_TV_AUTOSORT_CALCULATE], SETTING_COMMAND,
+			BRLocalizedString(@"  Calculate TV Directories", @"Calculate TV Dirs menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to calculate directories where each TV show is stored.", @"Calculate TV Dirs description"), SettingListDescription,
+			[theme gem:TVR_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportTVAutosortCalculate], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Update Scrapers", @"Update Scrapers menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to download latest scrapers from the website.", @"Update Scrapers description"), SETTING_DESCRIPTION,
-			[theme gem:CONE_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_UPDATE_SCRAPERS], SETTING_COMMAND,
-			nil],
-/*		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Choose Movie Posters", @"Start Poster Chooser menu item"), SETTING_NAME,
-			BRLocalizedString(@"Choose Movie Posters", @"Start Poster Chooser description"), SETTING_DESCRIPTION,
-			[theme gem:GREEN_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_MOVIE_POSTERS], SETTING_COMMAND,
-			nil],*/
-		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Hide Collections", @"Hide Collections menu item"), SETTING_NAME,
-			BRLocalizedString(@"Allows the user to specify which collections should be hidden from Sapphire's main menu.", @"Hide Collections description"), SETTING_DESCRIPTION,
-			[theme gem:FILE_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_COLLECTIONS_HIDE], SETTING_COMMAND,
-			nil],
-		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Don't Import Collections", @"Don't Import Collections menu item"), SETTING_NAME,
-			BRLocalizedString(@"Allows the user to specify which collections should be skipped when importing meta data.", @"Don't Import Collections description"), SETTING_DESCRIPTION,
-			[theme gem:FILE_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_COLLECTIONS_DONT_IMPORT], SETTING_COMMAND,
-			nil],
-		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Delete Collections", @"Delete Collections menu item"), SETTING_NAME,
-			BRLocalizedString(@"Allows the user to specify which collections should be delete along with its data.  Use this for collections which will never be used again.", @"Delete Collections description"), SETTING_DESCRIPTION,
-			[theme gem:FILE_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_COLLECTIONS_DELETE], SETTING_COMMAND,
-			nil],
-		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the favorite shows filter.", @"Skip Favorite shows description"), SETTING_DESCRIPTION,
-			HIDE_FAVORITE_KEY, SETTING_KEY,
-			[theme gem:YELLOW_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_FILTERS_SKIP_FAVORITE], SETTING_COMMAND,
+			BRLocalizedString(@"  Update Scrapers", @"Update Scrapers menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to download latest scrapers from the website.", @"Update Scrapers description"), SettingListDescription,
+			[theme gem:CONE_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportUpdateScrapers], SettingListCommand,
 			nil],
 /*		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Skip \"Top Shows\" filter", @"Skip Top shows menu item"), SETTING_NAME,
-			BRLocalizedString(@"Skip \"Top Shows\" filter", @"Skip Top shows description"), SETTING_DESCRIPTION,
-			HIDE_TOP_SHOWS_KEY, SETTING_KEY,
-			[theme gem:GREEN_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_FILTERS_SKIP_TOP_SHOWS], SETTING_COMMAND,
+			BRLocalizedString(@"  Choose Movie Posters", @"Start Poster Chooser menu item"), SettingListName,
+			BRLocalizedString(@"Choose Movie Posters", @"Start Poster Chooser description"), SettingListDescription,
+			[theme gem:GREEN_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:COMMAND_IMPORT_MOVIE_POSTERS], SettingListCommand,
 			nil],*/
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Skip \"Unwatched Shows\" filter", @"Skip Unwatched shows menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the unwatched shows filter.", @"Skip Unwatched shows description"),  SETTING_DESCRIPTION,
-			HIDE_UNWATCHED_KEY, SETTING_KEY,
-			[theme gem:BLUE_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_FILTERS_SKIP_UNWATCHED], SETTING_COMMAND,
+			BRLocalizedString(@"  Hide Collections", @"Hide Collections menu item"), SettingListName,
+			BRLocalizedString(@"Allows the user to specify which collections should be hidden from Sapphire's main menu.", @"Hide Collections description"), SettingListDescription,
+			[theme gem:FILE_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandCollectionsHide], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Hide Show Spoilers", @"Hide show summary menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to disable the display of the show's synopsis.", @"Hide show summary description"), SETTING_DESCRIPTION,
-			HIDE_SPOILERS_KEY, SETTING_KEY,
-			[theme gem:NOTE_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_METADATA_HIDE_SPOILERS], SETTING_COMMAND,
+			BRLocalizedString(@"  Don't Import Collections", @"Don't Import Collections menu item"), SettingListName,
+			BRLocalizedString(@"Allows the user to specify which collections should be skipped when importing meta data.", @"Don't Import Collections description"), SettingListDescription,
+			[theme gem:FILE_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandCollectionsDontImport], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Hide Audio Info", @"Hide perian audio info menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to disable the display of audio codec and sample rate information.", @"Hide perian audio info description"), SETTING_DESCRIPTION,
-			HIDE_AUDIO_KEY, SETTING_KEY,
-			[theme gem:AUDIO_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_METADATA_HIDE_AUDIO], SETTING_COMMAND,
+			BRLocalizedString(@"  Delete Collections", @"Delete Collections menu item"), SettingListName,
+			BRLocalizedString(@"Allows the user to specify which collections should be delete along with its data.  Use this for collections which will never be used again.", @"Delete Collections description"), SettingListDescription,
+			[theme gem:FILE_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandCollectionsDelete], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Hide Video Info", @"Hide perian video info menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to disable the display of video codec, resolution, and color depth information.", @"Hide perian video info description"), SETTING_DESCRIPTION,
-			HIDE_VIDEO_KEY, SETTING_KEY,
-			[theme gem:VIDEO_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_METADATA_HIDE_VIDEO], SETTING_COMMAND,
+			BRLocalizedString(@"  Skip \"Favorite Shows\" filter", @"Skip Favorite shows menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the favorite shows filter.", @"Skip Favorite shows description"), SettingListDescription,
+			SettingHideFavorite, SettingListKey,
+			[theme gem:YELLOW_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandFiltersSkipFavorite], SettingListCommand,
+			nil],
+/*		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Skip \"Top Shows\" filter", @"Skip Top shows menu item"), SettingListName,
+			BRLocalizedString(@"Skip \"Top Shows\" filter", @"Skip Top shows description"), SettingListDescription,
+			SettingHideTopShows, SettingListKey,
+			[theme gem:GREEN_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:COMMAND_FILTERS_SKIP_TOP_SHOWS], SettingListCommand,
+			nil],*/
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Skip \"Unwatched Shows\" filter", @"Skip Unwatched shows menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that when changing filter settings, skip over the unwatched shows filter.", @"Skip Unwatched shows description"),  SettingListDescription,
+			SettingHideUnwatched, SettingListKey,
+			[theme gem:BLUE_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandFiltersSkipUnwatched], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Hide Poster Chooser", @"Hide poster chooser menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to automatically choose posters for movies instead of asking the user to choose one.", @"Hide poster chooser description"), SETTING_DESCRIPTION,
-			HIDE_POSTER_CHOOSER_KEY, SETTING_KEY,
-			[theme gem:IMPORT_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_HIDE_POSTER_CHOOSER], SETTING_COMMAND,
+			BRLocalizedString(@"  Hide Show Spoilers", @"Hide show summary menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to disable the display of the show's synopsis.", @"Hide show summary description"), SettingListDescription,
+			SettingHideSpoilers, SettingListKey,
+			[theme gem:NOTE_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandMetadataHideSpoilers], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Hide UI Quit", @"Hide the ui quitter menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to hide the main menu element forcing FrontRow to quit.", @"Hide the ui quitter description"), SETTING_DESCRIPTION,
-			HIDE_UI_QUIT_KEY, SETTING_KEY,
-			[theme gem:FRONTROW_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_GENERAL_HIDE_UI_QUIT], SETTING_COMMAND,
+			BRLocalizedString(@"  Hide Audio Info", @"Hide perian audio info menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to disable the display of audio codec and sample rate information.", @"Hide perian audio info description"), SettingListDescription,
+			SettingHideAudio, SettingListKey,
+			[theme gem:AUDIO_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandMetadataHideAudio], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files.", @"Fast Directory Switching description"), SETTING_DESCRIPTION,
-			ENABLE_FAST_SWITCHING_KEY, SETTING_KEY,
-			[theme gem:FAST_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_GENERAL_FAST_DIRECTORY_SWITCHING], SETTING_COMMAND,
+			BRLocalizedString(@"  Hide Video Info", @"Hide perian video info menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to disable the display of video codec, resolution, and color depth information.", @"Hide perian video info description"), SettingListDescription,
+			SettingHideVideo, SettingListKey,
+			[theme gem:VIDEO_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandMetadataHideVideo], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 and DTS output.", @"Enable AC3 Passthrough description"), SETTING_DESCRIPTION,
-			USE_AC3_PASSTHROUGH, SETTING_KEY,
-			[theme gem:AC3_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_AUDIO_ENABLE_AC3], SETTING_COMMAND,
+			BRLocalizedString(@"  Hide Poster Chooser", @"Hide poster chooser menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to automatically choose posters for movies instead of asking the user to choose one.", @"Hide poster chooser description"), SettingListDescription,
+			SettingHidePosterChooser, SettingListKey,
+			[theme gem:IMPORT_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportHidePosterChooser], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Use Directory Lookup", @"Use directory names instead of filenames for movie lookup"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire that you want to use directory names instead of file names for identifying movies.", @"Enable Directory lookup description"), SETTING_DESCRIPTION,
-			ENABLE_DIR_LOOKUP, SETTING_KEY,
-			[theme gem:IMDB_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_USE_DIR_NAME], SETTING_COMMAND,
+			BRLocalizedString(@"  Hide UI Quit", @"Hide the ui quitter menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to hide the main menu element forcing FrontRow to quit.", @"Hide the ui quitter description"), SettingListDescription,
+			SettingHideUIQuit, SettingListKey,
+			[theme gem:FRONTROW_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandGeneralHideUIQuit], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Auto-Select Movies/Shows", @"Hide movie/show chooser menu item"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire skip the TV Show and Movie choosers when importing and make selections automatically.", @"Enable movie/show chooser description"), SETTING_DESCRIPTION,
-			ENABLE_AUTO_SELECTION, SETTING_KEY,
-			[theme gem:IMPORT_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_IMPORT_HIDE_ALL_CHOOSERS], SETTING_COMMAND,
+			BRLocalizedString(@"  Fast Directory Switching", @"Don't rescan directories upon entry and used cached data"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that when using a filter, use the cached data to setup directories rather than scanning the directories themselves for new files.", @"Fast Directory Switching description"), SettingListDescription,
+			SettingEnableFastSwitch, SettingListKey,
+			[theme gem:FAST_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandGeneralFastDirectorySwitching], SettingListCommand,
 			nil],
 		[NSDictionary dictionaryWithObjectsAndKeys:
-			BRLocalizedString(@"  Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), SETTING_NAME,
-			BRLocalizedString(@"Tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use.", @"Disable the anonymous reporting description"), SETTING_DESCRIPTION,
-			DISABLE_ANON_KEY, SETTING_KEY,
-			[theme gem:REPORT_GEM_KEY], SETTING_GEM,
-			[NSNumber numberWithInt:COMMAND_GENERAL_DONT_ANON_REPORT], SETTING_COMMAND,
+			BRLocalizedString(@"  Enable AC3 Passthrough", @"Enable AC3 Passthrough menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that you have an AC3 decoder and to enable passthrough of the full audio information to the decoder. This is how you get 5.1 and DTS output.", @"Enable AC3 Passthrough description"), SettingListDescription,
+			SettingAC3Passthrough, SettingListKey,
+			[theme gem:AC3_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandAudioEnableAC3], SettingListCommand,
+			nil],
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Use Directory Lookup", @"Use directory names instead of filenames for movie lookup"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire that you want to use directory names instead of file names for identifying movies.", @"Enable Directory lookup description"), SettingListDescription,
+			SettingDirLookup, SettingListKey,
+			[theme gem:IMDB_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportUseDirName], SettingListCommand,
+			nil],
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Auto-Select Movies/Shows", @"Hide movie/show chooser menu item"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire skip the TV Show and Movie choosers when importing and make selections automatically.", @"Enable movie/show chooser description"), SettingListDescription,
+			SettingEnableAutoSelect, SettingListKey,
+			[theme gem:IMPORT_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandImportHideAllChoosers], SettingListCommand,
+			nil],
+		[NSDictionary dictionaryWithObjectsAndKeys:
+			BRLocalizedString(@"  Disable Anonymous Reporting", @"Disable the anonymous reporting for aid in future features"), SettingListName,
+			BRLocalizedString(@"Tells Sapphire to not report any anonymous information on how you use Sapphire. Anonymous reporting enables us to improve the plugin for future use.", @"Disable the anonymous reporting description"), SettingListDescription,
+			SettingDisableAnonReport, SettingListKey,
+			[theme gem:REPORT_GEM_KEY], SettingListGem,
+			[NSNumber numberWithInt:SettingsCommandGeneralDontAnonReport], SettingListCommand,
 			nil],
 		nil];
 	
@@ -276,20 +282,25 @@ typedef enum {
 	options = [[NSDictionary dictionaryWithContentsOfFile:dictionaryPath] mutableCopy];
 	/*Set deaults*/
 	defaults = [[NSDictionary alloc] initWithObjectsAndKeys:
-		[NSNumber numberWithBool:NO], HIDE_FAVORITE_KEY,
-		[NSNumber numberWithBool:YES], HIDE_TOP_SHOWS_KEY,
-		[NSNumber numberWithBool:NO], HIDE_UNWATCHED_KEY,
-		[NSNumber numberWithBool:NO], HIDE_SPOILERS_KEY,
-		[NSNumber numberWithBool:NO], HIDE_AUDIO_KEY,
-		[NSNumber numberWithBool:NO], HIDE_VIDEO_KEY,
-		[NSNumber numberWithBool:NO], HIDE_POSTER_CHOOSER_KEY,
-		[NSNumber numberWithBool:YES], HIDE_UI_QUIT_KEY,
-		[NSNumber numberWithBool:YES], ENABLE_FAST_SWITCHING_KEY,
-		[NSNumber numberWithBool:NO], USE_AC3_PASSTHROUGH,
-		[NSNumber numberWithBool:NO], ENABLE_DIR_LOOKUP,
-		[NSNumber numberWithBool:NO], ENABLE_AUTO_SELECTION,
-		[NSNumber numberWithBool:NO], DISABLE_ANON_KEY,
-		[NSNumber numberWithInt:NSNotFound], LAST_PREDICATE,
+		[NSNumber numberWithBool:NO], SettingHideFavorite,
+		[NSNumber numberWithBool:YES], SettingHideTopShows,
+		[NSNumber numberWithBool:NO], SettingHideUnwatched,
+		[NSNumber numberWithBool:NO], SettingHideSpoilers,
+		[NSNumber numberWithBool:NO], SettingHideAudio,
+		[NSNumber numberWithBool:NO], SettingHideVideo,
+		[NSNumber numberWithBool:NO], SettingHidePosterChooser,
+		[NSNumber numberWithBool:YES], SettingHideUIQuit,
+		[NSNumber numberWithBool:YES], SettingEnableFastSwitch,
+		[NSNumber numberWithBool:NO], SettingAC3Passthrough,
+		[NSNumber numberWithBool:NO], SettingDirLookup,
+		[NSNumber numberWithBool:NO], SettingEnableAutoSelect,
+		[NSNumber numberWithBool:NO], SettingDisableAnonReport,
+		[NSNumber numberWithInt:NSNotFound], SettingLastPredicate,
+		[NSNumber numberWithInt:SapphireLogLevelError], SettingLogGeneralLevel,
+		[NSNumber numberWithInt:SapphireLogLevelError], SettingLogImportLevel,
+		[NSNumber numberWithInt:SapphireLogLevelError], SettingLogFileLevel,
+		[NSNumber numberWithInt:SapphireLogLevelError], SettingLogPlaybackLevel,
+		[NSNumber numberWithInt:SapphireLogLevelError], SettingLogMetadataLevel,
 		nil];
 	if(options == nil)
 		options = [[NSMutableDictionary alloc] init];
@@ -355,80 +366,90 @@ typedef enum {
 	return [num boolValue];
 }
 
+- (SapphireLogLevel)logLevelForKey:(NSString *)key
+{
+	/*Check the user's setting*/
+	NSNumber *num = [options objectForKey:key];
+	SapphireLogLevel value = [num intValue];
+	if(num != nil && value > 0 && value < SapphireLogLevelCount)
+		return value;
+	return [[defaults objectForKey:key] intValue];
+}
+
 - (BOOL)displayUnwatched
 {
-	return ![self boolForKey:HIDE_UNWATCHED_KEY];
+	return ![self boolForKey:SettingHideUnwatched];
 }
 
 - (BOOL)displayFavorites
 {
-	return ![self boolForKey:HIDE_FAVORITE_KEY];
+	return ![self boolForKey:SettingHideFavorite];
 }
 
 - (BOOL)displayTopShows
 {
-	return ![self boolForKey:HIDE_TOP_SHOWS_KEY];
+	return ![self boolForKey:SettingHideTopShows];
 }
 
 - (BOOL)displaySpoilers
 {
-	return ![self boolForKey:HIDE_SPOILERS_KEY];
+	return ![self boolForKey:SettingHideSpoilers];
 }
 
 - (BOOL)displayAudio
 {
-	return ![self boolForKey:HIDE_AUDIO_KEY];
+	return ![self boolForKey:SettingHideAudio];
 }
 
 - (BOOL)displayVideo
 {
-	return ![self boolForKey:HIDE_VIDEO_KEY];
+	return ![self boolForKey:SettingHideVideo];
 }
 
 - (BOOL)displayPosterChooser
 {
-	return ![self boolForKey:HIDE_POSTER_CHOOSER_KEY];
+	return ![self boolForKey:SettingHidePosterChooser];
 }
 
 - (BOOL)disableUIQuit
 {
-	return [self boolForKey:HIDE_UI_QUIT_KEY];
+	return [self boolForKey:SettingHideUIQuit];
 }
 
 - (BOOL)disableAnonymousReporting;
 {
-	return [self boolForKey:DISABLE_ANON_KEY];
+	return [self boolForKey:SettingDisableAnonReport];
 }
 
 - (BOOL)useAC3Passthrough
 {
-	return [self boolForKey:USE_AC3_PASSTHROUGH];
+	return [self boolForKey:SettingAC3Passthrough];
 }
 
 - (BOOL)fastSwitching
 {
-	return [self boolForKey:ENABLE_FAST_SWITCHING_KEY];
+	return [self boolForKey:SettingEnableFastSwitch];
 
 }
 
 - (BOOL)dirLookup
 {
-	return [self boolForKey:ENABLE_DIR_LOOKUP];
+	return [self boolForKey:SettingDirLookup];
 }
 
 - (BOOL)autoSelection
 {
-	return [self boolForKey:ENABLE_AUTO_SELECTION];
+	return [self boolForKey:SettingEnableAutoSelect];
 }
 
 - (int)indexOfLastPredicate
 {
-	return [[self numberForKey:LAST_PREDICATE] intValue];
+	return [[self numberForKey:SettingLastPredicate] intValue];
 }
 
 - (void)setIndexOfLastPredicate:(int)index
 {
-	[options setObject:[NSNumber numberWithInt:index] forKey:LAST_PREDICATE];
+	[options setObject:[NSNumber numberWithInt:index] forKey:SettingLastPredicate];
 	/*Save our settings*/
 	[self writeSettings];
 }
@@ -442,6 +463,31 @@ typedef enum {
 - (BOOL)displayOnlyPlot
 {
 	return [displayOnlyPlot compare:[NSDate date]] == NSOrderedDescending;
+}
+
+- (SapphireLogLevel)generalLogLevel
+{
+	return [self logLevelForKey:SettingLogGeneralLevel];
+}
+
+- (SapphireLogLevel)importLogLevel
+{
+	return [self logLevelForKey:SettingLogImportLevel];
+}
+
+- (SapphireLogLevel)fileLogLevel
+{
+	return [self logLevelForKey:SettingLogFileLevel];
+}
+
+- (SapphireLogLevel)playbackLogLevel
+{
+	return [self logLevelForKey:SettingLogPlaybackLevel];
+}
+
+- (SapphireLogLevel)metadataLogLevel
+{
+	return [self logLevelForKey:SettingLogMetadataLevel];
 }
 
 - (SapphireConfirmPrompt *)nextAutoSortPathConfirm:(NSArray *)shows
@@ -513,7 +559,7 @@ typedef enum {
 {
     // handle being revealed when the user presses Menu
 	
-	if(lastCommand == COMMAND_COLLECTIONS_DELETE)
+	if(lastCommand == SettingsCommandCollectionsDelete)
 	{
 		NSArray *collections = [SapphireCollectionDirectory allCollectionsInContext:moc];
 		NSEnumerator *colEnum = [collections objectEnumerator];
@@ -553,15 +599,15 @@ typedef enum {
 	
 	BRAdornedMenuItemLayer * result = nil;
 	NSDictionary *setting = [settings objectAtIndex:row];
-	NSString *name = [setting objectForKey:SETTING_NAME];
+	NSString *name = [setting objectForKey:SettingListName];
 	result = [SapphireFrontRowCompat textMenuItemForScene:[self scene] folder:NO];
 
-	NSString *key = [setting objectForKey:SETTING_KEY];
+	NSString *key = [setting objectForKey:SettingListKey];
 	if(key != nil && [self boolForKey:key])
 	{
 		[SapphireFrontRowCompat setLeftIcon:[SapphireFrontRowCompat selectedSettingImageForScene:[self scene]] forMenu:result];
 	}
-	[SapphireFrontRowCompat setRightIcon:[setting objectForKey:SETTING_GEM] forMenu:result];
+	[SapphireFrontRowCompat setRightIcon:[setting objectForKey:SettingListGem] forMenu:result];
 
 	// add text
 	[SapphireFrontRowCompat setTitle:name forMenu:result];
@@ -575,7 +621,7 @@ typedef enum {
 	if (row >= [settings count])
 		return nil;
 	
-	NSString *result = [[settings objectAtIndex:row] objectForKey:SETTING_NAME];
+	NSString *result = [[settings objectAtIndex:row] objectForKey:SettingListName];
 	return result;
 /*
     // return the title for the list item at the given index here
@@ -604,9 +650,9 @@ typedef enum {
     // This is called when the user changed a setting
 	NSDictionary *setting = [settings objectAtIndex:row];
 
-	lastCommand = [[setting objectForKey:SETTING_COMMAND] intValue];
+	lastCommand = [[setting objectForKey:SettingListCommand] intValue];
 	switch (lastCommand) {
-		case COMMAND_IMPORT_FILE_DATA:
+		case SettingsCommandImportFileData:
 		{
 			SapphireAllFileDataImporter *importer = [[SapphireAllFileDataImporter alloc] init];
 			SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] context:moc importer:importer];
@@ -615,7 +661,7 @@ typedef enum {
 			[importer release];
 			break;
 		}
-		case COMMAND_IMPORT_TV_DATA:
+		case SettingsCommandImportTVData:
 		{
 			SapphireTVShowImporter *importer = [[SapphireTVShowImporter alloc] init];
 			SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] context:moc importer:importer];
@@ -624,7 +670,7 @@ typedef enum {
 			[importer release];
 			break;
 		}
-		case COMMAND_IMPORT_MOVIE_DATA:
+		case SettingsCommandImportMovieData:
 		{
 			SapphireMovieImporter *importer = [[SapphireMovieImporter alloc] init];
 			SapphireImporterDataMenu *menu = [[SapphireImporterDataMenu alloc] initWithScene:[self scene] context:moc importer:importer];
@@ -633,7 +679,7 @@ typedef enum {
 			[importer release];
 			break;
 		}
-		case COMMAND_IMPORT_TV_AUTOSORT_CALCULATE:
+		case SettingsCommandImportTVAutosortCalculate:
 		{
 			NSArray *shows = doFetchRequest(SapphireTVShowName, moc, nil);
 			SapphireConfirmPrompt *confirm = [self nextAutoSortPathConfirm:shows];
@@ -647,7 +693,7 @@ typedef enum {
 			}
 			break;
 		}
-		case COMMAND_IMPORT_UPDATE_SCRAPERS:
+		case SettingsCommandImportUpdateScrapers:
 		{
 			SapphireURLLoader *loader = [SapphireApplianceController urlLoader];
 			NSFileManager *fm = [NSFileManager defaultManager];
@@ -673,7 +719,7 @@ typedef enum {
 			[chooser release];
 			break;
 		}*/
-		case COMMAND_COLLECTIONS_HIDE:
+		case SettingsCommandCollectionsHide:
 		{
 			SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] context:moc];
 			[colSettings setGettingSelector:@selector(hiddenValue)];
@@ -683,7 +729,7 @@ typedef enum {
 			[colSettings release];
 			break;
 		}
-		case COMMAND_COLLECTIONS_DONT_IMPORT:
+		case SettingsCommandCollectionsDontImport:
 		{
 			SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] context:moc];
 			[colSettings setGettingSelector:@selector(skipValue)];
@@ -693,7 +739,7 @@ typedef enum {
 			[colSettings release];
 			break;
 		}
-		case COMMAND_COLLECTIONS_DELETE:
+		case SettingsCommandCollectionsDelete:
 		{
 			SapphireCollectionSettings *colSettings = [[SapphireCollectionSettings alloc] initWithScene:[self scene] context:moc];
 			[colSettings setGettingSelector:@selector(deleteValue)];
@@ -705,7 +751,7 @@ typedef enum {
 		}
 		default:
 		{
-			NSString *key = [setting objectForKey:SETTING_KEY];
+			NSString *key = [setting objectForKey:SettingListKey];
 			if(key == nil)
 				break;
 			BOOL setting = [self boolForKey:key];
@@ -735,8 +781,8 @@ typedef enum {
 	NSDictionary *setting = [settings objectAtIndex:item];
 	
 	/* Get setting name & kill the gem cushion  */
-	NSString *settingName = [[setting objectForKey:SETTING_NAME] substringFromIndex:2];
-	NSString *settingDescription=[setting objectForKey:SETTING_DESCRIPTION];
+	NSString *settingName = [[setting objectForKey:SettingListName] substringFromIndex:2];
+	NSString *settingDescription=[setting objectForKey:SettingListDescription];
 	/* Construct a gerneric metadata asset for display */
 	NSMutableDictionary *settingMeta=[[NSMutableDictionary alloc] init];
 	[settingMeta setObject:settingName forKey:META_TITLE_KEY];

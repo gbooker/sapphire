@@ -134,7 +134,7 @@
 	NSPersistentStoreCoordinator *coord = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
 	if(![coord addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:nil error:&error])
 	{
-		SapphireLog(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not add store: %@", error);
+		SapphireLog(SapphireLogTypeAll, SapphireLogLevelError, @"Could not add store: %@", error);
 		
 		[coord release];
 		[model release];

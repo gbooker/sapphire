@@ -38,7 +38,7 @@ NSManagedObject *doSingleFetchRequest(NSString *entityName, NSManagedObjectConte
 	NSError *error = nil;
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if(error != nil)
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Single Fetch error: %@", error);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelError, @"Single Fetch error: %@", error);
 	[request release];
 	
 	if([array count])
@@ -62,7 +62,7 @@ NSArray *doSortedFetchRequest(NSString *entityName, NSManagedObjectContext *cont
 	NSError *error = nil;
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if(error != nil)
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Sorted Fetch error: %@", error);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelError, @"Sorted Fetch error: %@", error);
 	[request release];
 	
 	return array;
@@ -81,7 +81,7 @@ BOOL entityExists(NSString *entityName, NSManagedObjectContext *context, NSPredi
 	NSError *error = nil;
 	NSArray *array = [context executeFetchRequest:request error:&error];
 	if(error != nil)
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Exist error: %@", error);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelError, @"Exist error: %@", error);
 	[request release];
 	
 	if([array count])

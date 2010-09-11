@@ -79,7 +79,7 @@ NSString *MOVIE_DID_CHANGE_PREDICATE_MATCHING = @"MovieDidChangePredicateMatchin
 	NSString *title = [dict objectForKey:META_MOVIE_TITLE_KEY];
 	if(![title length])
 	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Imported a movie with no title: %@", dict);
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelError, @"Imported a movie with no title: %@", dict);
 		return nil;
 	}
 	

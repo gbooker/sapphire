@@ -208,7 +208,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	
 	NSPredicate *movieNoFile = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", movieIds];
 	NSArray *emptyMovies = doFetchRequest(SapphireMovieName, moc, movieNoFile);
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Pruning Movies %@", [emptyMovies valueForKeyPath:@"title"]);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Pruning Movies %@", [emptyMovies valueForKeyPath:@"title"]);
 	NSEnumerator *objEnum = [emptyMovies objectEnumerator];
 	NSManagedObject *obj;
 	while((obj = [objEnum nextObject]) != nil)
@@ -228,7 +228,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 		NSString *objName = [pruneKeys objectForKey:key];
 		NSArray *itemSet = [allMovies valueForKeyPath:[NSString stringWithFormat:@"@distinctUnionOfSets.%@.objectID", key]];
 		NSArray *emptyItems = doFetchRequest(objName, moc, [NSPredicate predicateWithFormat:@"NOT SELF IN %@", itemSet]);
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Pruning %@ %@", key, [emptyItems valueForKeyPath:@"name"]);
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Pruning %@ %@", key, [emptyItems valueForKeyPath:@"name"]);
 		objEnum = [emptyItems objectEnumerator];
 		while((obj = [objEnum nextObject]) != nil)
 			[moc deleteObject:obj];
@@ -240,7 +240,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	
 	NSPredicate *epNoFile = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", epIds];
 	NSArray *emptyEpisodes = doFetchRequest(SapphireEpisodeName, moc, epNoFile);
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Pruning Episodes %@", [emptyEpisodes valueForKeyPath:@"episodeTitle"]);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Pruning Episodes %@", [emptyEpisodes valueForKeyPath:@"episodeTitle"]);
 	objEnum = [emptyEpisodes objectEnumerator];
 	while((obj = [objEnum nextObject]) != nil)
 		[moc deleteObject:obj];
@@ -250,7 +250,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	NSSet *seasonIds = [allEps valueForKeyPath:@"@distinctUnionOfObjects.season.objectID"];
 	NSPredicate *noEpisodes = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", seasonIds];
 	NSArray *emptySeasons = doFetchRequest(SapphireSeasonName, moc, noEpisodes);
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Pruning Seasons %@", [emptySeasons valueForKeyPath:@"path"]);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Pruning Seasons %@", [emptySeasons valueForKeyPath:@"path"]);
 	objEnum = [emptySeasons objectEnumerator];
 	while((obj = [objEnum nextObject]) != nil)
 		[moc deleteObject:obj];
@@ -258,7 +258,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	NSSet *showIds = [allEps valueForKeyPath:@"@distinctUnionOfObjects.tvShow.objectID"];
 	noEpisodes = [NSPredicate predicateWithFormat:@"NOT SELF IN %@", showIds];
 	NSArray *emptyShows = doFetchRequest(SapphireTVShowName, moc, noEpisodes);
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Pruning Shows %@", [emptyShows valueForKeyPath:@"name"]);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Pruning Shows %@", [emptyShows valueForKeyPath:@"name"]);
 	objEnum = [emptyShows objectEnumerator];
 	while((obj = [objEnum nextObject]) != nil)
 		[moc deleteObject:obj];
@@ -309,7 +309,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 		context = [timer userInfo];
 	
 	if(writeTimer != nil)
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Rescheduled write");
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Rescheduled write");
 	writeTimer = nil;
 	NSError *error = nil;
 	locked = NO;
@@ -319,34 +319,34 @@ NSString *searchCoverArtExtForPath(NSString *path)
 		success = [context save:&error];
 	}
 	@catch (NSException * e) {
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Could not save due to exception \"%@\" with reason \"%@\"", [e name], [e reason]);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Could not save due to exception \"%@\" with reason \"%@\"", [e name], [e reason]);
 	}
 	if(error != nil)
 	{
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Save error \"%@\"", error);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelError, @"Save error \"%@\"", error);
 		NSArray *details = [[error userInfo] objectForKey:@"NSDetailedErrors"];
 		if(details != nil)
 		{
 			NSEnumerator *errorEnum = [details objectEnumerator];
 			NSError *aError;
 			while((aError = [errorEnum nextObject]) != nil)
-				SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"One error is %@: %@", aError, [aError userInfo]);
+				SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelError, @"One error is %@: %@", aError, [aError userInfo]);
 		}
 		NSException *underlying = [[error userInfo] objectForKey:@"NSUnderlyingException"];
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Underlying is %@ %@ %@ %@", underlying, [underlying name], [underlying reason], [underlying userInfo]);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDebug, @"Underlying is %@ %@ %@ %@", underlying, [underlying name], [underlying reason], [underlying userInfo]);
 		if([[underlying reason] isEqualToString:@"database is locked"])
 		{
-			SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Detected locked");
+			SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDebug, @"Detected locked");
 			locked = YES;
 		}
 	}
 	if(success == NO)
 	{
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Inserted objects is %@", [context insertedObjects]);
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Updated objects is %@", [context updatedObjects]);
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Deleted objects is %@", [context deletedObjects]);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDebug, @"Inserted objects is %@", [context insertedObjects]);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDebug, @"Updated objects is %@", [context updatedObjects]);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDebug, @"Deleted objects is %@", [context deletedObjects]);
 		interval *= 2;
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Rescheduling write to occurr in %f seconds", interval);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Rescheduling write to occurr in %f seconds", interval);
 		
 		@try {
 			NSSet *objSet = [context updatedObjects];
@@ -360,13 +360,13 @@ NSString *searchCoverArtExtForPath(NSString *path)
 				[context refreshObject:obj mergeChanges:YES];			
 		}
 		@catch (NSException * e) {
-			SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Could not fix save due to exception \"%@\" with reason \"%@\"", [e name], [e reason]);
+			SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Could not fix save due to exception \"%@\" with reason \"%@\"", [e name], [e reason]);
 		}
 		
 		writeTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(realWriteMetaData:) userInfo:context repeats:NO];
 	}
 	else
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_DETAIL, @"Save successful");
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelDetail, @"Save successful");
 }
 
 - (BOOL)save:(NSManagedObjectContext *)context;
@@ -626,7 +626,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	while((obj = [objEnum nextObject]) != nil)
 	{
 		if(![obj validateForUpdate:&error])
-			SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_INFO, @"%@", error);
+			SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelInfo, @"%@", error);
 	}
 }
 
@@ -740,7 +740,7 @@ NSString *searchCoverArtExtForPath(NSString *path)
 	[undo endUndoGrouping];
 	if(failed)
 	{
-		SapphireLog(SAPPHIRE_LOG_METADATA_STORE, SAPPHIRE_LOG_LEVEL_ERROR, @"Apply failed for %@, undoing", changes);
+		SapphireLog(SapphireLogTypeMetadataStore, SapphireLogLevelError, @"Apply failed for %@, undoing", changes);
 		[undo undo];
 	}
 	[moc setUndoManager:nil];

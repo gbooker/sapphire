@@ -19,19 +19,20 @@
  */
 
 typedef enum {
-	SAPPHIRE_LOG_GENERAL,
-	SAPPHIRE_LOG_IMPORT,
-	SAPPHIRE_LOG_FILE,
-	SAPPHIRE_LOG_PLAYBACK,
-	SAPPHIRE_LOG_METADATA_STORE,
-	SAPPHIRE_LOG_ALL,
+	SapphireLogTypeGeneral,
+	SapphireLogTypeImport,
+	SapphireLogTypeFile,
+	SapphireLogTypePlayback,
+	SapphireLogTypeMetadataStore,
+	SapphireLogTypeAll,
 } SapphireLogType;
 
 typedef enum {
-	SAPPHIRE_LOG_LEVEL_ERROR,
-	SAPPHIRE_LOG_LEVEL_INFO,
-	SAPPHIRE_LOG_LEVEL_DETAIL,
-	SAPPHIRE_LOG_LEVEL_DEBUG,
+	SapphireLogLevelError,
+	SapphireLogLevelInfo,
+	SapphireLogLevelDetail,
+	SapphireLogLevelDebug,
+	SapphireLogLevelCount,
 } SapphireLogLevel;
 
 @interface SapphireLogging : NSObject {

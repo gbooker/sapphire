@@ -54,8 +54,8 @@ int main(int argc, char *argv[])
 	NSBundle *bundle = [NSBundle bundleWithPath:path];
 	[bundle load];
 	
-	[NSClassFromString(@"SapphireLogging") setLogLevel:SAPPHIRE_LOG_LEVEL_ERROR forType:SAPPHIRE_LOG_ALL];
-	[NSClassFromString(@"SapphireLogging") setLogLevel:SAPPHIRE_LOG_LEVEL_DEBUG forType:SAPPHIRE_LOG_METADATA_STORE];
+	[NSClassFromString(@"SapphireLogging") setLogLevel:SapphireLogLevelError forType:SapphireLogTypeAll];
+	[NSClassFromString(@"SapphireLogging") setLogLevel:SapphireLogLevelDebug forType:SapphireLogTypeMetadataStore];
 	
 	SapphireImportHelperClient *help = [[NSClassFromString(@"SapphireImportHelperClient") alloc] init];
 	[help startChild];

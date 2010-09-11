@@ -288,7 +288,7 @@ BRMusicNowPlayingController *musicController = nil;
 		while((key = [mappingEnum nextObject]) != nil)
 			[ret appendFormat:@"\n0x%X\t%@", [key pointerValue], [mapping objectForKey:key]];
 	}
-	SapphireLog(SAPPHIRE_LOG_GENERAL, SAPPHIRE_LOG_LEVEL_ERROR, @"%@", ret);	
+	SapphireLog(SapphireLogTypeGeneral, SapphireLogLevelError, @"%@", ret);	
 }
 
 + (NSString *) rootMenuLabel
@@ -336,7 +336,7 @@ BRMusicNowPlayingController *musicController = nil;
 	NSPersistentStoreCoordinator *coord = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
 	if(![coord addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:storeOptions error:&error])
 	{
-		SapphireLog(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_ERROR, @"Could not add store: %@", error);
+		SapphireLog(SapphireLogTypeAll, SapphireLogLevelError, @"Could not add store: %@", error);
 		
 		[coord release];
 		[model release];
@@ -388,7 +388,11 @@ BRMusicNowPlayingController *musicController = nil;
 	}
 	mountsOnly = NO;
 	
-	SapphireSetLogLevel(SAPPHIRE_LOG_ALL, SAPPHIRE_LOG_LEVEL_ERROR);
+	SapphireSetLogLevel(SapphireLogTypeGeneral, [settings generalLogLevel]);
+	SapphireSetLogLevel(SapphireLogTypeImport, [settings importLogLevel]);
+	SapphireSetLogLevel(SapphireLogTypeFile, [settings fileLogLevel]);
+	SapphireSetLogLevel(SapphireLogTypePlayback, [settings playbackLogLevel]);
+	SapphireSetLogLevel(SapphireLogTypeMetadataStore, [settings metadataLogLevel]);
 	
 	distributed = [[SapphireDistributedMessagesReceiver alloc] initWithController:self];
 	

@@ -232,7 +232,7 @@ NSComparisonResult dirAndLinkPathCompare(id dir1, id dir2, void *context)
 			ret = [(SapphireDirectorySymLink *)ret directory];
 		return ret;
 	}
-	SapphireLog(SAPPHIRE_LOG_GENERAL, SAPPHIRE_LOG_LEVEL_ERROR, @"Somehow couldn't get cache for %@ in %@", directory, self.path);
+	SapphireLog(SapphireLogTypeGeneral, SapphireLogLevelError, @"Somehow couldn't get cache for %@ in %@", directory, self.path);
 	NSString *path = [self.path stringByAppendingPathComponent:directory];
 	NSPredicate *pred = [NSPredicate predicateWithFormat:@"path == %@", path];
 	NSArray *candidates = [[self.metaDirsSet allObjects] filteredArrayUsingPredicate:pred];

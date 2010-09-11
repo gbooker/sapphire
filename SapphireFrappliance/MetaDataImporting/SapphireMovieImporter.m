@@ -160,7 +160,7 @@
 							   nil]];
 	}
 	
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Found results: %@", movies);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Found results: %@", movies);
 	
 	/* No need to prompt the user for an empty set */
 	if(![movies count])
@@ -290,7 +290,7 @@
 	SapphireMovie *movie = [SapphireMovie movieWithDictionary:infoIMDB inContext:moc];
 	if(movie == nil)
 	{
-		SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_ERROR, @"Failed to import movie for %@", state->path);
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelError, @"Failed to import movie for %@", state->path);
 		[self completeWithState:state withStatus:ImportStateNotUpdated importComplete:NO];
 		return;
 	}
@@ -459,7 +459,7 @@
 	/*Get path*/
 	if(![self isMovieCandidate:metaData])
 		return ImportStateNotUpdated;
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Going to movie import %@", path);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Going to movie import %@", path);
 	NSString *extLessPath = path;
 	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
 		extLessPath = [extLessPath stringByDeletingPathExtension];
@@ -495,7 +495,7 @@
 		[state setLookupName:normalTitle];
 	}
 	
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Searching for movie \"%@\"", state->lookupName);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Searching for movie \"%@\"", state->lookupName);
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireMovieTranslation *tran = [SapphireMovieTranslation movieTranslationWithName:state->lookupName inContext:moc];
 	if(tran == nil)
@@ -532,7 +532,7 @@
 			/*There is no data menu, background import. So we can't ask user, skip*/
 				return ImportStateNotUpdated;
 			
-			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Searching for %@ with year %@", state->lookupName, yearStr);
+			SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Searching for %@ with year %@", state->lookupName, yearStr);
 			
 			/*Ask the user what movie this is*/
 			[siteScraper setObject:state];

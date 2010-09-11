@@ -57,10 +57,10 @@ static NSData * imageAtTime( QTMovie *movie, QTTime frameTime )
 
 + (NSArray *) imagesFromMovie: (NSString *)path forArraySize: (unsigned int) size
 {
-	SapphireLog(SAPPHIRE_LOG_FILE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Getting array of size %d from %@", size, path );
+	SapphireLog(SapphireLogTypeFile, SapphireLogLevelDebug, @"Getting array of size %d from %@", size, path );
 	NSError * error    = nil;
 	QTMovie * movie    = [QTMovie movieWithFile:path error:&error];
-	SapphireLog(SAPPHIRE_LOG_FILE, SAPPHIRE_LOG_LEVEL_DEBUG, @"movie opened");
+	SapphireLog(SapphireLogTypeFile, SapphireLogLevelDebug, @"movie opened");
 	QTTime    duration = [movie duration];
 
 	unsigned int i;
@@ -75,13 +75,13 @@ static NSData * imageAtTime( QTMovie *movie, QTTime frameTime )
 		QTTime imageTime = duration;
 		imageTime.timeValue = (rand() % (duration.timeValue/size)) + (i*duration.timeValue/size);
 
-		SapphireLog(SAPPHIRE_LOG_FILE, SAPPHIRE_LOG_LEVEL_DEBUG, @"getting image");
+		SapphireLog(SapphireLogTypeFile, SapphireLogLevelDebug, @"getting image");
 		NSImage * image = [movie frameImageAtTime:imageTime];
 		if ( image != nil )
 			[images addObject:image];
 	}
 
-	SapphireLog(SAPPHIRE_LOG_FILE, SAPPHIRE_LOG_LEVEL_DEBUG, @"Returning array of size %d from %@", [images count], path );
+	SapphireLog(SapphireLogTypeFile, SapphireLogLevelDebug, @"Returning array of size %d from %@", [images count], path );
 	return images;
 }
 

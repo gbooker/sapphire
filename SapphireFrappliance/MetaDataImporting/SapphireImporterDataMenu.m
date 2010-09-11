@@ -414,7 +414,7 @@
 		{
 			case ImportStateUpdated:
 				ret = YES;
-				SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Updated %@", [file path]);
+				SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Updated %@", [file path]);
 				break;
 			case ImportStateMultipleSuspend:
 			case ImportStateBackground:

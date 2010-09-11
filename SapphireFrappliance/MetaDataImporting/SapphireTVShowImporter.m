@@ -261,7 +261,7 @@
 							  nil]];
 	}
 	
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DETAIL, @"Found shows: %@", shows);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Found shows: %@", shows);
 	
 	/* No need to prompt the user for an empty set */
 	if(![shows count])
@@ -693,7 +693,7 @@
 	if(searchShowName != nil)
 		searchStr = searchShowName;
 	searchStr = [searchStr lowercaseString];
-	SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"%@ matched regex; checking show name %@", fileName, searchStr);
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"%@ matched regex; checking show name %@", fileName, searchStr);
 	/*Check to see if we know this title*/
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	SapphireTVTranslation *tran = [SapphireTVTranslation tvTranslationForName:searchStr inContext:moc];
@@ -732,7 +732,7 @@
 		}
 		else
 		{
-			SapphireLog(SAPPHIRE_LOG_IMPORT, SAPPHIRE_LOG_LEVEL_DEBUG, @"Conducting search");
+			SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Conducting search");
 			if(![delegate canDisplayChooser])
 			/*There is no data menu, background import. So we can't ask user, skip*/
 				return ImportStateNotUpdated;
