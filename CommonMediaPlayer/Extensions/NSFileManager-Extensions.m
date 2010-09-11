@@ -31,7 +31,6 @@
 	NSTask *mkdirTask = [NSTask launchedTaskWithLaunchPath:@"/bin/mkdir" arguments:[NSArray arrayWithObjects:@"-p", recursiveDirectory, nil]];
 	[mkdirTask waitUntilExit];
 	int mkdirStatus = [mkdirTask terminationStatus];
-	[mkdirTask release];
 	if(mkdirStatus == 0)
 		return YES;
 	else
