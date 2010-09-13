@@ -421,7 +421,8 @@ static NSSet *secondaryFiles;
 
 - (oneway void)addFileData:(bycopy NSDictionary *)fileMeta
 {
-	self.audioDescription = [fileMeta objectForKey:META_FILE_AUDIO_DESC_KEY];
+	NSString *audioDesc = [fileMeta objectForKey:META_FILE_AUDIO_DESC_KEY];
+	self.audioDescription = audioDesc;
 	self.audioFormatID = [fileMeta objectForKey:META_FILE_AUDIO_FORMAT_KEY];
 	self.duration = [fileMeta objectForKey:META_FILE_DURATION_KEY];
 	id value = [fileMeta objectForKey:META_FILE_MODIFIED_KEY];
@@ -434,6 +435,8 @@ static NSSet *secondaryFiles;
 	self.videoDescription = videoDesc;
 	if(videoDesc != nil)
 		self.hasVideoValue = YES;
+	else if(audioDesc != nil)
+		self.hasVideoValue = NO;
 }
 
 
