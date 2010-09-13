@@ -71,19 +71,19 @@ typedef enum {
 
 
 typedef enum {
-	FILE_CLASS_UTILITY= -2,
-	FILE_CLASS_NOT_FILE= -1,
-	FILE_CLASS_UNKNOWN = 0,
-	FILE_CLASS_TV_SHOW = 1,
-	FILE_CLASS_MOVIE = 2,
-	FILE_CLASS_AUDIO = 3,
-	FILE_CLASS_IMAGE = 4,
-	FILE_CLASS_OTHER = 5,
+	FileClassUtility= -2,
+	FileClassNotFile= -1,
+	FileClassUnknown = 0,
+	FileClassTVShow = 1,
+	FileClassMovie = 2,
+	FileClassAudio = 3,
+	FileClassImage = 4,
+	FileClassOther = 5,
 } FileClass;
 
 typedef enum FileContainerType {
-	FILE_CONTAINER_TYPE_QT_MOVIE = 0,
-	FILE_CONTAINER_TYPE_VIDEO_TS = 1,
+	FileContainerTypeQTMovie = 0,
+	FileContainerTypeVideoTS = 1,
 } FileContainerType;
 
 @class SapphireMetaDataUpgrading;

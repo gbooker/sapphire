@@ -401,9 +401,9 @@ NSComparisonResult dirAndLinkPathCompare(id dir1, id dir2, void *context)
 					[importArray addObject:subFile];				
 			}
 			if([fm hasVIDEO_TS:filePath])
-				subFile.fileContainerTypeValue = FILE_CONTAINER_TYPE_VIDEO_TS;
+				subFile.fileContainerTypeValue = FileContainerTypeVideoTS;
 			else
-				subFile.fileContainerTypeValue = FILE_CONTAINER_TYPE_QT_MOVIE;
+				subFile.fileContainerTypeValue = FileContainerTypeQTMovie;
 		}
 	}
 	

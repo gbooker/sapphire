@@ -263,7 +263,7 @@
 	SapphireMovie *ret;
 	if(imdbNumber != 0)
 		ret = [SapphireMovie createMovieWithIMDB:imdbNumber inContext:[self managedObjectContext]];
-	else if(title != nil && [[self file] fileClassValue] == FILE_CLASS_MOVIE)
+	else if(title != nil && [[self file] fileClassValue] == FileClassMovie)
 		ret = [SapphireMovie createMovieWithTitle:title inContext:[self managedObjectContext]];
 	else
 		return;

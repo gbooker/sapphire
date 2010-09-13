@@ -518,7 +518,7 @@
 		{
 			//QTMovie is broken on ATV, don't fetch images there
 			SapphireFileMetaData *metaData = tvState->file;
-			if ([SapphireFrontRowCompat usingLeopard] && [metaData fileContainerTypeValue] == FILE_CONTAINER_TYPE_QT_MOVIE)
+			if ([SapphireFrontRowCompat usingLeopard] && [metaData fileContainerTypeValue] == FileContainerTypeQTMovie)
 			{
 				// NSImage-Extensions
 				[[NSImage imageFromMovie:tvState->path] writeToFile:imageDestination atomically:YES];
@@ -564,8 +564,8 @@
 	if(importComplete)
 	{
 		[currentData didImportType:ImportTypeMaskTVShow];
-		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_MOVIE)
-			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
+		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FileClassMovie)
+			[currentData setFileClassValue:FileClassUnknown];
 	}
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
@@ -604,7 +604,7 @@
 		return ImportStateNotUpdated;
 	//	NSArray *pathComponents = [path pathComponents];
 	NSString *extLessPath = path;
-	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if([metaData fileContainerTypeValue] != FileContainerTypeVideoTS)
 		extLessPath = [extLessPath stringByDeletingPathExtension];
 
 	NSString *fileName = [path lastPathComponent];

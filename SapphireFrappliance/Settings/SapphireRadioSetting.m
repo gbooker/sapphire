@@ -141,7 +141,7 @@
 		/* Construct a gerneric metadata asset for display */
 		NSMutableDictionary *settingMeta=[[NSMutableDictionary alloc] init];
 		[settingMeta setObject:[choices objectAtIndex:item] forKey:META_TITLE_KEY];
-		[settingMeta setObject:[NSNumber numberWithInt:FILE_CLASS_UTILITY] forKey:FILE_CLASS_KEY];
+		[settingMeta setObject:[NSNumber numberWithInt:FileClassUtility] forKey:FILE_CLASS_KEY];
 		[settingMeta setObject:[choiceDesc objectAtIndex:item] forKey:META_DESCRIPTION_KEY];
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 		[preview setUtilityData:settingMeta];

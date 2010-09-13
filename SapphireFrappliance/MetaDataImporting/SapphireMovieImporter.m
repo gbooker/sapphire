@@ -404,8 +404,8 @@
 	if(importComplete)
 	{
 		[currentData didImportType:ImportTypeMaskMovie];
-		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_TV_SHOW)
-			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
+		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FileClassTVShow)
+			[currentData setFileClassValue:FileClassUnknown];
 	}
 	[delegate backgroundImporter:self completedImportOnPath:state->path withState:status];
 }
@@ -443,9 +443,9 @@
 {
 	NSString *path = [metaData path];
 	BOOL ret = [[NSFileManager defaultManager] acceptFilePath:path];
-	if([metaData fileContainerType] == FILE_CONTAINER_TYPE_QT_MOVIE)
+	if([metaData fileContainerType] == FileContainerTypeQTMovie)
 		ret &= [[NSFileManager videoExtensions] containsObject:[path pathExtension]];
-	if([metaData fileClassValue]==FILE_CLASS_TV_SHOW) /* File is a TV Show - skip it */
+	if([metaData fileClassValue]==FileClassTVShow) /* File is a TV Show - skip it */
 		ret = NO;
 	return ret;
 }
@@ -461,7 +461,7 @@
 		return ImportStateNotUpdated;
 	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Going to movie import %@", path);
 	NSString *extLessPath = path;
-	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if([metaData fileContainerTypeValue] != FileContainerTypeVideoTS)
 		extLessPath = [extLessPath stringByDeletingPathExtension];
 	
 	/*choose between file or directory name for lookup */

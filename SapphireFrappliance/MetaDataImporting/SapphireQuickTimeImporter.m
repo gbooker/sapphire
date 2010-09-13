@@ -119,9 +119,9 @@ NSSet *validExtensions;
 
 	int type = [[info valueForKey:TC_QT_TYPE] intValue];
 	if(type==9)
-		[dict setObject:[NSNumber numberWithInt:FILE_CLASS_MOVIE] forKey:FILE_CLASS_KEY];
+		[dict setObject:[NSNumber numberWithInt:FileClassMovie] forKey:FILE_CLASS_KEY];
 	else if(type==10) 
-		[dict setObject:[NSNumber numberWithInt:FILE_CLASS_TV_SHOW] forKey:FILE_CLASS_KEY];
+		[dict setObject:[NSNumber numberWithInt:FileClassTVShow] forKey:FILE_CLASS_KEY];
 
 	value = [info objectForKey:TC_QT_COPYRIGHT];
 	if(value != nil)

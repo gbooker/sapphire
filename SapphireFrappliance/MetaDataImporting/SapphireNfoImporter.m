@@ -48,14 +48,14 @@
 	/*Check for NFO file*/
 	BOOL nfoPathIsDir = NO;
 	NSString *extLessPath = path;
-	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if([metaData fileContainerTypeValue] != FileContainerTypeVideoTS)
 		extLessPath = [extLessPath stringByDeletingPathExtension];
 	
 	NSString *nfoFilePath=[extLessPath stringByAppendingPathExtension:@"nfo"];
 	if(![fm fileExistsAtPath:nfoFilePath isDirectory:&nfoPathIsDir] || nfoPathIsDir)
 		return ImportStateNotUpdated;
 	
-	if([metaData fileClassValue] != FILE_CLASS_UNKNOWN)
+	if([metaData fileClassValue] != FileClassUnknown)
 		return ImportStateNotUpdated;
 	
 	NSString *nfoContent = [NSString stringWithContentsOfFile:nfoFilePath];
@@ -74,12 +74,12 @@
 			//Match!!!!
 			if([[scraper contentType] isEqualToString:@"tvshows"])
 			{
-				[metaData setFileClassValue:FILE_CLASS_TV_SHOW];
+				[metaData setFileClassValue:FileClassTVShow];
 				match = YES;
 			}
 			else if([[scraper contentType] isEqualToString:@"movies"])
 			{
-				[metaData setFileClassValue:FILE_CLASS_MOVIE];
+				[metaData setFileClassValue:FileClassMovie];
 				match = YES;
 			}
 			if(match)

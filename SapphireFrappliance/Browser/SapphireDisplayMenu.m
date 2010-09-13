@@ -230,7 +230,7 @@ typedef enum {
 		/* Construct a gerneric metadata asset for display */
 		NSMutableDictionary *markMeta=[[NSMutableDictionary alloc] init];
 		[markMeta setObject:markName forKey:META_TITLE_KEY];
-		[markMeta setObject:[NSNumber numberWithInt:FILE_CLASS_UTILITY] forKey:FILE_CLASS_KEY];
+		[markMeta setObject:[NSNumber numberWithInt:FileClassUtility] forKey:FILE_CLASS_KEY];
 		[markMeta setObject:markDescription forKey:META_DESCRIPTION_KEY];
 		SapphireMediaPreview *preview = [[SapphireMediaPreview alloc] initWithScene:[self scene]];
 		[preview setUtilityData:markMeta];

@@ -513,40 +513,40 @@ static NSSet *coverArtExtentions = nil;
 	/*Get our data then*/
 	NSArray *order = nil;
 	NSMutableDictionary *allMeta = nil;
-	FileClass fileClass=FILE_CLASS_UNKNOWN ;
+	FileClass fileClass=FileClassUnknown ;
 	if([meta respondsToSelector:@selector(getDisplayedMetaDataInOrder:)])
 	{
 		allMeta=[(id)meta getDisplayedMetaDataInOrder:&order];
 		if([meta conformsToProtocol:@protocol(SapphireDirectory)])
-			fileClass=FILE_CLASS_NOT_FILE;
+			fileClass=FileClassNotFile;
 		else
 			fileClass=(FileClass)[(SapphireFileMetaData *) meta fileClassValue];
 	}
 	if(!allMeta)
-		fileClass=FILE_CLASS_UTILITY;
+		fileClass=FileClassUtility;
 	if(imageOnly)
 	{	
-		fileClass = FILE_CLASS_NOT_FILE;
+		fileClass = FileClassNotFile;
 		[allMeta removeAllObjects];
 	}
 		
 	BRMetadataLayer *metaLayer = [self gimmieMetadataLayer];
 	/* TV Show Preview Handeling */
-	if(fileClass==FILE_CLASS_TV_SHOW)
+	if(fileClass==FileClassTVShow)
 	{
 		[self  populateTVShowMetadataWith:allMeta];
 	}
 	/* Movie Preview Handeling */
-	else if(fileClass==FILE_CLASS_MOVIE)
+	else if(fileClass==FileClassMovie)
 	{
 		[self populateMovieMetadataWith:allMeta];
 	}
 	/* Utility Preview Handeling */
-	else if(fileClass == FILE_CLASS_UTILITY)
+	else if(fileClass == FileClassUtility)
 	{
 		[self populateUtilityDataWith:(NSMutableDictionary *)meta];
 	}
-	else if(fileClass != FILE_CLASS_NOT_FILE)
+	else if(fileClass != FileClassNotFile)
 	{
 		[self populateGenericMetadataWith:allMeta];
 	}

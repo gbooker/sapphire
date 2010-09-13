@@ -35,7 +35,7 @@
 	file = [aFile retain];
 	FileContainerType fileContainerType = aFile.fileContainerTypeValue;
 	CMPPlayerManagerFileType playerType = CMPPlayerManagerFileTypeQTCompatibleVideo;
-	if(fileContainerType == FILE_CONTAINER_TYPE_VIDEO_TS)
+	if(fileContainerType == FileContainerTypeVideoTS)
 		playerType = CMPPlayerManagerFileTypeVideo_TS;
 	
 	CMPPlayerManager *playerManager = [CMPPlayerManager sharedPlayerManager];

@@ -99,7 +99,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	/*Check for XML file*/
 	BOOL xmlPathIsDir = NO;
 	NSString *extLessPath = path;
-	if([metaData fileContainerTypeValue] != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if([metaData fileContainerTypeValue] != FileContainerTypeVideoTS)
 		extLessPath = [extLessPath stringByDeletingPathExtension];
 
 	NSString *xmlFilePath=[extLessPath stringByAppendingPathExtension:@"xml"];
@@ -132,16 +132,16 @@ static NSDictionary *xmlMultiAttributes = nil;
 		return ImportStateNotUpdated;
 	
 	NSString *type = [[root attributeForName:@"type"] stringValue];
-	FileClass fclass = FILE_CLASS_UNKNOWN;
+	FileClass fclass = FileClassUnknown;
 	//Need to catch the media type {"TV Show" , "Movie"}
 	if(type!=nil)
 	{
 		if([type isEqualToString:@"TV Show"])
-			fclass = FILE_CLASS_TV_SHOW;
+			fclass = FileClassTVShow;
 		else if([type isEqualToString:@"Movie"])
-			fclass = FILE_CLASS_MOVIE;
+			fclass = FileClassMovie;
 		
-		if(fclass != FILE_CLASS_UNKNOWN)
+		if(fclass != FileClassUnknown)
 			[newMetaData setObject:[NSNumber numberWithInt:fclass] forKey:FILE_CLASS_KEY];
 	}
 		
@@ -184,7 +184,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	/*Special cases*/
 	/* Screen Cap */
 	NSArray *imageCaps = [root objectsForXQuery:SCREENCAP_XML_QUERY error:&error];
-	if ( [imageCaps count] && [metaData fileContainerType] == FILE_CONTAINER_TYPE_QT_MOVIE )
+	if ( [imageCaps count] && [metaData fileContainerType] == FileContainerTypeQTMovie )
 	{
 		unsigned int hour;
 		unsigned int minute;

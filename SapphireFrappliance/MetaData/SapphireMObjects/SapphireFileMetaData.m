@@ -243,7 +243,7 @@ static NSSet *secondaryFiles;
 		self.tvEpisode = ep;
 		if(ep != nil)
 		{
-			self.fileClassValue = FILE_CLASS_TV_SHOW;
+			self.fileClassValue = FileClassTVShow;
 			NSString *epCoverPath = [[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:[ep path]];
 			NSString *oldBasePath = [[epCoverPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:[self fileName]];
 			NSString *oldCoverPath = searchCoverArtExtForPath(oldBasePath);
@@ -264,7 +264,7 @@ static NSSet *secondaryFiles;
 		self.movie = movie;
 		if(movie != nil)
 		{
-			self.fileClassValue = FILE_CLASS_MOVIE;
+			self.fileClassValue = FileClassMovie;
 			NSString *movieCoverPath = [movie coverArtPath];
 			NSString *oldBasePath = [[[SapphireMetaDataSupport collectionArtPath] stringByAppendingPathComponent:@"@MOVIES"] stringByAppendingPathComponent:[self fileName]];
 			NSString *oldCoverPath = searchCoverArtExtForPath(oldBasePath);
@@ -341,7 +341,7 @@ static NSSet *secondaryFiles;
 	/*Check modified date*/
 	NSString *path = nil;
 	NSFileManager *fm = [NSFileManager defaultManager];
-	if([self fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS)
+	if([self fileContainerTypeValue] == FileContainerTypeVideoTS)
 	{
 		NSString *vtsPath = [self.path stringByAppendingPathComponent:@"VIDEO_TS"];
 		NSEnumerator *fileEnum = [[fm directoryContentsAtPath:vtsPath] objectEnumerator];
@@ -404,10 +404,10 @@ static NSSet *secondaryFiles;
 	//Match imports, but exclude xml and file b/c they are tracked through other means
 	int match = ImportTypeMaskAll & ~ImportTypeMaskFile & ~ImportTypeMaskXML;
 	switch (self.fileClassValue) {
-		case FILE_CLASS_TV_SHOW:
+		case FileClassTVShow:
 			match &= ~ImportTypeMaskMovie;
 			break;
-		case FILE_CLASS_MOVIE:
+		case FileClassMovie:
 			match &= ~ImportTypeMaskTVShow;
 			break;
 		default:
@@ -443,7 +443,7 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type)
 	NSString *modifiedPath = path;
 	NSFileManager *fm = [NSFileManager defaultManager];
 	
-	if(type == FILE_CONTAINER_TYPE_VIDEO_TS)
+	if(type == FileContainerTypeVideoTS)
 	{
 		NSString *vtsPath = [path stringByAppendingPathComponent:@"VIDEO_TS"];
 		NSEnumerator *fileEnum = [[fm directoryContentsAtPath:vtsPath] objectEnumerator];
@@ -464,7 +464,7 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type)
 	[fileMeta setObject:[NSNumber numberWithInt:modTime] forKey:META_FILE_MODIFIED_KEY];
 	[fileMeta setObject:[props objectForKey:NSFileSize] forKey:META_FILE_SIZE_KEY];
 	
-	if(type == FILE_CONTAINER_TYPE_QT_MOVIE)
+	if(type == FileContainerTypeQTMovie)
 	{
 		/*Open the movie*/
 		NSError *error = nil;
@@ -557,7 +557,7 @@ NSDictionary *fileMetaData(NSString *path, FileContainerType type)
 			} 
 		}
 	} //QTMovie
-	else if(type == FILE_CONTAINER_TYPE_VIDEO_TS)
+	else if(type == FileContainerTypeVideoTS)
 	{
 		SapphireVideoTsParser *dvd = [[SapphireVideoTsParser alloc] initWithPath:path];
 		id description = [dvd videoFormatsString];
@@ -756,9 +756,9 @@ NSString *sizeStringForSize(float size)
 	NSString *fileName = [subPath lastPathComponent];
 	NSString * myArtPath=nil;
 	
-	if([self fileClassValue]==FILE_CLASS_TV_SHOW)
+	if([self fileClassValue]==FileClassTVShow)
 		myArtPath=[[self tvEpisode] coverArtPath];
-	if([self fileClassValue]==FILE_CLASS_MOVIE)
+	if([self fileClassValue]==FileClassMovie)
 		myArtPath=[[self movie] coverArtPath];
 	
 	/* Check the Collection Art location */
@@ -839,7 +839,7 @@ static NSString *movingToPath = @"To";
 	NSEnumerator *secondaryExtEnum = [secondaryFiles objectEnumerator];
 	NSString *extension;
 	NSString *newExtlessPath = newPath;
-	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if(self.fileContainerTypeValue != FileContainerTypeVideoTS)
 		newExtlessPath = [newExtlessPath stringByDeletingPathExtension];
 	
 	while((extension = [secondaryExtEnum nextObject]) != nil)
@@ -901,7 +901,7 @@ static NSString *movingToPath = @"To";
 	if(componentCount != 1)
 		return BRLocalizedString(@"A File name should not contain any '/' characters", @"Error indicating that filenames cannot contain / characters");
 	NSString *oldPath = [self path];
-	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if(self.fileContainerTypeValue != FileContainerTypeVideoTS)
 		newFilename = [newFilename stringByAppendingPathExtension:[oldPath pathExtension]];
 	NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newFilename];
 	if([oldPath isEqualToString:newPath])
@@ -995,7 +995,7 @@ static NSString *movingToPath = @"To";
 - (NSString *)fileName
 {
 	NSString *ret = [self.path lastPathComponent];
-	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if(self.fileContainerTypeValue != FileContainerTypeVideoTS)
 		ret = [ret stringByDeletingPathExtension];
 	
 	return ret;
@@ -1004,7 +1004,7 @@ static NSString *movingToPath = @"To";
 - (NSString *)extensionlessPath
 {
 	NSString *ret = self.path;
-	if(self.fileContainerTypeValue != FILE_CONTAINER_TYPE_VIDEO_TS)
+	if(self.fileContainerTypeValue != FileContainerTypeVideoTS)
 		ret = [ret stringByDeletingPathExtension];
 	
 	return ret;
@@ -1174,7 +1174,7 @@ static NSString *movingToPath = @"To";
 		return;
 	if(movie != nil)
 	{
-		[self setFileClassValue:FILE_CLASS_MOVIE];
+		[self setFileClassValue:FileClassMovie];
 		self.importTypeValue |= ImportTypeMaskMovie;
 	}
 	if(movie != oldMovie)
@@ -1189,7 +1189,7 @@ static NSString *movingToPath = @"To";
 		return;
 	if(ep != nil)
 	{
-		[self setFileClassValue:FILE_CLASS_TV_SHOW];
+		[self setFileClassValue:FileClassTVShow];
 		self.importTypeValue |= ImportTypeMaskTVShow;
 	}
 	if(ep != oldEp)
@@ -1211,7 +1211,7 @@ static NSString *movingToPath = @"To";
 - (FileClass)fileClassValue
 {
 	FileClass xmlClass = self.xmlData.fileClassValue;
-	if(xmlClass != FILE_CLASS_UNKNOWN)
+	if(xmlClass != FileClassUnknown)
 		return xmlClass;
 	return super.fileClassValue;
 }
@@ -1219,8 +1219,8 @@ static NSString *movingToPath = @"To";
 - (void)setFileClassValue:(FileClass)fileClass
 {
 	FileClass xmlClass = self.xmlData.fileClassValue;
-	if(xmlClass != FILE_CLASS_UNKNOWN)
-		self.xmlData.fileClassValue = FILE_CLASS_UNKNOWN;
+	if(xmlClass != FileClassUnknown)
+		self.xmlData.fileClassValue = FileClassUnknown;
 	super.fileClassValue = fileClass;
 }
 

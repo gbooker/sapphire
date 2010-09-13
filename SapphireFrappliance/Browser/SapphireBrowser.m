@@ -307,7 +307,7 @@ static BOOL is10Version = NO;
 			{
 				fileCls=[meta fileClassValue];
 				BOOL rightTextSet = NO;
-				if(fileCls==FILE_CLASS_TV_SHOW)
+				if(fileCls==FileClassTVShow)
 				{
 					SapphireEpisode *ep = [meta tvEpisode];
 					/*Display episode number if available*/
@@ -328,7 +328,7 @@ static BOOL is10Version = NO;
 						rightTextSet = YES;
 					}
 				}
-				if(fileCls==FILE_CLASS_MOVIE)
+				if(fileCls==FileClassMovie)
 				{
 					SapphireMovie *movie = [meta movie];
 					displayName=[movie title];
@@ -383,7 +383,7 @@ static BOOL is10Version = NO;
 		else if(partiallyWatched) gemString = RED_BLUE_GEM_KEY;
 		else if(!watched) gemString = BLUE_GEM_KEY;
 		else if(favorite) gemString = YELLOW_GEM_KEY;
-		else if(fileCls==FILE_CLASS_AUDIO) gemString = GREEN_GEM_KEY;
+		else if(fileCls==FileClassAudio) gemString = GREEN_GEM_KEY;
 		else gemString = RED_GEM_KEY;;
 		[SapphireFrontRowCompat setLeftIcon:[theme gem:gemString] forMenu:result];
 		
@@ -455,7 +455,7 @@ static BOOL is10Version = NO;
 		ext=[[path pathExtension]lowercaseString] ;
 	}
 	
-	if([currentPlayFile fileClassValue] == FILE_CLASS_TV_SHOW)
+	if([currentPlayFile fileClassValue] == FileClassTVShow)
 	{
 		SapphireEpisode *episode = [currentPlayFile tvEpisode];
 		fileClass=1;
@@ -472,7 +472,7 @@ static BOOL is10Version = NO;
 		if(showName != 0)
 			[reqComp addObject:[NSString stringWithFormat:@"showname=%@", showName]];
 	}
-	else if([currentPlayFile fileClassValue] == FILE_CLASS_MOVIE)
+	else if([currentPlayFile fileClassValue] == FileClassMovie)
 	{
 		fileClass=2;
 		request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/movie.php"]];
@@ -491,11 +491,11 @@ static BOOL is10Version = NO;
 	{
 		request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://appletv.nanopi.net/ext.php"]];
 		//The fileClass is never used in these cases later
-		//				if([currentPlayFile fileClassValue] == FILE_CLASS_UNKNOWN)
+		//				if([currentPlayFile fileClassValue] == FileClassUnknown)
 		//					 fileClass=0;
-		//				if([currentPlayFile fileClassValue] == FILE_CLASS_AUDIO)
+		//				if([currentPlayFile fileClassValue] == FileClassAudio)
 		//					 fileClass=3;
-		if([currentPlayFile fileClassValue] == FILE_CLASS_OTHER)
+		if([currentPlayFile fileClassValue] == FileClassOther)
 			fileClass=5;
 		else
 			fileClass=99;
@@ -557,7 +557,7 @@ static BOOL is10Version = NO;
 		[self anonymousReportFile:currentPlayFile withPath:path];
 	}
 	
-	if([currentPlayFile fileContainerTypeValue] == FILE_CONTAINER_TYPE_VIDEO_TS && path != nil)
+	if([currentPlayFile fileContainerTypeValue] == FileContainerTypeVideoTS && path != nil)
 	{
 		SapphireCMPWrapper *wrapper = [[SapphireCMPWrapper alloc] initWithFile:currentPlayFile scene:[self scene]];
 		id controller = [wrapper controller];
