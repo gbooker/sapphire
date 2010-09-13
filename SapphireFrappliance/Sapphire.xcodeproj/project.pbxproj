@@ -101,6 +101,8 @@
 		F56B765E0C3837CE00E934AA /* SapphireShowChooser.m in Sources */ = {isa = PBXBuildFile; fileRef = F56B765D0C3837CE00E934AA /* SapphireShowChooser.m */; };
 		F56B77D70C3858B400E934AA /* DefaultPreview.png in Resources */ = {isa = PBXBuildFile; fileRef = F56B77D60C3858B400E934AA /* DefaultPreview.png */; };
 		F571B7AE0E9C360500B7FD9D /* NSManagedObject-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F571B7AD0E9C360500B7FD9D /* NSManagedObject-Extensions.m */; };
+		F571FA3E11FB366A00FE07AE /* SapphireQTMovieParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F571FA3B11FB366A00FE07AE /* SapphireQTMovieParser.m */; };
+		F571FA3F11FB366A00FE07AE /* SapphireQuickTimeImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = F571FA3D11FB366A00FE07AE /* SapphireQuickTimeImporter.m */; };
 		F582536710E5228B00E832C7 /* _SapphireTranslation.m in Sources */ = {isa = PBXBuildFile; fileRef = F582536610E5228B00E832C7 /* _SapphireTranslation.m */; };
 		F582536B10E522C400E832C7 /* SapphireTranslation.m in Sources */ = {isa = PBXBuildFile; fileRef = F582536A10E522C400E832C7 /* SapphireTranslation.m */; };
 		F58AAF7A0ECFB04F0071CF4B /* SapphireLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = F58AAF790ECFB04F0071CF4B /* SapphireLogging.m */; };
@@ -515,6 +517,10 @@
 		F56B77D60C3858B400E934AA /* DefaultPreview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPreview.png; sourceTree = "<group>"; };
 		F571B7AC0E9C360500B7FD9D /* NSManagedObject-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject-Extensions.h"; sourceTree = "<group>"; };
 		F571B7AD0E9C360500B7FD9D /* NSManagedObject-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject-Extensions.m"; sourceTree = "<group>"; };
+		F571FA3A11FB366A00FE07AE /* SapphireQTMovieParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireQTMovieParser.h; sourceTree = "<group>"; };
+		F571FA3B11FB366A00FE07AE /* SapphireQTMovieParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireQTMovieParser.m; sourceTree = "<group>"; };
+		F571FA3C11FB366A00FE07AE /* SapphireQuickTimeImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireQuickTimeImporter.h; sourceTree = "<group>"; };
+		F571FA3D11FB366A00FE07AE /* SapphireQuickTimeImporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SapphireQuickTimeImporter.m; sourceTree = "<group>"; };
 		F582536510E5228B00E832C7 /* _SapphireTranslation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SapphireTranslation.h; sourceTree = "<group>"; };
 		F582536610E5228B00E832C7 /* _SapphireTranslation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SapphireTranslation.m; sourceTree = "<group>"; };
 		F582536910E522C400E832C7 /* SapphireTranslation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SapphireTranslation.h; sourceTree = "<group>"; };
@@ -1012,6 +1018,10 @@
 				F542052710E6D1FE007B0D3A /* SapphireNfoImporter.m */,
 				FE4BE49D0CBEAC7F00A7B24E /* SapphirePosterChooser.h */,
 				FE4BE49E0CBEAC7F00A7B24E /* SapphirePosterChooser.m */,
+				F571FA3A11FB366A00FE07AE /* SapphireQTMovieParser.h */,
+				F571FA3B11FB366A00FE07AE /* SapphireQTMovieParser.m */,
+				F571FA3C11FB366A00FE07AE /* SapphireQuickTimeImporter.h */,
+				F571FA3D11FB366A00FE07AE /* SapphireQuickTimeImporter.m */,
 				F5F515E810DD8B21006B9DED /* SapphireSiteScraper.h */,
 				F5F515E910DD8B21006B9DED /* SapphireSiteScraper.m */,
 				F5F5156910DD7BA2006B9DED /* SapphireScraper.h */,
@@ -1322,6 +1332,7 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB913E08733D840010E9CD /* Build configuration list for PBXProject "Sapphire" */;
 			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -1592,6 +1603,8 @@
 				F542052810E6D1FE007B0D3A /* SapphireNfoImporter.m in Sources */,
 				F595C614111A679D00C6C322 /* SapphireCMPWrapper.m in Sources */,
 				F5E3375810E98D7D00D252B6 /* SapphireOtherInformation.m in Sources */,
+				F571FA3E11FB366A00FE07AE /* SapphireQTMovieParser.m in Sources */,
+				F571FA3F11FB366A00FE07AE /* SapphireQuickTimeImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

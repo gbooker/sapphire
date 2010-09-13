@@ -563,7 +563,7 @@
 	SapphireFileMetaData *currentData = state->file;
 	if(importComplete)
 	{
-		[currentData didImportType:IMPORT_TYPE_TVSHOW_MASK];
+		[currentData didImportType:ImportTypeMaskTVShow];
 		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_MOVIE)
 			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
 	}
@@ -600,7 +600,7 @@
 {
 	cancelled = NO;
 	/*Check to see if it is already imported*/
-	if([metaData importTypeValue] & IMPORT_TYPE_TVSHOW_MASK)
+	if([metaData importTypeValue] & ImportTypeMaskTVShow)
 		return ImportStateNotUpdated;
 	//	NSArray *pathComponents = [path pathComponents];
 	NSString *extLessPath = path;
@@ -641,7 +641,7 @@
 	/*See if we found a match*/
 	if(index == NSNotFound)
 	{	
-		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
+		[metaData didImportType:ImportTypeMaskTVShow];
 		return ImportStateNotUpdated;
 	}
 	
@@ -671,7 +671,7 @@
 	/*No season, no info*/
 	if(season == 0)
 	{	
-		[metaData didImportType:IMPORT_TYPE_TVSHOW_MASK];
+		[metaData didImportType:ImportTypeMaskTVShow];
 		return ImportStateNotUpdated;
 	}
 	

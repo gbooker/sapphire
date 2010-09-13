@@ -61,11 +61,12 @@ extern NSString *META_FILE_JOINED_FILE_KEY;
 
 
 typedef enum {
-	IMPORT_TYPE_FILE_MASK = 1,
-	IMPORT_TYPE_XML_MASK = 2,
-	IMPORT_TYPE_TVSHOW_MASK = 4,
-	IMPORT_TYPE_MOVIE_MASK = 8,
-	IMPORT_TYPE_ALL_MASK = 0xf,
+	ImportTypeMaskFile = 1,
+	ImportTypeMaskXML = 2,
+	ImportTypeMaskTVShow = 4,
+	ImportTypeMaskMovie = 8,
+	ImportTypeMaskQT = 0x10,
+	ImportTypeMaskAll = 0x1f,
 } ImportTypeMask;
 
 

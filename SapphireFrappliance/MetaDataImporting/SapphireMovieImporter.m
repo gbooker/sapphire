@@ -403,7 +403,7 @@
 	SapphireFileMetaData *currentData = state->file;
 	if(importComplete)
 	{
-		[currentData didImportType:IMPORT_TYPE_MOVIE_MASK];
+		[currentData didImportType:ImportTypeMaskMovie];
 		if (status == ImportStateNotUpdated && [currentData fileClassValue] != FILE_CLASS_TV_SHOW)
 			[currentData setFileClassValue:FILE_CLASS_UNKNOWN];
 	}
@@ -454,7 +454,7 @@
 {
 	cancelled = NO;
 	/*Check to see if it is already imported*/
-	if([metaData importTypeValue] & IMPORT_TYPE_MOVIE_MASK)
+	if([metaData importTypeValue] & ImportTypeMaskMovie)
 		return ImportStateNotUpdated;
 	/*Get path*/
 	if(![self isMovieCandidate:metaData])

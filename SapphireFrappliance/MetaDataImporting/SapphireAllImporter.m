@@ -24,17 +24,20 @@
 #import "SapphireTVShowImporter.h"
 #import "SapphireMovieImporter.h"
 #import "SapphireNfoImporter.h"
+#import "SapphireQuickTimeImporter.h"
 
 @implementation SapphireAllImporter
 
 - (id) init
 {
+	SapphireQuickTimeImporter *qt = [[SapphireQuickTimeImporter alloc] init];
 	SapphireXMLFileDataImporter *xml = [[SapphireXMLFileDataImporter alloc] init];
 	SapphireFileDataImporter *file = [[SapphireFileDataImporter alloc] init];
 	SapphireNfoImporter *nfo = [[SapphireNfoImporter alloc] init];
 	SapphireTVShowImporter *tv = [[SapphireTVShowImporter alloc] init];
 	SapphireMovieImporter *movie = [[SapphireMovieImporter alloc] init];
 	NSArray *ourImporters = [[NSArray alloc] initWithObjects:
+							 qt,
 							 xml,
 							 nfo,
 							 file,

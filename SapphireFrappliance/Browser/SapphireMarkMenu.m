@@ -319,7 +319,7 @@ static NSString *movingPath = nil;
 			[marks removeObjectAtIndex:0];
 		}
 		int importType = [fileMeta importTypeValue];
-		if(importType | IMPORT_TYPE_TVSHOW_MASK)
+		if(importType | ImportTypeMaskTVShow)
 		{
 			[marks addObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
@@ -328,7 +328,7 @@ static NSString *movingPath = nil;
 					[NSNumber numberWithInt:COMMAND_MARK_TO_REFETCH_TV], MARK_COMMAND,
 					nil]];
 		}
-		if(importType | IMPORT_TYPE_MOVIE_MASK)
+		if(importType | ImportTypeMaskMovie)
 		{
 			[marks addObject:
 				[NSDictionary dictionaryWithObjectsAndKeys:
@@ -634,10 +634,10 @@ static NSString *movingPath = nil;
 				setSubtreeToFavorite(dirMeta, NO);
 				break;
 			case COMMAND_MARK_TO_REFETCH_TV:
-				setSubtreeToReimportFromMask(dirMeta, IMPORT_TYPE_TVSHOW_MASK);
+				setSubtreeToReimportFromMask(dirMeta, ImportTypeMaskTVShow);
 				break;
 			case COMMAND_MARK_TO_REFETCH_MOVIE:
-				setSubtreeToReimportFromMask(dirMeta, IMPORT_TYPE_MOVIE_MASK);
+				setSubtreeToReimportFromMask(dirMeta, ImportTypeMaskMovie);
 				break;
 			case COMMAND_MARK_TO_DELETE_METADATA:
 				setSubtreeToClearMetaData(dirMeta);
@@ -739,10 +739,10 @@ static NSString *movingPath = nil;
 				[fileMeta setFavoriteValue:NO];
 				break;
 			case COMMAND_MARK_TO_REFETCH_TV:
-				[fileMeta setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
+				[fileMeta setToReimportFromMaskValue:ImportTypeMaskTVShow];
 				break;
 			case COMMAND_MARK_TO_REFETCH_MOVIE:
-				[fileMeta setToReimportFromMaskValue:IMPORT_TYPE_MOVIE_MASK];
+				[fileMeta setToReimportFromMaskValue:ImportTypeMaskMovie];
 				break;
 			case COMMAND_MARK_TO_DELETE_METADATA:
 				[fileMeta clearMetaData];

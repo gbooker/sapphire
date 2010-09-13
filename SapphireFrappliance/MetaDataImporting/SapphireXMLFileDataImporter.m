@@ -118,7 +118,7 @@ static NSDictionary *xmlMultiAttributes = nil;
 	memset(&sb, 0, sizeof(struct stat));
 	stat([xmlFilePath fileSystemRepresentation], &sb);
 	long modTime = sb.st_mtimespec.tv_sec;
-	long oldTime = [metaData importedTimeFromSource:IMPORT_TYPE_XML_MASK];
+	long oldTime = [metaData importedTimeFromSource:ImportTypeMaskXML];
 	if(oldTime == modTime)
 		return ImportStateNotUpdated;
 

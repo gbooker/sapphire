@@ -173,7 +173,7 @@ static NSSet *secondaryFiles;
 		newFile.fileClass = [oldFile valueForKey:@"fileClass"];
 		newFile.fileContainerType = [oldFile valueForKey:@"fileContainerType"];
 		newFile.hasVideo = [oldFile valueForKey:@"hasVideo"];
-		newFile.importTypeValue = [[oldFile valueForKey:@"importType"] intValue] & ~IMPORT_TYPE_XML_MASK;
+		newFile.importTypeValue = [[oldFile valueForKey:@"importType"] intValue] & ~ImportTypeMaskXML;
 		newFile.modified = [oldFile valueForKey:@"modified"];
 		newFile.added = [oldFile valueForKey:@"modified"];
 		newFile.resumeTime = [oldFile valueForKey:@"resumeTime"];
@@ -234,7 +234,7 @@ static NSSet *secondaryFiles;
 		}
 		[xml insertDictionary:xmlDict];
 		xml.modified = [NSDate dateWithTimeIntervalSince1970:[[xmlDict objectForKey:META_FILE_MODIFIED_KEY] intValue]];
-		self.importTypeValue |= IMPORT_TYPE_XML_MASK;
+		self.importTypeValue |= ImportTypeMaskXML;
 	}
 	value = [dict objectForKey:@"TVRage Source"];
 	if(value != nil)
@@ -255,7 +255,7 @@ static NSSet *secondaryFiles;
 			}
 			[(NSMutableDictionary *)[defer objectForKey:@"TV Shows"] setObject:ep.tvShow forKey:[value objectForKey:META_SHOW_IDENTIFIER_KEY]];
 		}
-		self.importTypeValue |= IMPORT_TYPE_TVSHOW_MASK;
+		self.importTypeValue |= ImportTypeMaskTVShow;
 	}
 	value = [dict objectForKey:@"IMDB Source"];
 	if(value != nil)
@@ -275,7 +275,7 @@ static NSSet *secondaryFiles;
 				[fm movePath:oldCoverPath toPath:newPath handler:nil];
 			}
 		}
-		self.importTypeValue |= IMPORT_TYPE_MOVIE_MASK;
+		self.importTypeValue |= ImportTypeMaskMovie;
 	}
 	NSString *joinPath = [dict objectForKey:META_FILE_JOINED_FILE_KEY];
 	if(joinPath != nil)
@@ -397,18 +397,18 @@ static NSSet *secondaryFiles;
 	int modTime = 0;
 	if(xmlProps)
 		modTime = [[xmlProps objectForKey:NSFileModificationDate] timeIntervalSince1970];
-	if(modTime != [self importedTimeFromSource:IMPORT_TYPE_XML_MASK])
+	if(modTime != [self importedTimeFromSource:ImportTypeMaskXML])
 		//XML modification time does not match our last import
 		return YES;
 	
-	//Match improrts, but exclude xml and file b/c they are tracked through other means
-	int match = IMPORT_TYPE_ALL_MASK & ~IMPORT_TYPE_FILE_MASK & ~IMPORT_TYPE_XML_MASK;
+	//Match imports, but exclude xml and file b/c they are tracked through other means
+	int match = ImportTypeMaskAll & ~ImportTypeMaskFile & ~ImportTypeMaskXML;
 	switch (self.fileClassValue) {
 		case FILE_CLASS_TV_SHOW:
-			match &= ~IMPORT_TYPE_MOVIE_MASK;
+			match &= ~ImportTypeMaskMovie;
 			break;
 		case FILE_CLASS_MOVIE:
-			match &= ~IMPORT_TYPE_TVSHOW_MASK;
+			match &= ~ImportTypeMaskTVShow;
 			break;
 		default:
 			break;
@@ -652,14 +652,14 @@ NSString *sizeStringForSize(float size)
 {
 	int currentMask = self.importTypeValue;
 	self.importTypeValue = currentMask & ~mask;
-	if(mask & IMPORT_TYPE_MOVIE_MASK)
+	if(mask & ImportTypeMaskMovie)
 	{
 		SapphireMovie *movie = self.movie;
 		self.movie = nil;
 		if(movie != nil && [movie.filesSet count] == 0)
 			[[self managedObjectContext] deleteObject:movie];
 	}
-	if(mask & IMPORT_TYPE_TVSHOW_MASK)
+	if(mask & ImportTypeMaskTVShow)
 	{
 		SapphireEpisode *ep = self.tvEpisode;
 		self.tvEpisode = nil;
@@ -720,7 +720,7 @@ NSString *sizeStringForSize(float size)
 		}
 	}	
 	
-	[self setToReimportFromMaskValue:IMPORT_TYPE_ALL_MASK];
+	[self setToReimportFromMaskValue:ImportTypeMaskAll];
 }
 
 - (void)clearMetaData
@@ -1154,9 +1154,9 @@ static NSString *movingToPath = @"To";
 
 - (long)importedTimeFromSource:(int)source
 {
-	if(source == IMPORT_TYPE_FILE_MASK)
+	if(source == ImportTypeMaskFile)
 		return [self.modified timeIntervalSince1970];
-	else if(source == IMPORT_TYPE_XML_MASK)
+	else if(source == ImportTypeMaskXML)
 		return [self.xmlData.modified timeIntervalSince1970];
 	return 0;
 }
@@ -1175,7 +1175,7 @@ static NSString *movingToPath = @"To";
 	if(movie != nil)
 	{
 		[self setFileClassValue:FILE_CLASS_MOVIE];
-		self.importTypeValue |= IMPORT_TYPE_MOVIE_MASK;
+		self.importTypeValue |= ImportTypeMaskMovie;
 	}
 	if(movie != oldMovie)
 		self.xmlData.movie = movie;
@@ -1190,7 +1190,7 @@ static NSString *movingToPath = @"To";
 	if(ep != nil)
 	{
 		[self setFileClassValue:FILE_CLASS_TV_SHOW];
-		self.importTypeValue |= IMPORT_TYPE_TVSHOW_MASK;
+		self.importTypeValue |= ImportTypeMaskTVShow;
 	}
 	if(ep != oldEp)
 		self.xmlData.episode = ep;
