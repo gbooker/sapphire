@@ -55,7 +55,8 @@
 					Media qtMedia = [media quickTimeMedia];
 					short count;
 					GetMediaDataRefCount(qtMedia, &count);
-					for(int i=0; i<count; i++)
+					int i;
+					for(i=0; i<count; i++)
 					{
 						Handle dataRef;
 						OSType dataRefType;
