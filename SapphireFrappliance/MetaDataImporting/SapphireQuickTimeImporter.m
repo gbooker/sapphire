@@ -133,11 +133,15 @@ NSSet *validExtensions;
 	
 	BOOL doImport = YES;
 	if(type==10)
+	{
 		if([metaData importTypeValue] & ImportTypeMaskTVShow)
 			doImport = NO;
+	}
 	else if(type == 9)
+	{
 		if([metaData importTypeValue] & ImportTypeMaskMovie)
 			doImport = NO;
+	}
 
 	NSManagedObjectContext *moc = [metaData managedObjectContext];
 	if(doImport)

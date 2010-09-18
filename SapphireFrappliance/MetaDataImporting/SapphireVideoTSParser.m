@@ -118,7 +118,7 @@ static NSString *commaSeparatedStringFromCollection( const NSSet * const set )
 	NSMutableString * const str        = [NSMutableString stringWithString:[enumerator nextObject]];
 	const NSString        *       element    = nil;
 	
-	while( element = [enumerator nextObject] )
+	while((element = [enumerator nextObject]) != nil)
 		[str appendFormat:@", %@", element];
 	
 	return str;
@@ -185,7 +185,7 @@ static unsigned int bcdDecode( const unsigned char timeAsBCD )
 	unsigned long long total = 0;
 
 	// The largest IFO file (not including VIDEO_TS.IFO) corresponds to the main feature
-	while( filePath = [enumerator nextObject] )
+	while((filePath = [enumerator nextObject]) != nil)
 	{
 		unsigned long long sz = [[[fm fileAttributesAtPath:[videotsPath stringByAppendingPathComponent:filePath] traverseLink:YES] valueForKey:NSFileSize] unsignedLongLongValue];
 		total += sz;
