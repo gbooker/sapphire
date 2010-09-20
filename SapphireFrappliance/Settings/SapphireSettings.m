@@ -551,7 +551,7 @@ typedef enum {
 	while([loader loadingURLCount] != 0)
 		usleep(100000);
 	
-	SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Restart Needed", @"Restart Needed") longError:BRLocalizedString(@"You must exist Frontrow for new scrapers to take effect", @"You must exist Frontrow for new scrapers to take effect")];
+	SapphireErrorDisplayController *error = [[SapphireErrorDisplayController alloc] initWithScene:[self scene] error:BRLocalizedString(@"Restart Needed", @"Restart Needed") longError:BRLocalizedString(@"You must exit Frontrow for new scrapers to take effect", @"You must exit Frontrow for new scrapers to take effect")];
 	return [error autorelease];
 }
 
