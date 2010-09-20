@@ -611,6 +611,10 @@ static BOOL usingATypeOfTakeThree = NO;
 			case kBREventRemoteActionTake302SwipeDown:
 				return action - 2;
 				break;
+			case kBREventRemoteActionTake302TouchBegin:
+			case kBREventRemoteActionTake302TouchMove:
+				return 0;
+				break;
 			default:
 				return action;
 				break;
