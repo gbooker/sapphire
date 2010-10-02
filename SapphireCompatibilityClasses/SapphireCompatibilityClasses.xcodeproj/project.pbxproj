@@ -448,7 +448,14 @@
 			isa = PBXProject;
 			buildConfigurationList = F51BFCAA0D26B86800E22363 /* Build configuration list for PBXProject "SapphireCompatibilityClasses" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = F51BFCA50D26B86800E22363;
 			productRefGroup = F51BFCD20D26BAED00E22363 /* Products */;
 			projectDirPath = "";
