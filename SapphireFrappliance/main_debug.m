@@ -260,14 +260,13 @@ int main(int argc, char *argv[])
 #ifdef TESTING_UPDATED_VALUES
 	{
 		NSString *path = @"/Users/gbooker/Movies/Little Einsteins.avi";
-		SapphireFileMetaData *meta = [SapphireFileMetaData fileWithPath:path inContext:moc];
+		SapphireFileMetaData *meta = [SapphireFileMetaData createFileWithPath:path inContext:moc];
 		[meta clearMetaData];
 		[importManager importer:allImporter importMetaData:meta path:[meta path]];
 		
 		NSDictionary *changes = [SapphireMetaDataSupport changesDictionaryForContext:moc];
 		[moc reset];
 		[SapphireMetaDataSupport applyChanges:changes toContext:moc];
-		[allImporter release];
 	}
 #endif
 #ifdef TESTING_DIRECTORY_RESCAN
@@ -305,7 +304,7 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/MovieTests/FIFTH_ELEMENT.mov" inContext:moc];
 		SapphireMovieImporter *import = [[SapphireMovieImporter alloc] init];
-		[file setToReimportFromMaskValue:IMPORT_TYPE_MOVIE_MASK];
+		[file setToReimportFromMaskValue:ImportTypeMaskMovie];
 		[file setToResetImportDecisions];
 		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
@@ -315,7 +314,7 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Doctor Who (2005) S03ES1 Voyage of the Damned.avi" inContext:moc];
 		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
-		[file setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
+		[file setToReimportFromMaskValue:ImportTypeMaskTVShow];
 		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 	}
@@ -324,7 +323,7 @@ int main(int argc, char *argv[])
 	{
 		SapphireFileMetaData *file = [SapphireFileMetaData createFileWithPath:@"/Users/gbooker/Movies/TVShowsTests/Stargate Atlantis S01E01-E02.avi" inContext:moc];
 		SapphireTVShowImporter *import = [[SapphireTVShowImporter alloc] init];
-		[file setToReimportFromMaskValue:IMPORT_TYPE_TVSHOW_MASK];
+		[file setToReimportFromMaskValue:ImportTypeMaskTVShow];
 		[importManager importer:import importMetaData:file path:[file path]];
 		[import release];
 		
