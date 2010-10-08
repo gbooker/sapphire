@@ -91,7 +91,9 @@
 	for(importIndex = state->currentImportIndex;importIndex < count; importIndex++)
 	{
 		id <SapphireImporter> importer = [importers objectAtIndex:importIndex];
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Going to import %@ for %@", importer, path);
 		ImportState result = [importer importMetaData:metaData path:path];
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Import result was %d", result);
 		switch(result)
 		{
 			case ImportStateMultipleSuspend:
@@ -161,6 +163,7 @@
 
 - (void)backgroundImporter:(id <SapphireImporter>)importer completedImportOnPath:(NSString *)path withState:(ImportState)status
 {
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Importer %@ finish on %@ with state %d", importer, path, status);
 	SapphireMultipleImporterState *state = [pendingImports objectForKey:path];
 	if(!state)
 		//Don't know what to do with you!
@@ -193,6 +196,7 @@
 	{	
 		if(state->updated)
 			status = ImportStateUpdated;
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"All Importers Complete");
 		[delegate backgroundImporter:self completedImportOnPath:path withState:status];
 		[pendingImports removeObjectForKey:path];
 	}
