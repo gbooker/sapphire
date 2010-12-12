@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.1" date="2010-10-12" name="IMDb.com" content="movies" thumb="imdb.png" language="en">
+<scraper framework="1.1" date="2010-12-12" name="IMDb.com" content="movies" thumb="imdb.png" language="en">
 	<include>common/imdb.xml</include>
 	<include>common/tmdb.xml</include>
 	<include>common/movieposterdb.xml</include>
@@ -59,7 +59,7 @@
 				<expression clear="yes">/title/([t0-9]*)/faq</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;entity&gt;&lt;title&gt;\1&lt;/title&gt;&lt;year&gt;\2&lt;/year&gt;&lt;url&gt;http://$INFO[url]/title/$$7/&lt;/url&gt;&lt;id&gt;$$7&lt;/id&gt;&lt;/entity&gt;" dest="5">
-				<expression clear="yes" noclean="1">&lt;meta name=&quot;title&quot; content=&quot;([^&quot;]*) \(([0-9]*)\)</expression>
+				<expression clear="yes" noclean="1">&lt;meta name=&quot;title&quot; content=&quot;([^&quot;]*) \((?:Video )?([0-9]*)\)</expression>
 			</RegExp>
 			<RegExp input="$$1" output="\1" dest="4">
 				<expression noclean="1">(&gt;&lt;a href=&quot;/title.*)</expression>
