@@ -24,7 +24,7 @@
 	<GetDetails dest="7">
 		<RegExp input="$$5" output="&lt;details&gt;\1&lt;/details&gt;" dest="7">
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
-				<expression>&lt;h1 [^&gt;]*content_title hover_blue[^&gt;]*&gt;&lt;a [^&gt;]*&gt;.*?&lt;/a&gt;:\s*(.*?)&lt;/h1&gt;</expression>
+				<expression>&lt;h1 class=&quot;content_title hover_blue&quot;&gt;&lt;a [^&gt;]*&gt;(.*?)&lt;/a&gt;</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;id&gt;\1&lt;/id&gt;" dest="5+">
 				<RegExp input="$$1" output="\1" dest="2">
@@ -79,7 +79,7 @@
 	<GetEpisodeDetails dest="3">
 		<RegExp input="$$5" output="&lt;details&gt;\1&lt;/details&gt;" dest="3">	
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
-				<expression>&lt;h1 class=&apos;content_title hover_blue&apos;&gt;([^&gt;]*)&lt;/h1&gt;</expression>
+				<expression>&lt;h1 class=&apos;content_title hover_blue&apos;&gt;\s*&lt;a [^&gt;]*&gt;[^&lt;]*&lt;/a&gt;:\s*([^&lt;]*)&lt;/h1&gt;</expression>
 			</RegExp>	
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">
 				<expression>&lt;div class=&apos;show_synopsis&apos;&gt;(.*?)&lt;/div&gt;</expression>
