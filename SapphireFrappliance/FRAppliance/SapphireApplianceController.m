@@ -51,7 +51,7 @@ NSString *SAPPHIRE_MANAGED_OBJECT_CONTEXT_CLOSING =	@"SapphireManagedObjectConte
 
 #define ALL_IMPORT_MENU_ITEM	BRLocalizedString(@"  Import All Data", @"All Importer Menu Item")
 #define SETTINGS_MENU_ITEM		BRLocalizedString(@"  Settings", @"Settings Menu Item")
-#define RESET_MENU_ITEM			BRLocalizedString(@"  Reset the thing already", @"UI Quit")
+#define RESET_MENU_ITEM			BRLocalizedString(@"  Quit Frontrow", @"UI Quit")
 
 @interface SapphireDistributedMessagesReceiver : NSObject <SapphireDistributedMessagesProtocol>
 {
