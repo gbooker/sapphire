@@ -346,15 +346,12 @@ static NSString *movingPath = nil;
 					[NSNumber numberWithInt:COMMAND_MARK_TO_DELETE_METADATA], MARK_COMMAND,
 					nil]];
 		}
-		if([fileMeta fileClass] != FileClassUnknown)
-		{
-			[marks addObject:
-				[NSDictionary dictionaryWithObjectsAndKeys:
-					BRLocalizedString(@"        Reset Import Decisions", @"Mark a file to reset import decisions"), MARK_NAME,
-					BRLocalizedString(@"Tells Sapphire to forget import decisions made on this file.", @"Mark a file to reset import decisions description"), MARK_DESCRIPTION,
-					[NSNumber numberWithInt:COMMAND_MARK_TO_RESET_IMPORT], MARK_COMMAND,
-					nil]];
-		}
+		[marks addObject:
+			[NSDictionary dictionaryWithObjectsAndKeys:
+				BRLocalizedString(@"        Reset Import Decisions", @"Mark a file to reset import decisions"), MARK_NAME,
+				BRLocalizedString(@"Tells Sapphire to forget import decisions made on this file.", @"Mark a file to reset import decisions description"), MARK_DESCRIPTION,
+				[NSNumber numberWithInt:COMMAND_MARK_TO_RESET_IMPORT], MARK_COMMAND,
+				nil]];
 		if(![joinList containsObject:fileMeta])
 		{
 			[marks addObject:
