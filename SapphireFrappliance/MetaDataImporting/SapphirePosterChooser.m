@@ -541,6 +541,12 @@ NSData *CreateBitmapDataFromImage(CGImageRef image, unsigned int width, unsigned
 			
 			[loader cancelLoadOfURL:posterURL forTarget:self];
 		}
+		NSImage *candidateImage = [posters objectAtIndex:selection];
+		if([candidateImage isKindOfClass:[NSImage class]])
+		{
+			NSString *path = [[[meta path] stringByDeletingPathExtension] stringByAppendingPathExtension:@"jpg"];
+			[candidateImage writeToFile:path atomically:YES];
+		}
 		[[self stack] popController];
 	}
 }
