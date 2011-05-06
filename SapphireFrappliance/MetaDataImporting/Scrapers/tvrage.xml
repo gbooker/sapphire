@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.0" date="2011-04-16" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
+<scraper framework="1.0" date="2011-05-05" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
 	<NfoUrl dest="3">
 		<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;&lt;id&gt;\2&lt;/id&gt;"  dest="3">
 			<expression clear="yes" noclean="1">tvrage.com/(series/id-([0-9]*))</expression>
@@ -80,9 +80,12 @@
 		<RegExp input="$$5" output="&lt;details&gt;\1&lt;/details&gt;" dest="3">	
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
 				<expression>&lt;h1 class=&apos;content_title hover_blue&apos;&gt;\s*&lt;a [^&gt;]*&gt;[^&lt;]*&lt;/a&gt;:\s*([^&lt;]*)&lt;/h1&gt;</expression>
-			</RegExp>	
+			</RegExp>
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">
-				<expression>&lt;div class=&apos;show_synopsis&apos;&gt;(.*?)&lt;/div&gt;</expression>
+				<expression>&lt;div class=&apos;show_synopsis&apos;&gt;\s*(.*?)(?:&lt;span class=&apos;left&apos;&gt;.*?)?\s*&lt;/div&gt;</expression>
+			</RegExp>
+			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">
+				<expression>&lt;/div&gt;&lt;div&gt;([^&lt;].*?)(?:&lt;span class=&apos;left&apos;.*?)?&lt;/div&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;" dest="5+">
 				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes? cast\)&lt;/td&gt;</expression>
