@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.0" date="2011-05-05" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
+<scraper framework="1.0" date="2011-05-08" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
 	<NfoUrl dest="3">
 		<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;&lt;id&gt;\2&lt;/id&gt;"  dest="3">
 			<expression clear="yes" noclean="1">tvrage.com/(series/id-([0-9]*))</expression>
 		</RegExp>
 		<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;"  dest="3+">
-			<expression clear="yes" noclean="1">tvrage.com/([^/ ]*)(?!/id-[0-9])[/ ]</expression>
+			<expression clear="yes" noclean="1">tvrage.com/([^/ ]*?)(?!/id-[0-9])[/\s]</expression>
 		</RegExp>
 	</NfoUrl>
 	<CreateSearchUrl dest="3">

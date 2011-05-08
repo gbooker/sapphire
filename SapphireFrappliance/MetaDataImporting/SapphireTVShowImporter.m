@@ -380,6 +380,9 @@
 			[state->translation setEpisodeListURL:episodeListURL];
 		}
 	}
+	NSString *showId = stringValueOfChild(root, @"id");
+	if(showId != nil)
+		[state->translation setItemID:showId];
 	
 	[self getTVShowEpisodeListForState:state];
 }
@@ -726,9 +729,17 @@
 		
 		if([showURL length])
 		{
-			[tran setUrl:showURL];
-			if([showID length])
-				[tran setItemID:showID];
+			if(tran == nil)
+			{
+				tran = [SapphireTVTranslation createTVTranslationForName:searchStr withURL:showURL itemID:showID importer:[[state->siteScraper scraper] name] inContext:moc];
+				[state setTranslation:tran];
+			}
+			else
+			{
+				[tran setUrl:showURL];
+				if([showID length])
+					[tran setItemID:showID];
+			}
 		}
 		else
 		{
