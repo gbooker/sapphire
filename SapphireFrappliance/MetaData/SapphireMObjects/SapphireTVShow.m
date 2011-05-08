@@ -150,45 +150,26 @@ static inline NSArray *getEpsFromFiles(NSManagedObjectContext *moc, NSArray *fil
 		[SapphireMetaDataSupport setObjectForPendingDelete:self];
 }
 
-- (NSString *)calculateAutoSortPath
+- (NSSet *)calculateAutoSortPaths
 {
 	NSArray *files = doFetchRequest(SapphireFileMetaDataName, [self managedObjectContext], [self metaFileFetchPredicate]);
 	if([files count] == 0)
 		return nil;
 	
-	NSString *sortPath = [[(SapphireFileMetaData *)[files objectAtIndex:0] path] stringByDeletingLastPathComponent];
-	BOOL cropTwoDirs = NO;
 	NSEnumerator *fileEnum = [files objectEnumerator];
 	SapphireFileMetaData *file;
+	NSMutableSet *paths = [NSMutableSet set];
 	while((file = [fileEnum nextObject]) != nil)
 	{
 		NSString *dirPath = [[file path] stringByDeletingLastPathComponent];
-		if(cropTwoDirs)
+		NSString *dirName = [dirPath lastPathComponent];
+		if([[dirName lowercaseString] hasPrefix:@"season"])
 			dirPath = [dirPath stringByDeletingLastPathComponent];
 		
-		if([dirPath isEqualToString:sortPath])
-			continue;
-		
-		if(!cropTwoDirs)
-		{
-			sortPath = [sortPath stringByDeletingLastPathComponent];
-			dirPath = [dirPath stringByDeletingLastPathComponent];
-			cropTwoDirs = YES;
-			if([dirPath isEqualToString:sortPath])
-				continue;
-		}
-		
-		return nil;
+		[paths addObject:dirPath];
 	}
 	
-	if(!cropTwoDirs)
-	{
-		NSString *lastPathComponent = [sortPath lastPathComponent];
-		if([[lastPathComponent lowercaseString] hasPrefix:@"season"])
-			sortPath = [sortPath stringByDeletingLastPathComponent];
-	}
-	
-	return sortPath;
+	return paths;
 }
 
 - (NSString *)autoSortPath

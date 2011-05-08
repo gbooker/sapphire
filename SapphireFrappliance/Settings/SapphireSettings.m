@@ -490,35 +490,59 @@ typedef enum {
 	return [self logLevelForKey:SettingLogMetadataLevel];
 }
 
-- (SapphireConfirmPrompt *)nextAutoSortPathConfirm:(NSArray *)shows
+int checkPaths(NSString *autoPath, NSArray *computedPaths, int startIndex)
 {
-	int i, count = [shows count];
-	SapphireTVShow *show;
-	NSString *calcAutoPath = nil;
-	NSString *autoPath;
-	for(i=0; i<count; i++)
-	{
-		show = [shows objectAtIndex:i];
-		calcAutoPath = [show calculateAutoSortPath];
-		autoPath = [show autoSortPath];
-		if(autoPath == nil && calcAutoPath == nil)
-			continue;
-		if(autoPath == nil || calcAutoPath == nil)
-			//Only one of them is nil
-			break;
-		if(![autoPath isEqualToString:calcAutoPath])
+	int i, count = [computedPaths count];
+	for (i=startIndex; i<count; i++) {
+		if(![autoPath isEqualToString:[computedPaths objectAtIndex:i]])
 			break;
 	}
+	return i;
+}
+
+- (SapphireConfirmPrompt *)nextAutoSortPathConfirm:(NSArray *)paths forShow:(SapphireTVShow *)show remaining:(NSArray *)remaining
+{
+	NSString *calcAutoPath = nil;
+	NSString *autoPath = [show autoSortPath];
+	if([paths count] > 0)
+	{
+		int skipCount = checkPaths(autoPath, paths, 1);  //We had just checked the first one, continue after that.
+		paths = [paths subarrayWithRange:NSMakeRange(skipCount, [paths count]-skipCount)];
+	}
+	if([paths count] != 0)
+		calcAutoPath = [paths objectAtIndex:0];
+	else
+	{
+		int i, count = [remaining count];
+		for(i=0; i<count; i++)
+		{
+			show = [remaining objectAtIndex:i];
+			autoPath = [show autoSortPath];
+			paths = [[show calculateAutoSortPaths] allObjects];
+			NSLog(@"Paths for %@ are %@", [show name], paths);
+			if([paths count])
+			{
+				int skipCount = checkPaths(autoPath, paths, 0);
+				if(skipCount > 0)
+					paths = [paths subarrayWithRange:NSMakeRange(skipCount, [paths count]-skipCount)];
+			}
+			if([paths count])
+			{
+				calcAutoPath = [paths objectAtIndex:0];
+				break;
+			}
+		}
+		if(i == count)
+			return nil;
+		remaining = [remaining subarrayWithRange:NSMakeRange(i + 1, [remaining count] - i - 1)];
+	}
 	
-	if(i == count)
-		return nil;
-	
-	NSArray *newArray = [shows subarrayWithRange:NSMakeRange(i+1, count-i-1)];
-	NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(promptResult:forShow:remaining:)]];
+	NSInvocation *invoke = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(promptResult:forShow:paths:remaining:)]];
 	[invoke setTarget:self];
-	[invoke setSelector:@selector(promptResult:forShow:remaining:)];
+	[invoke setSelector:@selector(promptResult:forShow:paths:remaining:)];
 	[invoke setArgument:&show atIndex:3];
-	[invoke setArgument:&newArray atIndex:4];
+	[invoke setArgument:&paths atIndex:4];
+	[invoke setArgument:&remaining atIndex:5];
 	[invoke retainArguments];
 	
 	NSString *question;
@@ -531,18 +555,19 @@ typedef enum {
 	return [prompt autorelease];
 }
 
-- (BRLayerController *)promptResult:(SapphireConfirmPromptResult)result forShow:(SapphireTVShow *)show remaining:(NSArray *)remain
+- (BRLayerController *)promptResult:(SapphireConfirmPromptResult)result forShow:(SapphireTVShow *)show paths:(NSArray *)paths remaining:(NSArray *)remain
 {
 	if(result == SapphireConfirmPromptResultAbort)
 		return nil;
 	
 	if(result == SapphireConfirmPromptResultOK)
 	{
-		[show setAutoSortPath:[show calculateAutoSortPath]];
+		[show setAutoSortPath:[paths objectAtIndex:0]];
 		[SapphireMetaDataSupport save:moc];
+		return [self nextAutoSortPathConfirm:nil forShow:nil remaining:remain];
 	}
 	
-	return [self nextAutoSortPathConfirm:remain];
+	return [self nextAutoSortPathConfirm:paths forShow:show remaining:remain];
 }
 
 - (BRLayerController *)waitForDownloads
@@ -682,7 +707,7 @@ typedef enum {
 		case SettingsCommandImportTVAutosortCalculate:
 		{
 			NSArray *shows = doFetchRequest(SapphireTVShowName, moc, nil);
-			SapphireConfirmPrompt *confirm = [self nextAutoSortPathConfirm:shows];
+			SapphireConfirmPrompt *confirm = [self nextAutoSortPathConfirm:nil forShow:nil remaining:shows];
 			if(confirm != nil)
 				[[self stack] pushController:confirm];
 			else

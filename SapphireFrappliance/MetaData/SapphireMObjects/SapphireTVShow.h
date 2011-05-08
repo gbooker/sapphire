@@ -8,7 +8,7 @@
 + (NSArray *)sortMethods;
 
 - (NSComparisonResult)compare:(SapphireTVShow *)other;
-- (NSString *)calculateAutoSortPath;
+- (NSSet *)calculateAutoSortPaths;
 - (NSString *)autoSortPath;
 - (void)setAutoSortPath:(NSString *)path;
 @end
