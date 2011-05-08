@@ -354,8 +354,8 @@ int main(int argc, char *argv[])
 		SapphireTVShow *show;
 		while((show = [showEnum nextObject]) != nil)
 		{
-			NSString *autoPath = [show calculateAutoSortPath];
-			NSLog(@"Sort path for %@ is %@", [show name], autoPath);
+			NSSet *autoPaths = [show calculateAutoSortPaths];
+			NSLog(@"Sort path for %@ is %@", [show name], autoPaths);
 		}
 	}
 #endif
