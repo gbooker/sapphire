@@ -189,7 +189,7 @@ int enablePassthrough(SapphireFileMetaData *currentPlayFile)
 		Float64 sampleRate = [currentPlayFile sampleRateValue];
 		UInt32 type = [currentPlayFile audioFormatIDValue];
 		
-		if((type == 'ac-3' || type == 0x6D732000) && setupAudioOutput((int)sampleRate))
+		if((type == 'ac-3' || type == 0x6D732000 || type == 'CAC3') && setupAudioOutput((int)sampleRate))
 			useAC3Passthrough = YES;
 		else if((type == 'DTS ') && setupAudioOutput((int)sampleRate))
 			useDTSPassthrough = YES;
