@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.1" date="2011-04-24" name="IMDb.com" content="movies" thumb="imdb.png" language="en">
+<scraper framework="1.1" date="2011-06-11" name="IMDb.com" content="movies" thumb="imdb.png" language="en">
 	<include>common/imdb.xml</include>
 	<include>common/tmdb.xml</include>
 	<include>common/movieposterdb.xml</include>
@@ -85,10 +85,7 @@
 				<expression>Top 250 #([0-9]*)&lt;/strong&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;mpaa&gt;\1&lt;/mpaa&gt;" dest="5+">
-				<expression>MPAA&lt;/a&gt;\)&lt;/h4&gt;\s*Rated (.[^ ]*)</expression>
-			</RegExp>
-			<RegExp input="$$1" output="&lt;certification&gt;\1 \3&lt;/certification&gt;" dest="5+">
-				<expression repeat="yes">&lt;a href=&quot;[^?]*\?certificates=[^&quot;]*&quot;&gt;([^&lt;]*)&lt;/a&gt;[^&lt;]*(&lt;i&gt;([^&lt;]*)&lt;/i&gt;)?</expression>
+				<expression>MPAA&lt;/a&gt;\)&lt;/h4&gt;\s*(Rated .[^ ]*)</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;tagline&gt;\1&lt;/tagline&gt;" dest="5+">
 				<expression>Taglines:&lt;/h4&gt;\s*([^&lt;]*)</expression>
@@ -118,6 +115,9 @@
 				<expression>Release Date:&lt;/h4&gt;\n([^&lt;]*?)\s*\(</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;url function=&quot;GetIMDBPlot&quot;&gt;$$3plotsummary&lt;/url&gt;" dest="5+">
+				<expression/>
+			</RegExp>
+			<RegExp input="$$2" output="&lt;url cache=&quot;$$2-parentalguide.html&quot; function=&quot;GetIMDBCertificates&quot;&gt;$$3parentalguide&lt;/url&gt;" dest="5+">
 				<expression/>
 			</RegExp>
 			<RegExp conditional="!fullcredits" input="$$2" output="&lt;url cache=&quot;$$2-credits.html&quot; function=&quot;GetIMDBCast&quot;&gt;$$3&lt;/url&gt;" dest="5+">
