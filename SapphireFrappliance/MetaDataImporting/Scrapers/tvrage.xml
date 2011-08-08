@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.0" date="2011-08-07" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
+<scraper framework="1.0" date="2011-08-08" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
 	<NfoUrl dest="3">
 		<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;&lt;id&gt;\2&lt;/id&gt;"  dest="3">
 			<expression clear="yes" noclean="1">tvrage.com/(series/id-([0-9]*))</expression>
@@ -79,7 +79,7 @@
 	<GetEpisodeDetails dest="3">
 		<RegExp input="$$5" output="&lt;details&gt;\1&lt;/details&gt;" dest="3">	
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
-				<expression>&lt;font size=&apos;3&apos;&gt;\s*[^&lt;]* : ([^&lt;]*)\s*&lt;br&gt;</expression>
+				<expression>&lt;h1 class=&apos;content_title hover_blue&apos;&gt;\s*&lt;a [^&gt;]*&gt;[^&lt;]*&lt;/a&gt;:\s*([^&lt;]*)&lt;/h1&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">
 				<expression>&lt;div class=&apos;show_synopsis&apos;&gt;\s*(.*?)&lt;br&gt;\s*&lt;br&gt;&lt;span class=&apos;left&apos;&gt;.*?\s*&lt;/div&gt;</expression>
