@@ -120,7 +120,7 @@ BOOL usingCategories = NO;
 	{
 		//code from ATVFiles. Thx!
 		range = [backtrace rangeOfString: @"(in BackRow)"];
-		if(range.location != NSNotFound) {
+		if([SapphireFrontRowCompat atvVersion] >= SapphireFrontRowCompatATVVersionLeopardFrontrow) {
 			//NSLog(@"+[%@ className] called for Leopard/ATV2 whitelist check, so I'm lying, m'kay?", className);
 			// 10.5/ATV2 (and 1.1, but that's handled above)
 			className = @"RUIDVDAppliance";
