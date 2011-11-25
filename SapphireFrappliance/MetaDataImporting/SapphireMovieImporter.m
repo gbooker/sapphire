@@ -544,12 +544,14 @@
 	SapphireMovie *movie = [tran movie];
 	if(movie != nil)
 	{	
+		SapphireLog(SapphireLogTypeImport, SapphireLogLevelDetail, @"Found movie %@:%@", movie, movie.title);
 		[metaData setMovie:movie];
 		if([tran selectedPoster] != nil)
 			return ImportStateUpdated;
 		[self getMoviePostersForState:state thumbElements:[NSArray array]];
 		return ImportStateBackground;
 	}
+	SapphireLog(SapphireLogTypeImport, SapphireLogLevelDebug, @"Going to lookup at url %@", tran.url);
 	[self getMovieResultsForState:state];
 	return ImportStateBackground;
 }
