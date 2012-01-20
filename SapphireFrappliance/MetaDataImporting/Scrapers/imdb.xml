@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.1" date="2011-08-15" name="IMDb.com" content="movies" thumb="imdb.png" language="en">
+<scraper framework="1.1" date="2012-01-15" name="IMDb.com" content="movies" thumb="imdb.png" language="en">
 	<include>common/imdb.xml</include>
 	<include>common/tmdb.xml</include>
 	<include>common/movieposterdb.xml</include>
@@ -85,7 +85,7 @@
 				<expression>Top 250 #([0-9]*)&lt;/strong&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;mpaa&gt;\1&lt;/mpaa&gt;" dest="5+">
-				<expression>MPAA&lt;/a&gt;\)&lt;/h4&gt;\s*(Rated .[^ ]*)</expression>
+				<expression>&lt;img[^&gt;]*certificates/us/[^&gt;]*title=&quot;([^&quot;]*)&quot;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;tagline&gt;\1&lt;/tagline&gt;" dest="5+">
 				<expression>Taglines:&lt;/h4&gt;\s*([^&lt;]*)</expression>

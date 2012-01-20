@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.0" date="2011-08-08" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
+<scraper framework="1.0" date="2012-01-19" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
 	<NfoUrl dest="3">
 		<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;&lt;id&gt;\2&lt;/id&gt;"  dest="3">
 			<expression clear="yes" noclean="1">tvrage.com/(series/id-([0-9]*))</expression>
@@ -100,7 +100,7 @@
 				<expression>Production Number:\s*&lt;/b&gt;\s*([^&lt;]*)&lt;br</expression>
 			</RegExp>							
 			<RegExp input="$$1" output="&lt;actor&gt;&lt;name&gt;\1&lt;/name&gt;&lt;role&gt;\2&lt;/role&gt;&lt;/actor&gt;"  dest="5+">
-				<expression repeat="yes">a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;(.*?)&lt;/a&gt;.*?As&lt;i&gt;\s*(.*?)&lt;/i&gt;</expression>
+				<expression repeat="yes">&gt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt;&lt;/b&gt;&lt;br /&gt;\s*As&lt;i&gt;\s*([^&lt;]*)&lt;/i&gt;</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;director&gt;\1&lt;/director&gt;" dest="5+">			
 				<RegExp input="$$1" output="| \1" dest="2">
