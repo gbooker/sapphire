@@ -68,7 +68,7 @@
 				<expression noclean="1">(&gt;\s*&lt;a href=&quot;/title.*)</expression>
 			</RegExp>
 			<RegExp input="$$4" output="&lt;entity&gt;&lt;title&gt;\2&lt;/title&gt;&lt;year&gt;\3&lt;/year&gt;&lt;url&gt;http://$INFO[url]/title/\1/&lt;/url&gt;&lt;id&gt;\1&lt;/id&gt;&lt;kind&gt;\4&lt;/kind&gt;&lt;/entity&gt;" dest="5+">
-				<expression repeat="yes" noclean="1,2">&gt;\s*&lt;a href=&quot;/title/([t0-9]*)/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt; *\(([0-9]*)(?:\)[^/]*\(([a-z A-Z]*)\))?</expression>
+				<expression repeat="yes" noclean="1">&gt;\s*&lt;a href=&quot;/title/([t0-9]*)/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt; *\(([0-9]*)(?:\)[^/]*\(([a-z A-Z]*)\))?</expression>
 			</RegExp>
 			<expression clear="yes" noclean="1"/>
 		</RegExp>
