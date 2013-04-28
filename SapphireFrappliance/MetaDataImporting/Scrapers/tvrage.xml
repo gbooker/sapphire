@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scraper framework="1.0" date="2011-08-08" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
+<scraper framework="1.0" date="2013-04-27" name="TV Rage" content="tvshows" thumb="tvrage.jpg" language="en">
 	<NfoUrl dest="3">
 		<RegExp input="$$4" output="&lt;results&gt;\1&lt;/results&gt;" dest="3">	
 			<RegExp input="$$1" output="&lt;url&gt;http://www.tvrage.com/\1&lt;/url&gt;&lt;id&gt;\2&lt;/id&gt;"  dest="4">
@@ -27,7 +27,7 @@
 	<GetDetails dest="7">
 		<RegExp input="$$5" output="&lt;details&gt;\1&lt;/details&gt;" dest="7">
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
-				<expression>&lt;h1 class=&quot;content_title hover_blue&quot;&gt;&lt;a [^&gt;]*&gt;(.*?)&lt;/a&gt;</expression>
+				<expression>&lt;div class=&apos;content_title&apos;&gt;\s*&lt;a [^&gt;]*&gt;(.*?)&lt;/a&gt;</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;id&gt;\1&lt;/id&gt;" dest="5+">
 				<RegExp input="$$1" output="\1" dest="2">
@@ -39,7 +39,7 @@
 				<expression>&lt;div class=&quot;show_synopsis&quot;&gt;\s*(.*?)\s*&lt;/div&gt;</expression>
 			</RegExp>						
 			<RegExp input="$$1" output="&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;" dest="5+">
-				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes cast\)&lt;/td&gt;</expression>
+				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes cast\)&lt;/strong&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;actor&gt;&lt;name&gt;\1&lt;/name&gt;&lt;role&gt;\2&lt;/role&gt;&lt;/actor&gt;"  dest="5+">
 				<expression repeat="yes">a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;(.*?)&lt;/a&gt;.*?As&lt;i&gt;\s*(.*?)&lt;/i&gt;</expression>
@@ -82,16 +82,16 @@
 	<GetEpisodeDetails dest="3">
 		<RegExp input="$$5" output="&lt;details&gt;\1&lt;/details&gt;" dest="3">	
 			<RegExp input="$$1" output="&lt;title&gt;\1&lt;/title&gt;" dest="5">
-				<expression>&lt;h1 class=&apos;content_title hover_blue&apos;&gt;\s*&lt;a [^&gt;]*&gt;[^&lt;]*&lt;/a&gt;:\s*([^&lt;]*)&lt;/h1&gt;</expression>
+				<expression>&lt;h1 class=[&apos;&quot;]content_title hover_blue[&apos;&quot;]&gt;\s*&lt;a href=[^&gt;]*&gt;[^&lt;]*&lt;/a&gt;:\s*([^&lt;]*)&lt;/h1&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">
 				<expression>&lt;div class=&apos;show_synopsis&apos;&gt;\s*(?:&lt;a href=&apos;/edit/shows/.*&lt;/a&gt;)?\s*(.*?)&lt;br&gt;\s*&lt;br&gt;&lt;span class=&apos;left&apos;&gt;.*?\s*&lt;/div&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;plot&gt;\1&lt;/plot&gt;" dest="5+">
-				<expression>&lt;/div&gt;&lt;div&gt;(?!&lt;img)(?:&lt;a href=&apos;/edit/shows/.*&lt;/a&gt;)?(.*?)&lt;br&gt;\s*&lt;br&gt;&lt;span class=&apos;left&apos;.*?&lt;/div&gt;</expression>
+				<expression>&lt;div class=&apos;left padding_bottom_10&apos;&gt;\s*(?:&lt;a href=&apos;/edit/shows/.*&lt;/a&gt;)?\s*(.*?)&lt;br&gt;\s*&lt;br&gt;&lt;span class=&apos;left&apos;&gt;.*?\s*&lt;/div&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;rating&gt;\1&lt;/rating&gt;&lt;votes&gt;\2&lt;/votes&gt;" dest="5+">
-				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes? cast\)&lt;/td&gt;</expression>
+				<expression>&lt;strong&gt;([0-9.]+)/10 \(([0-9]*) Votes? cast\)&lt;/strong&gt;</expression>
 			</RegExp>
 			<RegExp input="$$1" output="&lt;aired&gt;\1&lt;/aired&gt;" dest="5+">
 				<expression>(?:Original )?Airdate:\s*&lt;/b&gt;\s*([^&lt;]*)&lt;br</expression>
@@ -103,17 +103,17 @@
 				<expression>Production Number:\s*&lt;/b&gt;\s*([^&lt;]*)&lt;br</expression>
 			</RegExp>							
 			<RegExp input="$$1" output="&lt;actor&gt;&lt;name&gt;\1&lt;/name&gt;&lt;role&gt;\2&lt;/role&gt;&lt;/actor&gt;"  dest="5+">
-				<expression repeat="yes">&gt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt;&lt;/b&gt;&lt;br /&gt;\s*As&lt;i&gt;\s*([^&lt;]*)&lt;/i&gt;</expression>
+				<expression repeat="yes">&lt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt;&lt;/b&gt;&lt;br /&gt;\s*As&lt;i&gt;\s*([^&lt;]*)&lt;/i&gt;</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;director&gt;\1&lt;/director&gt;" dest="5+">			
 				<RegExp input="$$1" output="| \1" dest="2">
-					<expression noclean="1">Director: &lt;/b&gt;&lt;/td&gt;&lt;td[^&gt;]*&gt;&lt;i&gt;&lt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^(&lt;|\(|/)]*)&lt;/a&gt;&lt;/i&gt;</expression>
+					<expression noclean="1">Director: &lt;/b&gt;&lt;i&gt;&lt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^(&lt;|\(|/)]*)&lt;/a&gt;&lt;/i&gt;</expression>
 				</RegExp>		
 				<expression repeat="yes">\| ([^\|]*)</expression>
 			</RegExp>
 			<RegExp input="$$2" output="&lt;credits&gt;\1&lt;/credits&gt;" dest="5+">			
 				<RegExp input="$$1" output="| \1" dest="2">
-					<expression noclean="1">Writer: &lt;/b&gt;&lt;/td&gt;&lt;td[^&gt;]*&gt;&lt;i&gt;&lt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^(&lt;|\(|/)]*)&lt;/a&gt;&lt;/i&gt;</expression>
+					<expression noclean="1">Writer:\s*&lt;/b&gt;&lt;i&gt;&lt;a href=&apos;(?:http://www.tvrage.com)?/person/[^&gt;]*&gt;([^&lt;]*)&lt;/a&gt;&lt;/i&gt;</expression>
 				</RegExp>		
 				<expression repeat="yes">\| ([^\|]*)</expression>
 			</RegExp>
